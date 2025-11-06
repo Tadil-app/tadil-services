@@ -5,7 +5,7 @@ services:
     container_name: tadil-db
     restart: unless-stopped
     ports:
-      - 5433:5432
+      - 5432:5432
     environment:
       POSTGRES_USER: tadil
       POSTGRES_PASSWORD: Tadil!
@@ -23,8 +23,8 @@ services:
     volumes:
       - tadil_minio_volume:/data
     ports:
-      - 9000:9000
-      - 9001:9001
+      - 9002:9000
+      - 9003:9001
 
 volumes:
   tadil_postgres_volume:
