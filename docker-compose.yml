@@ -1,0 +1,31 @@
+services:
+
+  postgresql:
+    image: postgres:latest
+    container_name: tadil-db
+    restart: unless-stopped
+    ports:
+      - 5433:5432
+    environment:
+      POSTGRES_USER: tadil
+      POSTGRES_PASSWORD: Tadil!
+    volumes:
+      - tadil_postgres_volume:/var/lib/postgresql
+
+  minio:
+    image: minio/minio:latest
+    container_name: tadil-minio
+    restart: unless-stopped
+    command: minio server --console-address ":9001" /data
+    environment:
+      MINIO_ROOT_USER: tadil
+      MINIO_ROOT_PASSWORD: TadilMinio!
+    volumes:
+      - tadil_minio_volume:/data
+    ports:
+      - 9000:9000
+      - 9001:9001
+
+volumes:
+  tadil_postgres_volume:
+  tadil_minio_volume:
