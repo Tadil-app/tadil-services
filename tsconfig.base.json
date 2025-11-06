@@ -21,7 +21,8 @@
     "paths": {
       "@tadil-database": ["libs/infra/tadil-database/src/index.ts"],
       "@tadil-common": ["libs/core/tadil-common/src/index.ts"],
-      "@tadil-sections": ["libs/core/tadil-sections/src/index.ts"]
+      "@tadil-sections": ["libs/core/tadil-sections/src/index.ts"],
+      "@tadil-alterations": ["libs/core/tadil-alterations/src/index.ts"]
     }
   }
 }

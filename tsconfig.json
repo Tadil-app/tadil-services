@@ -14,6 +14,9 @@
     },
     {
       "path": "./libs/core/tadil-sections"
+    },
+    {
+      "path": "./libs/core/tadil-alterations"
     }
   ]
 }
