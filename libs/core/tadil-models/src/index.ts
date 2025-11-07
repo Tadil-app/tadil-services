@@ -1,1 +1,1 @@
-export * from './lib/tadil-models.js';
+export * from './application';
