@@ -18,35 +18,24 @@ model Section {
     urduName    String
     hindiName   String
     bengaliName String
-
-    @@map("sections")
-}
-
-model Model {
-    id          String         @id @default(uuid())
-    imageFileId String
-    englishName String
-    arabicName  String
-    urduName    String
-    hindiName   String
-    bengaliName String
-    sections    ModelSection[]
-
-    @@map("models")
-}
-
-model ModelSection {
-    id          String @id @default(uuid())
-    englishName String
-    arabicName  String
-    urduName    String
-    hindiName   String
-    bengaliName String
     /// ![{x: number; y:number}]
     coordinates Json[]
 
     modelId String
     models  Model  @relation(fields: [modelId], references: [id])
 
-    @@map("model_sections")
+    @@map("sections")
+}
+
+model Model {
+    id          String    @id @default(uuid())
+    imageFileId String
+    englishName String
+    arabicName  String
+    urduName    String
+    hindiName   String
+    bengaliName String
+    sections    Section[]
+
+    @@map("models")
 }
