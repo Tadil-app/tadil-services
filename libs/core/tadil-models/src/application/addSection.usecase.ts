@@ -1,4 +1,7 @@
-import { InvalidCommandException } from '@tadil-common';
+import {
+  InfrastructureException,
+  InvalidCommandException,
+} from '@tadil-common';
 import { ModelsRepository } from './models.repository';
 import { v4 as uuidv4 } from 'uuid';
 import { Point } from './model.model';
@@ -34,11 +37,17 @@ export class AddSectionUseCase {
     ) {
       throw new InvalidCommandException('Coordinates are required');
     }
-    const nexSectionId = uuidv4();
-    await this._modelsRepository.addSection({
-      id: nexSectionId,
-      ...addSectionCommand,
-    });
+    try {
+      const nexSectionId = uuidv4();
+      await this._modelsRepository.addSection({
+        id: nexSectionId,
+        ...addSectionCommand,
+      });
+    } catch (error: unknown) {
+      if (error instanceof Error)
+        throw new InfrastructureException(error.message);
+      else throw error;
+    }
   }
 }
 
