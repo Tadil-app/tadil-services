@@ -56,7 +56,7 @@ export class CreateModelUseCase {
           hindiName: createModelCommand.hindiName,
           urduName: createModelCommand.urduName,
           bengaliName: createModelCommand.bengaliName,
-          sections: createModelCommand.sections,
+          sections: [],
         });
       } catch (error: unknown) {
         await this._fileStorageService.deleteFile(newModelId);
@@ -79,15 +79,13 @@ export class CreateModelCommand {
   readonly urduName: string;
   readonly bengaliName: string;
   readonly imageFile: ReadableFile;
-  readonly sections: Section[];
   constructor(
     englishName: string,
     arabicName: string,
     hindiName: string,
     urduName: string,
     bengaliName: string,
-    imageFile: ReadableFile,
-    sections: Section[]
+    imageFile: ReadableFile
   ) {
     this.englishName = englishName;
     this.arabicName = arabicName;
@@ -95,6 +93,5 @@ export class CreateModelCommand {
     this.urduName = urduName;
     this.bengaliName = bengaliName;
     this.imageFile = imageFile;
-    this.sections = sections;
   }
 }
