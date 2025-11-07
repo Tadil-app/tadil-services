@@ -1,4 +1,7 @@
 import { BadRequestException } from "@nestjs/common";
+import { diskStorage } from "multer";
+import { extname } from 'path';
+import { v4 as uuidv4 } from 'uuid';
 
 export function filterImageFiles(
   _req: Request,
@@ -19,3 +22,14 @@ export function filterImageFiles(
   }
   cb(null, true);
 }
+
+export const fileUploadLocalPath = {
+  storage: diskStorage({
+    destination: './uploads',
+    filename: (_req, file, cb) => {
+      const fileExtension = extname(file.originalname);
+      cb(null, uuidv4() + fileExtension);
+    },
+  }),
+  fileFilter: filterImageFiles,
+};
