@@ -9,7 +9,12 @@ import {
   UseInterceptors,
 } from '@nestjs/common';
 import { ApiBody, ApiConsumes, ApiOkResponse, ApiTags } from '@nestjs/swagger';
-import { AddSectionUseCase, CreateModelUseCase } from '@tadil-models';
+import {
+  AddSectionUseCase,
+  CreateModelUseCase,
+  DeleteModelUseCase,
+  DeleteSectionUseCase,
+} from '@tadil-models';
 import { AddSectionDTO, CreateModelDTO, DisplayModelDTO } from './dtos';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { NotFoundException, ReadableFile } from '@tadil-common';
@@ -22,7 +27,9 @@ export class ModelsController {
   constructor(
     private readonly _dataReader: DataReader,
     private readonly _createModelUseCase: CreateModelUseCase,
-    private readonly _addSectionUseCase: AddSectionUseCase
+    private readonly _deleteModelUseCase: DeleteModelUseCase,
+    private readonly _addSectionUseCase: AddSectionUseCase,
+    private readonly _deleteSectionUseCase: DeleteSectionUseCase
   ) {}
 
   @Get('/')
@@ -86,14 +93,19 @@ export class ModelsController {
 
   @Delete('/delete/:id')
   async deleteModel(@Param('id') id: string): Promise<void> {
-    await this._dataReader.queries.model.delete({ where: { id } });
+    await this._deleteModelUseCase.execute({ modelId: id });
   }
 
-  @Post(':id/add-section')
+  @Post('/:id/add-section')
   async addSection(
     @Param('id') id: string,
     @Body() section: AddSectionDTO
   ): Promise<void> {
     await this._addSectionUseCase.execute({ ...section, modelId: id });
+  }
+
+  @Delete('/delete-section/:id')
+  async deleteSection(@Param('id') id: string): Promise<void> {
+    await this._deleteSectionUseCase.execute({ sectionId: id });
   }
 }
