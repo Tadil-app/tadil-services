@@ -1,6 +1,7 @@
 import {
   InfrastructureException,
   InvalidCommandException,
+  NotFoundException,
 } from '@tadil-common';
 import { ModelsRepository } from './models.repository';
 import { v4 as uuidv4 } from 'uuid';
@@ -37,6 +38,14 @@ export class AddSectionUseCase {
     ) {
       throw new InvalidCommandException('Coordinates are required');
     }
+
+    const model = await this._modelsRepository.getModelById(
+      addSectionCommand.modelId
+    );
+    if (!model) {
+      throw new NotFoundException('Model not found');
+    }
+    
     try {
       const nexSectionId = uuidv4();
       await this._modelsRepository.addSection({
