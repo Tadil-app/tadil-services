@@ -1,5 +1,5 @@
 import { Section, SectionsRepository } from '@tadil-sections';
-import { DbClient } from '../../dbClient.js';
+import { DbClient } from '../../dbClient';
 export class PrismaSectionsRepository implements SectionsRepository {
   constructor(private readonly _db: DbClient) {}
 
