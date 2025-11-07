@@ -47,7 +47,7 @@ model Alteration {
     urduName    String
     hindiName   String
     bengaliName String
-    value       Float?
+    value       String?
     unit        String?
 
     @@map("alterations")
