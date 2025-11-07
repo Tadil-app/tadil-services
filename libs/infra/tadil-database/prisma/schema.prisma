@@ -2,6 +2,10 @@ generator client {
     provider = "prisma-client-js"
 }
 
+generator json {
+    provider = "prisma-json-types-generator"
+}
+
 datasource db {
     provider = "postgresql"
     url      = env("TADIL_DB")
@@ -16,4 +20,32 @@ model Section {
     bengaliName String
 
     @@map("sections")
+}
+
+model Model {
+    id          String         @id @default(uuid())
+    englishName String
+    arabicName  String
+    urduName    String
+    hindiName   String
+    bengaliName String
+    sections    ModelSection[]
+
+    @@map("models")
+}
+
+model ModelSection {
+    id          String @id @default(uuid())
+    englishName String
+    arabicName  String
+    urduName    String
+    hindiName   String
+    bengaliName String
+    /// ![{x: number; y:number}]
+    coordinates Json[]
+
+    modelId String
+    models  Model  @relation(fields: [modelId], references: [id])
+
+    @@map("model_sections")
 }
