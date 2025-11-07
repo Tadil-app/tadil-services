@@ -24,20 +24,20 @@ export class SectionsController {
     private readonly _createSectionUseCase: CreateSectionUseCase,
     private readonly _updateSectionUseCase: UpdateSectionUseCase,
     private readonly _deleteSectionUseCase: DeleteSectionUseCase,
-    private readonly _dataReaer: DataReader
+    private readonly _dataReader: DataReader
   ) {}
 
   @Get('/')
   @ApiOkResponse({ type: DisplaySectionDTO, isArray: true })
   async getSections(): Promise<DisplaySectionDTO[]> {
-    const sections = await this._dataReaer.queries.section.findMany();
+    const sections = await this._dataReader.queries.section.findMany();
     return sections;
   }
 
   @Get('/:id')
   @ApiOkResponse({ type: DisplaySectionDTO })
   async getSectionById(@Param('id') id: string): Promise<DisplaySectionDTO> {
-    const section = await this._dataReaer.queries.section.findUnique({
+    const section = await this._dataReader.queries.section.findUnique({
       where: {
         id,
       },

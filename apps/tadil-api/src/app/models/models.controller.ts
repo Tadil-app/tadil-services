@@ -20,13 +20,13 @@ import { DataReader } from '@tadil-database';
 export class ModelsController {
   constructor(
     private readonly _createModelUseCase: CreateModelUseCase,
-    private readonly _dataReaer: DataReader
+    private readonly _dataReader: DataReader
   ) {}
 
   @Get('/')
   @ApiOkResponse({ type: DisplayModelDTO, isArray: true })
   async getModels(): Promise<DisplayModelDTO[]> {
-    const models = await this._dataReaer.queries.model.findMany({
+    const models = await this._dataReader.queries.model.findMany({
       include: { sections: true },
     });
     return models;
@@ -35,7 +35,7 @@ export class ModelsController {
   @Get('/:id')
   @ApiOkResponse({ type: DisplayModelDTO, isArray: false })
   async getModelById(@Param('id') id: string): Promise<DisplayModelDTO> {
-    const model = await this._dataReaer.queries.model.findUnique({
+    const model = await this._dataReader.queries.model.findUnique({
       where: { id },
       include: { sections: true },
     });
