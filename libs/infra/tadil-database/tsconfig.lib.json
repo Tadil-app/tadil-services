@@ -10,6 +10,9 @@
   "references": [
     {
       "path": "../../core/tadil-sections/tsconfig.lib.json"
+    },
+    {
+      "path": "../../core/tadil-models/tsconfig.lib.json"
     }
   ]
 }
