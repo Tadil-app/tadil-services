@@ -1,6 +1,8 @@
+import { Alteration } from './alteration.model';
+
 export interface AlterationsRepository {
-  getAlterationById(id: string): Promise<any>;
-  createAlteration(data: any): Promise<any>;
-  updateAlteration(data: any): Promise<any>;
-  deleteAlteration(id: string): Promise<any>;
+  getAlterationById(id: string): Promise<Alteration>;
+  createAlteration(alteration: Alteration): Promise<void>;
+  updateAlteration(alteration: Alteration): Promise<void>;
+  deleteAlteration(id: string): Promise<void>;
 }
