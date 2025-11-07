@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   Param,
   Post,
@@ -80,5 +81,10 @@ export class ModelsController {
     } finally {
       cleanupLocalFile(file.path);
     }
+  }
+
+  @Delete('/delete/:id')
+  async deleteModel(@Param('id') id: string): Promise<void> {
+    await this._dataReader.queries.model.delete({ where: { id } });
   }
 }
