@@ -7,11 +7,11 @@ import {
   UploadedFile,
   UseInterceptors,
 } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiBody, ApiConsumes, ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { CreateModelUseCase } from '@tadil-models';
 import { CreateModelDTO, DisplayModelDTO } from './dtos';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { ReadableFile } from '@tadil-common';
+import { NotFoundException, ReadableFile } from '@tadil-common';
 import { cleanupLocalFile, fileUploadLocalPath } from '../utils';
 import { DataReader } from '@tadil-database';
 
@@ -24,6 +24,7 @@ export class ModelsController {
   ) {}
 
   @Get('/')
+  @ApiOkResponse({ type: DisplayModelDTO, isArray: true })
   async getModels(): Promise<DisplayModelDTO[]> {
     const models = await this._dataReaer.queries.model.findMany({
       include: { sections: true },
@@ -32,9 +33,8 @@ export class ModelsController {
   }
 
   @Get('/:id')
-  async getModelById(
-    @Param('id') id: string
-  ): Promise<DisplayModelDTO | undefined> {
+  @ApiOkResponse({ type: DisplayModelDTO, isArray: false })
+  async getModelById(@Param('id') id: string): Promise<DisplayModelDTO | undefined> {
     const model = await this._dataReaer.queries.model.findUnique({
       where: { id },
       include: { sections: true },
@@ -45,6 +45,23 @@ export class ModelsController {
   }
 
   @Post('/create')
+  @ApiConsumes('multipart/form-data')
+  @ApiBody({
+    schema: {
+      type: 'object',
+      properties: {
+        file: {
+          type: 'string',
+          format: 'binary',
+        },
+        englishName: { type: 'string' },
+        arabicName: { type: 'string' },
+        hindiName: { type: 'string' },
+        urduName: { type: 'string' },
+        bengaliName: { type: 'string' },
+      },
+    },
+  })
   @UseInterceptors(FileInterceptor('file', fileUploadLocalPath))
   async createModel(
     @UploadedFile() file: Express.Multer.File,

@@ -1,6 +1,13 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsNotEmpty } from 'class-validator';
 
+export class Point {
+  @ApiProperty()
+  x!: number;
+  @ApiProperty()
+  y!: number;
+}
+
 export class DisplaySectionDTO {
   @ApiProperty()
   @IsNotEmpty()
@@ -20,12 +27,7 @@ export class DisplaySectionDTO {
   @ApiProperty()
   @IsNotEmpty()
   bengaliName!: string;
-  @ApiProperty()
+  @ApiProperty({ type: () => Point, isArray: true })
   @IsNotEmpty()
   coordinates!: Point[];
-}
-
-interface Point {
-  x: number;
-  y: number;
 }

@@ -24,7 +24,7 @@ export class DisplayModelDTO {
   @ApiProperty()
   @IsNotEmpty()
   bengaliName!: string;
-  @ApiProperty()
+  @ApiProperty({ type: () => DisplaySectionDTO, isArray: true })
   @IsNotEmpty()
   sections!: DisplaySectionDTO[];
 }
