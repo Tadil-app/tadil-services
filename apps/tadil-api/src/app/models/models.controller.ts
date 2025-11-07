@@ -34,13 +34,13 @@ export class ModelsController {
 
   @Get('/:id')
   @ApiOkResponse({ type: DisplayModelDTO, isArray: false })
-  async getModelById(@Param('id') id: string): Promise<DisplayModelDTO | undefined> {
+  async getModelById(@Param('id') id: string): Promise<DisplayModelDTO> {
     const model = await this._dataReaer.queries.model.findUnique({
       where: { id },
       include: { sections: true },
     });
 
-    if (!model) return undefined;
+    if (!model) throw new NotFoundException(`Model with id ${id} not found`);
     return model;
   }
 

@@ -3,6 +3,7 @@ import {
   Controller,
   Delete,
   Get,
+  NotFoundException,
   Param,
   Post,
   Put,
@@ -35,16 +36,15 @@ export class SectionsController {
 
   @Get('/:id')
   @ApiOkResponse({ type: DisplaySectionDTO })
-  async getSectionById(
-    @Param('id') id: string
-  ): Promise<DisplaySectionDTO | undefined> {
+  async getSectionById(@Param('id') id: string): Promise<DisplaySectionDTO> {
     const section = await this._dataReaer.queries.section.findUnique({
       where: {
         id,
       },
     });
 
-    if (!section) return undefined;
+    if (!section)
+      throw new NotFoundException(`Section with id ${id} not found`);
     return section;
   }
 
