@@ -1,7 +1,11 @@
 import { Provider, Scope } from '@nestjs/common';
 import { FileStorageService } from '@tadil-common';
 import { DbClient, PrismaModelsRepository } from '@tadil-database';
-import { CreateModelUseCase, ModelsRepository } from '@tadil-models';
+import {
+  CreateModelUseCase,
+  ModelsRepository,
+  DeleteModelUseCase,
+} from '@tadil-models';
 
 const ModelsRepositoryProvider: Provider<ModelsRepository> = {
   provide: 'ModelsRepository',
@@ -22,7 +26,17 @@ const CreateModelUseCaseProvider: Provider<CreateModelUseCase> = {
   inject: ['ModelsRepository', 'FileStorageService'],
 };
 
+const DeleteModelUseCaseProvider: Provider<DeleteModelUseCase> = {
+  provide: DeleteModelUseCase,
+  useFactory: (modelsRepository: ModelsRepository) => {
+    return new DeleteModelUseCase(modelsRepository);
+  },
+  scope: Scope.REQUEST,
+  inject: ['ModelsRepository'],
+};
+
 export {
   ModelsRepositoryProvider,
   CreateModelUseCaseProvider,
+  DeleteModelUseCaseProvider,
 };
