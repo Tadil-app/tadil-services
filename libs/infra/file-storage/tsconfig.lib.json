@@ -1,0 +1,15 @@
+{
+  "extends": "../../../tsconfig.base.json",
+  "compilerOptions": {
+    "outDir": "../../../dist/out-tsc",
+    "emitDeclarationOnly": false,
+    "forceConsistentCasingInFileNames": true,
+    "types": ["node"]
+  },
+  "include": ["src/**/*.ts"],
+  "references": [
+    {
+      "path": "../../core/tadil-common/tsconfig.lib.json"
+    }
+  ]
+}

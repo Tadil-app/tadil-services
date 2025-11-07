@@ -20,6 +20,9 @@
     },
     {
       "path": "./libs/core/tadil-models"
+    },
+    {
+      "path": "./libs/infra/file-storage"
     }
   ]
 }

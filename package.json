@@ -62,6 +62,7 @@
     "libs/core/tadil-sections",
     "libs/core/tadil-common",
     "libs/core/tadil-alterations",
-    "libs/core/tadil-models"
+    "libs/core/tadil-models",
+    "libs/infra/file-storage"
   ]
 }
