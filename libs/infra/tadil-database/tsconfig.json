@@ -7,6 +7,9 @@
       "path": "../../core/tadil-models"
     },
     {
+      "path": "../../core/tadil-alterations"
+    },
+    {
       "path": "./tsconfig.lib.json"
     }
   ]

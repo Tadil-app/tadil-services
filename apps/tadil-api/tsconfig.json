@@ -13,6 +13,9 @@
       "path": "../../libs/core/tadil-models"
     },
     {
+      "path": "../../libs/core/tadil-alterations"
+    },
+    {
       "path": "../../libs/core/tadil-common"
     },
     {
@@ -20,6 +23,6 @@
     },
     {
       "path": "../../libs/infra/file-storage"
-    },
+    }
   ]
 }
