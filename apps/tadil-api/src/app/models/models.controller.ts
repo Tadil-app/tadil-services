@@ -8,7 +8,13 @@ import {
   UploadedFile,
   UseInterceptors,
 } from '@nestjs/common';
-import { ApiBody, ApiConsumes, ApiOkResponse, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBody,
+  ApiConsumes,
+  ApiOkResponse,
+  ApiParam,
+  ApiTags,
+} from '@nestjs/swagger';
 import {
   AddSectionUseCase,
   CreateModelUseCase,
@@ -42,6 +48,7 @@ export class ModelsController {
   }
 
   @Get('/:id')
+  @ApiParam({ name: 'id', type: 'string' })
   @ApiOkResponse({ type: DisplayModelDTO, isArray: false })
   async getModelById(@Param('id') id: string): Promise<DisplayModelDTO> {
     const model = await this._dataReader.queries.model.findUnique({
@@ -55,22 +62,6 @@ export class ModelsController {
 
   @Post('/create')
   @ApiConsumes('multipart/form-data')
-  @ApiBody({
-    schema: {
-      type: 'object',
-      properties: {
-        file: {
-          type: 'string',
-          format: 'binary',
-        },
-        englishName: { type: 'string' },
-        arabicName: { type: 'string' },
-        hindiName: { type: 'string' },
-        urduName: { type: 'string' },
-        bengaliName: { type: 'string' },
-      },
-    },
-  })
   @UseInterceptors(FileInterceptor('file', fileUploadLocalPath))
   async createModel(
     @UploadedFile() file: Express.Multer.File,
@@ -92,11 +83,13 @@ export class ModelsController {
   }
 
   @Delete('/delete/:id')
+  @ApiParam({ name: 'id', type: 'string' })
   async deleteModel(@Param('id') id: string): Promise<void> {
     await this._deleteModelUseCase.execute({ modelId: id });
   }
 
   @Post('/:id/add-section')
+  @ApiParam({ name: 'id', type: 'string' })
   async addSection(
     @Param('id') id: string,
     @Body() section: AddSectionDTO
@@ -105,6 +98,8 @@ export class ModelsController {
   }
 
   @Delete('/delete-section/:id')
+  @ApiParam({ name: 'id', type: 'string' })
+  @ApiBody({ type: AddSectionDTO })
   async deleteSection(@Param('id') id: string): Promise<void> {
     await this._deleteSectionUseCase.execute({ sectionId: id });
   }
