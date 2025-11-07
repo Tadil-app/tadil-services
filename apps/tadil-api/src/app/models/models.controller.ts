@@ -9,8 +9,8 @@ import {
   UseInterceptors,
 } from '@nestjs/common';
 import { ApiBody, ApiConsumes, ApiOkResponse, ApiTags } from '@nestjs/swagger';
-import { CreateModelUseCase } from '@tadil-models';
-import { CreateModelDTO, DisplayModelDTO } from './dtos';
+import { AddSectionUseCase, CreateModelUseCase } from '@tadil-models';
+import { AddSectionDTO, CreateModelDTO, DisplayModelDTO } from './dtos';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { NotFoundException, ReadableFile } from '@tadil-common';
 import { cleanupLocalFile, fileUploadLocalPath } from '../utils';
@@ -20,8 +20,9 @@ import { DataReader } from '@tadil-database';
 @ApiTags('Models')
 export class ModelsController {
   constructor(
+    private readonly _dataReader: DataReader,
     private readonly _createModelUseCase: CreateModelUseCase,
-    private readonly _dataReader: DataReader
+    private readonly _addSectionUseCase: AddSectionUseCase
   ) {}
 
   @Get('/')
@@ -86,5 +87,13 @@ export class ModelsController {
   @Delete('/delete/:id')
   async deleteModel(@Param('id') id: string): Promise<void> {
     await this._dataReader.queries.model.delete({ where: { id } });
+  }
+
+  @Post(':id/add-section')
+  async addSection(
+    @Param('id') id: string,
+    @Body() section: AddSectionDTO
+  ): Promise<void> {
+    await this._addSectionUseCase.execute({ ...section, modelId: id });
   }
 }
