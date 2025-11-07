@@ -28,25 +28,6 @@ export class MinioFileStorageService implements FileStorageService {
     this.bucketName = bucketName;
   }
 
-  async isFileExists(fileId: string): Promise<boolean> {
-    try {
-      const fileStat = await this.minioClient.statObject(
-        this.bucketName,
-        fileId
-      );
-      return !!fileStat;
-    } catch (error: unknown) {
-      if (error instanceof Error)
-        throw new InfrastructureException(
-          `Error checking file existence: ${error.message}`
-        );
-      else
-        throw new InfrastructureException(
-          `Error checking file existence: ${error}`
-        );
-    }
-  }
-
   async uploadFile(fileId: string, file: ReadableFile): Promise<string> {
     try {
       const metaData = {
