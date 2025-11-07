@@ -39,3 +39,16 @@ model Model {
 
     @@map("models")
 }
+
+model Alteration {
+    id          String  @id @default(uuid())
+    englishName String
+    arabicName  String
+    urduName    String
+    hindiName   String
+    bengaliName String
+    value       Float?
+    unit        String?
+
+    @@map("alterations")
+}
