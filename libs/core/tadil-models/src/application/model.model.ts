@@ -1,7 +1,24 @@
 export interface Model {
   id: string;
-  name: string;
-  imageId: string;
-  imageUrl: string;
-  sections: any[];
+  englishName: string;
+  arabicName: string;
+  hindiName: string;
+  urduName: string;
+  bengaliName: string;
+  sections: Section[];
+}
+
+export interface Section {
+  id: string;
+  englishName: string;
+  arabicName: string;
+  hindiName: string;
+  urduName: string;
+  bengaliName: string;
+  coordinates: Point[];
+}
+
+export interface Point {
+  x: number;
+  y: number;
 }
