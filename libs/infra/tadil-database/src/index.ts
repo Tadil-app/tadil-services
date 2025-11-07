@@ -1,3 +1,3 @@
-export * from './dbClient.js';
-export * from './dataReader.js';
-export * from './repositories/index.js';
+export * from './dbClient';
+export * from './dataReader';
+export * from './repositories';

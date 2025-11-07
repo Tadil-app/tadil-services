@@ -1,3 +1,3 @@
-export * from './exceptions/index.js';
+export * from './exceptions';
 export * from './fileStorage.service';
 export * from './models';

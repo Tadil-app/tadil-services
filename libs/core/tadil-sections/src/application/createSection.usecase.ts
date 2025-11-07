@@ -1,5 +1,5 @@
 import { InvalidCommandException } from '@tadil-common';
-import { SectionsRepository } from './sections.repository.js';
+import { SectionsRepository } from './sections.repository';
 import { v4 as uuidv4 } from 'uuid';
 
 export class CreateSectionUseCase {
