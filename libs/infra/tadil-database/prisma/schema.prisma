@@ -24,6 +24,7 @@ model Section {
 
 model Model {
     id          String         @id @default(uuid())
+    imageFileId String
     englishName String
     arabicName  String
     urduName    String

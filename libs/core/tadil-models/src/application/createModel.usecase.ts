@@ -6,7 +6,7 @@ import {
   ReadableFile,
 } from '@tadil-common';
 import { v4 as uuidv4 } from 'uuid';
-import { Section } from './model.model';
+import * as path from 'path';
 
 export class CreateModelUseCase {
   private _modelsRepository: ModelsRepository;
@@ -43,14 +43,17 @@ export class CreateModelUseCase {
     try {
       const newModelId = uuidv4();
 
+      const fileExtension = path.extname(createModelCommand.imageFile.path);
+      const imageFileId = newModelId + fileExtension;
       await this._fileStorageService.uploadFile(
-        newModelId,
+        imageFileId,
         createModelCommand.imageFile
       );
 
       try {
         await this._modelsRepository.createModel({
           id: newModelId,
+          imageFileId: imageFileId,
           englishName: createModelCommand.englishName,
           arabicName: createModelCommand.arabicName,
           hindiName: createModelCommand.hindiName,
@@ -59,7 +62,7 @@ export class CreateModelUseCase {
           sections: [],
         });
       } catch (error: unknown) {
-        await this._fileStorageService.deleteFile(newModelId);
+        await this._fileStorageService.deleteFile(imageFileId);
         if (error instanceof Error)
           throw new InfrastructureException(error.message);
         else throw error;

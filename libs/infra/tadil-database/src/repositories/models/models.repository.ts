@@ -18,6 +18,7 @@ export class PrismaModelsRepository implements ModelsRepository {
     await this._db.model.create({
       data: {
         id: model.id,
+        imageFileId: model.imageFileId,
         englishName: model.englishName,
         arabicName: model.arabicName,
         hindiName: model.hindiName,
@@ -31,6 +32,7 @@ export class PrismaModelsRepository implements ModelsRepository {
     await this._db.model.update({
       where: { id: model.id },
       data: {
+        imageFileId: model.imageFileId,
         englishName: model.englishName,
         arabicName: model.arabicName,
         hindiName: model.hindiName,

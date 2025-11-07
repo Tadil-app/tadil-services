@@ -1,5 +1,6 @@
 export interface Model {
   id: string;
+  imageFileId: string;
   englishName: string;
   arabicName: string;
   hindiName: string;
