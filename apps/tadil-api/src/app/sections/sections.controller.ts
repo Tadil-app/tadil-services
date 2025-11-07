@@ -37,12 +37,14 @@ export class SectionsController {
   @ApiOkResponse({ type: DisplaySectionDTO })
   async getSectionById(
     @Param('id') id: string
-  ): Promise<DisplaySectionDTO | null> {
+  ): Promise<DisplaySectionDTO | undefined> {
     const section = await this._dataReaer.queries.section.findUnique({
       where: {
         id,
       },
     });
+
+    if (!section) return undefined;
     return section;
   }
 
