@@ -47,7 +47,7 @@ export class MinioFileStorageService implements FileStorageService {
     }
   }
 
-  async uploadFile(file: ReadableFile): Promise<string> {
+  async uploadFile(fileId: string, file: ReadableFile): Promise<string> {
     try {
       const metaData = {
         ContentType: file.mimetype,
@@ -55,7 +55,7 @@ export class MinioFileStorageService implements FileStorageService {
       };
       await this.minioClient.fPutObject(
         this.bucketName,
-        file.originalName,
+        fileId,
         file.path,
         metaData
       );
