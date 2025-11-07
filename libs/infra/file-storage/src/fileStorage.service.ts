@@ -28,7 +28,26 @@ export class MinioFileStorageService implements FileStorageService {
     this.bucketName = bucketName;
   }
 
-  public async uploadFile(file: ReadableFile): Promise<string> {
+  async isFileExists(fileId: string): Promise<boolean> {
+    try {
+      const fileStat = await this.minioClient.statObject(
+        this.bucketName,
+        fileId
+      );
+      return !!fileStat;
+    } catch (error: unknown) {
+      if (error instanceof Error)
+        throw new InfrastructureException(
+          `Error checking file existence: ${error.message}`
+        );
+      else
+        throw new InfrastructureException(
+          `Error checking file existence: ${error}`
+        );
+    }
+  }
+
+  async uploadFile(file: ReadableFile): Promise<string> {
     try {
       const metaData = {
         ContentType: file.mimetype,
@@ -50,10 +69,7 @@ export class MinioFileStorageService implements FileStorageService {
     }
   }
 
-  public async getFileUrl(
-    fileId: string,
-    expirySeconds: number
-  ): Promise<string> {
+  async getFileUrl(fileId: string, expirySeconds: number): Promise<string> {
     try {
       const url = await this.minioClient.presignedGetObject(
         this.bucketName,
@@ -71,7 +87,7 @@ export class MinioFileStorageService implements FileStorageService {
     }
   }
 
-  public async downloadFile(fileId: string): Promise<Readable> {
+  async downloadFile(fileId: string): Promise<Readable> {
     try {
       const stream = await this.minioClient.getObject(this.bucketName, fileId);
       return stream;
