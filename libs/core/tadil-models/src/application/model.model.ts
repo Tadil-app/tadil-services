@@ -11,6 +11,7 @@ export interface Model {
 
 export interface Section {
   id: string;
+  modelId: string;
   englishName: string;
   arabicName: string;
   hindiName: string;
