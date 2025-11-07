@@ -28,11 +28,14 @@ const CreateModelUseCaseProvider: Provider<CreateModelUseCase> = {
 
 const DeleteModelUseCaseProvider: Provider<DeleteModelUseCase> = {
   provide: DeleteModelUseCase,
-  useFactory: (modelsRepository: ModelsRepository) => {
-    return new DeleteModelUseCase(modelsRepository);
+  useFactory: (
+    modelsRepository: ModelsRepository,
+    fileStorageService: FileStorageService
+  ) => {
+    return new DeleteModelUseCase(modelsRepository, fileStorageService);
   },
   scope: Scope.REQUEST,
-  inject: ['ModelsRepository'],
+  inject: ['ModelsRepository', 'FileStorageService'],
 };
 
 export {
