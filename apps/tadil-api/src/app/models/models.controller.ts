@@ -12,8 +12,7 @@ import { CreateModelUseCase } from '@tadil-models';
 import { CreateModelDTO, DisplayModelDTO } from './dtos';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { ReadableFile } from '@tadil-common';
-import { promises } from 'fs';
-import { fileUploadLocalPath } from '../utils';
+import { cleanupLocalFile, fileUploadLocalPath } from '../utils';
 import { DataReader } from '@tadil-database';
 
 @Controller('models')
@@ -62,15 +61,7 @@ export class ModelsController {
       await this._createModelUseCase.execute({ ...model, imageFile });
       return;
     } finally {
-      try {
-        await promises.unlink(file.path);
-      } catch (cleanupError: any) {
-        if (cleanupError.code !== 'ENOENT')
-          console.error(
-            `Failed to delete temporary file ${file.path}:`,
-            cleanupError
-          );
-      }
+      cleanupLocalFile(file.path);
     }
   }
 }

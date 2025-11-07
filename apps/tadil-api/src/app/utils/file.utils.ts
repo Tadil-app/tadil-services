@@ -1,5 +1,6 @@
-import { BadRequestException } from "@nestjs/common";
-import { diskStorage } from "multer";
+import { BadRequestException, HttpException } from '@nestjs/common';
+import { promises } from 'fs';
+import { diskStorage } from 'multer';
 import { extname } from 'path';
 import { v4 as uuidv4 } from 'uuid';
 
@@ -16,7 +17,7 @@ export function filterImageFiles(
   );
   if (!isMimeTypeValid || !isExtensionValid) {
     return cb(
-      new BadRequestException('Only jpg, png and svg files are allowed!'),
+      new BadRequestException('Only jpg, jpeg, png and svg files are allowed!'),
       false
     );
   }
@@ -33,3 +34,16 @@ export const fileUploadLocalPath = {
   }),
   fileFilter: filterImageFiles,
 };
+
+export async function cleanupLocalFile(filePath: string) {
+  try {
+    await promises.unlink(filePath);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  } catch (cleanupError: any) {
+    if (cleanupError.code !== 'ENOENT')
+      console.error(
+        `Failed to delete temporary file ${filePath}:`,
+        cleanupError
+      );
+  }
+}

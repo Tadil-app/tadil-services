@@ -1,1 +1,1 @@
-export * from './fileFilters.utils'
+export * from './file.utils'
