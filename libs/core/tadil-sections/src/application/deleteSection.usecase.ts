@@ -1,4 +1,4 @@
-import { InvalidCommandException } from '@tadil-common';
+import { InvalidCommandException, NotFoundException } from '@tadil-common';
 import { SectionsRepository } from './sections.repository';
 
 export class DeleteSectionUseCase {
@@ -16,7 +16,7 @@ export class DeleteSectionUseCase {
       deleteSectionCommand.sectionId
     );
     if (!section) {
-      throw new InvalidCommandException('Section not found');
+      throw new NotFoundException('Section not found');
     }
 
     await this._sectionsRepository.deleteSection(
