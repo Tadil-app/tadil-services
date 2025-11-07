@@ -25,6 +25,7 @@
     "tslib": "^2.3.0"
   },
   "devDependencies": {
-    "@prisma/client": "^6.19.0"
+    "@prisma/client": "^6.19.0",
+    "prisma-json-types-generator": "^3.6.2"
   }
 }
