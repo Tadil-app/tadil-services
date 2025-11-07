@@ -5,6 +5,6 @@ export interface Alteration {
   hindiName: string;
   urduName: string;
   bengaliName: string;
-  price: number;
-  measurements: string[];
+  value?: string;
+  unit?: string;
 }
