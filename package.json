@@ -60,7 +60,6 @@
   "workspaces": [
     "apps/tadil-api",
     "libs/infra/tadil-database",
-    "libs/core/tadil-sections",
     "libs/core/tadil-common",
     "libs/core/tadil-alterations",
     "libs/core/tadil-models",
