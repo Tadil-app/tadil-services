@@ -1,4 +1,4 @@
-import { BadRequestException, HttpException } from '@nestjs/common';
+import { BadRequestException } from '@nestjs/common';
 import { promises } from 'fs';
 import { diskStorage } from 'multer';
 import { extname } from 'path';
