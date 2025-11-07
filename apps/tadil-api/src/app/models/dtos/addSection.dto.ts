@@ -5,9 +5,6 @@ import { Point } from '.';
 export class AddSectionDTO {
   @ApiProperty()
   @IsNotEmpty()
-  modelId!: string;
-  @ApiProperty()
-  @IsNotEmpty()
   englishName!: string;
   @ApiProperty()
   @IsNotEmpty()
