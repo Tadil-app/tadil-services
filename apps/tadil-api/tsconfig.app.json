@@ -24,6 +24,12 @@
       "path": "../../libs/core/tadil-sections/tsconfig.lib.json"
     },
     {
+      "path": "../../libs/core/tadil-models/tsconfig.lib.json"
+    },
+    {
+      "path": "../../libs/core/tadil-common/tsconfig.lib.json"
+    },
+    {
       "path": "../../libs/infra/tadil-database/tsconfig.lib.json"
     }
   ]

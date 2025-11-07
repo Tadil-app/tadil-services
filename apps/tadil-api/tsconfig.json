@@ -13,6 +13,12 @@
       "path": "../../libs/core/tadil-sections"
     },
     {
+      "path": "../../libs/core/tadil-models"
+    },
+    {
+      "path": "../../libs/core/tadil-common"
+    },
+    {
       "path": "../../libs/infra/tadil-database"
     }
   ]
