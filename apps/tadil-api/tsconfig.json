@@ -20,6 +20,9 @@
     },
     {
       "path": "../../libs/infra/tadil-database"
-    }
+    },
+    {
+      "path": "../../libs/infra/file-storage"
+    },
   ]
 }
