@@ -3,13 +3,13 @@ import {
   Controller,
   Delete,
   Get,
+  Inject,
   Param,
   Post,
   UploadedFile,
   UseInterceptors,
 } from '@nestjs/common';
 import {
-  ApiBody,
   ApiConsumes,
   ApiOkResponse,
   ApiParam,
@@ -23,7 +23,11 @@ import {
 } from '@tadil-models';
 import { AddSectionDTO, CreateModelDTO, DisplayModelDTO } from './dtos';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { NotFoundException, ReadableFile } from '@tadil-common';
+import {
+  type FileStorageService,
+  NotFoundException,
+  ReadableFile,
+} from '@tadil-common';
 import { cleanupLocalFile, fileUploadLocalPath } from '../utils';
 import { DataReader } from '@tadil-database';
 
@@ -35,7 +39,9 @@ export class ModelsController {
     private readonly _createModelUseCase: CreateModelUseCase,
     private readonly _deleteModelUseCase: DeleteModelUseCase,
     private readonly _addSectionUseCase: AddSectionUseCase,
-    private readonly _deleteSectionUseCase: DeleteSectionUseCase
+    private readonly _deleteSectionUseCase: DeleteSectionUseCase,
+    @Inject('FileStorageService')
+    private readonly _fileStorageService: FileStorageService
   ) {}
 
   @Get('/')
@@ -44,7 +50,16 @@ export class ModelsController {
     const models = await this._dataReader.queries.model.findMany({
       include: { sections: true },
     });
-    return models;
+    const modelsWithImages = models.map(async (model) => {
+      const imageFileUrl = await this._fileStorageService.getFileUrl(
+        model.imageFileId
+      );
+      return {
+        ...model,
+        imageFileUrl: imageFileUrl,
+      };
+    });
+    return await Promise.all(modelsWithImages);
   }
 
   @Get('/:id')
@@ -57,7 +72,13 @@ export class ModelsController {
     });
 
     if (!model) throw new NotFoundException(`Model with id ${id} not found`);
-    return model;
+    const imageFileUrl = await this._fileStorageService.getFileUrl(
+      model.imageFileId
+    );
+    return {
+      ...model,
+      imageFileUrl: imageFileUrl,
+    };
   }
 
   @Post('/create')
@@ -99,7 +120,6 @@ export class ModelsController {
 
   @Delete('/delete-section/:id')
   @ApiParam({ name: 'id', type: 'string' })
-  @ApiBody({ type: AddSectionDTO })
   async deleteSection(@Param('id') id: string): Promise<void> {
     await this._deleteSectionUseCase.execute({ sectionId: id });
   }
