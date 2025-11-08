@@ -8,6 +8,7 @@
     "test": "nx test",
     "db-generate": "npm run prisma-generate -w tadil-database",
     "db-migrate-dev": "npm run prisma-migrate-dev -w tadil-database",
+    "db-migrate-deploy": "npm run prisma-migrate-deploy -w tadil-database",
     "db-studio": "npm run prisma-studio -w tadil-database"
   },
   "private": true,
