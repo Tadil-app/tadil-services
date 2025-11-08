@@ -1,49 +1,45 @@
-# -----------------------------------------------------------------
-# STAGE 1: Build & Compile the NestJS Application
-# -----------------------------------------------------------------
-FROM node:20-alpine AS builder
+FROM node:22-alpine AS deps
+WORKDIR /app
 
-WORKDIR /usr/src/app
+COPY package.json package-lock.json* ./
+RUN npm install --legacy-peer-deps
 
-# Copy package.json and package-lock.json
-COPY package*.json ./
+COPY libs/infra/tadil-database/package.json libs/infra/tadil-database/
+RUN cd libs/infra/tadil-database && npm install --legacy-peer-deps
 
-# Install all dependencies (including devDependencies needed for 'nest build')
-RUN npm ci
+COPY libs/infra/file-storage/package.json libs/infra/file-storage/
+RUN cd libs/infra/file-storage && npm install --legacy-peer-deps
 
-# Copy all source files
+FROM node:22-alpine AS builder
+WORKDIR /app
+
+COPY package.json package-lock.json* ./
+RUN npm install --legacy-peer-deps
+
+COPY --from=deps /app/node_modules ./node_modules
+COPY --from=deps /app/libs/infra/tadil-database/node_modules ./libs/infra/tadil-database/node_modules
+COPY --from=deps /app/libs/infra/file-storage/node_modules ./libs/infra/file-storage/node_modules
+
 COPY . .
 
-# Compile TypeScript into JavaScript (output is usually 'dist')
-RUN npm run build
+RUN npm run db-generate
+RUN npx nx build tadil-api --prod
 
-# -----------------------------------------------------------------
-# STAGE 2: Production Runtime
-# -----------------------------------------------------------------
-FROM node:20-alpine AS production
+FROM node:22-alpine AS runner
+WORKDIR /app
 
-# Set environment variable for production optimization
-ENV NODE_ENV production
+COPY --from=builder /app/dist/apps/tadil-api ./dist/apps/tadil-api
 
-WORKDIR /usr/src/app
+COPY --from=builder /app/node_modules ./node_modules
+COPY --from=builder /app/libs/infra/tadil-database/node_modules ./libs/infra/tadil-database/node_modules
+COPY --from=builder /app/libs/infra/file-storage/node_modules ./libs/infra/file-storage/node_modules
 
-# Copy only production dependencies from the build stage 
-# (This excludes dev dependencies like Nest CLI, Jest, etc.)
-COPY --from=builder /usr/src/app/package*.json ./
-# Run npm ci to get only production dependencies in the final image
-# This is a key step to reduce image size!
-RUN npm ci --only=production
+COPY libs/infra/tadil-database/prisma ./libs/infra/tadil-database/prisma
 
-# Copy the compiled application code (the 'dist' folder)
-COPY --from=builder /usr/src/app/dist ./dist
+ENV NODE_ENV=production
+ENV PORT=4444
 
-# Set a non-root user for security (best practice)
-RUN adduser -D nestjs
-USER nestjs
-
-# Expose the port your NestJS app listens on (default is 3000)
 EXPOSE 4444
 
-# Start the compiled application
-# Change 3000 here if your NestJS app listens on a different port (e.g., 8080 or 4444)
-CMD ["node", "dist/main"]
+CMD ["sh", "-c", "npm run db-migrate-deploy && node dist/apps/tadil-api/main.js"]
+
