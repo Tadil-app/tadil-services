@@ -52,7 +52,8 @@ export class MinioFileStorageService implements FileStorageService {
 
   async getFileUrl(fileId: string, expirySeconds: number): Promise<string> {
     try {
-      const url = await this.minioClient.presignedGetObject(
+      const url = await this.minioClient.presignedUrl(
+        'GET',
         this.bucketName,
         fileId,
         expirySeconds
