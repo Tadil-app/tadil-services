@@ -16,12 +16,11 @@ RUN npm run db-generate
 RUN npx nx build tadil-api --prod
 
 COPY libs/infra/tadil-database/prisma ./libs/infra/tadil-database/prisma
-RUN npm run db-migrate-deploy
 
 ENV NODE_ENV=production
 ENV PORT=4444
 
 EXPOSE 4444
 
-CMD ["node dist/apps/tadil-api/main.js"]
+CMD ["sh", "-c", "npm run db-migrate-deploy && node dist/apps/tadil-api/main.js"]
 
