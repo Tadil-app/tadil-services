@@ -7,7 +7,7 @@ export class DisplayModelDTO {
   @ApiProperty()
   imageFileId!: string;
   @ApiProperty()
-  imageFileUrl!: string;
+  imageBase64String!: string;
   @ApiProperty()
   englishName!: string;
   @ApiProperty()

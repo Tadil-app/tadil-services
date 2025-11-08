@@ -9,12 +9,7 @@ import {
   UploadedFile,
   UseInterceptors,
 } from '@nestjs/common';
-import {
-  ApiConsumes,
-  ApiOkResponse,
-  ApiParam,
-  ApiTags,
-} from '@nestjs/swagger';
+import { ApiConsumes, ApiOkResponse, ApiParam, ApiTags } from '@nestjs/swagger';
 import {
   AddSectionUseCase,
   CreateModelUseCase,
@@ -28,7 +23,11 @@ import {
   NotFoundException,
   ReadableFile,
 } from '@tadil-common';
-import { cleanupLocalFile, fileUploadLocalPath } from '../utils';
+import {
+  cleanupLocalFile,
+  fileUploadLocalPath,
+  streamToBase64,
+} from '../utils';
 import { DataReader } from '@tadil-database';
 
 @Controller('models')
@@ -51,12 +50,13 @@ export class ModelsController {
       include: { sections: true },
     });
     const modelsWithImages = models.map(async (model) => {
-      const imageFileUrl = await this._fileStorageService.getFileUrl(
+      const imageStream = await this._fileStorageService.downloadFile(
         model.imageFileId
       );
+      const imageBase64String = await streamToBase64(imageStream);
       return {
         ...model,
-        imageFileUrl: imageFileUrl,
+        imageBase64String,
       };
     });
     return await Promise.all(modelsWithImages);
@@ -72,12 +72,13 @@ export class ModelsController {
     });
 
     if (!model) throw new NotFoundException(`Model with id ${id} not found`);
-    const imageFileUrl = await this._fileStorageService.getFileUrl(
+    const imageStream = await this._fileStorageService.downloadFile(
       model.imageFileId
     );
+    const imageBase64String = await streamToBase64(imageStream);
     return {
       ...model,
-      imageFileUrl: imageFileUrl,
+      imageBase64String,
     };
   }
 
