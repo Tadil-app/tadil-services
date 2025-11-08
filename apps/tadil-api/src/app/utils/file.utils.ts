@@ -2,6 +2,7 @@ import { BadRequestException } from '@nestjs/common';
 import { promises } from 'fs';
 import { diskStorage } from 'multer';
 import { extname } from 'path';
+import { Readable } from 'stream';
 import { v4 as uuidv4 } from 'uuid';
 
 export function filterImageFiles(
@@ -46,4 +47,15 @@ export async function cleanupLocalFile(filePath: string) {
         cleanupError
       );
   }
+}
+
+export async function streamToBase64(stream: Readable): Promise<string> {
+  const chunks: Buffer[] = [];
+
+  for await (const chunk of stream) {
+    chunks.push(Buffer.isBuffer(chunk) ? chunk : Buffer.from(chunk));
+  }
+
+  const buffer = Buffer.concat(chunks);
+  return 'data:image/*;base64,' + buffer.toString('base64');
 }
