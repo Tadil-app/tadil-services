@@ -13,7 +13,10 @@ import * as path from 'path';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-  app.enableCors();
+  app.enableCors({
+    origin: '*', // or your frontend domain
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  });
   const globalPrefix = 'api';
   app.setGlobalPrefix(globalPrefix);
   const port = environment.apiPort;
