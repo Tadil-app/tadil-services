@@ -22,7 +22,7 @@ model Section {
     coordinates Json[]
 
     modelId String
-    models  Model  @relation(fields: [modelId], references: [id])
+    models  Model  @relation(fields: [modelId], references: [id], onDelete: Cascade)
 
     @@map("sections")
 }
