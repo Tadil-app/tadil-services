@@ -7,6 +7,7 @@ import {
   DeleteModelUseCase,
   AddSectionUseCase,
   DeleteSectionUseCase,
+  UpdateModelUseCase,
 } from '@tadil-models';
 
 const ModelsRepositoryProvider: Provider<ModelsRepository> = {
@@ -26,6 +27,15 @@ const CreateModelUseCaseProvider: Provider<CreateModelUseCase> = {
   },
   scope: Scope.REQUEST,
   inject: ['ModelsRepository', 'FileStorageService'],
+};
+
+const UpdateModelUseCaseProvider: Provider<UpdateModelUseCase> = {
+  provide: UpdateModelUseCase,
+  useFactory: (modelsRepository: ModelsRepository) => {
+    return new UpdateModelUseCase(modelsRepository);
+  },
+  scope: Scope.REQUEST,
+  inject: ['ModelsRepository'],
 };
 
 const DeleteModelUseCaseProvider: Provider<DeleteModelUseCase> = {
@@ -64,4 +74,5 @@ export {
   DeleteModelUseCaseProvider,
   AddSectionUseCaseProvider,
   DeleteSectionUseCaseProvider,
+  UpdateModelUseCaseProvider,
 };

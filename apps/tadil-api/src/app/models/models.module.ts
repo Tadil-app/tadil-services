@@ -5,6 +5,7 @@ import {
   DeleteModelUseCaseProvider,
   DeleteSectionUseCaseProvider,
   ModelsRepositoryProvider,
+  UpdateModelUseCaseProvider,
 } from './models.providers';
 import { ModelsController } from './models.controller';
 import { CommonModule } from '../common/common.module';
@@ -18,6 +19,7 @@ import { CommonModule } from '../common/common.module';
     DeleteModelUseCaseProvider,
     AddSectionUseCaseProvider,
     DeleteSectionUseCaseProvider,
+    UpdateModelUseCaseProvider,
   ],
   exports: [],
 })
