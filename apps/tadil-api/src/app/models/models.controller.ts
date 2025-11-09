@@ -6,6 +6,7 @@ import {
   Inject,
   Param,
   Post,
+  Put,
   UploadedFile,
   UseInterceptors,
 } from '@nestjs/common';
@@ -15,8 +16,14 @@ import {
   CreateModelUseCase,
   DeleteModelUseCase,
   DeleteSectionUseCase,
+  UpdateModelUseCase,
 } from '@tadil-models';
-import { AddSectionDTO, CreateModelDTO, DisplayModelDTO } from './dtos';
+import {
+  AddSectionDTO,
+  CreateModelDTO,
+  DisplayModelDTO,
+  UpdateModelDTO,
+} from './dtos';
 import { FileInterceptor } from '@nestjs/platform-express';
 import {
   type FileStorageService,
@@ -36,6 +43,7 @@ export class ModelsController {
   constructor(
     private readonly _dataReader: DataReader,
     private readonly _createModelUseCase: CreateModelUseCase,
+    private readonly _updateModelUseCase: UpdateModelUseCase,
     private readonly _deleteModelUseCase: DeleteModelUseCase,
     private readonly _addSectionUseCase: AddSectionUseCase,
     private readonly _deleteSectionUseCase: DeleteSectionUseCase,
@@ -102,6 +110,15 @@ export class ModelsController {
     } finally {
       cleanupLocalFile(file.path);
     }
+  }
+
+  @Put('/update/:id')
+  @ApiParam({ name: 'id', type: 'string' })
+  async updateModel(
+    @Param('id') id: string,
+    @Body() model: UpdateModelDTO
+  ): Promise<void> {
+    await this._updateModelUseCase.execute({ ...model, id });
   }
 
   @Delete('/delete/:id')
