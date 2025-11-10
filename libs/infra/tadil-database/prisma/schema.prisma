@@ -21,8 +21,9 @@ model Section {
     /// ![{x: number; y:number}]
     coordinates Json[]
 
-    modelId String
-    models  Model  @relation(fields: [modelId], references: [id], onDelete: Cascade)
+    modelId  String
+    models   Model     @relation(fields: [modelId], references: [id], onDelete: Cascade)
+    services Service[] @relation("services-sections")
 
     @@map("sections")
 }
@@ -50,5 +51,22 @@ model Alteration {
     value       String?
     unit        String?
 
+    services Service[] @relation("services-alterations")
+
     @@map("alterations")
+}
+
+model Service {
+    id          String @id @default(uuid())
+    englishName String
+    arabicName  String
+    urduName    String
+    hindiName   String
+    bengaliName String
+    price       Float
+
+    sections    Section[]    @relation("services-sections")
+    alterations Alteration[] @relation("services-alterations")
+
+    @@map("services")
 }
