@@ -1,4 +1,4 @@
-import { Provider } from '@nestjs/common';
+import { Provider, Scope } from '@nestjs/common';
 import { DbClient, PrismaServicesRepository } from '@tadil-database';
 import {
   CreateServiceUseCase,
@@ -9,9 +9,10 @@ import {
 
 const ServicesRepositoryProvider: Provider<ServicesRepository> = {
   provide: 'ServicesRepository',
-  useFactory(db: DbClient): ServicesRepository {
-    return new PrismaServicesRepository(db);
+  useFactory(dbClient: DbClient): ServicesRepository {
+    return new PrismaServicesRepository(dbClient);
   },
+  scope: Scope.REQUEST,
   inject: [DbClient],
 };
 
