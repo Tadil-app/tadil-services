@@ -10,6 +10,9 @@
       "path": "../../core/tadil-alterations"
     },
     {
+      "path": "../../core/tadil-services"
+    },
+    {
       "path": "./tsconfig.lib.json"
     }
   ]
