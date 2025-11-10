@@ -19,6 +19,9 @@
       "path": "../../libs/core/tadil-common"
     },
     {
+      "path": "../../libs/core/tadil-services"
+    },
+    {
       "path": "../../libs/infra/tadil-database"
     },
     {

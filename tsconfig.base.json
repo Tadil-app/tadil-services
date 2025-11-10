@@ -23,7 +23,8 @@
       "@tadil-common": ["libs/core/tadil-common/src/index.ts"],
       "@tadil-alterations": ["libs/core/tadil-alterations/src/index.ts"],
       "@tadil-models": ["libs/core/tadil-models/src/index.ts"],
-      "@file-storage": ["libs/infra/file-storage/src/index.ts"]
+      "@file-storage": ["libs/infra/file-storage/src/index.ts"],
+      "@tadil-services": ["libs/core/tadil-services/src/index.ts"]
     }
   }
 }

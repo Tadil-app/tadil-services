@@ -30,6 +30,9 @@
       "path": "../../libs/core/tadil-common/tsconfig.lib.json"
     },
     {
+      "path": "../../libs/core/tadil-services/tsconfig.lib.json"
+    },
+    {
       "path": "../../libs/infra/tadil-database/tsconfig.lib.json"
     },
     {
