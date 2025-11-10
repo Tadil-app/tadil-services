@@ -43,17 +43,11 @@ export class UpdateServiceUseCase {
     }
 
     try {
-      try {
-        await this._servicesRepository.updateService(updateServiceCommand);
-      } catch (error: unknown) {
-        if (error instanceof Error)
-          throw new InfrastructureException(error.message);
-        else throw error;
-      }
-    } catch (uploadError: unknown) {
-      if (uploadError instanceof Error)
-        throw new InfrastructureException(uploadError.message);
-      else throw uploadError;
+      await this._servicesRepository.updateService(updateServiceCommand);
+    } catch (error: unknown) {
+      if (error instanceof Error)
+        throw new InfrastructureException(error.message);
+      else throw error;
     }
   }
 }
