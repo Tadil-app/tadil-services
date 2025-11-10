@@ -29,7 +29,7 @@ export class PrismaServicesRepository implements ServicesRepository {
         hindiName: service.hindiName,
         urduName: service.urduName,
         bengaliName: service.bengaliName,
-        price: service.price,
+        price: Number(service.price),
         sections: {
           connect: service.sections.map((sectionId) => ({ id: sectionId })),
         },
@@ -51,7 +51,7 @@ export class PrismaServicesRepository implements ServicesRepository {
         hindiName: service.hindiName,
         urduName: service.urduName,
         bengaliName: service.bengaliName,
-        price: service.price,
+        price: Number(service.price),
         sections: {
           connect: service.sections.map((sectionId) => ({ id: sectionId })),
         },
