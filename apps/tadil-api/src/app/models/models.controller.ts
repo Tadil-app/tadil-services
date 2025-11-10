@@ -22,6 +22,7 @@ import {
   AddSectionDTO,
   CreateModelDTO,
   DisplayModelDTO,
+  DisplaySectionDTO,
   UpdateModelDTO,
 } from './dtos';
 import { FileInterceptor } from '@nestjs/platform-express';
@@ -70,26 +71,6 @@ export class ModelsController {
     return await Promise.all(modelsWithImages);
   }
 
-  @Get('/:id')
-  @ApiParam({ name: 'id', type: 'string' })
-  @ApiOkResponse({ type: DisplayModelDTO, isArray: false })
-  async getModelById(@Param('id') id: string): Promise<DisplayModelDTO> {
-    const model = await this._dataReader.queries.model.findUnique({
-      where: { id },
-      include: { sections: true },
-    });
-
-    if (!model) throw new NotFoundException(`Model with id ${id} not found`);
-    const imageStream = await this._fileStorageService.downloadFile(
-      model.imageFileId
-    );
-    const imageBase64String = await streamToBase64(imageStream);
-    return {
-      ...model,
-      imageBase64String,
-    };
-  }
-
   @Post('/create')
   @ApiConsumes('multipart/form-data')
   @UseInterceptors(FileInterceptor('file', fileUploadLocalPath))
@@ -127,6 +108,13 @@ export class ModelsController {
     await this._deleteModelUseCase.execute({ modelId: id });
   }
 
+  @Get('/sections')
+  @ApiOkResponse({ type: DisplaySectionDTO, isArray: true })
+  async getSections(): Promise<DisplaySectionDTO[]> {
+    const sections = await this._dataReader.queries.section.findMany();
+    return sections;
+  }
+
   @Post('/:id/add-section')
   @ApiParam({ name: 'id', type: 'string' })
   async addSection(
@@ -140,5 +128,25 @@ export class ModelsController {
   @ApiParam({ name: 'id', type: 'string' })
   async deleteSection(@Param('id') id: string): Promise<void> {
     await this._deleteSectionUseCase.execute({ sectionId: id });
+  }
+
+  @Get('/:id')
+  @ApiParam({ name: 'id', type: 'string' })
+  @ApiOkResponse({ type: DisplayModelDTO, isArray: false })
+  async getModelById(@Param('id') id: string): Promise<DisplayModelDTO> {
+    const model = await this._dataReader.queries.model.findUnique({
+      where: { id },
+      include: { sections: true },
+    });
+
+    if (!model) throw new NotFoundException(`Model with id ${id} not found`);
+    const imageStream = await this._fileStorageService.downloadFile(
+      model.imageFileId
+    );
+    const imageBase64String = await streamToBase64(imageStream);
+    return {
+      ...model,
+      imageBase64String,
+    };
   }
 }
