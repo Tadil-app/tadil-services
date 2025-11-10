@@ -6,8 +6,10 @@ import {
   DeleteServiceUseCaseProvider,
 } from './services.providers';
 import { ServicesController } from './services.controller';
+import { CommonModule } from '../common/common.module';
 
 @Module({
+  imports: [CommonModule],
   controllers: [ServicesController],
   providers: [
     ServicesRepositoryProvider,
