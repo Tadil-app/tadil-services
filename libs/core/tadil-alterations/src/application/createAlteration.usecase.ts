@@ -2,40 +2,42 @@ import {
   InfrastructureException,
   InvalidCommandException,
 } from '@tadil-common';
-import { ServicesRepository } from './services.repository';
+import { AlterationsRepository } from './alterations.repository';
 import { v4 as uuidv4 } from 'uuid';
 
-export class CreateServiceUseCase {
-  private _servicesRepository: ServicesRepository;
-  constructor(_servicesRepository: ServicesRepository) {
-    this._servicesRepository = _servicesRepository;
+export class CreateAlterationUseCase {
+  private _alterationsRepository: AlterationsRepository;
+  constructor(_alterationsRepository: AlterationsRepository) {
+    this._alterationsRepository = _alterationsRepository;
   }
 
-  async execute(createServiceCommand: CreateServiceCommand): Promise<void> {
-    if (!createServiceCommand.englishName) {
+  async execute(
+    createAlterationCommand: CreateAlterationCommand
+  ): Promise<void> {
+    if (!createAlterationCommand.englishName) {
       throw new InvalidCommandException('English name is required');
     }
-    if (!createServiceCommand.arabicName) {
+    if (!createAlterationCommand.arabicName) {
       throw new InvalidCommandException('Arabic name is required');
     }
-    if (!createServiceCommand.hindiName) {
+    if (!createAlterationCommand.hindiName) {
       throw new InvalidCommandException('Hindi name is required');
     }
-    if (!createServiceCommand.urduName) {
+    if (!createAlterationCommand.urduName) {
       throw new InvalidCommandException('Urdu name is required');
     }
-    if (!createServiceCommand.bengaliName) {
+    if (!createAlterationCommand.bengaliName) {
       throw new InvalidCommandException('Bengali name is required');
     }
-    if (!createServiceCommand.price) {
-      throw new InvalidCommandException('Service prioce is required');
+    if (!createAlterationCommand.price) {
+      throw new InvalidCommandException('Alteration prioce is required');
     }
 
     try {
       const newSectionId = uuidv4();
-      await this._servicesRepository.createService({
+      await this._alterationsRepository.createAlteration({
         id: newSectionId,
-        ...createServiceCommand,
+        ...createAlterationCommand,
       });
     } catch (error: unknown) {
       if (error instanceof Error)
@@ -45,7 +47,7 @@ export class CreateServiceUseCase {
   }
 }
 
-export class CreateServiceCommand {
+export class CreateAlterationCommand {
   readonly englishName: string;
   readonly arabicName: string;
   readonly hindiName: string;
@@ -53,7 +55,7 @@ export class CreateServiceCommand {
   readonly bengaliName: string;
   readonly price: number;
   readonly sections: string[];
-  readonly alterations: string[];
+  readonly informations: string[];
 
   constructor(
     englishName: string,
@@ -63,7 +65,7 @@ export class CreateServiceCommand {
     bengaliName: string,
     price: number,
     sections: string[],
-    alterations: string[]
+    informations: string[]
   ) {
     this.englishName = englishName;
     this.arabicName = arabicName;
@@ -72,6 +74,6 @@ export class CreateServiceCommand {
     this.bengaliName = bengaliName;
     this.price = price;
     this.sections = sections;
-    this.alterations = alterations;
+    this.informations = informations;
   }
 }

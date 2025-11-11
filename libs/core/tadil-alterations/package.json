@@ -1,5 +1,5 @@
 {
-  "name": "tadil-services",
+  "name": "tadil-alterations",
   "version": "0.0.1",
   "private": true,
   "type": "module",
@@ -25,7 +25,7 @@
           "{projectRoot}/test-output/jest/coverage"
         ],
         "options": {
-          "jestConfig": "libs/core/tadil-services/jest.config.ts"
+          "jestConfig": "libs/core/tadil-alterations/jest.config.ts"
         }
       }
     }

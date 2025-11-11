@@ -1,5 +1,5 @@
 {
-  "name": "tadil-services",
+  "name": "tadil-alterations",
   "version": "0.0.0",
   "license": "MIT",
   "scripts": {
@@ -65,6 +65,6 @@
     "libs/core/tadil-informations",
     "libs/core/tadil-models",
     "libs/infra/file-storage",
-    "libs/core/tadil-services"
+    "libs/core/tadil-alterations"
   ]
 }

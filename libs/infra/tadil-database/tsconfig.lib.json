@@ -12,13 +12,13 @@
       "path": "../../core/tadil-models/tsconfig.lib.json"
     },
     {
-      "path": "../../core/tadil-services/tsconfig.lib.json"
+      "path": "../../core/tadil-alterations/tsconfig.lib.json"
     },
     {
       "path": "../../core/tadil-informations/tsconfig.lib.json"
     },
     {
-      "path": "../../core/tadil-services/tsconfig.lib.json"
+      "path": "../../core/tadil-alterations/tsconfig.lib.json"
     }
   ]
 }

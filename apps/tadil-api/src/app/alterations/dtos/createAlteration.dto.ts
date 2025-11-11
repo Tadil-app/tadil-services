@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsNotEmpty } from 'class-validator';
 
-export class CreateServiceDTO {
+export class CreateAlterationDTO {
   @ApiProperty()
   @IsNotEmpty()
   englishName!: string;
@@ -25,5 +25,5 @@ export class CreateServiceDTO {
   sections!: string[];
   @ApiProperty({ type: String, isArray: true })
   @IsNotEmpty()
-  alterations!: string[];
+  informations!: string[];
 }

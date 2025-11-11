@@ -1,4 +1,4 @@
-export interface Service {
+export interface Alteration {
   id: string;
   englishName: string;
   arabicName: string;
@@ -7,5 +7,5 @@ export interface Service {
   bengaliName: string;
   price: number;
   sections: string[];
-  alterations: string[];
+  informations: string[];
 }

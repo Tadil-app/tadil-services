@@ -1,3 +1,3 @@
 export * from './models';
 export * from './informations';
-export * from './services';
+export * from './alterations';

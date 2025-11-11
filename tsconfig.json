@@ -22,7 +22,7 @@
       "path": "./libs/infra/file-storage"
     },
     {
-      "path": "./libs/core/tadil-services"
+      "path": "./libs/core/tadil-alterations"
     }
   ]
 }
