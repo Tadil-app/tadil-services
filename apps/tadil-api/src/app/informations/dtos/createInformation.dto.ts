@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsNotEmpty, IsOptional } from 'class-validator';
 
-export class CreateAlterationDTO {
+export class CreateInformationDTO {
   @ApiProperty()
   @IsNotEmpty()
   englishName!: string;

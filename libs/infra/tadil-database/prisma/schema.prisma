@@ -41,7 +41,7 @@ model Model {
     @@map("models")
 }
 
-model Alteration {
+model Information {
     id          String  @id @default(uuid())
     englishName String
     arabicName  String
@@ -51,9 +51,9 @@ model Alteration {
     value       String?
     unit        String?
 
-    services Service[] @relation("services-alterations")
+    services Service[] @relation("services-informations")
 
-    @@map("alterations")
+    @@map("informations")
 }
 
 model Service {
@@ -65,8 +65,8 @@ model Service {
     bengaliName String
     price       Float
 
-    sections    Section[]    @relation("services-sections")
-    alterations Alteration[] @relation("services-alterations")
+    sections    Section[]     @relation("services-sections")
+    alterations Information[] @relation("services-informations")
 
     @@map("services")
 }

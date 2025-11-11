@@ -10,7 +10,7 @@ const swcJestConfig = JSON.parse(
 swcJestConfig.swcrc = false;
 
 export default {
-  displayName: 'tadil-alterations',
+  displayName: 'tadil-informations',
   preset: '../../../jest.preset.js',
   testEnvironment: 'node',
   transform: {
