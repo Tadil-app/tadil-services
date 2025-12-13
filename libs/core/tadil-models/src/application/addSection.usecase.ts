@@ -14,8 +14,8 @@ export class AddSectionUseCase {
   }
 
   async execute(addSectionCommand: AddSectionCommand): Promise<void> {
-    if (!addSectionCommand.modelId) {
-      throw new InvalidCommandException('Model ID is required');
+    if (!addSectionCommand.modelImageId) {
+      throw new InvalidCommandException('Model Image ID is required');
     }
     if (!addSectionCommand.englishName) {
       throw new InvalidCommandException('English name is required');
@@ -39,17 +39,17 @@ export class AddSectionUseCase {
       throw new InvalidCommandException('Coordinates are required');
     }
 
-    const model = await this._modelsRepository.getModelById(
-      addSectionCommand.modelId
+    const modelImage = await this._modelsRepository.getModelImageById(
+      addSectionCommand.modelImageId
     );
-    if (!model) {
+    if (!modelImage) {
       throw new NotFoundException('Model not found');
     }
-    
+
     try {
-      const nexSectionId = uuidv4();
+      const newSectionId = uuidv4();
       await this._modelsRepository.addSection({
-        id: nexSectionId,
+        id: newSectionId,
         ...addSectionCommand,
       });
     } catch (error: unknown) {
@@ -61,7 +61,7 @@ export class AddSectionUseCase {
 }
 
 export class AddSectionCommand {
-  readonly modelId: string;
+  readonly modelImageId: string;
   readonly englishName: string;
   readonly arabicName: string;
   readonly hindiName: string;
@@ -70,7 +70,7 @@ export class AddSectionCommand {
   readonly coordinates: Point[];
 
   constructor(
-    modelId: string,
+    modelImageId: string,
     englishName: string,
     arabicName: string,
     hindiName: string,
@@ -78,7 +78,7 @@ export class AddSectionCommand {
     bengaliName: string,
     coordinates: Point[]
   ) {
-    this.modelId = modelId;
+    this.modelImageId = modelImageId;
     this.englishName = englishName;
     this.arabicName = arabicName;
     this.hindiName = hindiName;

@@ -21,22 +21,32 @@ model Section {
     /// ![{x: number; y:number}]
     coordinates Json[]
 
-    modelId  String
-    models   Model        @relation(fields: [modelId], references: [id], onDelete: Cascade)
     services Alteration[] @relation("alterations-sections")
+    modelImageId  String
+    image    ModelImage   @relation(fields: [modelImageId], references: [id])
 
     @@map("sections")
 }
 
+model ModelImage {
+    id     String @id @default(uuid())
+    fileId String
+
+    modelId  String
+    model   Model     @relation(fields: [modelId], references: [id], onDelete: Cascade)
+    sections Section[]
+
+    @@map("models-images")
+}
+
 model Model {
-    id          String    @id @default(uuid())
-    imageFileId String
+    id          String       @id @default(uuid())
     englishName String
     arabicName  String
     urduName    String
     hindiName   String
     bengaliName String
-    sections    Section[]
+    images      ModelImage[]
 
     @@map("models")
 }

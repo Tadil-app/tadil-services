@@ -1,17 +1,23 @@
 export interface Model {
   id: string;
-  imageFileId: string;
   englishName: string;
   arabicName: string;
   hindiName: string;
   urduName: string;
   bengaliName: string;
+  images: ModelImage[];
+}
+
+export interface ModelImage {
+  id: string;
+  modelId: string;
+  fileId: string;
   sections: Section[];
 }
 
 export interface Section {
   id: string;
-  modelId: string;
+  modelImageId: string;
   englishName: string;
   arabicName: string;
   hindiName: string;

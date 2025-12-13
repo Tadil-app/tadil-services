@@ -1,13 +1,9 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { DisplaySectionDTO } from '.';
+import { DisplayModelImageDTO } from './displayModelImage.dto';
 
 export class DisplayModelDTO {
   @ApiProperty()
   id!: string;
-  @ApiProperty()
-  imageFileId!: string;
-  @ApiProperty()
-  imageBase64String!: string;
   @ApiProperty()
   englishName!: string;
   @ApiProperty()
@@ -18,6 +14,6 @@ export class DisplayModelDTO {
   urduName!: string;
   @ApiProperty()
   bengaliName!: string;
-  @ApiProperty({ type: () => DisplaySectionDTO, isArray: true })
-  sections!: DisplaySectionDTO[];
+  @ApiProperty({ type: () => DisplayModelImageDTO, isArray: true })
+  thumbNailImageBase64String?: string 
 }

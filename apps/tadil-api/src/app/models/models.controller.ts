@@ -12,6 +12,7 @@ import {
 } from '@nestjs/common';
 import { ApiConsumes, ApiOkResponse, ApiParam, ApiTags } from '@nestjs/swagger';
 import {
+  AddModelImageUseCase,
   AddSectionUseCase,
   CreateModelUseCase,
   DeleteModelUseCase,
@@ -22,15 +23,12 @@ import {
   AddSectionDTO,
   CreateModelDTO,
   DisplayModelDTO,
+  DisplayModelImageDTO,
   DisplaySectionDTO,
   UpdateModelDTO,
 } from './dtos';
-import { FileInterceptor } from '@nestjs/platform-express';
-import {
-  type FileStorageService,
-  NotFoundException,
-  ReadableFile,
-} from '@tadil-common';
+import { FilesInterceptor } from '@nestjs/platform-express';
+import { type FileStorageService, ReadableFile } from '@tadil-common';
 import {
   cleanupLocalFile,
   fileUploadLocalPath,
@@ -46,6 +44,7 @@ export class ModelsController {
     private readonly _createModelUseCase: CreateModelUseCase,
     private readonly _updateModelUseCase: UpdateModelUseCase,
     private readonly _deleteModelUseCase: DeleteModelUseCase,
+    private readonly _addModelImageUseCase: AddModelImageUseCase,
     private readonly _addSectionUseCase: AddSectionUseCase,
     private readonly _deleteSectionUseCase: DeleteSectionUseCase,
     @Inject('FileStorageService')
@@ -56,40 +55,60 @@ export class ModelsController {
   @ApiOkResponse({ type: DisplayModelDTO, isArray: true })
   async getModels(): Promise<DisplayModelDTO[]> {
     const models = await this._dataReader.queries.model.findMany({
-      include: { sections: true },
+      include: { images: { select: { fileId: true } } },
     });
-    const modelsWithImages = models.map(async (model) => {
-      const imageStream = await this._fileStorageService.downloadFile(
-        model.imageFileId
-      );
-      const imageBase64String = await streamToBase64(imageStream);
-      return {
-        ...model,
-        imageBase64String,
-      };
-    });
-    return await Promise.all(modelsWithImages);
+    const modelsWithThumbNails = await Promise.all(
+      models.map(async (model) => {
+        let thumbNailImageBase64String: string | undefined;
+        if (model.images.length > 0) {
+          const thumbNailImage = model.images[0];
+          const thumbNailImageStream =
+            await this._fileStorageService.downloadFile(thumbNailImage.fileId);
+          thumbNailImageBase64String = await streamToBase64(
+            thumbNailImageStream
+          );
+        }
+        return {
+          id: model.id,
+          englishName: model.englishName,
+          arabicName: model.arabicName,
+          hindiName: model.hindiName,
+          urduName: model.urduName,
+          bengaliName: model.bengaliName,
+          thumbNailImageBase64String,
+        };
+      })
+    );
+    return modelsWithThumbNails;
   }
 
   @Post('/create')
   @ApiConsumes('multipart/form-data')
-  @UseInterceptors(FileInterceptor('file', fileUploadLocalPath))
+  @UseInterceptors(FilesInterceptor('files', undefined, fileUploadLocalPath))
   async createModel(
-    @UploadedFile() file: Express.Multer.File,
+    @UploadedFile() files: Express.Multer.File[],
     @Body() model: CreateModelDTO
   ): Promise<void> {
     try {
-      const imageFile: ReadableFile = {
-        path: file.path,
-        mimetype: file.mimetype,
-        originalName: file.originalname,
-        size: file.size,
-      };
-
-      await this._createModelUseCase.execute({ ...model, imageFile });
-      return;
+      const newModelId = await this._createModelUseCase.execute(model);
+      await Promise.all(
+        files.map(async (file) => {
+          const imageFile: ReadableFile = {
+            path: file.path,
+            mimetype: file.mimetype,
+            originalName: file.originalname,
+            size: file.size,
+          };
+          await this._addModelImageUseCase.execute({
+            modelId: newModelId,
+            imageFile,
+          });
+        })
+      );
     } finally {
-      cleanupLocalFile(file.path);
+      files.forEach((file) => {
+        cleanupLocalFile(file.path);
+      });
     }
   }
 
@@ -115,13 +134,16 @@ export class ModelsController {
     return sections;
   }
 
-  @Post('/:id/add-section')
-  @ApiParam({ name: 'id', type: 'string' })
+  @Post('/:modelImageId/add-section')
+  @ApiParam({ name: 'modelImageId', type: 'string' })
   async addSection(
-    @Param('id') id: string,
+    @Param('modelImageId') modelImageId: string,
     @Body() section: AddSectionDTO
   ): Promise<void> {
-    await this._addSectionUseCase.execute({ ...section, modelId: id });
+    await this._addSectionUseCase.execute({
+      ...section,
+      modelImageId: modelImageId,
+    });
   }
 
   @Delete('/delete-section/:id')
@@ -130,23 +152,38 @@ export class ModelsController {
     await this._deleteSectionUseCase.execute({ sectionId: id });
   }
 
-  @Get('/:id')
+  @Get('/:id/images')
   @ApiParam({ name: 'id', type: 'string' })
-  @ApiOkResponse({ type: DisplayModelDTO, isArray: false })
-  async getModelById(@Param('id') id: string): Promise<DisplayModelDTO> {
-    const model = await this._dataReader.queries.model.findUnique({
-      where: { id },
+  async getModelImages(
+    @Param('id') id: string
+  ): Promise<DisplayModelImageDTO[]> {
+    const modelImages = await this._dataReader.queries.modelImage.findMany({
+      where: { modelId: id },
       include: { sections: true },
     });
 
-    if (!model) throw new NotFoundException(`Model with id ${id} not found`);
-    const imageStream = await this._fileStorageService.downloadFile(
-      model.imageFileId
+    const images = await Promise.all(
+      modelImages.map(async (image) => {
+        const imageStream = await this._fileStorageService.downloadFile(
+          image.fileId
+        );
+        const imageBase64String = await streamToBase64(imageStream);
+        return {
+          id: image.id,
+          fileId: image.fileId,
+          imageBase64String,
+          sections: image.sections.map((section) => ({
+            id: section.id,
+            englishName: section.englishName,
+            arabicName: section.arabicName,
+            hindiName: section.hindiName,
+            urduName: section.urduName,
+            bengaliName: section.bengaliName,
+            coordinates: section.coordinates,
+          })),
+        };
+      })
     );
-    const imageBase64String = await streamToBase64(imageStream);
-    return {
-      ...model,
-      imageBase64String,
-    };
+    return images;
   }
 }

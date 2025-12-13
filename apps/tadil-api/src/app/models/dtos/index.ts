@@ -5,6 +5,7 @@ export * from './createModel.dto';
 export * from './updateModel.dto';
 export * from './displaySection.dto';
 export * from './addSection.dto';
+export * from './displayModelImage.dto';
 
 export class Point {
   @ApiProperty()

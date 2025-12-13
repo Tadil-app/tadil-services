@@ -8,6 +8,8 @@ import {
   AddSectionUseCase,
   DeleteSectionUseCase,
   UpdateModelUseCase,
+  AddModelImageUseCase,
+  DeleteModelImageUseCase,
 } from '@tadil-models';
 
 const ModelsRepositoryProvider: Provider<ModelsRepository> = {
@@ -19,14 +21,11 @@ const ModelsRepositoryProvider: Provider<ModelsRepository> = {
 
 const CreateModelUseCaseProvider: Provider<CreateModelUseCase> = {
   provide: CreateModelUseCase,
-  useFactory: (
-    modelsRepository: ModelsRepository,
-    fileStorageService: FileStorageService
-  ) => {
-    return new CreateModelUseCase(modelsRepository, fileStorageService);
+  useFactory: (modelsRepository: ModelsRepository) => {
+    return new CreateModelUseCase(modelsRepository);
   },
   scope: Scope.REQUEST,
-  inject: ['ModelsRepository', 'FileStorageService'],
+  inject: ['ModelsRepository'],
 };
 
 const UpdateModelUseCaseProvider: Provider<UpdateModelUseCase> = {
@@ -45,6 +44,30 @@ const DeleteModelUseCaseProvider: Provider<DeleteModelUseCase> = {
     fileStorageService: FileStorageService
   ) => {
     return new DeleteModelUseCase(modelsRepository, fileStorageService);
+  },
+  scope: Scope.REQUEST,
+  inject: ['ModelsRepository', 'FileStorageService'],
+};
+
+const AddModelImageUseCaseProvider: Provider<AddModelImageUseCase> = {
+  provide: AddModelImageUseCase,
+  useFactory: (
+    modelsRepository: ModelsRepository,
+    fileStorageService: FileStorageService
+  ) => {
+    return new AddModelImageUseCase(modelsRepository, fileStorageService);
+  },
+  scope: Scope.REQUEST,
+  inject: ['ModelsRepository', 'FileStorageService'],
+};
+
+const DeleteModelImageUseCaseProvider: Provider<DeleteModelImageUseCase> = {
+  provide: DeleteModelImageUseCase,
+  useFactory: (
+    modelsRepository: ModelsRepository,
+    fileStorageService: FileStorageService
+  ) => {
+    return new DeleteModelImageUseCase(modelsRepository, fileStorageService);
   },
   scope: Scope.REQUEST,
   inject: ['ModelsRepository', 'FileStorageService'],
@@ -72,6 +95,8 @@ export {
   ModelsRepositoryProvider,
   CreateModelUseCaseProvider,
   DeleteModelUseCaseProvider,
+  AddModelImageUseCaseProvider,
+  DeleteModelImageUseCaseProvider,
   AddSectionUseCaseProvider,
   DeleteSectionUseCaseProvider,
   UpdateModelUseCaseProvider,

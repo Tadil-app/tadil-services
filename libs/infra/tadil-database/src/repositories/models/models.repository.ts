@@ -1,4 +1,4 @@
-import { Model, ModelsRepository, Section } from '@tadil-models';
+import { Model, ModelImage, ModelsRepository, Section } from '@tadil-models';
 import { DbClient } from '../../dbClient';
 
 export class PrismaModelsRepository implements ModelsRepository {
@@ -7,18 +7,20 @@ export class PrismaModelsRepository implements ModelsRepository {
   async getModelById(id: string): Promise<Model | undefined> {
     const model = await this._db.model.findUnique({
       where: { id },
-      include: { sections: true },
+      include: { images: true },
     });
     if (!model) return undefined;
 
-    return model;
+    return {
+      ...model,
+      images: model.images.map((image) => ({ ...image, sections: [] })),
+    };
   }
 
   async createModel(model: Model): Promise<void> {
     await this._db.model.create({
       data: {
         id: model.id,
-        imageFileId: model.imageFileId,
         englishName: model.englishName,
         arabicName: model.arabicName,
         hindiName: model.hindiName,
@@ -32,7 +34,6 @@ export class PrismaModelsRepository implements ModelsRepository {
     await this._db.model.update({
       where: { id: model.id },
       data: {
-        imageFileId: model.imageFileId,
         englishName: model.englishName,
         arabicName: model.arabicName,
         hindiName: model.hindiName,
@@ -44,6 +45,32 @@ export class PrismaModelsRepository implements ModelsRepository {
 
   async deleteModel(id: string): Promise<void> {
     await this._db.model.delete({
+      where: { id },
+    });
+  }
+
+  async getModelImageById(
+    id: string
+  ): Promise<Omit<ModelImage, 'sections'> | undefined> {
+    const modelImage = await this._db.modelImage.findUnique({
+      where: { id },
+    });
+    if (!modelImage) return undefined;
+    return modelImage;
+  }
+
+  async addModelImage(modelImage: ModelImage): Promise<void> {
+    await this._db.modelImage.create({
+      data: {
+        id: modelImage.id,
+        modelId: modelImage.modelId,
+        fileId: modelImage.fileId,
+      },
+    });
+  }
+
+  async deleteModelImage(id: string): Promise<void> {
+    await this._db.modelImage.delete({
       where: { id },
     });
   }
@@ -61,7 +88,7 @@ export class PrismaModelsRepository implements ModelsRepository {
     await this._db.section.create({
       data: {
         id: section.id,
-        modelId: section.modelId,
+        modelImageId: section.modelImageId,
         englishName: section.englishName,
         arabicName: section.arabicName,
         hindiName: section.hindiName,

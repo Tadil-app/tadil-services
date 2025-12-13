@@ -1,7 +1,9 @@
 import { Module } from '@nestjs/common';
 import {
+  AddModelImageUseCaseProvider,
   AddSectionUseCaseProvider,
   CreateModelUseCaseProvider,
+  DeleteModelImageUseCaseProvider,
   DeleteModelUseCaseProvider,
   DeleteSectionUseCaseProvider,
   ModelsRepositoryProvider,
@@ -17,6 +19,8 @@ import { CommonModule } from '../common/common.module';
     ModelsRepositoryProvider,
     CreateModelUseCaseProvider,
     DeleteModelUseCaseProvider,
+    AddModelImageUseCaseProvider,
+    DeleteModelImageUseCaseProvider,
     AddSectionUseCaseProvider,
     DeleteSectionUseCaseProvider,
     UpdateModelUseCaseProvider,
