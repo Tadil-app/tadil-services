@@ -15,6 +15,7 @@ import {
   AddModelImageUseCase,
   AddSectionUseCase,
   CreateModelUseCase,
+  DeleteModelImageUseCase,
   DeleteModelUseCase,
   DeleteSectionUseCase,
   UpdateModelUseCase,
@@ -45,6 +46,7 @@ export class ModelsController {
     private readonly _updateModelUseCase: UpdateModelUseCase,
     private readonly _deleteModelUseCase: DeleteModelUseCase,
     private readonly _addModelImageUseCase: AddModelImageUseCase,
+    private readonly _deleteModelImageUseCase: DeleteModelImageUseCase,
     private readonly _addSectionUseCase: AddSectionUseCase,
     private readonly _deleteSectionUseCase: DeleteSectionUseCase,
     @Inject('FileStorageService')
@@ -134,19 +136,25 @@ export class ModelsController {
     return sections;
   }
 
-  @Post('/:modelImageId/add-section')
-  @ApiParam({ name: 'modelImageId', type: 'string' })
+  @Post('/images/:id/add-section')
+  @ApiParam({ name: 'id', type: 'string' })
   async addSection(
-    @Param('modelImageId') modelImageId: string,
+    @Param('id') id: string,
     @Body() section: AddSectionDTO
   ): Promise<void> {
     await this._addSectionUseCase.execute({
       ...section,
-      modelImageId: modelImageId,
+      modelImageId: id,
     });
   }
 
-  @Delete('/delete-section/:id')
+  @Delete('/delete-image/:id')
+  @ApiParam({ name: 'id', type: 'string' })
+  async deleteModelImage(@Param('id') id: string): Promise<void> {
+    await this._deleteModelImageUseCase.execute({ imageId: id });
+  }
+
+  @Delete('/image/delete-section/:id')
   @ApiParam({ name: 'id', type: 'string' })
   async deleteSection(@Param('id') id: string): Promise<void> {
     await this._deleteSectionUseCase.execute({ sectionId: id });
@@ -154,6 +162,7 @@ export class ModelsController {
 
   @Get('/:id/images')
   @ApiParam({ name: 'id', type: 'string' })
+  @ApiOkResponse({ type: DisplayModelImageDTO, isArray: true })
   async getModelImages(
     @Param('id') id: string
   ): Promise<DisplayModelImageDTO[]> {
