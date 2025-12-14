@@ -21,9 +21,9 @@ model Section {
     /// ![{x: number; y:number}]
     coordinates Json[]
 
-    services Alteration[] @relation("alterations-sections")
-    modelImageId  String
-    image    ModelImage   @relation(fields: [modelImageId], references: [id])
+    services     Alteration[] @relation("alterations-sections")
+    modelImageId String
+    image        ModelImage   @relation(fields: [modelImageId], references: [id], onDelete: Cascade)
 
     @@map("sections")
 }
@@ -33,7 +33,7 @@ model ModelImage {
     fileId String
 
     modelId  String
-    model   Model     @relation(fields: [modelId], references: [id], onDelete: Cascade)
+    model    Model     @relation(fields: [modelId], references: [id], onDelete: Cascade)
     sections Section[]
 
     @@map("models-images")
