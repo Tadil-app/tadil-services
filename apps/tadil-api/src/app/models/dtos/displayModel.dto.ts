@@ -1,5 +1,4 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { DisplayModelImageDTO } from './displayModelImage.dto';
 
 export class DisplayModelDTO {
   @ApiProperty()
@@ -14,6 +13,6 @@ export class DisplayModelDTO {
   urduName!: string;
   @ApiProperty()
   bengaliName!: string;
-  @ApiProperty({ type: () => DisplayModelImageDTO, isArray: true })
+  @ApiProperty()
   thumbNailImageBase64String?: string 
 }

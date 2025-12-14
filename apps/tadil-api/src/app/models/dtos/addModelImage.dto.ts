@@ -1,8 +1,14 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { IsNotEmpty } from 'class-validator';
 
 export class AddModelImageDTO {
-  @ApiProperty()
-  id!: string;
-  @ApiProperty({ type: 'string', format: 'binary' })
-  imageFile!: Express.Multer.File;
+  @ApiProperty({
+    type: 'array',
+    items: {
+      type: 'string',
+      format: 'binary',
+    }
+  })
+  @IsNotEmpty()
+  files!: Express.Multer.File[];
 }

@@ -1,5 +1,4 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { Point } from '.';
 
 export class DisplaySectionDTO {
   @ApiProperty()
@@ -16,4 +15,11 @@ export class DisplaySectionDTO {
   bengaliName!: string;
   @ApiProperty({ type: () => Point, isArray: true })
   coordinates!: Point[];
+}
+
+export class Point {
+  @ApiProperty()
+  x!: number;
+  @ApiProperty()
+  y!: number;
 }
