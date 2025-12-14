@@ -43,7 +43,7 @@ export class AddSectionUseCase {
       addSectionCommand.modelImageId
     );
     if (!modelImage) {
-      throw new NotFoundException('Model not found');
+      throw new NotFoundException('Model Image not found');
     }
 
     try {
