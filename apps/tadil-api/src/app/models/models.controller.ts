@@ -100,7 +100,6 @@ export class ModelsController {
   ): Promise<void> {
     try {
       const newModelId = await this._createModelUseCase.execute(model);
-      console.log(files);
       await Promise.all(
         files.map(async (file) => {
           const imageFile: ReadableFile = {
