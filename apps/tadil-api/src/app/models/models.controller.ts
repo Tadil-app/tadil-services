@@ -5,12 +5,18 @@ import {
   Get,
   Inject,
   Param,
+  Patch,
   Post,
-  Put,
-  UploadedFile,
+  UploadedFiles,
   UseInterceptors,
 } from '@nestjs/common';
-import { ApiConsumes, ApiOkResponse, ApiParam, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBody,
+  ApiConsumes,
+  ApiOkResponse,
+  ApiParam,
+  ApiTags,
+} from '@nestjs/swagger';
 import {
   AddModelImageUseCase,
   AddSectionUseCase,
@@ -21,6 +27,7 @@ import {
   UpdateModelUseCase,
 } from '@tadil-models';
 import {
+  AddModelImageDTO,
   AddSectionDTO,
   CreateModelDTO,
   DisplayModelDTO,
@@ -88,11 +95,12 @@ export class ModelsController {
   @ApiConsumes('multipart/form-data')
   @UseInterceptors(FilesInterceptor('files', undefined, fileUploadLocalPath))
   async createModel(
-    @UploadedFile() files: Express.Multer.File[],
+    @UploadedFiles() files: Express.Multer.File[],
     @Body() model: CreateModelDTO
   ): Promise<void> {
     try {
       const newModelId = await this._createModelUseCase.execute(model);
+      console.log(files);
       await Promise.all(
         files.map(async (file) => {
           const imageFile: ReadableFile = {
@@ -114,29 +122,7 @@ export class ModelsController {
     }
   }
 
-  @Put('/update/:id')
-  @ApiParam({ name: 'id', type: 'string' })
-  async updateModel(
-    @Param('id') id: string,
-    @Body() model: UpdateModelDTO
-  ): Promise<void> {
-    await this._updateModelUseCase.execute({ ...model, id });
-  }
-
-  @Delete('/delete/:id')
-  @ApiParam({ name: 'id', type: 'string' })
-  async deleteModel(@Param('id') id: string): Promise<void> {
-    await this._deleteModelUseCase.execute({ modelId: id });
-  }
-
-  @Get('/sections')
-  @ApiOkResponse({ type: DisplaySectionDTO, isArray: true })
-  async getSections(): Promise<DisplaySectionDTO[]> {
-    const sections = await this._dataReader.queries.section.findMany();
-    return sections;
-  }
-
-  @Post('/images/:id/add-section')
+  @Post('/images/:id/sections/add')
   @ApiParam({ name: 'id', type: 'string' })
   async addSection(
     @Param('id') id: string,
@@ -148,13 +134,20 @@ export class ModelsController {
     });
   }
 
-  @Delete('/delete-image/:id')
+  @Delete('/images/:id/delete')
   @ApiParam({ name: 'id', type: 'string' })
   async deleteModelImage(@Param('id') id: string): Promise<void> {
     await this._deleteModelImageUseCase.execute({ imageId: id });
   }
 
-  @Delete('/image/delete-section/:id')
+  @Get('/images/sections')
+  @ApiOkResponse({ type: DisplaySectionDTO, isArray: true })
+  async getSections(): Promise<DisplaySectionDTO[]> {
+    const sections = await this._dataReader.queries.section.findMany();
+    return sections;
+  }
+
+  @Delete('/images/sections/:id/delete')
   @ApiParam({ name: 'id', type: 'string' })
   async deleteSection(@Param('id') id: string): Promise<void> {
     await this._deleteSectionUseCase.execute({ sectionId: id });
@@ -194,5 +187,51 @@ export class ModelsController {
       })
     );
     return images;
+  }
+
+  @Post('/:id/images/add')
+  @ApiParam({ name: 'id', type: 'string' })
+  @ApiConsumes('multipart/form-data')
+  @ApiBody({ type: AddModelImageDTO })
+  @UseInterceptors(FilesInterceptor('files', undefined, fileUploadLocalPath))
+  async addModelImage(
+    @Param('id') id: string,
+    @UploadedFiles() files: Express.Multer.File[]
+  ): Promise<void> {
+    try {
+      await Promise.all(
+        files.map(async (file) => {
+          const imageFile: ReadableFile = {
+            path: file.path,
+            mimetype: file.mimetype,
+            originalName: file.originalname,
+            size: file.size,
+          };
+          await this._addModelImageUseCase.execute({
+            modelId: id,
+            imageFile,
+          });
+        })
+      );
+    } finally {
+      files.forEach((file) => {
+        cleanupLocalFile(file.path);
+      });
+    }
+  }
+
+  @Patch('/:id/update')
+  @ApiParam({ name: 'id', type: 'string' })
+  async updateModel(
+    @Param('id') id: string,
+    @Body() model: UpdateModelDTO
+  ): Promise<void> {
+    await this._updateModelUseCase.execute({ ...model, id });
+  }
+
+  @Delete('/:id/delete')
+  @ApiParam({ name: 'id', type: 'string' })
+  async deleteModel(@Param('id') id: string): Promise<void> {
+    await this._deleteModelUseCase.execute({ modelId: id });
   }
 }
