@@ -84,6 +84,7 @@ export class ModelsController {
           hindiName: model.hindiName,
           urduName: model.urduName,
           bengaliName: model.bengaliName,
+          category: model.category ?? undefined,
           thumbNailImageBase64String,
         };
       })

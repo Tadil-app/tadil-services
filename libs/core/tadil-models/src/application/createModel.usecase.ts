@@ -38,7 +38,7 @@ export class CreateModelUseCase {
         hindiName: createModelCommand.hindiName,
         urduName: createModelCommand.urduName,
         bengaliName: createModelCommand.bengaliName,
-        images: [],
+        category: createModelCommand.category,
       });
 
       return newModelId;
@@ -56,17 +56,20 @@ export class CreateModelCommand {
   readonly hindiName: string;
   readonly urduName: string;
   readonly bengaliName: string;
+  readonly category?: string;
   constructor(
     englishName: string,
     arabicName: string,
     hindiName: string,
     urduName: string,
-    bengaliName: string
+    bengaliName: string,
+    category?: string
   ) {
     this.englishName = englishName;
     this.arabicName = arabicName;
     this.hindiName = hindiName;
     this.urduName = urduName;
     this.bengaliName = bengaliName;
+    this.category = category;
   }
 }

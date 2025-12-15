@@ -13,6 +13,7 @@ export class PrismaModelsRepository implements ModelsRepository {
 
     return {
       ...model,
+      category: model.category ?? undefined,
       images: model.images.map((image) => ({ ...image, sections: [] })),
     };
   }
@@ -26,6 +27,7 @@ export class PrismaModelsRepository implements ModelsRepository {
         hindiName: model.hindiName,
         urduName: model.urduName,
         bengaliName: model.bengaliName,
+        category: model.category,
       },
     });
   }
@@ -39,6 +41,7 @@ export class PrismaModelsRepository implements ModelsRepository {
         hindiName: model.hindiName,
         urduName: model.urduName,
         bengaliName: model.bengaliName,
+        category: model.category,
       },
     });
   }

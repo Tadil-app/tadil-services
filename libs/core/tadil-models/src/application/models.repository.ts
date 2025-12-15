@@ -2,7 +2,7 @@ import { Model, ModelImage, Section } from './model.model';
 
 export interface ModelsRepository {
   getModelById(id: string): Promise<Model | undefined>;
-  createModel(model: Model): Promise<void>;
+  createModel(model: Omit<Model, 'images'>): Promise<void>;
   updateModel(model: Omit<Model, 'images'>): Promise<void>;
   deleteModel(id: string): Promise<void>;
   getModelImageById(

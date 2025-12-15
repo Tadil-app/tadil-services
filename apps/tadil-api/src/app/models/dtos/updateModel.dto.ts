@@ -17,4 +17,6 @@ export class UpdateModelDTO {
   @ApiProperty()
   @IsNotEmpty()
   bengaliName!: string;
+  @ApiProperty()
+  category?: string;
 }

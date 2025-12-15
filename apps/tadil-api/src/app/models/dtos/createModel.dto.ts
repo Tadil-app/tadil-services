@@ -17,13 +17,14 @@ export class CreateModelDTO {
   @ApiProperty()
   @IsNotEmpty()
   bengaliName!: string;
+  @ApiProperty()
+  category?: string;
   @ApiProperty({
     type: 'array',
     items: {
       type: 'string',
       format: 'binary',
-    }
+    },
   })
-  @IsNotEmpty()
   files?: Express.Multer.File[];
 }

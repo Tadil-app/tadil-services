@@ -46,6 +46,7 @@ model Model {
     urduName    String
     hindiName   String
     bengaliName String
+    category    String?
     images      ModelImage[]
 
     @@map("models")

@@ -5,6 +5,7 @@ export interface Model {
   hindiName: string;
   urduName: string;
   bengaliName: string;
+  category?: string;
   images: ModelImage[];
 }
 

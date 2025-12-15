@@ -14,5 +14,7 @@ export class DisplayModelDTO {
   @ApiProperty()
   bengaliName!: string;
   @ApiProperty()
-  thumbNailImageBase64String?: string 
+  category?: string;
+  @ApiProperty()
+  thumbNailImageBase64String?: string;
 }

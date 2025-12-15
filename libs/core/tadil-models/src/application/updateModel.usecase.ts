@@ -48,6 +48,7 @@ export class UpdateModelUseCase {
           hindiName: updateModelCommand.hindiName,
           urduName: updateModelCommand.urduName,
           bengaliName: updateModelCommand.bengaliName,
+          category: updateModelCommand.category,
         });
       } catch (error: unknown) {
         if (error instanceof Error)
@@ -69,13 +70,15 @@ export class UpdateModelCommand {
   readonly hindiName: string;
   readonly urduName: string;
   readonly bengaliName: string;
+  readonly category?: string;
   constructor(
     id: string,
     englishName: string,
     arabicName: string,
     hindiName: string,
     urduName: string,
-    bengaliName: string
+    bengaliName: string,
+    category?: string
   ) {
     this.id = id;
     this.englishName = englishName;
@@ -83,5 +86,6 @@ export class UpdateModelCommand {
     this.hindiName = hindiName;
     this.urduName = urduName;
     this.bengaliName = bengaliName;
+    this.category = category;
   }
 }
