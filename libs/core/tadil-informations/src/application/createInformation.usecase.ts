@@ -63,7 +63,6 @@ export class CreateInformationCommand {
     hindiName: string,
     urduName: string,
     bengaliName: string,
-    value?: string,
     unit?: string
   ) {
     this.englishName = englishName;

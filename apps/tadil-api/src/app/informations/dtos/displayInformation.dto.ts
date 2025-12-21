@@ -22,8 +22,5 @@ export class DisplayInformationDTO {
   bengaliName!: string;
   @ApiProperty()
   @IsOptional()
-  value?: string;
-  @ApiProperty()
-  @IsOptional()
   unit?: string;
 }

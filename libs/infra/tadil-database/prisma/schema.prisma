@@ -59,7 +59,6 @@ model Information {
     urduName    String
     hindiName   String
     bengaliName String
-    value       String?
     unit        String?
 
     services Alteration[] @relation("alterations-informations")

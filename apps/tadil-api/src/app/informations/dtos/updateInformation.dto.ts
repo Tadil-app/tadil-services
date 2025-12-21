@@ -19,8 +19,5 @@ export class UpdateInformationDTO {
   bengaliName!: string;
   @ApiProperty()
   @IsOptional()
-  value?: string;
-  @ApiProperty()
-  @IsOptional()
   unit?: string;
 }

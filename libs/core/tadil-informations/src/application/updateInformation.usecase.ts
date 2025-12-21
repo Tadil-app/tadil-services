@@ -49,7 +49,6 @@ export class UpdateInformationUseCase {
         hindiName: updateInformationCommand.hindiName,
         urduName: updateInformationCommand.urduName,
         bengaliName: updateInformationCommand.bengaliName,
-        value: updateInformationCommand.value,
         unit: updateInformationCommand.unit,
       });
     } catch (error: unknown) {
@@ -67,7 +66,6 @@ export class UpdateInformationCommand {
   readonly hindiName: string;
   readonly urduName: string;
   readonly bengaliName: string;
-  readonly value?: string;
   readonly unit?: string;
   constructor(
     id: string,
@@ -76,7 +74,6 @@ export class UpdateInformationCommand {
     hindiName: string,
     urduName: string,
     bengaliName: string,
-    value?: string,
     unit?: string
   ) {
     this.id = id;
@@ -85,7 +82,6 @@ export class UpdateInformationCommand {
     this.hindiName = hindiName;
     this.urduName = urduName;
     this.bengaliName = bengaliName;
-    this.value = value;
     this.unit = unit;
   }
 }
