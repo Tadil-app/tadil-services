@@ -3,8 +3,10 @@
   "version": "0.0.0",
   "license": "MIT",
   "scripts": {
-    "start": "nx serve",
-    "build": "nx build",
+    "start-admin": "nx serve tadil-api",
+    "start-mobile": "nx serve tadil-mobile-api",
+    "build-admin": "nx build tadil-api",
+    "build-mobile": "nx build tadil-mobile-api",
     "test": "nx test",
     "db-generate": "npm run prisma-generate -w tadil-database",
     "db-migrate-dev": "npm run prisma-migrate-dev -w tadil-database",
@@ -65,6 +67,7 @@
     "libs/core/tadil-informations",
     "libs/core/tadil-models",
     "libs/infra/file-storage",
-    "libs/core/tadil-alterations"
+    "libs/core/tadil-alterations",
+    "apps/tadil-mobile-api"
   ]
 }

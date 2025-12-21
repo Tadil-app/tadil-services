@@ -23,6 +23,9 @@
     },
     {
       "path": "./libs/core/tadil-alterations"
+    },
+    {
+      "path": "./apps/tadil-mobile-api"
     }
   ]
 }
