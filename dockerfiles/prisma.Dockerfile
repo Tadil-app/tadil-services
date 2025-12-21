@@ -3,6 +3,7 @@ RUN apk add --no-cache libc6-compat
 WORKDIR /app
 
 # Only copy what is needed for migrations
+COPY package.json package-lock.json* ./
 COPY libs/infra/tadil-database/package.json ./libs/infra/tadil-database/
 RUN npm install --legacy-peer-deps
 
