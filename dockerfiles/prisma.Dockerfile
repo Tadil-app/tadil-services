@@ -14,4 +14,4 @@ COPY libs/infra/tadil-database/prisma ./libs/infra/tadil-database/prisma
 ENV NODE_OPTIONS="--dns-result-order=ipv4first"
 
 # Added a 5s sleep to ensure the internal network is ready before Prisma attempts to connect
-CMD ["sh", "-c", "sleep 5 && npx prisma migrate deploy"]
+CMD ["sh", "-c", "sleep 5 && npm run prisma-migrate-deploy -w tadil-database"]
