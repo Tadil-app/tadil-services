@@ -13,7 +13,7 @@ export enum ModelCategory {
   ALL = 'all',
   MEN = 'men',
   WOMEN = 'women',
-  kids = 'kids',
+  KIDS = 'kids',
 }
 
 export interface ModelImage {
