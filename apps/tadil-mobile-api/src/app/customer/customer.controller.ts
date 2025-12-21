@@ -1,5 +1,5 @@
 import { Controller, Get, Inject, Param, Query, Res } from '@nestjs/common';
-import { ApiOkResponse, ApiParam, ApiTags } from '@nestjs/swagger';
+import { ApiOkResponse, ApiParam, ApiQuery, ApiTags } from '@nestjs/swagger';
 import { type FileStorageService } from '@tadil-common';
 import { DataReader } from '@tadil-database';
 import { type Response } from 'express';
@@ -21,6 +21,12 @@ export class CustomerController {
 
   @Get('models')
   @ApiOkResponse({ type: DisplayModelDTO, isArray: true })
+  @ApiQuery({
+    name: 'category',
+    required: false,
+    enum: ModelCategory,
+    description: 'Filter models by category',
+  })
   async getModels(
     @Query('category') category?: ModelCategory
   ): Promise<DisplayModelDTO[]> {
