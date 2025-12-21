@@ -40,13 +40,13 @@ model ModelImage {
 }
 
 model Model {
-    id          String       @id @default(uuid())
+    id          String        @id @default(uuid())
     englishName String
     arabicName  String
     urduName    String
     hindiName   String
     bengaliName String
-    category    String?
+    category    ModelCategory @default(all)
     images      ModelImage[]
 
     @@map("models")
@@ -79,4 +79,11 @@ model Alteration {
     informations Information[] @relation("alterations-informations")
 
     @@map("alterations")
+}
+
+enum ModelCategory {
+    all
+    men
+    women
+    kids
 }

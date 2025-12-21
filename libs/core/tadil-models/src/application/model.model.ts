@@ -5,8 +5,15 @@ export interface Model {
   hindiName: string;
   urduName: string;
   bengaliName: string;
-  category?: string;
+  category: ModelCategory;
   images: ModelImage[];
+}
+
+export enum ModelCategory {
+  ALL = 'all',
+  MEN = 'men',
+  WOMEN = 'women',
+  kids = 'kids',
 }
 
 export interface ModelImage {

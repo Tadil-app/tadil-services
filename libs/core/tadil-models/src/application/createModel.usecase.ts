@@ -4,6 +4,7 @@ import {
   InvalidCommandException,
 } from '@tadil-common';
 import { v4 as uuidv4 } from 'uuid';
+import { ModelCategory } from './model.model';
 
 export class CreateModelUseCase {
   private _modelsRepository: ModelsRepository;
@@ -27,6 +28,9 @@ export class CreateModelUseCase {
     }
     if (!createModelCommand.bengaliName) {
       throw new InvalidCommandException('Model Bengali Name is required');
+    }
+    if (!createModelCommand.category) {
+      throw new InvalidCommandException('Model Category is required');
     }
 
     try {
@@ -56,14 +60,14 @@ export class CreateModelCommand {
   readonly hindiName: string;
   readonly urduName: string;
   readonly bengaliName: string;
-  readonly category?: string;
+  readonly category: ModelCategory;
   constructor(
     englishName: string,
     arabicName: string,
     hindiName: string,
     urduName: string,
     bengaliName: string,
-    category?: string
+    category: ModelCategory
   ) {
     this.englishName = englishName;
     this.arabicName = arabicName;

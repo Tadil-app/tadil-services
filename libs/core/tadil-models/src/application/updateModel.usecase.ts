@@ -1,3 +1,4 @@
+import { ModelCategory } from './model.model';
 import { ModelsRepository } from './models.repository';
 import {
   InfrastructureException,
@@ -30,6 +31,9 @@ export class UpdateModelUseCase {
     }
     if (!updateModelCommand.bengaliName) {
       throw new InvalidCommandException('Model Bengali Name is required');
+    }
+    if (!updateModelCommand.category) {
+      throw new InvalidCommandException('Model Category is required');
     }
 
     const model = await this._modelsRepository.getModelById(
@@ -70,7 +74,7 @@ export class UpdateModelCommand {
   readonly hindiName: string;
   readonly urduName: string;
   readonly bengaliName: string;
-  readonly category?: string;
+  readonly category: ModelCategory;
   constructor(
     id: string,
     englishName: string,
@@ -78,7 +82,7 @@ export class UpdateModelCommand {
     hindiName: string,
     urduName: string,
     bengaliName: string,
-    category?: string
+    category: ModelCategory
   ) {
     this.id = id;
     this.englishName = englishName;

@@ -1,4 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { ModelCategory } from '@tadil-models';
 import { IsNotEmpty } from 'class-validator';
 
 export class CreateModelDTO {
@@ -18,7 +19,8 @@ export class CreateModelDTO {
   @IsNotEmpty()
   bengaliName!: string;
   @ApiProperty()
-  category?: string;
+  @IsNotEmpty()
+  category!: ModelCategory;
   @ApiProperty({
     type: 'array',
     items: {
