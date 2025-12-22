@@ -22,7 +22,12 @@ RUN apk add --no-cache libc6-compat
 WORKDIR /app
 
 COPY package.json package-lock.json* ./
+COPY libs/infra/tadil-database/package.json libs/infra/tadil-database/
+COPY libs/infra/file-storage/package.json libs/infra/file-storage/
+
 RUN npm install --legacy-peer-deps --omit=dev
+RUN cd libs/infra/tadil-database && npm install --legacy-peer-deps --omit=dev
+RUN cd libs/infra/file-storage && npm install --legacy-peer-deps --omit=dev
 
 COPY --from=builder /app/dist/apps/tadil-api ./dist
 COPY --from=builder /app/node_modules/.prisma ./node_modules/.prisma
