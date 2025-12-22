@@ -1,4 +1,4 @@
-FROM node:25-alpine
+FROM node:25-alpine AS builder
 RUN apk add --no-cache libc6-compat
 WORKDIR /app
 
@@ -13,8 +13,21 @@ RUN cd libs/infra/file-storage && npm install --legacy-peer-deps
 
 COPY . .
 
-RUN npm run db-generate
+RUN npx prisma generate --schema=./libs/infra/tadil-database/prisma/schema.prisma
 RUN npx nx build tadil-mobile-api --prod
+
+
+FROM node:25-alpine
+RUN apk add --no-cache libc6-compat
+WORKDIR /app
+
+COPY package.json package-lock.json* ./
+RUN npm install --legacy-peer-deps --omit=dev
+
+COPY --from=builder /app/dist/apps/tadil-mobile-api ./dist
+COPY --from=builder /app/node_modules/.prisma ./node_modules/.prisma
+COPY --from=builder /app/node_modules/@prisma ./node_modules/@prisma
+
 
 ENV NODE_ENV=production
 ENV PORT=4445
@@ -22,5 +35,5 @@ ENV NODE_OPTIONS="--dns-result-order=ipv4first"
 
 EXPOSE 4445
 
-CMD ["node", "dist/apps/tadil-mobile-api/main.js"]
+CMD ["node", "dist/main.js"]
 
