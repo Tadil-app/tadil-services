@@ -2,7 +2,7 @@ FROM node:25-alpine
 RUN apk add --no-cache libc6-compat
 WORKDIR /app
 
-COPY libs/infra/tadil-database/package.json ./libs/infra/tadil-database/
+COPY libs/infra/tadil-database/package.json .
 RUN npm install --legacy-peer-deps
 
 COPY libs/infra/tadil-database/prisma ./libs/infra/tadil-database/prisma
