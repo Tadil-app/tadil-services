@@ -47,7 +47,7 @@ export class CustomerController {
         bengaliName: model.bengaliName,
         category: model.category as ModelCategory,
         thumbnailImageUrl: thumbnailImage
-          ? `/api/customer/files/${thumbnailImage.fileId}`
+          ? `${process.env.Tadil_MOBILE_API}/api/customer/files/${thumbnailImage.fileId}`
           : undefined,
       };
     });
