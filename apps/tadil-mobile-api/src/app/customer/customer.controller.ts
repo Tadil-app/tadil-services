@@ -68,7 +68,7 @@ export class CustomerController {
     const images = modelImages.map((image) => {
       return {
         id: image.id,
-        imageUrl: `/api/customer/files/${image.fileId}`,
+        imageUrl: `${process.env.Tadil_MOBILE_API}/api/customer/files/${image.fileId}`,
         sections: image.sections.map((section) => ({
           id: section.id,
           englishName: section.englishName,
@@ -86,6 +86,12 @@ export class CustomerController {
 
   @Get('alterations')
   @ApiOkResponse({ type: DisplayAlterationDTO, isArray: true })
+  @ApiQuery({
+    name: 'sectionId',
+    type: 'string',
+    required: false,
+    description: 'Filter alterations by section ID',
+  })
   async getAlterations(
     @Query('sectionId') sectionId?: string
   ): Promise<DisplayAlterationDTO[]> {
