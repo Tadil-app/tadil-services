@@ -1,6 +1,11 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { ModelCategory } from '@tadil-models';
 
+export enum ModelCategory {
+  ALL = 'all',
+  MEN = 'men',
+  WOMEN = 'women',
+  KIDS = 'kids',
+}
 export class DisplayModelDTO {
   @ApiProperty()
   id!: string;
@@ -14,8 +19,8 @@ export class DisplayModelDTO {
   urduName!: string;
   @ApiProperty()
   bengaliName!: string;
-  @ApiProperty()
+  @ApiProperty({ enum: ModelCategory, enumName: 'ModelCategory' })
   category!: ModelCategory;
-  @ApiProperty()
+  @ApiProperty({ required: false })
   thumbnailImageUrl?: string;
 }

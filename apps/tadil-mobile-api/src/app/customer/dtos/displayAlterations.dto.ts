@@ -1,5 +1,22 @@
 import { ApiProperty } from '@nestjs/swagger';
 
+export class DisplayInformationDTO {
+  @ApiProperty()
+  id!: string;
+  @ApiProperty()
+  englishName!: string;
+  @ApiProperty()
+  arabicName!: string;
+  @ApiProperty()
+  hindiName!: string;
+  @ApiProperty()
+  urduName!: string;
+  @ApiProperty()
+  bengaliName!: string;
+  @ApiProperty({ required: false })
+  unit?: string;
+}
+
 export class DisplayAlterationDTO {
   @ApiProperty()
   id!: string;
@@ -15,23 +32,6 @@ export class DisplayAlterationDTO {
   bengaliName!: string;
   @ApiProperty()
   price!: number;
-  @ApiProperty({ type: String, isArray: true })
+  @ApiProperty({ type: DisplayInformationDTO, isArray: true })
   informations!: DisplayInformationDTO[];
-}
-
-export class DisplayInformationDTO {
-  @ApiProperty()
-  id!: string;
-  @ApiProperty()
-  englishName!: string;
-  @ApiProperty()
-  arabicName!: string;
-  @ApiProperty()
-  hindiName!: string;
-  @ApiProperty()
-  urduName!: string;
-  @ApiProperty()
-  bengaliName!: string;
-  @ApiProperty()
-  unit?: string;
 }

@@ -7,8 +7,8 @@ import {
   DisplayAlterationDTO,
   DisplayModelDTO,
   DisplayModelImageDTO,
+  ModelCategory,
 } from './dtos';
-import { ModelCategory } from '@tadil-models';
 
 @Controller('customer')
 @ApiTags('Customer')
@@ -25,7 +25,6 @@ export class CustomerController {
     name: 'category',
     required: false,
     enum: ModelCategory,
-    description: 'Filter models by category',
   })
   async getModels(
     @Query('category') category?: ModelCategory
@@ -90,7 +89,6 @@ export class CustomerController {
     name: 'sectionId',
     type: 'string',
     required: false,
-    description: 'Filter alterations by section ID',
   })
   async getAlterations(
     @Query('sectionId') sectionId?: string
@@ -134,6 +132,7 @@ export class CustomerController {
   async getFileStream(@Param('id') fileId: string, @Res() res: Response) {
     try {
       const fileStream = await this._fileStorageService.downloadFile(fileId);
+      res.setHeader('Cache-Control', 'public, max-age=31536000, immutable');
       res.setHeader('Content-Disposition', `inline; filename="${fileId}"`);
       fileStream.on('error', (error) => {
         if (!res.headersSent) {
