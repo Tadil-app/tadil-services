@@ -2,42 +2,42 @@ import {
   InfrastructureException,
   InvalidCommandException,
 } from '@tadil-common';
-import { AlterationsRepository } from './alterations.repository';
+import { ExtrasRepository } from './extras.repository';
 import { v4 as uuidv4 } from 'uuid';
 
-export class CreateAlterationUseCase {
-  private _alterationsRepository: AlterationsRepository;
-  constructor(_alterationsRepository: AlterationsRepository) {
-    this._alterationsRepository = _alterationsRepository;
+export class CreateExtraUseCase {
+  private _extrasRepository: ExtrasRepository;
+  constructor(_extrasRepository: ExtrasRepository) {
+    this._extrasRepository = _extrasRepository;
   }
 
   async execute(
-    createAlterationCommand: CreateAlterationCommand
+    createExtraCommand: CreateExtraCommand
   ): Promise<void> {
-    if (!createAlterationCommand.englishName) {
+    if (!createExtraCommand.englishName) {
       throw new InvalidCommandException('English name is required');
     }
-    if (!createAlterationCommand.arabicName) {
+    if (!createExtraCommand.arabicName) {
       throw new InvalidCommandException('Arabic name is required');
     }
-    if (!createAlterationCommand.hindiName) {
+    if (!createExtraCommand.hindiName) {
       throw new InvalidCommandException('Hindi name is required');
     }
-    if (!createAlterationCommand.urduName) {
+    if (!createExtraCommand.urduName) {
       throw new InvalidCommandException('Urdu name is required');
     }
-    if (!createAlterationCommand.bengaliName) {
+    if (!createExtraCommand.bengaliName) {
       throw new InvalidCommandException('Bengali name is required');
     }
-    if (!createAlterationCommand.price) {
-      throw new InvalidCommandException('Alteration price is required');
+    if (!createExtraCommand.price) {
+      throw new InvalidCommandException('Extra price is required');
     }
 
     try {
       const newSectionId = uuidv4();
-      await this._alterationsRepository.createAlteration({
+      await this._extrasRepository.createExtra({
         id: newSectionId,
-        ...createAlterationCommand,
+        ...createExtraCommand,
       });
     } catch (error: unknown) {
       if (error instanceof Error)
@@ -47,16 +47,13 @@ export class CreateAlterationUseCase {
   }
 }
 
-export class CreateAlterationCommand {
+export class CreateExtraCommand {
   readonly englishName: string;
   readonly arabicName: string;
   readonly hindiName: string;
   readonly urduName: string;
   readonly bengaliName: string;
   readonly price: number;
-  readonly sections: string[];
-  readonly informations: string[];
-  readonly extras: string[];
 
   constructor(
     englishName: string,
@@ -65,9 +62,6 @@ export class CreateAlterationCommand {
     urduName: string,
     bengaliName: string,
     price: number,
-    sections: string[],
-    informations: string[],
-    extras: string[]
   ) {
     this.englishName = englishName;
     this.arabicName = arabicName;
@@ -75,8 +69,5 @@ export class CreateAlterationCommand {
     this.urduName = urduName;
     this.bengaliName = bengaliName;
     this.price = price;
-    this.sections = sections;
-    this.informations = informations;
-    this.extras = extras;
   }
 }

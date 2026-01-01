@@ -1,4 +1,4 @@
-export interface Alteration {
+export interface Extra {
   id: string;
   englishName: string;
   arabicName: string;
@@ -6,7 +6,4 @@ export interface Alteration {
   urduName: string;
   bengaliName: string;
   price: number;
-  sections: string[];
-  informations: string[];
-  extras: string[];
 }

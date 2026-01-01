@@ -19,6 +19,9 @@
       "path": "../../libs/core/tadil-alterations"
     },
     {
+      "path": "../../libs/core/tadil-extras"
+    },
+    {
       "path": "../../libs/infra/tadil-database"
     },
     {

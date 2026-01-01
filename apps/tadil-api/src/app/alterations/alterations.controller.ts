@@ -15,7 +15,11 @@ import {
   UpdateAlterationUseCase,
   DeleteAlterationUseCase,
 } from '@tadil-alterations';
-import { CreateAlterationDTO, DisplayAlterationDTO, UpdateAlterationDTO } from './dtos';
+import {
+  CreateAlterationDTO,
+  DisplayAlterationDTO,
+  UpdateAlterationDTO,
+} from './dtos';
 
 @Controller('alterations')
 @ApiTags('Alterations')
@@ -34,6 +38,7 @@ export class AlterationsController {
       include: {
         sections: { select: { id: true } },
         informations: { select: { id: true } },
+        extras: { select: { id: true } },
       },
     });
     return alterations.map((alteration) => ({
@@ -42,18 +47,22 @@ export class AlterationsController {
       informations: alteration.informations.map(
         (informations) => informations.id
       ),
+      extras: alteration.extras.map((extras) => extras.id),
     }));
   }
 
   @Get('/:id')
   @ApiParam({ name: 'id', type: 'string' })
   @ApiOkResponse({ type: DisplayAlterationDTO })
-  async getAlterationById(@Param('id') id: string): Promise<DisplayAlterationDTO> {
+  async getAlterationById(
+    @Param('id') id: string
+  ): Promise<DisplayAlterationDTO> {
     const alteration = await this._dataReader.queries.alteration.findUnique({
       where: { id },
       include: {
         sections: { select: { id: true } },
         informations: { select: { id: true } },
+        extras: { select: { id: true } },
       },
     });
 
@@ -65,11 +74,14 @@ export class AlterationsController {
       informations: alteration.informations.map(
         (informations) => informations.id
       ),
+      extras: alteration.extras.map((extras) => extras.id),
     };
   }
 
   @Post('/create')
-  async createAlteration(@Body() alteration: CreateAlterationDTO): Promise<void> {
+  async createAlteration(
+    @Body() alteration: CreateAlterationDTO
+  ): Promise<void> {
     await this._createAlterationUseCase.execute(alteration);
   }
 

@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsNotEmpty } from 'class-validator';
 
-export class CreateAlterationDTO {
+export class UpdateExtraDTO {
   @ApiProperty()
   @IsNotEmpty()
   englishName!: string;
@@ -20,13 +20,4 @@ export class CreateAlterationDTO {
   @ApiProperty()
   @IsNotEmpty()
   price!: number;
-  @ApiProperty({ type: String, isArray: true })
-  @IsNotEmpty()
-  sections!: string[];
-  @ApiProperty({ type: String, isArray: true })
-  @IsNotEmpty()
-  informations!: string[];
-  @ApiProperty({ type: String, isArray: true })
-  @IsNotEmpty()
-  extras!: string[];
 }

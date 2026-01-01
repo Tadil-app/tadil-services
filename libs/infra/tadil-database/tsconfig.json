@@ -13,6 +13,9 @@
       "path": "../../core/tadil-alterations"
     },
     {
+      "path": "../../core/tadil-extras"
+    },
+    {
       "path": "./tsconfig.lib.json"
     }
   ]

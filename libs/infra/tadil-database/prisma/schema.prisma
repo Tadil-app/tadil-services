@@ -77,8 +77,23 @@ model Alteration {
 
     sections     Section[]     @relation("alterations-sections")
     informations Information[] @relation("alterations-informations")
+    extras       Extra[]       @relation("alterations-extras")
 
     @@map("alterations")
+}
+
+model Extra {
+    id          String @id @default(uuid())
+    englishName String
+    arabicName  String
+    urduName    String
+    hindiName   String
+    bengaliName String
+    price       Float
+
+    alterations Alteration[] @relation("alterations-extras")
+
+    @@map("extras")
 }
 
 enum ModelCategory {
