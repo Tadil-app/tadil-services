@@ -9,6 +9,7 @@ export class PrismaAlterationsRepository implements AlterationsRepository {
       include: {
         sections: { select: { id: true } },
         informations: { select: { id: true } },
+        extras: { select: { id: true } },
       },
     });
 
@@ -19,6 +20,7 @@ export class PrismaAlterationsRepository implements AlterationsRepository {
       informations: alteration.informations.map(
         (information) => information.id
       ),
+      extras: alteration.extras.map((extra) => extra.id),
     };
   }
 
@@ -40,6 +42,9 @@ export class PrismaAlterationsRepository implements AlterationsRepository {
             id: informationId,
           })),
         },
+        extras: {
+          connect: alteration.extras.map((extraId) => ({ id: extraId })),
+        },
       },
     });
   }
@@ -55,12 +60,15 @@ export class PrismaAlterationsRepository implements AlterationsRepository {
         bengaliName: alteration.bengaliName,
         price: Number(alteration.price),
         sections: {
-          connect: alteration.sections.map((sectionId) => ({ id: sectionId })),
+          set: alteration.sections.map((sectionId) => ({ id: sectionId })),
         },
         informations: {
-          connect: alteration.informations.map((informationId) => ({
+          set: alteration.informations.map((informationId) => ({
             id: informationId,
           })),
+        },
+        extras: {
+          set: alteration.extras.map((extraId) => ({ id: extraId })),
         },
       },
     });
