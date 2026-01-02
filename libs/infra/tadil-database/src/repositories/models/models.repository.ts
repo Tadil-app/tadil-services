@@ -1,4 +1,10 @@
-import { Model, ModelImage, ModelsRepository, Section } from '@tadil-models';
+import {
+  Model,
+  ModelCategory,
+  ModelImage,
+  ModelsRepository,
+  Section,
+} from '@tadil-models';
 import { DbClient } from '../../dbClient';
 
 export class PrismaModelsRepository implements ModelsRepository {
@@ -13,7 +19,7 @@ export class PrismaModelsRepository implements ModelsRepository {
 
     return {
       ...model,
-      category: model.category ?? undefined,
+      category: model.category as ModelCategory,
       images: model.images.map((image) => ({ ...image, sections: [] })),
     };
   }
