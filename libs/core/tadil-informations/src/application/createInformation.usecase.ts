@@ -34,13 +34,8 @@ export class CreateInformationUseCase {
     try {
       const newInformationId = uuidv4();
       await this._informationsRepository.createInformation({
+        ...createInformationCommand,
         id: newInformationId,
-        englishName: createInformationCommand.englishName,
-        arabicName: createInformationCommand.arabicName,
-        hindiName: createInformationCommand.hindiName,
-        urduName: createInformationCommand.urduName,
-        bengaliName: createInformationCommand.bengaliName,
-        unit: createInformationCommand.unit,
       });
     } catch (error: unknown) {
       if (error instanceof Error)
@@ -56,6 +51,7 @@ export class CreateInformationCommand {
   readonly hindiName: string;
   readonly urduName: string;
   readonly bengaliName: string;
+  readonly extras: string[];
   readonly unit?: string;
   constructor(
     englishName: string,
@@ -63,6 +59,7 @@ export class CreateInformationCommand {
     hindiName: string,
     urduName: string,
     bengaliName: string,
+    extras: string[],
     unit?: string
   ) {
     this.englishName = englishName;
@@ -70,6 +67,7 @@ export class CreateInformationCommand {
     this.hindiName = hindiName;
     this.urduName = urduName;
     this.bengaliName = bengaliName;
+    this.extras = extras;
     this.unit = unit;
   }
 }

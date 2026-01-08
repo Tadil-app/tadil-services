@@ -23,4 +23,7 @@ export class DisplayInformationDTO {
   @ApiProperty()
   @IsOptional()
   unit?: string;
+  @ApiProperty({ type: String, isArray: true })
+  @IsNotEmpty()
+  extras!: string[];
 }

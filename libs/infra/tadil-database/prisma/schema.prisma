@@ -62,6 +62,7 @@ model Information {
     unit        String?
 
     services Alteration[] @relation("alterations-informations")
+    extras   Extra[]      @relation("informations-extras")
 
     @@map("informations")
 }
@@ -77,7 +78,6 @@ model Alteration {
 
     sections     Section[]     @relation("alterations-sections")
     informations Information[] @relation("alterations-informations")
-    extras       Extra[]       @relation("alterations-extras")
 
     @@map("alterations")
 }
@@ -91,7 +91,7 @@ model Extra {
     bengaliName String
     price       Float
 
-    alterations Alteration[] @relation("alterations-extras")
+    informations Information[] @relation("informations-extras")
 
     @@map("extras")
 }

@@ -8,5 +8,4 @@ export interface Alteration {
   price: number;
   sections: string[];
   informations: string[];
-  extras: string[];
 }

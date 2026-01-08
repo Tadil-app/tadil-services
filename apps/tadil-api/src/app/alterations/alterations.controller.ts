@@ -38,7 +38,6 @@ export class AlterationsController {
       include: {
         sections: { select: { id: true } },
         informations: { select: { id: true } },
-        extras: { select: { id: true } },
       },
     });
     return alterations.map((alteration) => ({
@@ -47,7 +46,6 @@ export class AlterationsController {
       informations: alteration.informations.map(
         (informations) => informations.id
       ),
-      extras: alteration.extras.map((extras) => extras.id),
     }));
   }
 
@@ -62,7 +60,6 @@ export class AlterationsController {
       include: {
         sections: { select: { id: true } },
         informations: { select: { id: true } },
-        extras: { select: { id: true } },
       },
     });
 
@@ -74,7 +71,6 @@ export class AlterationsController {
       informations: alteration.informations.map(
         (informations) => informations.id
       ),
-      extras: alteration.extras.map((extras) => extras.id),
     };
   }
 

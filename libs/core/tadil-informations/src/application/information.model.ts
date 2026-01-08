@@ -5,5 +5,6 @@ export interface Information {
   hindiName: string;
   urduName: string;
   bengaliName: string;
+  extras: string[];
   unit?: string;
 }

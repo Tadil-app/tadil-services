@@ -7,6 +7,9 @@ export class PrismaInformationsRepository implements InformationsRepository {
   async getInformationById(id: string): Promise<Information | undefined> {
     const information = await this._db.information.findUnique({
       where: { id },
+      include: {
+        extras: { select: { id: true } },
+      },
     });
 
     if (!information) return undefined;
@@ -18,6 +21,7 @@ export class PrismaInformationsRepository implements InformationsRepository {
       urduName: information.urduName,
       bengaliName: information.bengaliName,
       unit: information.unit ?? undefined,
+      extras: information.extras.map((extra) => extra.id),
     };
   }
 
@@ -31,6 +35,9 @@ export class PrismaInformationsRepository implements InformationsRepository {
         urduName: information.urduName,
         bengaliName: information.bengaliName,
         unit: information.unit,
+        extras: {
+          connect: information.extras.map((extraId) => ({ id: extraId })),
+        },
       },
     });
   }
@@ -45,6 +52,9 @@ export class PrismaInformationsRepository implements InformationsRepository {
         urduName: information.urduName,
         bengaliName: information.bengaliName,
         unit: information.unit,
+        extras: {
+          set: information.extras.map((extraId) => ({ id: extraId })),
+        },
       },
     });
   }

@@ -42,15 +42,9 @@ export class UpdateInformationUseCase {
     }
 
     try {
-      await this._informationsRepository.updateInformation({
-        id: updateInformationCommand.id,
-        englishName: updateInformationCommand.englishName,
-        arabicName: updateInformationCommand.arabicName,
-        hindiName: updateInformationCommand.hindiName,
-        urduName: updateInformationCommand.urduName,
-        bengaliName: updateInformationCommand.bengaliName,
-        unit: updateInformationCommand.unit,
-      });
+      await this._informationsRepository.updateInformation(
+        updateInformationCommand
+      );
     } catch (error: unknown) {
       if (error instanceof Error)
         throw new InfrastructureException(error.message);
@@ -66,6 +60,7 @@ export class UpdateInformationCommand {
   readonly hindiName: string;
   readonly urduName: string;
   readonly bengaliName: string;
+  readonly extras: string[];
   readonly unit?: string;
   constructor(
     id: string,
@@ -74,6 +69,7 @@ export class UpdateInformationCommand {
     hindiName: string,
     urduName: string,
     bengaliName: string,
+    extras: string[],
     unit?: string
   ) {
     this.id = id;
@@ -82,6 +78,7 @@ export class UpdateInformationCommand {
     this.hindiName = hindiName;
     this.urduName = urduName;
     this.bengaliName = bengaliName;
+    this.extras = extras;
     this.unit = unit;
   }
 }

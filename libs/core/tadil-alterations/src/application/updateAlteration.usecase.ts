@@ -66,7 +66,6 @@ export class UpdateAlterationCommand {
   readonly price: number;
   readonly sections: string[];
   readonly informations: string[];
-  readonly extras: string[];
   constructor(
     id: string,
     englishName: string,
@@ -76,8 +75,7 @@ export class UpdateAlterationCommand {
     bengaliName: string,
     price: number,
     sections: string[],
-    informations: string[],
-    extras: string[]
+    informations: string[]
   ) {
     this.id = id;
     this.englishName = englishName;
@@ -88,6 +86,5 @@ export class UpdateAlterationCommand {
     this.price = price;
     this.sections = sections;
     this.informations = informations;
-    this.extras = extras;
   }
 }

@@ -55,8 +55,7 @@ export class CreateAlterationCommand {
   readonly bengaliName: string;
   readonly price: number;
   readonly sections: string[];
-  readonly informations: string[];
-  readonly extras: string[];
+  readonly informations: string[]
 
   constructor(
     englishName: string,
@@ -66,8 +65,7 @@ export class CreateAlterationCommand {
     bengaliName: string,
     price: number,
     sections: string[],
-    informations: string[],
-    extras: string[]
+    informations: string[]
   ) {
     this.englishName = englishName;
     this.arabicName = arabicName;
@@ -77,6 +75,5 @@ export class CreateAlterationCommand {
     this.price = price;
     this.sections = sections;
     this.informations = informations;
-    this.extras = extras;
   }
 }

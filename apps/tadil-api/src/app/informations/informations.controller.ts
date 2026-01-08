@@ -34,7 +34,11 @@ export class InformationsController {
   @Get('/')
   @ApiOkResponse({ type: DisplayInformationDTO, isArray: true })
   async getInformations(): Promise<DisplayInformationDTO[]> {
-    const informations = await this._dataReader.queries.information.findMany();
+    const informations = await this._dataReader.queries.information.findMany({
+      include: {
+        extras: { select: { id: true } },
+      },
+    });
     return informations.map((information) => ({
       id: information.id,
       englishName: information.englishName,
@@ -43,6 +47,7 @@ export class InformationsController {
       urduName: information.urduName,
       bengaliName: information.bengaliName,
       unit: information.unit ?? undefined,
+      extras: information.extras.map((extra) => extra.id),
     }));
   }
 
@@ -54,6 +59,9 @@ export class InformationsController {
   ): Promise<DisplayInformationDTO> {
     const information = await this._dataReader.queries.information.findUnique({
       where: { id },
+      include: {
+        extras: { select: { id: true } },
+      },
     });
 
     if (!information)
@@ -66,6 +74,7 @@ export class InformationsController {
       urduName: information.urduName,
       bengaliName: information.bengaliName,
       unit: information.unit ?? undefined,
+      extras: information.extras.map((extra) => extra.id),
     };
   }
 

@@ -9,7 +9,6 @@ export class PrismaAlterationsRepository implements AlterationsRepository {
       include: {
         sections: { select: { id: true } },
         informations: { select: { id: true } },
-        extras: { select: { id: true } },
       },
     });
 
@@ -20,7 +19,6 @@ export class PrismaAlterationsRepository implements AlterationsRepository {
       informations: alteration.informations.map(
         (information) => information.id
       ),
-      extras: alteration.extras.map((extra) => extra.id),
     };
   }
 
@@ -41,9 +39,6 @@ export class PrismaAlterationsRepository implements AlterationsRepository {
           connect: alteration.informations.map((informationId) => ({
             id: informationId,
           })),
-        },
-        extras: {
-          connect: alteration.extras.map((extraId) => ({ id: extraId })),
         },
       },
     });
@@ -66,9 +61,6 @@ export class PrismaAlterationsRepository implements AlterationsRepository {
           set: alteration.informations.map((informationId) => ({
             id: informationId,
           })),
-        },
-        extras: {
-          set: alteration.extras.map((extraId) => ({ id: extraId })),
         },
       },
     });
