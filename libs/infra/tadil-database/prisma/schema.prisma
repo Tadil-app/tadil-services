@@ -53,12 +53,14 @@ model Model {
 }
 
 model Information {
-    id          String  @id @default(uuid())
+    id          String          @id @default(uuid())
     englishName String
     arabicName  String
     urduName    String
     hindiName   String
     bengaliName String
+    isRequired  Boolean         @default(false)
+    type        InformationType @default(text)
     unit        String?
 
     services Alteration[] @relation("alterations-informations")
@@ -101,4 +103,11 @@ enum ModelCategory {
     men
     women
     kids
+}
+
+enum InformationType {
+    text
+    number
+    select_menu
+    checkbox
 }

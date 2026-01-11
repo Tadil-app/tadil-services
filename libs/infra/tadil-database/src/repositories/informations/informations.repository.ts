@@ -1,4 +1,8 @@
-import { InformationsRepository, Information } from '@tadil-informations';
+import {
+  InformationsRepository,
+  Information,
+  InformationType,
+} from '@tadil-informations';
 import { DbClient } from '../../dbClient';
 
 export class PrismaInformationsRepository implements InformationsRepository {
@@ -20,6 +24,8 @@ export class PrismaInformationsRepository implements InformationsRepository {
       hindiName: information.hindiName,
       urduName: information.urduName,
       bengaliName: information.bengaliName,
+      isRequired: information.isRequired,
+      type: information.type as InformationType,
       unit: information.unit ?? undefined,
       extras: information.extras.map((extra) => extra.id),
     };
@@ -34,6 +40,8 @@ export class PrismaInformationsRepository implements InformationsRepository {
         hindiName: information.hindiName,
         urduName: information.urduName,
         bengaliName: information.bengaliName,
+        isRequired: information.isRequired,
+        type: information.type,
         unit: information.unit,
         extras: {
           connect: information.extras.map((extraId) => ({ id: extraId })),
@@ -51,6 +59,8 @@ export class PrismaInformationsRepository implements InformationsRepository {
         hindiName: information.hindiName,
         urduName: information.urduName,
         bengaliName: information.bengaliName,
+        isRequired: information.isRequired,
+        type: information.type,
         unit: information.unit,
         extras: {
           set: information.extras.map((extraId) => ({ id: extraId })),

@@ -1,5 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsNotEmpty, IsOptional } from 'class-validator';
+import { InformationType } from '.';
 
 export class UpdateInformationDTO {
   @ApiProperty()
@@ -17,6 +18,12 @@ export class UpdateInformationDTO {
   @ApiProperty()
   @IsNotEmpty()
   bengaliName!: string;
+  @ApiProperty()
+  @IsNotEmpty()
+  isRequired!: boolean;
+  @ApiProperty({ enum: InformationType, enumName: 'InformationType' })
+  @IsNotEmpty()
+  type!: InformationType;
   @ApiProperty()
   @IsOptional()
   unit?: string;

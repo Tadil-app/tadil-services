@@ -4,6 +4,7 @@ import {
   InvalidCommandException,
 } from '@tadil-common';
 import { v4 as uuidv4 } from 'uuid';
+import { InformationType } from './information.model';
 
 export class CreateInformationUseCase {
   private _informationsRepository: InformationsRepository;
@@ -30,6 +31,9 @@ export class CreateInformationUseCase {
     if (!createInformationCommand.bengaliName) {
       throw new InvalidCommandException('Information Bengali Name is required');
     }
+    if (!createInformationCommand.type) {
+      throw new InvalidCommandException('Information Type is required');
+    }
 
     try {
       const newInformationId = uuidv4();
@@ -51,6 +55,8 @@ export class CreateInformationCommand {
   readonly hindiName: string;
   readonly urduName: string;
   readonly bengaliName: string;
+  readonly isRequired: boolean;
+  readonly type: InformationType;
   readonly extras: string[];
   readonly unit?: string;
   constructor(
@@ -59,6 +65,8 @@ export class CreateInformationCommand {
     hindiName: string,
     urduName: string,
     bengaliName: string,
+    isRequired: boolean,
+    type: InformationType,
     extras: string[],
     unit?: string
   ) {
@@ -67,6 +75,8 @@ export class CreateInformationCommand {
     this.hindiName = hindiName;
     this.urduName = urduName;
     this.bengaliName = bengaliName;
+    this.isRequired = isRequired;
+    this.type = type;
     this.extras = extras;
     this.unit = unit;
   }

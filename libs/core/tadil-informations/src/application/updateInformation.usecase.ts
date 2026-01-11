@@ -1,3 +1,4 @@
+import { InformationType } from './information.model';
 import { InformationsRepository } from './information.repository';
 import {
   InfrastructureException,
@@ -33,6 +34,9 @@ export class UpdateInformationUseCase {
     if (!updateInformationCommand.bengaliName) {
       throw new InvalidCommandException('Information Bengali Name is required');
     }
+    if (!updateInformationCommand.type) {
+      throw new InvalidCommandException('Information Type is required');
+    }
 
     const information = await this._informationsRepository.getInformationById(
       updateInformationCommand.id
@@ -60,6 +64,8 @@ export class UpdateInformationCommand {
   readonly hindiName: string;
   readonly urduName: string;
   readonly bengaliName: string;
+  readonly isRequired: boolean;
+  readonly type: InformationType;
   readonly extras: string[];
   readonly unit?: string;
   constructor(
@@ -69,6 +75,8 @@ export class UpdateInformationCommand {
     hindiName: string,
     urduName: string,
     bengaliName: string,
+    isRequired: boolean,
+    type: InformationType,
     extras: string[],
     unit?: string
   ) {
@@ -78,6 +86,8 @@ export class UpdateInformationCommand {
     this.hindiName = hindiName;
     this.urduName = urduName;
     this.bengaliName = bengaliName;
+    this.isRequired = isRequired;
+    this.type = type;
     this.extras = extras;
     this.unit = unit;
   }

@@ -18,6 +18,7 @@ import { DataReader } from '@tadil-database';
 import {
   CreateInformationDTO,
   DisplayInformationDTO,
+  InformationType,
   UpdateInformationDTO,
 } from './dtos';
 
@@ -46,6 +47,8 @@ export class InformationsController {
       hindiName: information.hindiName,
       urduName: information.urduName,
       bengaliName: information.bengaliName,
+      isRequired: information.isRequired,
+      type: information.type as InformationType,
       unit: information.unit ?? undefined,
       extras: information.extras.map((extra) => extra.id),
     }));
@@ -73,6 +76,8 @@ export class InformationsController {
       hindiName: information.hindiName,
       urduName: information.urduName,
       bengaliName: information.bengaliName,
+      isRequired: information.isRequired,
+      type: information.type as InformationType,
       unit: information.unit ?? undefined,
       extras: information.extras.map((extra) => extra.id),
     };

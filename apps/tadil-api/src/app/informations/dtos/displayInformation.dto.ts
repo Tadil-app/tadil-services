@@ -1,5 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsNotEmpty, IsOptional } from 'class-validator';
+import { InformationType } from '.';
 
 export class DisplayInformationDTO {
   @ApiProperty()
@@ -20,6 +21,12 @@ export class DisplayInformationDTO {
   @ApiProperty()
   @IsNotEmpty()
   bengaliName!: string;
+  @ApiProperty()
+  @IsNotEmpty()
+  isRequired!: boolean;
+  @ApiProperty({ enum: InformationType, enumName: 'InformationType' })
+  @IsNotEmpty()
+  type!: InformationType;
   @ApiProperty()
   @IsOptional()
   unit?: string;
