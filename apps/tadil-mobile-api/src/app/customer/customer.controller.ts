@@ -7,6 +7,7 @@ import {
   DisplayAlterationDTO,
   DisplayModelDTO,
   DisplayModelImageDTO,
+  InformationType,
   ModelCategory,
 } from './dtos';
 
@@ -104,7 +105,9 @@ export class CustomerController {
           }
         : undefined,
       include: {
-        informations: true,
+        informations: {
+          include: { extras: true },
+        },
       },
     });
 
@@ -123,6 +126,9 @@ export class CustomerController {
         hindiName: info.hindiName,
         urduName: info.urduName,
         bengaliName: info.bengaliName,
+        isRequired: info.isRequired,
+        type: info.type as InformationType,
+        extras: info.extras,
         unit: info.unit ?? undefined,
       })),
     }));
