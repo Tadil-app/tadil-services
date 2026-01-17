@@ -1,6 +1,23 @@
-import { Controller, Get, Inject, Param, Query, Res } from '@nestjs/common';
-import { ApiOkResponse, ApiParam, ApiQuery, ApiTags } from '@nestjs/swagger';
-import { type FileStorageService } from '@tadil-common';
+import {
+  Body,
+  Controller,
+  Get,
+  Inject,
+  Param,
+  Post,
+  Query,
+  Res,
+  UploadedFile,
+  UseInterceptors,
+} from '@nestjs/common';
+import {
+  ApiConsumes,
+  ApiOkResponse,
+  ApiParam,
+  ApiQuery,
+  ApiTags,
+} from '@nestjs/swagger';
+import { ReadableFile, type FileStorageService } from '@tadil-common';
 import { DataReader } from '@tadil-database';
 import { type Response } from 'express';
 import {
@@ -10,6 +27,11 @@ import {
   InformationType,
   ModelCategory,
 } from './dtos';
+import { fileUploadLocalPath } from '../utils';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { v4 as uuidv4 } from 'uuid';
+import { extname } from 'path';
+import { UploadFileDto } from './dtos/uploadFile.dto';
 
 @Controller('customer')
 @ApiTags('Customer')
@@ -134,6 +156,27 @@ export class CustomerController {
     }));
   }
 
+  @Post('files/upload')
+  @ApiConsumes('multipart/form-data')
+  @UseInterceptors(FileInterceptor('file', fileUploadLocalPath))
+  async uploadFile(
+    @UploadedFile() file: Express.Multer.File,
+    @Body() _body: UploadFileDto
+  ): Promise<string> {
+    const imageFile: ReadableFile = {
+      path: file.path,
+      mimetype: file.mimetype,
+      originalName: file.originalname,
+      size: file.size,
+    };
+
+    const fileExtension = extname(imageFile.path);
+    const imageFileId = uuidv4() + fileExtension;
+
+    await this._fileStorageService.uploadFile(imageFileId, imageFile);
+
+    return `${process.env.Tadil_MOBILE_API}/api/customer/files/${imageFileId}`;
+  }
   @Get('files/:id')
   async getFileStream(@Param('id') fileId: string, @Res() res: Response) {
     try {
