@@ -22,6 +22,9 @@
       "path": "../../libs/core/tadil-extras"
     },
     {
+      "path": "../../libs/core/tadil-tailor"
+    },
+    {
       "path": "../../libs/infra/tadil-database"
     },
     {

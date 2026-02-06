@@ -25,7 +25,8 @@
       "@tadil-models": ["libs/core/tadil-models/src/index.ts"],
       "@file-storage": ["libs/infra/file-storage/src/index.ts"],
       "@tadil-alterations": ["libs/core/tadil-alterations/src/index.ts"],
-      "@tadil-extras": ["libs/core/tadil-extras/src/index.ts"]
+      "@tadil-extras": ["libs/core/tadil-extras/src/index.ts"],
+      "@tadil-tailor": ["libs/core/tadil-tailor/src/index.ts"]
     }
   }
 }

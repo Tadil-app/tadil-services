@@ -63,8 +63,9 @@ model Information {
     type        InformationType @default(text)
     unit        String?
 
-    services Alteration[] @relation("alterations-informations")
-    extras   Extra[]      @relation("informations-extras")
+    services                        Alteration[]                     @relation("alterations-informations")
+    extras                          Extra[]                          @relation("informations-extras")
+    orderItemAlterationInformations OrderItemAlterationInformation[]
 
     @@map("informations")
 }
@@ -78,8 +79,9 @@ model Alteration {
     bengaliName String
     price       Float
 
-    sections     Section[]     @relation("alterations-sections")
-    informations Information[] @relation("alterations-informations")
+    sections             Section[]             @relation("alterations-sections")
+    informations         Information[]         @relation("alterations-informations")
+    orderItemAlterations OrderItemAlteration[]
 
     @@map("alterations")
 }
@@ -105,9 +107,39 @@ enum ModelCategory {
     kids
 }
 
+model OrderItemAlterationInformation {
+    id    String @id @default(uuid())
+    value String
+    sourceInformationId   String
+    sourceInformation     Information         @relation(fields: [sourceInformationId], references: [id])
+
+    orderItemAlterationId String
+    orderItemAlteration   OrderItemAlteration @relation(fields: [orderItemAlterationId], references: [id], onDelete: Cascade)
+
+    @@map("order-item-alteration-informations")
+}
+
+model OrderItemAlteration {
+    id           String                           @id @default(uuid())
+    informations OrderItemAlterationInformation[]
+
+    sourceAlterationId String
+    sourceAlteration   Alteration @relation(fields: [sourceAlterationId], references: [id])
+    
+
+    @@map("order-item-alterations")
+}
+
 enum InformationType {
     text
     number
     select_menu
     checkbox
+}
+
+enum OrderStatus {
+    pending
+    inProgress
+    completed
+    waitingForPickup
 }

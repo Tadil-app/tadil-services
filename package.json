@@ -69,6 +69,7 @@
     "libs/infra/file-storage",
     "libs/core/tadil-alterations",
     "apps/tadil-mobile-api",
-    "libs/core/tadil-extras"
+    "libs/core/tadil-extras",
+    "libs/core/*"
   ]
 }

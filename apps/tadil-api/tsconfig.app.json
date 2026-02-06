@@ -33,6 +33,9 @@
       "path": "../../libs/core/tadil-extras/tsconfig.lib.json"
     },
     {
+      "path": "../../libs/core/tadil-tailor/tsconfig.lib.json"
+    },
+    {
       "path": "../../libs/infra/tadil-database/tsconfig.lib.json"
     },
     {
