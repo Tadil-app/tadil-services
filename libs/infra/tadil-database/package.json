@@ -23,8 +23,8 @@
     "prisma-seed": "npx prisma db seed"
   },
   "prisma": {
-  "seed": "ts-node prisma/seed.ts"
-},
+    "seed": "ts-node prisma/seed.ts"
+  },
   "dependencies": {
     "prisma": "^6.19.0",
     "tslib": "^2.3.0"
