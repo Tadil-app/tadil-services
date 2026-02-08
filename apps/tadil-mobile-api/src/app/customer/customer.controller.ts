@@ -6,7 +6,6 @@ import {
   Param,
   Post,
   Query,
-  Res,
   UploadedFile,
   UseInterceptors,
 } from '@nestjs/common';
@@ -19,7 +18,6 @@ import {
 } from '@nestjs/swagger';
 import { ReadableFile, type FileStorageService } from '@tadil-common';
 import { DataReader } from '@tadil-database';
-import { type Response } from 'express';
 import {
   DisplayAlterationDTO,
   DisplayModelDTO,
@@ -69,7 +67,7 @@ export class CustomerController {
         bengaliName: model.bengaliName,
         category: model.category as ModelCategory,
         thumbnailImageUrl: thumbnailImage
-          ? `${process.env.Tadil_MOBILE_API}/api/customer/files/${thumbnailImage.fileId}`
+          ? `${process.env.Tadil_MOBILE_API}/api/files/${thumbnailImage.fileId}`
           : undefined,
       };
     });
@@ -90,7 +88,7 @@ export class CustomerController {
     const images = modelImages.map((image) => {
       return {
         id: image.id,
-        imageUrl: `${process.env.Tadil_MOBILE_API}/api/customer/files/${image.fileId}`,
+        imageUrl: `${process.env.Tadil_MOBILE_API}/api/files/${image.fileId}`,
         sections: image.sections.map((section) => ({
           id: section.id,
           englishName: section.englishName,
@@ -175,29 +173,6 @@ export class CustomerController {
 
     await this._fileStorageService.uploadFile(imageFileId, imageFile);
 
-    return `${process.env.Tadil_MOBILE_API}/api/customer/files/${imageFileId}`;
-  }
-  @Get('files/:id')
-  async getFileStream(@Param('id') fileId: string, @Res() res: Response) {
-    try {
-      const fileStream = await this._fileStorageService.downloadFile(fileId);
-      res.setHeader('Cache-Control', 'public, max-age=31536000, immutable');
-      res.setHeader('Content-Disposition', `inline; filename="${fileId}"`);
-      fileStream.on('error', (error) => {
-        if (!res.headersSent) {
-          res.status(500).send('Error in file retrieval: ' + error.message);
-        }
-      });
-      fileStream.on('end', () => {
-        res.end();
-      });
-      fileStream.pipe(res);
-    } catch (error: unknown) {
-      if (!res.headersSent) {
-        if (error instanceof Error)
-          res.status(500).send('Error while retrieving file: ' + error.message);
-        else res.status(500).send('Error while retrieving file: ' + error);
-      }
-    }
+    return `${process.env.Tadil_MOBILE_API}/api/files/${imageFileId}`;
   }
 }

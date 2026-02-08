@@ -1,1 +1,1 @@
-export * from './lib/tadil-tailor.js';
+export * from './application';

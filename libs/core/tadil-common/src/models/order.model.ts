@@ -39,6 +39,7 @@ export interface CustomOrderItem {
 }
 
 export interface Order {
+  id: string
   customerId: string;
   reference: string;
   date: string;

@@ -11,7 +11,8 @@
     "db-generate": "npm run prisma-generate -w tadil-database",
     "db-migrate-dev": "npm run prisma-migrate-dev -w tadil-database",
     "db-migrate-deploy": "npm run prisma-migrate-deploy -w tadil-database",
-    "db-studio": "npm run prisma-studio -w tadil-database"
+    "db-studio": "npm run prisma-studio -w tadil-database",
+    "db-seed": "npm run prisma-seed -w tadil-database"
   },
   "private": true,
   "dependencies": {

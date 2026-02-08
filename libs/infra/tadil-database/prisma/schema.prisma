@@ -63,9 +63,8 @@ model Information {
     type        InformationType @default(text)
     unit        String?
 
-    services                        Alteration[]                     @relation("alterations-informations")
-    extras                          Extra[]                          @relation("informations-extras")
-    orderItemAlterationInformations OrderItemAlterationInformation[]
+    services Alteration[] @relation("alterations-informations")
+    extras   Extra[]      @relation("informations-extras")
 
     @@map("informations")
 }
@@ -79,9 +78,8 @@ model Alteration {
     bengaliName String
     price       Float
 
-    sections             Section[]             @relation("alterations-sections")
-    informations         Information[]         @relation("alterations-informations")
-    orderItemAlterations OrderItemAlteration[]
+    sections     Section[]     @relation("alterations-sections")
+    informations Information[] @relation("alterations-informations")
 
     @@map("alterations")
 }
@@ -100,18 +98,16 @@ model Extra {
     @@map("extras")
 }
 
-enum ModelCategory {
-    all
-    men
-    women
-    kids
-}
-
 model OrderItemAlterationInformation {
-    id    String @id @default(uuid())
-    value String
-    sourceInformationId   String
-    sourceInformation     Information         @relation(fields: [sourceInformationId], references: [id])
+    id          String          @id @default(uuid())
+    englishName String
+    arabicName  String
+    urduName    String
+    hindiName   String
+    bengaliName String
+    type        InformationType
+    unit        String?
+    value       String
 
     orderItemAlterationId String
     orderItemAlteration   OrderItemAlteration @relation(fields: [orderItemAlterationId], references: [id], onDelete: Cascade)
@@ -120,14 +116,91 @@ model OrderItemAlterationInformation {
 }
 
 model OrderItemAlteration {
-    id           String                           @id @default(uuid())
-    informations OrderItemAlterationInformation[]
+    id                String @id @default(uuid())
+    englishName       String
+    arabicName        String
+    urduName          String
+    hindiName         String
+    bengaliName       String
+    price             Float
+    /// ![{x: number; y:number}]
+    customCoordinates Json[]
 
-    sourceAlterationId String
-    sourceAlteration   Alteration @relation(fields: [sourceAlterationId], references: [id])
-    
+    informations       OrderItemAlterationInformation[]
+    orderItemSectionId String?
+    orderItemSection   OrderItemSection?                @relation(fields: [orderItemSectionId], references: [id], onDelete: Cascade)
+    customOrderItemId  String?
+    customOrderItem    CustomOrderItem?                 @relation(fields: [customOrderItemId], references: [id])
 
     @@map("order-item-alterations")
+}
+
+model OrderItemSection {
+    id          String @id @default(uuid())
+    englishName String
+    arabicName  String
+    urduName    String
+    hindiName   String
+    bengaliName String
+    /// ![{x: number; y:number}]
+    coordinates Json[]
+    imageFileId String
+
+    alterations OrderItemAlteration[]
+    orderItemId String
+    orderItem   OrderItem             @relation(fields: [orderItemId], references: [id])
+
+    @@map("order-item-sections")
+}
+
+model OrderItem {
+    id          String @id @default(uuid())
+    price       Float  @default(0)
+    englishName String
+    arabicName  String
+    urduName    String
+    hindiName   String
+    bengaliName String
+    imageFileId String
+
+    sections OrderItemSection[]
+    orderId  String
+    order    Order              @relation(fields: [orderId], references: [id])
+
+    @@map("order-items")
+}
+
+model CustomOrderItem {
+    id          String @id @default(uuid())
+    price       Float  @default(0)
+    imageFileId String
+
+    alterations OrderItemAlteration[]
+    orderId     String
+    order       Order                 @relation(fields: [orderId], references: [id])
+
+    @@map("custom-order-items")
+}
+
+model Order {
+    id         String      @id @default(uuid())
+    customerId String
+    reference  String
+    date       DateTime    @default(now())
+    totalPrice Float       @default(0)
+    status     OrderStatus
+
+    items       OrderItem[]
+    customItems CustomOrderItem[]
+
+    @@map("orders")
+}
+
+enum ModelCategory {
+    all
+    men
+    women
+    kids
 }
 
 enum InformationType {
