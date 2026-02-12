@@ -63,14 +63,15 @@
   },
   "workspaces": [
     "apps/tadil-api",
+    "apps/tadil-mobile-api",
     "libs/infra/tadil-database",
+    "libs/infra/file-storage",
     "libs/core/tadil-common",
     "libs/core/tadil-informations",
     "libs/core/tadil-models",
-    "libs/infra/file-storage",
     "libs/core/tadil-alterations",
-    "apps/tadil-mobile-api",
     "libs/core/tadil-extras",
-    "libs/core/*"
+    "libs/core/tadil-tailor",
+    "libs/core/tadil-users"
   ]
 }

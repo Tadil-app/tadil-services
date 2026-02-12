@@ -20,10 +20,10 @@
     "target": "es2022",
     "paths": {
       "@tadil-database": ["libs/infra/tadil-database/src/index.ts"],
+      "@file-storage": ["libs/infra/file-storage/src/index.ts"],
       "@tadil-common": ["libs/core/tadil-common/src/index.ts"],
       "@tadil-informations": ["libs/core/tadil-informations/src/index.ts"],
       "@tadil-models": ["libs/core/tadil-models/src/index.ts"],
-      "@file-storage": ["libs/infra/file-storage/src/index.ts"],
       "@tadil-alterations": ["libs/core/tadil-alterations/src/index.ts"],
       "@tadil-extras": ["libs/core/tadil-extras/src/index.ts"],
       "@tadil-tailor": ["libs/core/tadil-tailor/src/index.ts"],
