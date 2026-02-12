@@ -25,6 +25,9 @@
       "path": "../../libs/core/tadil-tailor"
     },
     {
+      "path": "../../libs/core/tadil-users"
+    },
+    {
       "path": "../../libs/infra/tadil-database"
     },
     {

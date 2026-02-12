@@ -25,6 +25,9 @@
     },
     {
       "path": "../../core/tadil-tailor/tsconfig.lib.json"
+    },
+    {
+      "path": "../../core/tadil-users/tsconfig.lib.json"
     }
   ]
 }

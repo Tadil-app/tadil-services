@@ -32,6 +32,9 @@
     },
     {
       "path": "./libs/core/tadil-tailor"
+    },
+    {
+      "path": "./libs/core/tadil-users"
     }
   ]
 }
