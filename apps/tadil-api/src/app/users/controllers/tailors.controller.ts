@@ -1,0 +1,98 @@
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Post,
+  Put,
+} from '@nestjs/common';
+import { ApiOkResponse, ApiTags } from '@nestjs/swagger';
+import { DataReader } from '@tadil-database';
+import { CreateUserDTO, DisplayUserDTO, UpdateUserDTO } from '../dtos';
+import {
+  ROLE,
+  CreateUserUseCase,
+  UpdateUserUseCase,
+  DeleteUserUseCase,
+} from '@tadil-users';
+
+@Controller('tailors')
+@ApiTags('Tailors')
+export class TailorsController {
+  constructor(
+    private readonly _dataReader: DataReader,
+    private readonly _createUserUseCase: CreateUserUseCase,
+    private readonly _updateUserUseCase: UpdateUserUseCase,
+    private readonly _deleteUserUseCase: DeleteUserUseCase
+  ) {}
+
+  @Get('/')
+  @ApiOkResponse({ type: DisplayUserDTO, isArray: true })
+  async getTailors(): Promise<DisplayUserDTO[]> {
+    const users = await this._dataReader.queries.user.findMany({
+      where: { role: ROLE.TAILOR },
+    });
+
+    return users.map((user) => ({
+      ...user,
+      email: user.email ?? undefined,
+    }));
+  }
+
+  @Get('/phone/:phone')
+  @ApiOkResponse({ type: DisplayUserDTO })
+  async getTailorByPhone(
+    @Param('phone') phone: string
+  ): Promise<DisplayUserDTO | undefined> {
+    const user = await this._dataReader.queries.user.findUnique({
+      where: { phone },
+    });
+
+    if (!user) return undefined;
+    return {
+      ...user,
+      email: user.email ?? undefined,
+    };
+  }
+
+  @Post('/create')
+  async createTailor(@Body() tailor: CreateUserDTO): Promise<void> {
+    await this._createUserUseCase.execute({
+      ...tailor,
+      role: ROLE.TAILOR,
+    });
+  }
+
+  @Get('/:id')
+  @ApiOkResponse({ type: DisplayUserDTO })
+  async getTailorById(
+    @Param('id') id: string
+  ): Promise<DisplayUserDTO | undefined> {
+    const user = await this._dataReader.queries.user.findUnique({
+      where: { id },
+    });
+
+    if (!user) return undefined;
+    return {
+      ...user,
+      email: user.email ?? undefined,
+    };
+  }
+
+  @Put('/:id/update')
+  async updateTailor(
+    @Param('id') id: string,
+    @Body() tailor: UpdateUserDTO
+  ): Promise<void> {
+    await this._updateUserUseCase.execute({
+      ...tailor,
+      id: id,
+    });
+  }
+
+  @Delete('/:id/delete')
+  async deleteTailor(@Param('id') id: string): Promise<void> {
+    await this._deleteUserUseCase.execute({ id });
+  }
+}
