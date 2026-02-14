@@ -14,6 +14,32 @@ const createNames = (base: string) => ({
 async function main() {
   console.log('Start seeding ...');
 
+  await prisma.user.upsert({
+    where: { id: '1abe4126-67a0-e1c0-810b-3de72f094f7d' },
+    create: {
+      id: '1abe4126-67a0-e1c0-810b-3de72f094f7d',
+      firstName: 'John',
+      lastName: 'Smith',
+      phone: '0987654321',
+      role: 'tailor',
+      email: 'John.Smith@example.com',
+    },
+    update: {},
+  });
+  await prisma.user.upsert({
+    where: { id: '67a0e1c0-1abe-4126-810b-3de72f094f7d' },
+    create: {
+      id: '67a0e1c0-1abe-4126-810b-3de72f094f7d',
+      firstName: 'John',
+      lastName: 'Doe',
+      phone: '1234567890',
+      role: 'customer',
+      email: 'John.Doe@example.com',
+    },
+    update: {},
+  });
+  const customerId = '67a0e1c0-1abe-4126-810b-3de72f094f7d';
+
   // 1. CLEANUP: Delete existing data to prevent unique constraint errors or duplicates
   //    (Deleted in reverse order of dependencies)
   await prisma.orderItemAlterationInformation.deleteMany();
@@ -27,7 +53,8 @@ async function main() {
   const ordersData = [
     // ORDER 1: Standard Suit Adjustment (Pending)
     {
-      customerId: '67a0e1c0-1abe-4126-810b-3de72f094f7d',
+      customerId,
+      assignedTailorId: '1abe4126-67a0-e1c0-810b-3de72f094f7d',
       reference: 'ORD-2024-001',
       status: OrderStatus.pending,
       totalPrice: 45.0,
@@ -104,7 +131,8 @@ async function main() {
 
     // ORDER 2: Traditional Dress (In Progress)
     {
-      customerId: '67a0e1c0-1abe-4126-810b-3de72f094f7d',
+      customerId,
+      assignedTailorId: '1abe4126-67a0-e1c0-810b-3de72f094f7d',
       reference: 'ORD-2024-002',
       status: OrderStatus.inProgress,
       totalPrice: 30.0,
@@ -149,7 +177,8 @@ async function main() {
 
     // ORDER 3: Custom Item Repair
     {
-      customerId: '67a0e1c0-1abe-4126-810b-3de72f094f7d',
+      customerId,
+      assignedTailorId: '1abe4126-67a0-e1c0-810b-3de72f094f7d',
       reference: 'ORD-2024-003',
       status: OrderStatus.waitingForPickup,
       totalPrice: 50.0,
@@ -183,7 +212,8 @@ async function main() {
 
     // ORDER 4: Wedding Dress
     {
-      customerId: '67a0e1c0-1abe-4126-810b-3de72f094f7d',
+      customerId,
+      assignedTailorId: '1abe4126-67a0-e1c0-810b-3de72f094f7d',
       reference: 'ORD-2024-004',
       status: OrderStatus.completed,
       totalPrice: 150.0,
@@ -250,7 +280,8 @@ async function main() {
 
     // ORDER 5: T-Shirt (FIXED: informations: { create: [] })
     {
-      customerId: '67a0e1c0-1abe-4126-810b-3de72f094f7d',
+      customerId,
+      assignedTailorId: '1abe4126-67a0-e1c0-810b-3de72f094f7d',
       reference: 'ORD-2024-005',
       status: OrderStatus.pending,
       totalPrice: 10.0,
@@ -286,7 +317,8 @@ async function main() {
 
     // ORDER 6: Mixed Order (FIXED: informations: { create: [] })
     {
-      customerId: '67a0e1c0-1abe-4126-810b-3de72f094f7d',
+      customerId,
+      assignedTailorId: '1abe4126-67a0-e1c0-810b-3de72f094f7d',
       reference: 'ORD-2024-006',
       status: OrderStatus.inProgress,
       totalPrice: 65.0,
@@ -340,7 +372,8 @@ async function main() {
 
     // ORDER 7: Curtains
     {
-      customerId: '67a0e1c0-1abe-4126-810b-3de72f094f7d',
+      customerId,
+      assignedTailorId: '1abe4126-67a0-e1c0-810b-3de72f094f7d',
       reference: 'ORD-2024-007',
       status: OrderStatus.waitingForPickup,
       totalPrice: 60.0,
@@ -380,7 +413,8 @@ async function main() {
 
     // ORDER 8: Blazer + Shirt (FIXED: informations: { create: [] })
     {
-      customerId: '67a0e1c0-1abe-4126-810b-3de72f094f7d',
+      customerId,
+      assignedTailorId: '1abe4126-67a0-e1c0-810b-3de72f094f7d',
       reference: 'ORD-2024-008',
       status: OrderStatus.pending,
       totalPrice: 55.0,
@@ -440,7 +474,8 @@ async function main() {
 
     // ORDER 9: Leather Jacket
     {
-      customerId: '67a0e1c0-1abe-4126-810b-3de72f094f7d',
+      customerId,
+      assignedTailorId: '1abe4126-67a0-e1c0-810b-3de72f094f7d',
       reference: 'ORD-2024-009',
       status: OrderStatus.inProgress,
       totalPrice: 120.0,
@@ -474,7 +509,8 @@ async function main() {
 
     // ORDER 10: Button
     {
-      customerId: '67a0e1c0-1abe-4126-810b-3de72f094f7d',
+      customerId,
+      assignedTailorId: '1abe4126-67a0-e1c0-810b-3de72f094f7d',
       reference: 'ORD-2024-010',
       status: OrderStatus.completed,
       totalPrice: 5.0,
