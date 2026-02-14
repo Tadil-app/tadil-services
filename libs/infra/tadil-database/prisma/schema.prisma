@@ -157,7 +157,7 @@ model OrderItemAlteration {
     orderItemSectionId String?
     orderItemSection   OrderItemSection?                @relation(fields: [orderItemSectionId], references: [id], onDelete: Cascade)
     customOrderItemId  String?
-    customOrderItem    CustomOrderItem?                 @relation(fields: [customOrderItemId], references: [id])
+    customOrderItem    CustomOrderItem?                 @relation(fields: [customOrderItemId], references: [id], onDelete: Cascade)
 
     @@map("order-item-alterations")
 }
@@ -175,7 +175,7 @@ model OrderItemSection {
 
     alterations OrderItemAlteration[]
     orderItemId String
-    orderItem   OrderItem             @relation(fields: [orderItemId], references: [id])
+    orderItem   OrderItem             @relation(fields: [orderItemId], references: [id], onDelete: Cascade)
 
     @@map("order-item-sections")
 }
@@ -192,7 +192,7 @@ model OrderItem {
 
     sections OrderItemSection[]
     orderId  String
-    order    Order              @relation(fields: [orderId], references: [id])
+    order    Order              @relation(fields: [orderId], references: [id], onDelete: Cascade)
 
     @@map("order-items")
 }
@@ -204,14 +204,13 @@ model CustomOrderItem {
 
     alterations OrderItemAlteration[]
     orderId     String
-    order       Order                 @relation(fields: [orderId], references: [id])
+    order       Order                 @relation(fields: [orderId], references: [id], onDelete: Cascade)
 
     @@map("custom-order-items")
 }
 
 model Order {
     id         String      @id @default(uuid())
-    customerId String
     reference  String
     date       DateTime    @default(now())
     totalPrice Float       @default(0)
@@ -219,6 +218,17 @@ model Order {
 
     items       OrderItem[]
     customItems CustomOrderItem[]
+
+    customerId String
+    customer   User   @relation("customer-orders", fields: [customerId], references: [id], onDelete: Cascade)
+
+    assignedTailorId String?
+    assignedTailor   User?   @relation("user-assigned-order", fields: [assignedTailorId], references: [id], onDelete: Cascade)
+    rejectedTailors  User[]  @relation("user-rejected-orders")
+
+    assignedCourierId String?
+    assignedCourier   User?   @relation("courier-assigned-order", fields: [assignedCourierId], references: [id], onDelete: Cascade)
+    rejectedCouriers  User[]  @relation("courier-rejected-orders")
 
     @@map("orders")
 }
@@ -230,6 +240,14 @@ model User {
     lastName  String
     email     String?
     role      Role
+
+    orders Order[] @relation("customer-orders")
+
+    assignedOrders Order[] @relation("user-assigned-order")
+    rejectedOrders Order[] @relation("user-rejected-orders")
+
+    assignedCouriers Order[] @relation("courier-assigned-order")
+    rejectedCouriers Order[] @relation("courier-rejected-orders")
 
     @@map("users")
 }

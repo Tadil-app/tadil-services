@@ -1,18 +1,35 @@
-import { Controller, Get } from '@nestjs/common';
+import { Controller, Get, Param } from '@nestjs/common';
 import { ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { DataReader } from '@tadil-database';
 import { DisplayOrderDTO } from './dtos/order';
 import { InformationType } from '@tadil-informations';
 
-@Controller('tailor')
+@Controller('tailor/:id')
 @ApiTags('Tailor')
 export class TailorController {
   constructor(private readonly _dataReader: DataReader) {}
 
   @Get('/orders')
   @ApiOkResponse({ type: DisplayOrderDTO, isArray: true })
-  async getOrders(): Promise<DisplayOrderDTO[]> {
+  async getOrders(@Param('id') id: string): Promise<DisplayOrderDTO[]> {
     const orders = await this._dataReader.queries.order.findMany({
+      where: {
+        OR: [
+          {
+            AND: [
+              {
+                assignedTailorId: null,
+              },
+              {
+                status: 'pending',
+              },
+            ],
+          },
+          {
+            assignedTailorId: id,
+          },
+        ],
+      },
       include: {
         items: {
           include: {

@@ -27,7 +27,7 @@ async function main() {
   const ordersData = [
     // ORDER 1: Standard Suit Adjustment (Pending)
     {
-      customerId: 'cust_001',
+      customerId: '67a0e1c0-1abe-4126-810b-3de72f094f7d',
       reference: 'ORD-2024-001',
       status: OrderStatus.pending,
       totalPrice: 45.0,
@@ -104,7 +104,7 @@ async function main() {
 
     // ORDER 2: Traditional Dress (In Progress)
     {
-      customerId: 'cust_002',
+      customerId: '67a0e1c0-1abe-4126-810b-3de72f094f7d',
       reference: 'ORD-2024-002',
       status: OrderStatus.inProgress,
       totalPrice: 30.0,
@@ -149,7 +149,7 @@ async function main() {
 
     // ORDER 3: Custom Item Repair
     {
-      customerId: 'cust_003',
+      customerId: '67a0e1c0-1abe-4126-810b-3de72f094f7d',
       reference: 'ORD-2024-003',
       status: OrderStatus.waitingForPickup,
       totalPrice: 50.0,
@@ -183,7 +183,7 @@ async function main() {
 
     // ORDER 4: Wedding Dress
     {
-      customerId: 'cust_004',
+      customerId: '67a0e1c0-1abe-4126-810b-3de72f094f7d',
       reference: 'ORD-2024-004',
       status: OrderStatus.completed,
       totalPrice: 150.0,
@@ -250,7 +250,7 @@ async function main() {
 
     // ORDER 5: T-Shirt (FIXED: informations: { create: [] })
     {
-      customerId: 'cust_005',
+      customerId: '67a0e1c0-1abe-4126-810b-3de72f094f7d',
       reference: 'ORD-2024-005',
       status: OrderStatus.pending,
       totalPrice: 10.0,
@@ -286,7 +286,7 @@ async function main() {
 
     // ORDER 6: Mixed Order (FIXED: informations: { create: [] })
     {
-      customerId: 'cust_006',
+      customerId: '67a0e1c0-1abe-4126-810b-3de72f094f7d',
       reference: 'ORD-2024-006',
       status: OrderStatus.inProgress,
       totalPrice: 65.0,
@@ -340,7 +340,7 @@ async function main() {
 
     // ORDER 7: Curtains
     {
-      customerId: 'cust_007',
+      customerId: '67a0e1c0-1abe-4126-810b-3de72f094f7d',
       reference: 'ORD-2024-007',
       status: OrderStatus.waitingForPickup,
       totalPrice: 60.0,
@@ -380,7 +380,7 @@ async function main() {
 
     // ORDER 8: Blazer + Shirt (FIXED: informations: { create: [] })
     {
-      customerId: 'cust_008',
+      customerId: '67a0e1c0-1abe-4126-810b-3de72f094f7d',
       reference: 'ORD-2024-008',
       status: OrderStatus.pending,
       totalPrice: 55.0,
@@ -440,7 +440,7 @@ async function main() {
 
     // ORDER 9: Leather Jacket
     {
-      customerId: 'cust_009',
+      customerId: '67a0e1c0-1abe-4126-810b-3de72f094f7d',
       reference: 'ORD-2024-009',
       status: OrderStatus.inProgress,
       totalPrice: 120.0,
@@ -474,7 +474,7 @@ async function main() {
 
     // ORDER 10: Button
     {
-      customerId: 'cust_010',
+      customerId: '67a0e1c0-1abe-4126-810b-3de72f094f7d',
       reference: 'ORD-2024-010',
       status: OrderStatus.completed,
       totalPrice: 5.0,
