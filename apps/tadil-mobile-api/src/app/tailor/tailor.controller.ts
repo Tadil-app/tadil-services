@@ -1,32 +1,43 @@
-import { Controller, Get, Param } from '@nestjs/common';
+import { Controller, Get, Param, Post } from '@nestjs/common';
 import { ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { DataReader } from '@tadil-database';
 import { DisplayOrderDTO } from './dtos/order';
 import { InformationType } from '@tadil-informations';
+import { AcceptOrderUseCase, DeclineOrderUseCase } from '@tadil-tailor';
 
 @Controller('tailor/:id')
 @ApiTags('Tailor')
 export class TailorController {
-  constructor(private readonly _dataReader: DataReader) {}
+  constructor(
+    private readonly _dataReader: DataReader,
+    private readonly _acceptOrderUseCase: AcceptOrderUseCase,
+    private readonly _declineOrderUseCase: DeclineOrderUseCase
+  ) {}
 
   @Get('/orders')
   @ApiOkResponse({ type: DisplayOrderDTO, isArray: true })
-  async getOrders(@Param('id') id: string): Promise<DisplayOrderDTO[]> {
+  async getOrders(@Param('id') tailorId: string): Promise<DisplayOrderDTO[]> {
     const orders = await this._dataReader.queries.order.findMany({
       where: {
         OR: [
           {
             AND: [
               {
-                assignedTailorId: null,
+                status: 'pending',
               },
               {
-                status: 'pending',
+                NOT: {
+                  rejectedTailors: {
+                    some: {
+                      id: tailorId,
+                    },
+                  },
+                },
               },
             ],
           },
           {
-            assignedTailorId: id,
+            assignedTailorId: tailorId,
           },
         ],
       },
@@ -86,5 +97,27 @@ export class TailorController {
         })),
       })),
     }));
+  }
+
+  @Post('/orders/:orderId/accept')
+  async acceptOrder(
+    @Param('id') tailorId: string,
+    @Param('orderId') orderId: string
+  ) {
+    await this._acceptOrderUseCase.execute({
+      tailorId,
+      orderId,
+    });
+  }
+
+  @Post('/orders/:orderId/decline')
+  async declineOrder(
+    @Param('id') tailorId: string,
+    @Param('orderId') orderId: string
+  ) {
+    await this._declineOrderUseCase.execute({
+      tailorId,
+      orderId,
+    });
   }
 }

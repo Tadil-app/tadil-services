@@ -211,7 +211,7 @@ model CustomOrderItem {
 
 model Order {
     id         String      @id @default(uuid())
-    reference  String
+    reference  String      @unique()
     date       DateTime    @default(now())
     totalPrice Float       @default(0)
     status     OrderStatus

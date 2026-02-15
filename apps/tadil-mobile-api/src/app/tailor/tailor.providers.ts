@@ -12,15 +12,17 @@ const TailorRepositoryProvider: Provider<TailorRepository> = {
   scope: Scope.REQUEST,
   inject: [DbClient],
 };
+
 const AcceptOrderUseCaseProvider: Provider<AcceptOrderUseCase> = {
-  provide: 'AcceptOrderUseCase',
+  provide: AcceptOrderUseCase,
   useFactory: (tailorRepository: TailorRepository) =>
     new AcceptOrderUseCase(tailorRepository),
   scope: Scope.REQUEST,
   inject: ['TailorRepository'],
 };
+
 const DeclineOrderUseCaseProvider: Provider<DeclineOrderUseCase> = {
-  provide: 'AcceptOrderUseCase',
+  provide: DeclineOrderUseCase,
   useFactory: (tailorRepository: TailorRepository) =>
     new DeclineOrderUseCase(tailorRepository),
   scope: Scope.REQUEST,

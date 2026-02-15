@@ -54,7 +54,7 @@ async function main() {
     // ORDER 1: Standard Suit Adjustment (Pending)
     {
       customerId,
-      assignedTailorId: '1abe4126-67a0-e1c0-810b-3de72f094f7d',
+      assignedTailorId: null,
       reference: 'ORD-2024-001',
       status: OrderStatus.pending,
       totalPrice: 45.0,
@@ -132,9 +132,9 @@ async function main() {
     // ORDER 2: Traditional Dress (In Progress)
     {
       customerId,
-      assignedTailorId: '1abe4126-67a0-e1c0-810b-3de72f094f7d',
+      assignedTailorId: null,
       reference: 'ORD-2024-002',
-      status: OrderStatus.inProgress,
+      status: OrderStatus.pending,
       totalPrice: 30.0,
       items: {
         create: [
@@ -178,9 +178,9 @@ async function main() {
     // ORDER 3: Custom Item Repair
     {
       customerId,
-      assignedTailorId: '1abe4126-67a0-e1c0-810b-3de72f094f7d',
+      assignedTailorId: null,
       reference: 'ORD-2024-003',
-      status: OrderStatus.waitingForPickup,
+      status: OrderStatus.pending,
       totalPrice: 50.0,
       customItems: {
         create: [
@@ -213,9 +213,9 @@ async function main() {
     // ORDER 4: Wedding Dress
     {
       customerId,
-      assignedTailorId: '1abe4126-67a0-e1c0-810b-3de72f094f7d',
+      assignedTailorId: null,
       reference: 'ORD-2024-004',
-      status: OrderStatus.completed,
+      status: OrderStatus.pending,
       totalPrice: 150.0,
       items: {
         create: [
@@ -281,7 +281,7 @@ async function main() {
     // ORDER 5: T-Shirt (FIXED: informations: { create: [] })
     {
       customerId,
-      assignedTailorId: '1abe4126-67a0-e1c0-810b-3de72f094f7d',
+      assignedTailorId: null,
       reference: 'ORD-2024-005',
       status: OrderStatus.pending,
       totalPrice: 10.0,
@@ -318,9 +318,9 @@ async function main() {
     // ORDER 6: Mixed Order (FIXED: informations: { create: [] })
     {
       customerId,
-      assignedTailorId: '1abe4126-67a0-e1c0-810b-3de72f094f7d',
+      assignedTailorId: null,
       reference: 'ORD-2024-006',
-      status: OrderStatus.inProgress,
+      status: OrderStatus.pending,
       totalPrice: 65.0,
       items: {
         create: [
@@ -373,9 +373,9 @@ async function main() {
     // ORDER 7: Curtains
     {
       customerId,
-      assignedTailorId: '1abe4126-67a0-e1c0-810b-3de72f094f7d',
+      assignedTailorId: null,
       reference: 'ORD-2024-007',
-      status: OrderStatus.waitingForPickup,
+      status: OrderStatus.pending,
       totalPrice: 60.0,
       customItems: {
         create: [
@@ -414,7 +414,7 @@ async function main() {
     // ORDER 8: Blazer + Shirt (FIXED: informations: { create: [] })
     {
       customerId,
-      assignedTailorId: '1abe4126-67a0-e1c0-810b-3de72f094f7d',
+      assignedTailorId: null,
       reference: 'ORD-2024-008',
       status: OrderStatus.pending,
       totalPrice: 55.0,
@@ -475,9 +475,9 @@ async function main() {
     // ORDER 9: Leather Jacket
     {
       customerId,
-      assignedTailorId: '1abe4126-67a0-e1c0-810b-3de72f094f7d',
+      assignedTailorId: null,
       reference: 'ORD-2024-009',
-      status: OrderStatus.inProgress,
+      status: OrderStatus.pending,
       totalPrice: 120.0,
       customItems: {
         create: [
@@ -510,9 +510,9 @@ async function main() {
     // ORDER 10: Button
     {
       customerId,
-      assignedTailorId: '1abe4126-67a0-e1c0-810b-3de72f094f7d',
+      assignedTailorId: null,
       reference: 'ORD-2024-010',
-      status: OrderStatus.completed,
+      status: OrderStatus.pending,
       totalPrice: 5.0,
       items: {
         create: [

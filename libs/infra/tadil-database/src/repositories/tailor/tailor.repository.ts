@@ -11,7 +11,8 @@ export class PrismaTailorRepository implements TailorRepository {
         id: orderId,
       },
       data: {
-        status: OrderStatus.pending,
+        status: OrderStatus.waitingForPickup,
+        assignedTailorId: tailorId,
       },
     });
   }
@@ -22,7 +23,9 @@ export class PrismaTailorRepository implements TailorRepository {
         id: orderId,
       },
       data: {
-        status: OrderStatus.pending,
+        rejectedTailors: {
+          connect: [{ id: tailorId }],
+        },
       },
     });
   }
