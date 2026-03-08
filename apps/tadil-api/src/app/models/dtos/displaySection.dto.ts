@@ -15,6 +15,8 @@ export class DisplaySectionDTO {
   bengaliName!: string;
   @ApiProperty({ type: () => Point, isArray: true })
   coordinates!: Point[];
+  @ApiProperty({ type: String, isArray: true })
+  alterations!: string[];
 }
 
 export class Point {

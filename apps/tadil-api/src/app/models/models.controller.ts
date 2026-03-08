@@ -21,14 +21,16 @@ import {
   AddModelImageUseCase,
   AddSectionUseCase,
   CreateModelUseCase,
+  UpdateModelUseCase,
+  UpdateSectionUseCase,
   DeleteModelImageUseCase,
   DeleteModelUseCase,
   DeleteSectionUseCase,
-  UpdateModelUseCase,
 } from '@tadil-models';
 import {
   AddModelImageDTO,
   AddSectionDTO,
+  UpdateSectionDTO,
   CreateModelDTO,
   DisplayModelDTO,
   DisplayModelImageDTO,
@@ -55,6 +57,7 @@ export class ModelsController {
     private readonly _addModelImageUseCase: AddModelImageUseCase,
     private readonly _deleteModelImageUseCase: DeleteModelImageUseCase,
     private readonly _addSectionUseCase: AddSectionUseCase,
+    private readonly _updateSectionUseCase: UpdateSectionUseCase,
     private readonly _deleteSectionUseCase: DeleteSectionUseCase,
     @Inject('FileStorageService')
     private readonly _fileStorageService: FileStorageService
@@ -134,6 +137,18 @@ export class ModelsController {
     });
   }
 
+  @Patch('/images/sections/:id/update')
+  @ApiParam({ name: 'id', type: 'string' })
+  async updateSection(
+    @Param('id') id: string,
+    @Body() section: UpdateSectionDTO
+  ): Promise<void> {
+    await this._updateSectionUseCase.execute({
+      ...section,
+      id,
+    });
+  }
+
   @Delete('/images/:id/delete')
   @ApiParam({ name: 'id', type: 'string' })
   async deleteModelImage(@Param('id') id: string): Promise<void> {
@@ -143,8 +158,14 @@ export class ModelsController {
   @Get('/images/sections')
   @ApiOkResponse({ type: DisplaySectionDTO, isArray: true })
   async getSections(): Promise<DisplaySectionDTO[]> {
-    const sections = await this._dataReader.queries.section.findMany();
-    return sections;
+    const sections = await this._dataReader.queries.section.findMany({
+      include: { services: { select: { id: true } } },
+    });
+    return sections.map((section) => ({
+      ...section,
+      coordinates: section.coordinates as unknown as { x: number; y: number }[],
+      alterations: section.services.map((service) => service.id),
+    }));
   }
 
   @Delete('/images/sections/:id/delete')
@@ -161,7 +182,13 @@ export class ModelsController {
   ): Promise<DisplayModelImageDTO[]> {
     const modelImages = await this._dataReader.queries.modelImage.findMany({
       where: { modelId: id },
-      include: { sections: true },
+      include: {
+        sections: {
+          include: {
+            services: { select: { id: true } },
+          },
+        },
+      },
     });
 
     const images = await Promise.all(
@@ -181,7 +208,11 @@ export class ModelsController {
             hindiName: section.hindiName,
             urduName: section.urduName,
             bengaliName: section.bengaliName,
-            coordinates: section.coordinates,
+            coordinates: section.coordinates as unknown as {
+              x: number;
+              y: number;
+            }[],
+            alterations: section.services.map((service) => service.id),
           })),
         };
       })

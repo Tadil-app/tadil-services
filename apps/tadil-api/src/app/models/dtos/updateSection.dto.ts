@@ -2,7 +2,7 @@ import { ApiProperty } from '@nestjs/swagger';
 import { IsArray, IsNotEmpty } from 'class-validator';
 import { Point } from '.';
 
-export class AddSectionDTO {
+export class UpdateSectionDTO {
   @ApiProperty()
   @IsNotEmpty()
   englishName!: string;

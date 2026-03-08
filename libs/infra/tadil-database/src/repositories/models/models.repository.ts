@@ -90,7 +90,10 @@ export class PrismaModelsRepository implements ModelsRepository {
     });
 
     if (!section) return undefined;
-    return section;
+    return {
+      ...section,
+      alterations: [],
+    };
   }
 
   async addSection(section: Section): Promise<void> {
@@ -104,6 +107,30 @@ export class PrismaModelsRepository implements ModelsRepository {
         urduName: section.urduName,
         bengaliName: section.bengaliName,
         coordinates: section.coordinates,
+        services: {
+          connect: section.alterations.map((alterationId) => ({
+            id: alterationId,
+          })),
+        },
+      },
+    });
+  }
+
+  async updateSection(section: Section): Promise<void> {
+    await this._db.section.update({
+      where: { id: section.id },
+      data: {
+        englishName: section.englishName,
+        arabicName: section.arabicName,
+        hindiName: section.hindiName,
+        urduName: section.urduName,
+        bengaliName: section.bengaliName,
+        coordinates: section.coordinates,
+        services: {
+          set: section.alterations.map((alterationId) => ({
+            id: alterationId,
+          })),
+        },
       },
     });
   }

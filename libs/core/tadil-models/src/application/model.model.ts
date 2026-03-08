@@ -32,6 +32,7 @@ export interface Section {
   urduName: string;
   bengaliName: string;
   coordinates: Point[];
+  alterations: string[];
 }
 
 export interface Point {

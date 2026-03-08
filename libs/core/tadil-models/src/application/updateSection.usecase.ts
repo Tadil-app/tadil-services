@@ -4,53 +4,51 @@ import {
   NotFoundException,
 } from '@tadil-common';
 import { ModelsRepository } from './models.repository';
-import { v4 as uuidv4 } from 'uuid';
 import { Point } from './model.model';
 
-export class AddSectionUseCase {
+export class UpdateSectionUseCase {
   private _modelsRepository: ModelsRepository;
   constructor(_modelsRepository: ModelsRepository) {
     this._modelsRepository = _modelsRepository;
   }
 
-  async execute(addSectionCommand: AddSectionCommand): Promise<void> {
-    if (!addSectionCommand.modelImageId) {
-      throw new InvalidCommandException('Model Image ID is required');
+  async execute(updateSectionCommand: UpdateSectionCommand): Promise<void> {
+    if (!updateSectionCommand.id) {
+      throw new InvalidCommandException('Section ID is required');
     }
-    if (!addSectionCommand.englishName) {
+    if (!updateSectionCommand.englishName) {
       throw new InvalidCommandException('English name is required');
     }
-    if (!addSectionCommand.arabicName) {
+    if (!updateSectionCommand.arabicName) {
       throw new InvalidCommandException('Arabic name is required');
     }
-    if (!addSectionCommand.hindiName) {
+    if (!updateSectionCommand.hindiName) {
       throw new InvalidCommandException('Hindi name is required');
     }
-    if (!addSectionCommand.urduName) {
+    if (!updateSectionCommand.urduName) {
       throw new InvalidCommandException('Urdu name is required');
     }
-    if (!addSectionCommand.bengaliName) {
+    if (!updateSectionCommand.bengaliName) {
       throw new InvalidCommandException('Bengali name is required');
     }
     if (
-      !addSectionCommand.coordinates ||
-      addSectionCommand.coordinates.length === 0
+      !updateSectionCommand.coordinates ||
+      updateSectionCommand.coordinates.length === 0
     ) {
       throw new InvalidCommandException('Coordinates are required');
     }
 
-    const modelImage = await this._modelsRepository.getModelImageById(
-      addSectionCommand.modelImageId
+    const section = await this._modelsRepository.getSectionById(
+      updateSectionCommand.id
     );
-    if (!modelImage) {
-      throw new NotFoundException('Model Image not found');
+    if (!section) {
+      throw new NotFoundException('Section not found');
     }
 
     try {
-      const newSectionId = uuidv4();
-      await this._modelsRepository.addSection({
-        id: newSectionId,
-        ...addSectionCommand,
+      await this._modelsRepository.updateSection({
+        ...section,
+        ...updateSectionCommand,
       });
     } catch (error: unknown) {
       if (error instanceof Error)
@@ -60,8 +58,8 @@ export class AddSectionUseCase {
   }
 }
 
-export class AddSectionCommand {
-  readonly modelImageId: string;
+export class UpdateSectionCommand {
+  readonly id: string;
   readonly englishName: string;
   readonly arabicName: string;
   readonly hindiName: string;
@@ -71,7 +69,7 @@ export class AddSectionCommand {
   readonly alterations: string[];
 
   constructor(
-    modelImageId: string,
+    id: string,
     englishName: string,
     arabicName: string,
     hindiName: string,
@@ -80,7 +78,7 @@ export class AddSectionCommand {
     coordinates: Point[],
     alterations: string[]
   ) {
-    this.modelImageId = modelImageId;
+    this.id = id;
     this.englishName = englishName;
     this.arabicName = arabicName;
     this.hindiName = hindiName;
