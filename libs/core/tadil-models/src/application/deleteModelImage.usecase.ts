@@ -1,4 +1,4 @@
-import { FileStorageService, InfrastructureException } from '@tadil-common';
+import { FileStorageService, InfrastructureException, InvalidCommandException, NotFoundException } from '@tadil-common';
 import { ModelsRepository } from './models.repository';
 
 export class DeleteModelImageUseCase {
@@ -16,14 +16,14 @@ export class DeleteModelImageUseCase {
     deleteModelImageCommand: DeleteModelImageCommand
   ): Promise<void> {
     if (!deleteModelImageCommand.imageId) {
-      throw new Error('Image ID is required');
+      throw new InvalidCommandException('Image ID is required');
     }
 
     const image = await this._modelsRepository.getModelImageById(
       deleteModelImageCommand.imageId
     );
     if (!image) {
-      throw new Error('Image not found');
+      throw new NotFoundException('Image not found');
     }
 
     try {

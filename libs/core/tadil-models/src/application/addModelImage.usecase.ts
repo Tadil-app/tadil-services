@@ -1,6 +1,8 @@
 import {
   FileStorageService,
   InfrastructureException,
+  InvalidCommandException,
+  NotFoundException,
   ReadableFile,
 } from '@tadil-common';
 import { ModelsRepository } from './models.repository';
@@ -21,17 +23,17 @@ export class AddModelImageUseCase {
 
   async execute(addModelImageCommand: AddModelImageCommand) {
     if (!addModelImageCommand.modelId) {
-      throw new Error('Model ID is required');
+      throw new InvalidCommandException('Model ID is required');
     }
     if (!addModelImageCommand.imageFile) {
-      throw new Error('Image is required');
+      throw new InvalidCommandException('Image is required');
     }
 
     const model = await this._modelsRepository.getModelById(
       addModelImageCommand.modelId
     );
     if (!model) {
-      throw new Error('Model not found');
+      throw new NotFoundException('Model not found');
     }
 
     const newImageId = uuidv4();
