@@ -11,6 +11,9 @@ RUN cd libs/infra/tadil-database && npm install --legacy-peer-deps
 COPY libs/infra/file-storage/package.json libs/infra/file-storage/
 RUN cd libs/infra/file-storage && npm install --legacy-peer-deps
 
+COPY libs/infra/sms-provider/package.json libs/infra/file-storage/
+RUN cd libs/infra/sms-provider && npm install --legacy-peer-deps
+
 COPY . .
 
 RUN npx prisma generate --schema=./libs/infra/tadil-database/prisma/schema.prisma
@@ -24,10 +27,12 @@ WORKDIR /app
 COPY package.json package-lock.json* ./
 COPY libs/infra/tadil-database/package.json libs/infra/tadil-database/
 COPY libs/infra/file-storage/package.json libs/infra/file-storage/
+COPY libs/infra/sms-provider/package.json libs/infra/sms-provider/
 
 RUN npm install --legacy-peer-deps --omit=dev
 RUN cd libs/infra/tadil-database && npm install --legacy-peer-deps --omit=dev
 RUN cd libs/infra/file-storage && npm install --legacy-peer-deps --omit=dev
+RUN cd libs/infra/sms-provider && npm install --legacy-peer-deps --omit=dev
 
 COPY --from=builder /app/dist/apps/tadil-mobile-api ./dist
 COPY --from=builder /app/node_modules/.prisma ./node_modules/.prisma
