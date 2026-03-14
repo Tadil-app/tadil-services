@@ -27,7 +27,9 @@
       "@tadil-alterations": ["libs/core/tadil-alterations/src/index.ts"],
       "@tadil-extras": ["libs/core/tadil-extras/src/index.ts"],
       "@tadil-tailor": ["libs/core/tadil-tailor/src/index.ts"],
-      "@tadil-users": ["libs/core/tadil-users/src/index.ts"]
+      "@tadil-users": ["libs/core/tadil-users/src/index.ts"],
+      "@tadil-auth": ["libs/core/tadil-auth/src/index.ts"],
+      "@tadil-sms": ["libs/infra/sms-provider/src/index.ts"]
     }
   }
 }

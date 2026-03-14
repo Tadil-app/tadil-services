@@ -4,3 +4,4 @@ export * from './alterations';
 export * from './extras';
 export * from './tailor';
 export * from './users';
+export * from './otps';

@@ -32,6 +32,9 @@
     },
     {
       "path": "../../libs/infra/file-storage"
+    },
+    {
+      "path": "../../libs/infra/sms-provider"
     }
   ]
 }

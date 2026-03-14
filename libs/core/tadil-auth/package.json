@@ -1,0 +1,27 @@
+{
+  "name": "tadil-auth",
+  "version": "0.0.1",
+  "private": true,
+  "type": "module",
+  "nx": {
+    "targets": {
+      "lint": {
+        "executor": "@nx/eslint:lint"
+      },
+      "test": {
+        "executor": "@nx/jest:jest",
+        "outputs": [
+          "{projectRoot}/test-output/jest/coverage"
+        ],
+        "options": {
+          "jestConfig": "libs/core/tadil-auth/jest.config.ts"
+        }
+      }
+    }
+  },
+  "dependencies": {
+    "jsonwebtoken": "^9.0.2",
+    "@types/jsonwebtoken": "^9.0.8",
+    "tslib": "^2.3.0"
+  }
+}

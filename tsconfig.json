@@ -35,6 +35,12 @@
     },
     {
       "path": "./libs/core/tadil-users"
+    },
+    {
+      "path": "./libs/core/tadil-auth"
+    },
+    {
+      "path": "./libs/infra/sms-provider"
     }
   ]
 }

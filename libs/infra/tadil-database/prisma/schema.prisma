@@ -249,5 +249,20 @@ model User {
     assignedCouriers Order[] @relation("courier-assigned-order")
     rejectedCouriers Order[] @relation("courier-rejected-orders")
 
+    otps Otp[]
+
     @@map("users")
+}
+
+model Otp {
+    id        String   @id @default(uuid())
+    code      String
+    phone     String
+    expiresAt DateTime
+    createdAt DateTime @default(now())
+
+    userId String?
+    user   User?   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+    @@map("otps")
 }

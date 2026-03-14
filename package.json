@@ -18,6 +18,7 @@
   "dependencies": {
     "@nestjs/common": "^11.0.0",
     "@nestjs/core": "^11.0.0",
+    "@nestjs/jwt": "^11.0.2",
     "@nestjs/platform-express": "^11.0.0",
     "@nestjs/swagger": "^11.2.1",
     "axios": "^1.6.0",
@@ -40,6 +41,7 @@
     "@nx/webpack": "22.0.2",
     "@nx/workspace": "22.0.2",
     "@swc-node/register": "~1.9.1",
+    "@swc/cli": "~0.6.0",
     "@swc/core": "~1.5.7",
     "@swc/helpers": "~0.5.11",
     "@swc/jest": "~0.2.38",
@@ -72,6 +74,8 @@
     "libs/core/tadil-alterations",
     "libs/core/tadil-extras",
     "libs/core/tadil-tailor",
-    "libs/core/tadil-users"
+    "libs/core/tadil-users",
+    "libs/core/tadil-auth",
+    "libs/infra/sms-provider"
   ]
 }
