@@ -11,7 +11,7 @@ RUN cd libs/infra/tadil-database && npm install --legacy-peer-deps
 COPY libs/infra/file-storage/package.json libs/infra/file-storage/
 RUN cd libs/infra/file-storage && npm install --legacy-peer-deps
 
-COPY libs/infra/sms-provider/package.json libs/infra/file-storage/
+COPY libs/infra/sms-provider/package.json libs/infra/sms-provider/
 RUN cd libs/infra/sms-provider && npm install --legacy-peer-deps
 
 COPY . .
