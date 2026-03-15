@@ -63,7 +63,7 @@ async function main() {
           {
             ...createNames("Men's 2-Piece Suit"),
             price: 0,
-            imageFileId: '2bd8106e-b35a-482a-ae80-68b526bc0349.png',
+            imageFileId: '5ce2c874-911f-4bbe-b33d-c2d71dc889ac.png',
             // imageFileId: '2bd8106e-b35a-482a-ae80-68b526bc0349.png',
             sections: {
               create: [
@@ -144,7 +144,7 @@ async function main() {
           {
             ...createNames('Traditional Thobe'),
             price: 0,
-            imageFileId: '2bd8106e-b35a-482a-ae80-68b526bc0349.png',
+            imageFileId: '5ce2c874-911f-4bbe-b33d-c2d71dc889ac.png',
             // imageFileId: '2bd8106e-b35a-482a-ae80-68b526bc0349.png',
             sections: {
               create: [
@@ -191,7 +191,7 @@ async function main() {
         create: [
           {
             price: 50.0,
-            imageFileId: '2bd8106e-b35a-482a-ae80-68b526bc0349.png',
+            imageFileId: '5ce2c874-911f-4bbe-b33d-c2d71dc889ac.png',
             // imageFileId: '2bd8106e-b35a-482a-ae80-68b526bc0349.png',
             alterations: {
               create: [
@@ -228,7 +228,7 @@ async function main() {
           {
             ...createNames('Wedding Gown'),
             price: 0,
-            imageFileId: '2bd8106e-b35a-482a-ae80-68b526bc0349.png',
+            imageFileId: '5ce2c874-911f-4bbe-b33d-c2d71dc889ac.png',
             // imageFileId: '2bd8106e-b35a-482a-ae80-68b526bc0349.png',
             sections: {
               create: [
@@ -299,7 +299,7 @@ async function main() {
           {
             ...createNames('Cotton T-Shirt'),
             price: 0,
-            imageFileId: '2bd8106e-b35a-482a-ae80-68b526bc0349.png',
+            imageFileId: '5ce2c874-911f-4bbe-b33d-c2d71dc889ac.png',
             // imageFileId: '2bd8106e-b35a-482a-ae80-68b526bc0349.png',
             sections: {
               create: [
@@ -338,7 +338,7 @@ async function main() {
           {
             ...createNames('Jeans'),
             price: 0,
-            imageFileId: '2bd8106e-b35a-482a-ae80-68b526bc0349.png',
+            imageFileId: '5ce2c874-911f-4bbe-b33d-c2d71dc889ac.png',
             // imageFileId: '2bd8106e-b35a-482a-ae80-68b526bc0349.png',
             sections: {
               create: [
@@ -367,7 +367,7 @@ async function main() {
         create: [
           {
             price: 40.0,
-            imageFileId: '2bd8106e-b35a-482a-ae80-68b526bc0349.png',
+            imageFileId: '5ce2c874-911f-4bbe-b33d-c2d71dc889ac.png',
             // imageFileId: '2bd8106e-b35a-482a-ae80-68b526bc0349.png',
             alterations: {
               create: [
@@ -395,7 +395,7 @@ async function main() {
         create: [
           {
             price: 60.0,
-            imageFileId: '2bd8106e-b35a-482a-ae80-68b526bc0349.png',
+            imageFileId: '5ce2c874-911f-4bbe-b33d-c2d71dc889ac.png',
             // imageFileId: '2bd8106e-b35a-482a-ae80-68b526bc0349.png',
             alterations: {
               create: [
@@ -438,7 +438,7 @@ async function main() {
           {
             ...createNames('Blazer'),
             price: 0,
-            imageFileId: '2bd8106e-b35a-482a-ae80-68b526bc0349.png',
+            imageFileId: '5ce2c874-911f-4bbe-b33d-c2d71dc889ac.png',
             // imageFileId: '2bd8106e-b35a-482a-ae80-68b526bc0349.png',
             sections: {
               create: [
@@ -464,7 +464,7 @@ async function main() {
           {
             ...createNames('Dress Shirt'),
             price: 0,
-            imageFileId: '2bd8106e-b35a-482a-ae80-68b526bc0349.png',
+            imageFileId: '5ce2c874-911f-4bbe-b33d-c2d71dc889ac.png',
             // imageFileId: '2bd8106e-b35a-482a-ae80-68b526bc0349.png',
             sections: {
               create: [
@@ -502,7 +502,7 @@ async function main() {
         create: [
           {
             price: 120.0,
-            imageFileId: '2bd8106e-b35a-482a-ae80-68b526bc0349.png',
+            imageFileId: '5ce2c874-911f-4bbe-b33d-c2d71dc889ac.png',
             // imageFileId: '2bd8106e-b35a-482a-ae80-68b526bc0349.png',
             alterations: {
               create: [
@@ -539,7 +539,7 @@ async function main() {
           {
             ...createNames('Coat'),
             price: 0,
-            imageFileId: '2bd8106e-b35a-482a-ae80-68b526bc0349.png',
+            imageFileId: '5ce2c874-911f-4bbe-b33d-c2d71dc889ac.png',
             // imageFileId: '2bd8106e-b35a-482a-ae80-68b526bc0349.png',
             sections: {
               create: [
