@@ -1,3 +1,3 @@
-export * from './requestOtp.dto';
-export * from './verifyOtp.dto';
+export * from './login.dto';
+export * from './completeProfile.dto';
 export * from './authResponse.dto';

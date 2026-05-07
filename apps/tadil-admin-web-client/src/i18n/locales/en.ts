@@ -5,6 +5,22 @@ export const en = {
     extras: "Extras",
     models: "Models",
     users: "Users",
+    loginRequests: "Login Requests",
+  },
+  loginRequests: {
+    title: "Login Requests",
+    subtitle: "Manage tailor and courier login approval requests",
+    table: {
+      name: "Name",
+      phone: "Phone",
+      role: "Role",
+      actions: "Actions",
+      empty: "No pending login requests",
+    },
+    buttons: {
+      approve: "Approve",
+      reject: "Reject",
+    },
   },
   common: {
     currencies: {

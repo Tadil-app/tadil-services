@@ -14,8 +14,9 @@ import {
   DisplayModelImageDTO,
   DisplayAlterationDTO,
   DisplayOrderDTO,
-  GetOtpCodeDto,
-  VerifyOtpDto,
+  LoginDto,
+  CompleteProfileDto,
+  AuthResponseDto,
 } from "../dtos";
 export interface UploadFileDto {
   file: File;
@@ -341,14 +342,14 @@ export class Api<
      * No description
      *
      * @tags Auth
-     * @name AuthControllerGetOtpCode
+     * @name AuthControllerLogin
      * @request POST:/api/auth/login
      */
-    authControllerGetOtpCode: (
-      data: GetOtpCodeDto,
+    authControllerLogin: (
+      data: LoginDto,
       params: RequestParams = {},
     ) =>
-      this.request<VerifyOtpDto, any>({
+      this.request<AuthResponseDto, any>({
         path: `/api/auth/login`,
         method: "POST",
         body: data,
@@ -361,13 +362,13 @@ export class Api<
      * No description
      *
      * @tags Auth
-     * @name AuthControllerVerifyOtp
-     * @request POST:/api/auth/verify-otp
+     * @name AuthControllerCompleteProfile
+     * @request PUT:/api/auth/complete-profile
      */
-    authControllerVerifyOtp: (data: VerifyOtpDto, params: RequestParams = {}) =>
-      this.request<boolean, any>({
-        path: `/api/auth/verify-otp`,
-        method: "POST",
+    authControllerCompleteProfile: (data: CompleteProfileDto, params: RequestParams = {}) =>
+      this.request<AuthResponseDto, any>({
+        path: `/api/auth/complete-profile`,
+        method: "PUT",
         body: data,
         type: ContentType.Json,
         format: "json",

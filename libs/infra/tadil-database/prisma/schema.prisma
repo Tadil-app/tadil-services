@@ -32,6 +32,12 @@ enum OrderStatus {
     waitingForPickup
 }
 
+enum LoginRequestStatus {
+    PENDING
+    APPROVED
+    REJECTED
+}
+
 enum Role {
     tailor
     customer
@@ -241,6 +247,9 @@ model User {
     email     String?
     role      Role
 
+    loginRequestStatus LoginRequestStatus?
+    loginToken         String?
+
     orders Order[] @relation("customer-orders")
 
     assignedOrders Order[] @relation("user-assigned-order")
@@ -249,20 +258,5 @@ model User {
     assignedCouriers Order[] @relation("courier-assigned-order")
     rejectedCouriers Order[] @relation("courier-rejected-orders")
 
-    otps Otp[]
-
     @@map("users")
-}
-
-model Otp {
-    id        String   @id @default(uuid())
-    code      String
-    phone     String
-    expiresAt DateTime
-    createdAt DateTime @default(now())
-
-    userId String?
-    user   User?   @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-    @@map("otps")
 }

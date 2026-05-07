@@ -4,39 +4,55 @@ import {
   HttpCode,
   HttpStatus,
   Post,
+  Put,
 } from '@nestjs/common';
-import { ApiOkResponse, ApiTags, ApiOperation, ApiNoContentResponse } from '@nestjs/swagger';
-import { RequestOtpUseCase, VerifyOtpUseCase } from '@tadil-auth';
-import { AuthResponseDto, RequestOtpDto, VerifyOtpDto } from './dtos';
+import { ApiOkResponse, ApiTags, ApiOperation } from '@nestjs/swagger';
+import { LoginUseCase, CompleteProfileUseCase } from '@tadil-auth';
+import { AuthResponseDto, LoginDto, CompleteProfileDto } from './dtos';
 
 @Controller('auth')
 @ApiTags('Auth')
 export class AuthController {
   constructor(
-    private readonly _requestOtpUseCase: RequestOtpUseCase,
-    private readonly _verifyOtpUseCase: VerifyOtpUseCase
+    private readonly _loginUseCase: LoginUseCase,
+    private readonly _completeProfileUseCase: CompleteProfileUseCase
   ) {}
 
   @Post('/login')
-  @HttpCode(HttpStatus.NO_CONTENT)
-  @ApiOperation({ summary: 'Request an OTP code via SMS for login' })
-  @ApiNoContentResponse({
-    description: 'OTP has been successfully sent via SMS.',
-  })
-  async requestOtp(@Body() dto: RequestOtpDto): Promise<void> {
-    await this._requestOtpUseCase.execute(dto.phone);
-  }
-
-  @Post('/verify-otp')
   @HttpCode(HttpStatus.OK)
-  @ApiOperation({ summary: 'Verify OTP code and receive JWT token' })
+  @ApiOperation({ summary: 'Login or initiate registration with phone number' })
   @ApiOkResponse({
-    description: 'Authentication successful',
+    description: 'Login status returned',
     type: AuthResponseDto,
   })
-  async verifyOtp(@Body() dto: VerifyOtpDto): Promise<AuthResponseDto> {
-    const result = await this._verifyOtpUseCase.execute(dto.phone, dto.code);
+  async login(@Body() dto: LoginDto): Promise<AuthResponseDto> {
+    const result = await this._loginUseCase.execute(dto.phone);
     return {
+      status: result.status,
+      token: result.token,
+      message: result.message,
+      user: result.user ? {
+        id: result.user.id,
+        firstName: result.user.firstName,
+        lastName: result.user.lastName,
+        phone: result.user.phone,
+        role: result.user.role,
+        email: result.user.email ?? undefined,
+      } : undefined,
+    };
+  }
+
+  @Put('/complete-profile')
+  @HttpCode(HttpStatus.OK)
+  @ApiOperation({ summary: 'Complete skeleton user profile' })
+  @ApiOkResponse({
+    description: 'Profile completed and authenticated',
+    type: AuthResponseDto,
+  })
+  async completeProfile(@Body() dto: CompleteProfileDto): Promise<AuthResponseDto> {
+    const result = await this._completeProfileUseCase.execute(dto.phone, dto.firstName, dto.lastName);
+    return {
+      status: 'authenticated',
       token: result.token,
       user: {
         id: result.user.id,

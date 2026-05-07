@@ -17,9 +17,15 @@ class UserDto {
 }
 
 export class AuthResponseDto {
-  @ApiProperty({ description: 'Persistent JWT access token' })
-  token!: string;
+  @ApiProperty({ enum: ['authenticated', 'signup_required', 'pending', 'rejected'] })
+  status!: string;
 
-  @ApiProperty({ type: UserDto })
-  user!: UserDto;
+  @ApiProperty({ required: false, description: 'JWT access token (only if authenticated)' })
+  token?: string;
+
+  @ApiProperty({ type: UserDto, required: false })
+  user?: UserDto;
+
+  @ApiProperty({ required: false })
+  message?: string;
 }

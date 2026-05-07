@@ -21,6 +21,7 @@
 import {
   GitBranchPlus,
   HandCoins,
+  KeyRound,
   ScissorsLineDashed,
   Spool,
   Users,
@@ -35,5 +36,6 @@ const navItems = computed(() => [
   { path: "/extras", label: t("nav.extras"), icon: GitBranchPlus },
   { path: "/models", label: t("nav.models"), icon: ScissorsLineDashed },
   { path: "/users", label: t("nav.users"), icon: Users },
+  { path: "/login-requests", label: t("nav.loginRequests"), icon: KeyRound },
 ]);
 </script>

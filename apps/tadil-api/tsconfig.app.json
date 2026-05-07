@@ -39,6 +39,9 @@
       "path": "../../libs/core/tadil-users/tsconfig.lib.json"
     },
     {
+      "path": "../../libs/core/tadil-auth/tsconfig.lib.json"
+    },
+    {
       "path": "../../libs/infra/tadil-database/tsconfig.lib.json"
     },
     {

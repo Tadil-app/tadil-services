@@ -879,6 +879,49 @@ export class Api<
     /**
      * No description
      *
+     * @tags Login Requests
+     * @name LoginRequestsControllerGetPending
+     * @request GET:/api/login-requests/pending
+     */
+    loginRequestsControllerGetPending: (params: RequestParams = {}) =>
+      this.request<DisplayUserDTO[], any>({
+        path: `/api/login-requests/pending`,
+        method: "GET",
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Login Requests
+     * @name LoginRequestsControllerApprove
+     * @request POST:/api/login-requests/{id}/approve
+     */
+    loginRequestsControllerApprove: (id: string, params: RequestParams = {}) =>
+      this.request<void, any>({
+        path: `/api/login-requests/${id}/approve`,
+        method: "POST",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Login Requests
+     * @name LoginRequestsControllerReject
+     * @request POST:/api/login-requests/{id}/reject
+     */
+    loginRequestsControllerReject: (id: string, params: RequestParams = {}) =>
+      this.request<void, any>({
+        path: `/api/login-requests/${id}/reject`,
+        method: "POST",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
      * @tags App
      * @name AppControllerGetFileStream
      * @request GET:/api/files/{id}

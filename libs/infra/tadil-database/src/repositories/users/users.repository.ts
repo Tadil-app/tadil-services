@@ -1,4 +1,4 @@
-import { User, UsersRepository } from '@tadil-users';
+import { User, UsersRepository, LoginRequestStatusType } from '@tadil-users';
 import { DbClient } from '../../dbClient';
 
 export class PrismaUsersRepository implements UsersRepository {
@@ -13,6 +13,8 @@ export class PrismaUsersRepository implements UsersRepository {
     return {
       ...user,
       email: user.email ?? undefined,
+      loginRequestStatus: (user.loginRequestStatus as LoginRequestStatusType) ?? undefined,
+      loginToken: user.loginToken ?? undefined,
     };
   }
 
@@ -24,7 +26,23 @@ export class PrismaUsersRepository implements UsersRepository {
     return {
       ...user,
       email: user.email ?? undefined,
+      loginRequestStatus: (user.loginRequestStatus as LoginRequestStatusType) ?? undefined,
+      loginToken: user.loginToken ?? undefined,
     };
+  }
+
+  async getUsersByLoginRequestStatus(
+    status: LoginRequestStatusType
+  ): Promise<User[]> {
+    const users = await this._db.user.findMany({
+      where: { loginRequestStatus: status },
+    });
+    return users.map((user) => ({
+      ...user,
+      email: user.email ?? undefined,
+      loginRequestStatus: (user.loginRequestStatus as LoginRequestStatusType) ?? undefined,
+      loginToken: user.loginToken ?? undefined,
+    }));
   }
 
   async createUser(user: User): Promise<void> {
@@ -36,6 +54,8 @@ export class PrismaUsersRepository implements UsersRepository {
         phone: user.phone,
         role: user.role,
         email: user.email,
+        loginRequestStatus: user.loginRequestStatus,
+        loginToken: user.loginToken,
       },
     });
   }
@@ -49,6 +69,8 @@ export class PrismaUsersRepository implements UsersRepository {
         phone: user.phone,
         role: user.role,
         email: user.email,
+        loginRequestStatus: user.loginRequestStatus,
+        loginToken: user.loginToken,
       },
     });
   }

@@ -81,7 +81,7 @@ npm run build-mobile
   - Use cases: `Create[Entity]UseCase.ts`
   - Controllers: Standard NestJS controllers in `apps`.
   - Modules: Group related logic into NestJS modules.
-- **Documentation:** Use `@nestjs/swagger` decorators on DTOs and Controllers for up-to-date documentation.
+- **Documentation:** Use `@nestjs/swagger` decorators on DTOs and Controllers for up-to-date API documentation. Also, **maintain a 'docs' folder at the root of the project** containing `.md` files for every part of the application (e.g., individual apps and libraries). From now on, any new part of the app must have a corresponding `.md` file in the `docs/` folder.
 - **Formatting & Linting:**
   - Prettier for formatting (`.prettierrc`).
   - ESLint for linting (`eslint.config.mjs`).

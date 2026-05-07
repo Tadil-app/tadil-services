@@ -6,6 +6,12 @@ import {
   UpdateUserUseCase,
   DeleteUserUseCase,
 } from '@tadil-users';
+import {
+  ApproveLoginRequestUseCase,
+  RejectLoginRequestUseCase,
+  GetPendingLoginRequestsUseCase,
+} from '@tadil-auth';
+import { environment } from '../../environments/environment';
 
 const UsersRepositoryProvider: Provider<UsersRepository> = {
   provide: 'UsersRepository',
@@ -43,9 +49,40 @@ const DeleteUserUseCaseProvider: Provider<DeleteUserUseCase> = {
   inject: ['UsersRepository'],
 };
 
+const ApproveLoginRequestUseCaseProvider: Provider<ApproveLoginRequestUseCase> = {
+  provide: ApproveLoginRequestUseCase,
+  useFactory: (usersRepository: UsersRepository) => {
+    const secret = environment.jwtSecret || 'super-secret';
+    return new ApproveLoginRequestUseCase(usersRepository, secret);
+  },
+  scope: Scope.REQUEST,
+  inject: ['UsersRepository'],
+};
+
+const RejectLoginRequestUseCaseProvider: Provider<RejectLoginRequestUseCase> = {
+  provide: RejectLoginRequestUseCase,
+  useFactory: (usersRepository: UsersRepository) => {
+    return new RejectLoginRequestUseCase(usersRepository);
+  },
+  scope: Scope.REQUEST,
+  inject: ['UsersRepository'],
+};
+
+const GetPendingLoginRequestsUseCaseProvider: Provider<GetPendingLoginRequestsUseCase> = {
+  provide: GetPendingLoginRequestsUseCase,
+  useFactory: (usersRepository: UsersRepository) => {
+    return new GetPendingLoginRequestsUseCase(usersRepository);
+  },
+  scope: Scope.REQUEST,
+  inject: ['UsersRepository'],
+};
+
 export {
   UsersRepositoryProvider,
   CreateUserUseCaseProvider,
   UpdateUserUseCaseProvider,
   DeleteUserUseCaseProvider,
+  ApproveLoginRequestUseCaseProvider,
+  RejectLoginRequestUseCaseProvider,
+  GetPendingLoginRequestsUseCaseProvider,
 };

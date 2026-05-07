@@ -3,11 +3,9 @@ import { CommonModule } from '../common/common.module';
 import { AuthController } from './auth.controller';
 import { AuthGuard } from './auth.guard';
 import {
-  OtpsRepositoryProvider,
-  RequestOtpUseCaseProvider,
-  SmsServiceProvider,
   UsersRepositoryProvider,
-  VerifyOtpUseCaseProvider,
+  LoginUseCaseProvider,
+  CompleteProfileUseCaseProvider,
 } from './auth.providers';
 
 @Module({
@@ -15,11 +13,9 @@ import {
   controllers: [AuthController],
   providers: [
     AuthGuard,
-    OtpsRepositoryProvider,
     UsersRepositoryProvider,
-    SmsServiceProvider,
-    RequestOtpUseCaseProvider,
-    VerifyOtpUseCaseProvider,
+    LoginUseCaseProvider,
+    CompleteProfileUseCaseProvider,
   ],
   exports: [AuthGuard],
 })

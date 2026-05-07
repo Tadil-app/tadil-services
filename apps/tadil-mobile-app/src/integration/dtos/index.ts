@@ -156,10 +156,26 @@ export interface DisplayOrderDTO {
   customItems: DisplayCustomOrderItemDTO[];
 }
 
-export interface GetOtpCodeDto {
+export interface LoginDto {
   phone: string;
 }
 
-export interface VerifyOtpDto {
-  code: string;
+export interface CompleteProfileDto {
+  phone: string;
+  firstName: string;
+  lastName: string;
+}
+
+export interface AuthResponseDto {
+  status: "authenticated" | "signup_required" | "pending" | "rejected";
+  token?: string;
+  user?: {
+    id: string;
+    firstName: string;
+    lastName: string;
+    phone: string;
+    role: "tailor" | "customer" | "courier";
+    email?: string;
+  };
+  message?: string;
 }

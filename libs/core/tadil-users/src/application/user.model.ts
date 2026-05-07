@@ -5,6 +5,14 @@ export const ROLE = {
 } as const;
 export type RoleType = (typeof ROLE)[keyof typeof ROLE];
 
+export const LOGIN_REQUEST_STATUS = {
+  PENDING: 'PENDING',
+  APPROVED: 'APPROVED',
+  REJECTED: 'REJECTED',
+} as const;
+export type LoginRequestStatusType =
+  (typeof LOGIN_REQUEST_STATUS)[keyof typeof LOGIN_REQUEST_STATUS];
+
 export interface User {
   id: string;
   firstName: string;
@@ -12,4 +20,6 @@ export interface User {
   phone: string;
   role: RoleType;
   email?: string;
+  loginRequestStatus?: LoginRequestStatusType;
+  loginToken?: string;
 }

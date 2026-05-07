@@ -1,22 +1,31 @@
 import { Module } from '@nestjs/common';
+import { CommonModule } from '../common/common.module';
+import {
+  TailorsController,
+  CouriersController,
+  LoginRequestsController,
+} from './controllers';
 import {
   UsersRepositoryProvider,
   CreateUserUseCaseProvider,
   UpdateUserUseCaseProvider,
   DeleteUserUseCaseProvider,
+  ApproveLoginRequestUseCaseProvider,
+  RejectLoginRequestUseCaseProvider,
+  GetPendingLoginRequestsUseCaseProvider,
 } from './users.providers';
-import { CommonModule } from '../common/common.module';
-import { CouriersController, TailorsController } from './controllers';
 
 @Module({
   imports: [CommonModule],
-  controllers: [TailorsController, CouriersController],
+  controllers: [TailorsController, CouriersController, LoginRequestsController],
   providers: [
     UsersRepositoryProvider,
     CreateUserUseCaseProvider,
     UpdateUserUseCaseProvider,
     DeleteUserUseCaseProvider,
+    ApproveLoginRequestUseCaseProvider,
+    RejectLoginRequestUseCaseProvider,
+    GetPendingLoginRequestsUseCaseProvider,
   ],
-  exports: [],
 })
 export class UsersModule {}

@@ -2,6 +2,7 @@ export const environment = {
   production: false,
   apiPort: process.env.PORT || 4444,
   tadilDb: process.env.TADIL_DB,
+  jwtSecret: process.env.JWT_SECRET,
   minio: {
     endpoint: process.env.MINIO_ENDPOINT,
     port: process.env.MINIO_PORT,

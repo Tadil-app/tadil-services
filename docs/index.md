@@ -1,0 +1,15 @@
+# Tadil Services Documentation
+
+Welcome to the documentation for the Tadil platform. This `docs` folder contains markdown files describing every major part of the application.
+
+## Apps
+
+- [Tadil Admin API](./tadil-api.md)
+- [Tadil Mobile API](./tadil-mobile-api.md)
+- [Tadil Admin Web Client](./tadil-admin-web-client.md)
+- [Tadil Mobile App](./tadil-mobile-app.md)
+
+## Libraries
+
+- [Core Libraries](./libs-core.md)
+- [Infrastructure Libraries](./libs-infra.md)

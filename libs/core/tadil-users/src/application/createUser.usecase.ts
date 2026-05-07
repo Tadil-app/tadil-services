@@ -29,11 +29,20 @@ export class CreateUserUseCase {
     const userByPhone = await this._usersRepository.getUserByPhone(
       command.phone
     );
-    if (userByPhone) {
-      throw new InvalidCommandException('User Phone number already exists');
-    }
 
     try {
+      if (userByPhone) {
+        // If user exists, update their profile and role
+        await this._usersRepository.updateUser({
+          ...userByPhone,
+          firstName: command.firstName,
+          lastName: command.lastName,
+          role: command.role,
+          email: command.email ?? userByPhone.email,
+        });
+        return;
+      }
+
       const newUserId = uuid();
       await this._usersRepository.createUser({
         id: newUserId,

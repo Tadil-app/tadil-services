@@ -75,18 +75,25 @@ export const en = {
         numericErrorMessage: "Phone Number must be numeric",
         lengthErrorMessage: "Phone Number must be 10 digits",
       },
-      otpCode: {
-        label: "Verification Code",
-        placeholder: "Enter your verification code",
-        undefinedErrorMessage: "Verification Code is required",
-        numericErrorMessage: "Verification Code must be numeric",
-        lengthErrorMessage: "Verification Code must be 6 digits",
-        notRecieved: "Code not received?",
-        resendCode: "Resend Code",
+      signup: {
+        title: "Complete Your Profile",
+        firstName: {
+          label: "First Name",
+          placeholder: "Enter your first name",
+        },
+        lastName: {
+          label: "Last Name",
+          placeholder: "Enter your last name",
+        },
+      },
+      status: {
+        pending: "Your login request is pending admin approval.",
+        rejected: "Your login request has been rejected.",
       },
       buttons: {
-        sendCode: "Send Code",
-        verifyCode: "Verify Code",
+        login: "Login",
+        signup: "Sign Up",
+        back: "Back",
       },
     },
   },

@@ -27,6 +27,10 @@ const routes = [
       {
         path: "/users",
         component: () => import("@/views/users/UsersManagementView.vue"),
+      },
+      {
+        path: "/login-requests",
+        component: () => import("@/views/users/LoginRequestsView.vue"),
       }
     ],
   },
