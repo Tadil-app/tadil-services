@@ -111,9 +111,12 @@ export const en = {
       language: "Language",
       darkTheme: "Dark Theme",
     },
-    logAsTailor: "Login as Tailor",
-    logAsCustomer: "Login as Customer",
-    logout: "Logout",
+    identity: {
+      title: "Identity",
+      logAsTailor: "Login as Tailor",
+      logAsCustomer: "Login as Customer",
+      logout: "Logout",
+    },
   },
   modelCategory: {
     title: "Choose a Category",

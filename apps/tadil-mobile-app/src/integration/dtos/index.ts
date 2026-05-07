@@ -166,16 +166,24 @@ export interface CompleteProfileDto {
   lastName: string;
 }
 
+export interface UpdateProfileDto {
+  firstName?: string;
+  lastName?: string;
+  email?: string;
+}
+
+export interface User {
+  id: string;
+  firstName: string;
+  lastName: string;
+  phone: string;
+  role: "tailor" | "customer" | "courier";
+  email?: string;
+}
+
 export interface AuthResponseDto {
   status: "authenticated" | "signup_required" | "pending" | "rejected";
   token?: string;
-  user?: {
-    id: string;
-    firstName: string;
-    lastName: string;
-    phone: string;
-    role: "tailor" | "customer" | "courier";
-    email?: string;
-  };
+  user?: User;
   message?: string;
 }

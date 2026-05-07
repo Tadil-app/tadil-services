@@ -10,11 +10,15 @@
           <IonAvatar class="mx-auto">
             <IonImg alt="Avatar" src="/avatar.svg" />
           </IonAvatar>
-          <p class="text-center mt-2 text-lg font-medium">John Doe</p>
-          <p class="text-center text-sm font-light">1234567890</p>
+          <p class="text-center mt-2 text-lg font-medium">
+            {{ authStore.userInfo?.firstName }} {{ authStore.userInfo?.lastName }}
+          </p>
+          <p class="text-center text-sm font-light">
+            {{ authStore.userInfo?.phone }}
+          </p>
         </IonCard>
         <IonCard class="ion-padding">
-          <IonItem button lines="none" fill="clear" color="" :detail="false">
+          <IonItem button lines="none" fill="clear" color="" :detail="false" @click="openUpdateProfileModal">
             <CircleUserRound aria-hidden="true" slot="start" class="me-2" />
             <IonLabel>{{ $t("profileSettings.profile.title") }}</IonLabel>
           </IonItem>
@@ -55,30 +59,7 @@
           </IonList>
         </IonCard>
         <IonCard class="ion-padding">
-          <IonLabel class="font-bold">
-            {{ $t("profileSettings.identity.title") }}
-          </IonLabel>
           <IonList lines="none">
-            <IonItem
-              button
-              :detail="false"
-              :router-link="{ name: 'tailor-dashboard' }"
-            >
-              <Scissors aria-hidden="true" class="me-2" slot="start" />
-              <IonLabel>{{
-                $t("profileSettings.identity.logAsTailor")
-              }}</IonLabel>
-            </IonItem>
-            <IonItem
-              button
-              :detail="false"
-              :router-link="{ name: 'customer-dashboard' }"
-            >
-              <ShoppingBasket aria-hidden="true" class="me-2" slot="start" />
-              <IonLabel>{{
-                $t("profileSettings.identity.logAsCustomer")
-              }}</IonLabel>
-            </IonItem>
             <IonItem button :detail="false" @click="authStore.logout">
               <LogOut aria-hidden="true" class="me-2" slot="start" />
               <IonLabel>{{ $t("profileSettings.identity.logout") }}</IonLabel>
@@ -104,24 +85,35 @@ import {
   IonSelectOption,
   IonLabel,
   IonCard,
+  modalController,
 } from "@ionic/vue";
 import {
   CircleUserRound,
   Languages,
   LogOut,
   Moon,
-  ShoppingBasket,
-  Scissors,
 } from "lucide-vue-next";
 import { SecondaryHeader } from "@/components";
 import { onMounted, ref } from "vue";
+import UpdateProfileModal from "./auth/components/UpdateProfileModal.vue";
 
 const languageStore = useLanguageStore();
 const themeStore = useThemeStore();
 const authStore = useAuthStore();
 
 const isReady = ref(false);
-onMounted(() => {
+
+async function openUpdateProfileModal() {
+  const modal = await modalController.create({
+    component: UpdateProfileModal,
+  });
+  modal.present();
+}
+
+onMounted(async () => {
+  if (!authStore.userInfo) {
+    await authStore.fetchProfile();
+  }
   isReady.value = true;
 });
 </script>

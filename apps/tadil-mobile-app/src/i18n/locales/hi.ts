@@ -66,6 +66,58 @@ export const hi = {
       requiredField: "यह फ़ील्ड आवश्यक है",
     },
   },
+  login: {
+    form: {
+      phoneNumber: {
+        label: "फ़ोन नंबर",
+        placeholder: "अपना फ़ोन नंबर दर्ज करें",
+        undefinedErrorMessage: "फ़ोन नंबर आवश्यक है",
+        numericErrorMessage: "फ़ोन नंबर संख्यात्मक होना चाहिए",
+        lengthErrorMessage: "फ़ोन नंबर १० अंकों का होना चाहिए",
+      },
+      signup: {
+        title: "अपनी प्रोफ़ाइल पूरी करें",
+        firstName: {
+          label: "पहला नाम",
+          placeholder: "अपना पहला नाम दर्ज करें",
+        },
+        lastName: {
+          label: "अंतिम नाम",
+          placeholder: "अपना अंतिम नाम दर्ज करें",
+        },
+      },
+      status: {
+        pending: "आपका लॉगिन अनुरोध व्यवस्थापक की स्वीकृति के लिए लंबित है।",
+        rejected: "आपका लॉगिन अनुरोध अस्वीकार कर दिया गया है।",
+      },
+      buttons: {
+        login: "लॉगिन",
+        signup: "साइन अप करें",
+        back: "पीछे",
+      },
+    },
+  },
+  profileSettings: {
+    title: "सेटिंग्स",
+    profile: {
+      title: "प्रोफ़ाइल प्रबंधित करें",
+      firstName: "पहला नाम",
+      lastName: "अंतिम नाम",
+      phoneNumber: "फ़ोन नंबर",
+      email: "ईमेल (वैकल्पिक)",
+    },
+    preferences: {
+      title: "पसंद",
+      language: "भाषा",
+      darkTheme: "डार्क थीम",
+    },
+    identity: {
+      title: "पहचान",
+      logAsTailor: "दर्जी के रूप में लॉगिन करें",
+      logAsCustomer: "ग्राहक के रूप में लॉगिन करें",
+      logout: "लॉगआउट",
+    },
+  },
   modelCategory: {
     title: "श्रेणी चुनें",
     all: "सभी श्रेणियाँ",

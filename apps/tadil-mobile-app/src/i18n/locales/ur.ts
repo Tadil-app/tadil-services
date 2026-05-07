@@ -66,6 +66,58 @@ export const ur = {
       requiredField: "یہ فیلڈ مطلوبہ ہے",
     },
   },
+  login: {
+    form: {
+      phoneNumber: {
+        label: "فون نمبر",
+        placeholder: "اپنا فون نمبر درج کریں",
+        undefinedErrorMessage: "فون نمبر درکار ہے",
+        numericErrorMessage: "فون نمبر ہندسوں میں ہونا چاہیے",
+        lengthErrorMessage: "فون نمبر ۱۰ ہندسوں کا ہونا چاہیے",
+      },
+      signup: {
+        title: "اپنی پروفائل مکمل کریں",
+        firstName: {
+          label: "پہلا نام",
+          placeholder: "اپنا پہلا نام درج کریں",
+        },
+        lastName: {
+          label: "آخری نام",
+          placeholder: "اپنا آخری نام درج کریں",
+        },
+      },
+      status: {
+        pending: "آپ کی لاگ ان کی درخواست ایڈمن کی منظوری کے لیے زیر التوا ہے۔",
+        rejected: "آپ کی لاگ ان کی درخواست مسترد کر دی گئی ہے۔",
+      },
+      buttons: {
+        login: "لاگ ان",
+        signup: "سائن اپ",
+        back: "واپس",
+      },
+    },
+  },
+  profileSettings: {
+    title: "سیٹنگز",
+    profile: {
+      title: "پروفائل کا انتظام کریں",
+      firstName: "پہلا نام",
+      lastName: "آخری نام",
+      phoneNumber: "فون نمبر",
+      email: "ای میل (اختیاری)",
+    },
+    preferences: {
+      title: "ترجیحات",
+      language: "زبان",
+      darkTheme: "ڈارک تھیم",
+    },
+    identity: {
+      title: "شناخت",
+      logAsTailor: "درزی کے طور پر لاگ ان کریں",
+      logAsCustomer: "گاہک کے طور پر لاگ ان کریں",
+      logout: "لاگ آؤٹ",
+    },
+  },
   modelCategory: {
     title: "زمرہ منتخب کریں",
     all: "تمام زمرے",

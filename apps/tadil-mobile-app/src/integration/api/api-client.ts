@@ -17,6 +17,8 @@ import {
   LoginDto,
   CompleteProfileDto,
   AuthResponseDto,
+  UpdateProfileDto,
+  User,
 } from "../dtos";
 export interface UploadFileDto {
   file: File;
@@ -335,6 +337,45 @@ export class Api<
       this.request<void, any>({
         path: `/api/tailor/${id}/orders/${orderId}/decline`,
         method: "POST",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Auth
+     * @name AuthControllerGetProfile
+     * @request GET:/api/auth/me
+     * @secure
+     */
+    authControllerGetProfile: (params: RequestParams = {}) =>
+      this.request<User, any>({
+        path: `/api/auth/me`,
+        method: "GET",
+        secure: true,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Auth
+     * @name AuthControllerUpdateProfile
+     * @request PUT:/api/auth/me
+     * @secure
+     */
+    authControllerUpdateProfile: (
+      data: UpdateProfileDto,
+      params: RequestParams = {},
+    ) =>
+      this.request<User, any>({
+        path: `/api/auth/me`,
+        method: "PUT",
+        body: data,
+        secure: true,
+        type: ContentType.Json,
+        format: "json",
         ...params,
       }),
 

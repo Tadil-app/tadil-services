@@ -76,18 +76,25 @@ export const ar = {
         numericErrorMessage: "رقم الجوال يجب ان يكون رقم",
         lengthErrorMessage: "رقم الجوال يجب ان يكون 10 رقم",
       },
-      otpCode: {
-        label: "كود التحقق",
-        placeholder: "ادخل كود التحقق",
-        undefinedErrorMessage: "كود التحقق مطلوب",
-        numericErrorMessage: "كود التحقق يجب ان يكون رقم",
-        lengthErrorMessage: "كود التحقق يجب ان يكون 6 رقم",
-        notRecieved: "لم يتم استلام الكود",
-        resendCode: "ارسل الكود مرة اخرى",
+      signup: {
+        title: "أكمل ملفك الشخصي",
+        firstName: {
+          label: "الاسم الأول",
+          placeholder: "أدخل اسمك الأول",
+        },
+        lastName: {
+          label: "الاسم الأخير",
+          placeholder: "أدخل اسمك الأخير",
+        },
+      },
+      status: {
+        pending: "طلب تسجيل الدخول الخاص بك قيد انتظار موافقة المسؤول.",
+        rejected: "تم رفض طلب تسجيل الدخول الخاص بك.",
       },
       buttons: {
-        sendCode: "ارسل الكود",
-        verifyCode: "تاكيد الكود",
+        login: "تسجيل الدخول",
+        signup: "إنشاء حساب",
+        back: "رجوع",
       },
     },
   },

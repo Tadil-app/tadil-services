@@ -66,6 +66,58 @@ export const bn = {
       requiredField: "এই ঘরটি পূরণ করা আবশ্যক",
     },
   },
+  login: {
+    form: {
+      phoneNumber: {
+        label: "ফোন নম্বর",
+        placeholder: "আপনার ফোন নম্বর লিখুন",
+        undefinedErrorMessage: "ফোন নম্বর প্রয়োজন",
+        numericErrorMessage: "ফোন নম্বর অবশ্যই সংখ্যা হতে হবে",
+        lengthErrorMessage: "ফোন নম্বর অবশ্যই ১০ ডিজিটের হতে হবে",
+      },
+      signup: {
+        title: "আপনার প্রোফাইল সম্পূর্ণ করুন",
+        firstName: {
+          label: "প্রথম নাম",
+          placeholder: "আপনার প্রথম নাম লিখুন",
+        },
+        lastName: {
+          label: "শেষ নাম",
+          placeholder: "আপনার শেষ নাম লিখুন",
+        },
+      },
+      status: {
+        pending: "আপনার লগইন অনুরোধ অ্যাডমিন অনুমোদনের অপেক্ষায় আছে।",
+        rejected: "আপনার লগইন অনুরোধ প্রত্যাখ্যান করা হয়েছে।",
+      },
+      buttons: {
+        login: "লগইন",
+        signup: "নিবন্ধন করুন",
+        back: "ফিরে যান",
+      },
+    },
+  },
+  profileSettings: {
+    title: "সেটিংস",
+    profile: {
+      title: "প্রোফাইল পরিচালনা করুন",
+      firstName: "প্রথম নাম",
+      lastName: "শেষ নাম",
+      phoneNumber: "ফোন নম্বর",
+      email: "ইমেল (ঐচ্ছিক)",
+    },
+    preferences: {
+      title: "পছন্দসমূহ",
+      language: "ভাষা",
+      darkTheme: "ডার্ক থিম",
+    },
+    identity: {
+      title: "পরিচয়",
+      logAsTailor: "দর্জি হিসেবে লগইন করুন",
+      logAsCustomer: "গ্রাহক হিসেবে লগইন করুন",
+      logout: "লগআউট",
+    },
+  },
   modelCategory: {
     title: "বিভাগ নির্বাচন করুন",
     all: "সব বিভাগ",

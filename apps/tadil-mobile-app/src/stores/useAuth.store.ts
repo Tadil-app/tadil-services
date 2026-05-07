@@ -1,5 +1,5 @@
 import { apiClient } from "@/integration/api";
-import { AuthResponseDto } from "@/integration/dtos";
+import { AuthResponseDto, User, UpdateProfileDto } from "@/integration/dtos";
 import { Preferences } from "@capacitor/preferences";
 import { defineStore } from "pinia";
 import { ref } from "vue";
@@ -9,6 +9,7 @@ export const useAuthStore = defineStore("auth", () => {
   const userId = ref("");
   const userRole = ref("");
   const token = ref("");
+  const userInfo = ref<User | null>(null);
   const router = useRouter();
 
   async function initAuth() {
@@ -18,6 +19,11 @@ export const useAuthStore = defineStore("auth", () => {
     token.value = storedToken || "";
     userId.value = storedUserId || "";
     userRole.value = storedUserRole || "";
+
+    if (token.value) {
+      // apiClient.setSecurityData(token.value);
+      await fetchProfile();
+    }
   }
 
   async function login(phone: string): Promise<AuthResponseDto> {
@@ -26,7 +32,7 @@ export const useAuthStore = defineStore("auth", () => {
     });
 
     if (data.status === "authenticated" && data.token && data.user) {
-      await setSession(data.token, data.user.id, data.user.role);
+      await setSession(data.token, data.user);
     }
 
     return data;
@@ -40,30 +46,53 @@ export const useAuthStore = defineStore("auth", () => {
     });
 
     if (data.status === "authenticated" && data.token && data.user) {
-      await setSession(data.token, data.user.id, data.user.role);
+      await setSession(data.token, data.user);
     }
 
     return data;
   }
 
-  async function setSession(newToken: string, newUserId: string, newRole: string) {
+  async function fetchProfile() {
+    try {
+      const { data } = await apiClient.authControllerGetProfile();
+      userInfo.value = data;
+    } catch (error) {
+      console.error("Failed to fetch profile", error);
+      if ((error as any).response?.status === 401) {
+        await logout();
+      }
+    }
+  }
+
+  async function updateProfile(dto: UpdateProfileDto) {
+    const { data } = await apiClient.authControllerUpdateProfile(dto);
+    userInfo.value = data;
+  }
+
+  async function setSession(newToken: string, user: User) {
     token.value = newToken;
-    userId.value = newUserId;
-    userRole.value = newRole;
+    userId.value = user.id;
+    userRole.value = user.role;
+    userInfo.value = user;
+    
+    // apiClient.setSecurityData(newToken);
+
     await Preferences.set({ key: "token", value: newToken });
-    await Preferences.set({ key: "userId", value: newUserId });
-    await Preferences.set({ key: "userRole", value: newRole });
+    await Preferences.set({ key: "userId", value: user.id });
+    await Preferences.set({ key: "userRole", value: user.role });
   }
 
   async function logout() {
     token.value = "";
     userId.value = "";
     userRole.value = "";
+    userInfo.value = null;
+    // apiClient.setSecurityData(null);
     await Preferences.remove({ key: "token" });
     await Preferences.remove({ key: "userId" });
     await Preferences.remove({ key: "userRole" });
     router.push({ name: "login" });
   }
 
-  return { userId, userRole, token, initAuth, login, completeProfile, logout };
+  return { userId, userRole, token, userInfo, initAuth, login, completeProfile, fetchProfile, updateProfile, logout };
 });
