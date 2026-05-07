@@ -1,0 +1,78 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Cairo", ui-sans-serif, system-ui, sans-serif;
+  --tracking-wide: 0.025em;
+
+  /* App Surfaces & Borders */
+  --color-background: var(--ion-background-color);
+  --color-border: var(--ion-border-color);
+  --color-item: var(--ion-item-background);
+  --shadow-app: var(--app-shadow);
+
+  /* Text Colors */
+  --color-main: var(--ion-text-color);
+  --color-placeholder: var(--ion-placeholder-color);
+
+  /* Primary - Steel Blue */
+  --color-primary: var(--ion-color-primary);
+  --color-primary-contrast: var(--ion-color-primary-contrast);
+  --color-primary-shade: var(--ion-color-primary-shade);
+  --color-primary-tint: var(--ion-color-primary-tint);
+
+  /* Secondary - Dusty Rose */
+  --color-secondary: var(--ion-color-secondary);
+  --color-secondary-contrast: var(--ion-color-secondary-contrast);
+  --color-secondary-shade: var(--ion-color-secondary-shade);
+  --color-secondary-tint: var(--ion-color-secondary-tint);
+
+  /* Tertiary - Terracotta */
+  --color-tertiary: var(--ion-color-tertiary);
+  --color-tertiary-contrast: var(--ion-color-tertiary-contrast);
+  --color-tertiary-shade: var(--ion-color-tertiary-shade);
+  --color-tertiary-tint: var(--ion-color-tertiary-tint);
+
+  /* Feedback Colors */
+  --color-success: var(--ion-color-success);
+  --color-success-contrast: var(--ion-color-success-contrast);
+  --color-success-shade: var(--ion-color-success-shade);
+  --color-success-tint: var(--ion-color-success-tint);
+
+  --color-warning: var(--ion-color-warning);
+  --color-warning-contrast: var(--ion-color-warning-contrast);
+  --color-warning-shade: var(--ion-color-warning-shade);
+  --color-warning-tint: var(--ion-color-warning-tint);
+
+  --color-danger: var(--ion-color-danger);
+  --color-danger-contrast: var(--ion-color-danger-contrast);
+  --color-danger-shade: var(--ion-color-danger-shade);
+  --color-danger-tint: var(--ion-color-danger-tint);
+
+  /* Neutral Shades */
+  --color-light: var(--ion-color-light);
+  --color-light-contrast: var(--ion-color-light-contrast);
+  --color-light-shade: var(--ion-color-light-shade);
+  --color-light-tint: var(--ion-color-light-tint);
+
+  --color-medium: var(--ion-color-medium);
+  --color-medium-contrast: var(--ion-color-medium-contrast);
+  --color-medium-shade: var(--ion-color-medium-shade);
+  --color-medium-tint: var(--ion-color-medium-tint);
+
+  --color-dark: var(--ion-color-dark);
+  --color-dark-contrast: var(--ion-color-dark-contrast);
+  --color-dark-shade: var(--ion-color-dark-shade);
+  --color-dark-tint: var(--ion-color-dark-tint);
+
+  /* Step Colors (Very useful for subtle UI backgrounds/borders) */
+  --color-step-50: var(--ion-step-50);
+  --color-step-100: var(--ion-step-100);
+  --color-step-150: var(--ion-step-150);
+  --color-step-200: var(--ion-step-200);
+  --color-step-250: var(--ion-step-250);
+  --color-step-300: var(--ion-step-300);
+  --color-step-350: var(--ion-step-350);
+  --color-step-400: var(--ion-step-400);
+  --color-step-450: var(--ion-step-450);
+  --color-step-500: var(--ion-step-500);
+}

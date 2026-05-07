@@ -1,0 +1,151 @@
+export const hi = {
+  common: {
+    units: {
+      cm: "सेमी",
+      inch: "इंच",
+    },
+    currencies: {
+      sar: "SAR",
+      usd: "$",
+    },
+    categories: {
+      all: "सभी",
+      men: "पुरुष",
+      women: "महिला",
+      kids: "बच्चे",
+    },
+    price: "कीमत",
+    optional: "वैकल्पिक",
+    buttons: {
+      save: "सहेजें",
+      cancel: "रद्द करें",
+      addToCart: "कार्ट में डालें",
+      leave: "छोड़ें",
+      change: "बदलें",
+    },
+    inputs: {
+      imageInput: {
+        placeholder: "अपलोड करने के लिए क्लिक करें",
+        info: "PNG, JPG 10MB तक",
+        sourceModal: {
+          title: "स्रोत चुनें",
+          camera: "कैमरा",
+          gallery: "गैलरी",
+        },
+      },
+    },
+    alerts: {
+      unsavedChanges: {
+        header: "बिना सहेजे गए बदलाव",
+        message: "आपके पास बिना सहेजे गए बदलाव हैं। क्या आप वाकई छोड़ना चाहते हैं?",
+      },
+      changePhoto: {
+        header: "फोटो बदलें?",
+        message: "इससे आपके सभी मौजूदा बिंदु हट जाएंगे।",
+      },
+      zoneOptions: {
+        header: "ज़ोन विकल्प",
+        addNew: "नया बदलाव जोड़ें",
+        removeAll: "सभी बदलाव हटाएं",
+      },
+      noAlterations: "कृपया कम से कम एक बदलाव जोड़ें।",
+      itemAdded: "आइटम सफलतापूर्वक कार्ट में जोड़ दिया गया।",
+    },
+    errors: {
+      voiceRecorder: {
+        permissionDenied: "वॉयस मैसेज रिकॉर्ड करने के लिए माइक्रोफ़ोन की अनुमति आवश्यक है।",
+        startFailed: "रिकॉर्डिंग शुरू करने में विफल।",
+        saveFailed: "वॉयस मैसेज सहेजने में विफल।",
+      },
+      loadModels: "मॉडल लोड करने में विफल।",
+      loadImages: "मॉडल चित्र लोड करने में विफल।",
+      loadAlterations: "बदलाव लोड करने में विफल।",
+      loadOrders: "ऑर्डर लोड करने में विफल।",
+      addToCartFailed: "कार्ट में आइटम जोड़ने में विफल।",
+      uploadImage: "छवि अपलोड करने में विफल।",
+      requiredField: "यह फ़ील्ड आवश्यक है",
+    },
+  },
+  modelCategory: {
+    title: "श्रेणी चुनें",
+    all: "सभी श्रेणियाँ",
+    men: "पुरुषों के लिए",
+    women: "महिलाओं के लिए",
+    kids: "बच्चों के लिए",
+  },
+  modelMode: {
+    title: "मोड चुनें",
+    predefined: {
+      title: "मौजूदा मॉडल",
+      description: "हमारे पूर्व-निर्धारित मॉडलों में से चुनें",
+    },
+    custom: {
+      title: "कस्टम",
+      description: "अपनी फोटो अपलोड करें",
+    },
+  },
+  predefinedModelsList: {
+    title: "मॉडल चुनें",
+  },
+  customModel: {
+    title: "श्रेणी चुनें",
+    upload: "अपनी फोटो अपलोड करें",
+    instructions:
+      "कपड़े के उन हिस्सों पर क्लिक करें जिन्हें आप बदलना चाहते हैं",
+    changePhoto: "फोटो बदलें",
+    pointSelection: "कस्टम बिंदु चयन",
+    categories: {
+      dress: "पोशाक",
+      shirt: "कमीज़",
+      pants: "पतलून",
+      sweater: "स्वेटर",
+      coat: "कोट",
+      suit: "सूट",
+    },
+  },
+  alterationForm: {
+    alterationType: "बदलाव (Alteration) चुनें",
+    extrasPrice: "अतिरिक्त लागत",
+    price: "कुल कीमत",
+    noMoreAlterations: "इस अनुभाग के लिए और कोई बदलाव उपलब्ध नहीं हैं",
+  },
+  cart: {
+    title: "कार्ट",
+    showDetails: "विवरण दिखाएं",
+    hideDetails: "विवरण छिपाएं",
+    emptyTitle: "आपकी कार्ट खाली है",
+    emptyDescription: "उन्हें यहाँ देखने के लिए कुछ बदलाव जोड़ें",
+    shopNow: "अभी खरीदारी करें",
+    alterations: "बदलाव",
+    moreImages: "अधिक फोटो",
+    zone: "हिस्सा (Zone)",
+    alteration: "बदलाव",
+    price: "कीमत",
+    itemsCount: "कुल आइटम",
+    totalPrice: "कुल कीमत",
+    clearAll: "सभी हटाएँ",
+    checkout: "चेकआउट",
+  },
+  cartEdit: {
+    title: "कार्ट आइटम बदलें",
+    save: "सहेजें",
+    cancel: "रद्द करें",
+    priceCard: {
+      title: "कीमत का विवरण",
+      basePrice: "मूल कीमत",
+      extrasPrice: "अतिरिक्त लागत",
+      totalPrice: "कुल कीमत",
+    },
+  },
+  customer: {
+    dashboard: {
+      title: "मेरा डैशबोर्ड",
+      recentOrders: "हाल के ऑर्डर",
+    },
+    ordersHistory: {
+      title: "ऑर्डर इतिहास",
+      subtitle: "अपने सभी सिलाई अनुरोधों को ट्रैक करें",
+      search: "रेफरेंस द्वारा खोजें...",
+    },
+  },
+};

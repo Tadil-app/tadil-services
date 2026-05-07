@@ -1,0 +1,13 @@
+export * from "./models";
+export * from "./informations";
+export * from "./alterations";
+export * from "./extras";
+export * from "./users";
+
+export enum ContentType {
+  Json = "application/json",
+  JsonApi = "application/vnd.api+json",
+  FormData = "multipart/form-data",
+  UrlEncoded = "application/x-www-form-urlencoded",
+  Text = "text/plain",
+}

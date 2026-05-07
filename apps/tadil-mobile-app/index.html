@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Tadil-تعديل</title>
+
+    <base href="/" />
+
+    <meta name="theme-color" content="#a8c5dd" />
+    <meta name="background-color" content="#a8c5dd" />
+    <meta name="color-scheme" content="light dark" />
+    <meta
+      name="viewport"
+      content="viewport-fit=cover, width=device-width, initial-scale=1.0"
+    />
+    <meta name="format-detection" content="telephone=no" />
+    <meta name="msapplication-tap-highlight" content="no" />
+
+    <!-- add to homescreen for ios -->
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-title" content="Tadil-تعديل" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+    <link
+      rel="preload"
+      href="/fonts/cairo/cairo-500.woff2"
+      as="font"
+      type="font/woff2"
+      crossorigin
+    />
+    <link
+      rel="preload"
+      href="/fonts/cairo/cairo-700.woff2"
+      as="font"
+      type="font/woff2"
+      crossorigin
+    />
+    <link rel="stylesheet" href="/fonts/cairo/cairo.css" />
+  </head>
+  <style>
+    /* Container and Overlay */
+    .overlay-container {
+      position: fixed;
+      inset: 0;
+      background: linear-gradient(to bottom right, #a8c5dd, #d4a5c7, #e87b56);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+      transition: opacity 500ms ease-in-out;
+      opacity: 1; /* Changed from 0 to 1 */
+    }
+
+    .overlay-container.fade-out {
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .text-center {
+      text-align: center;
+    }
+
+    /* Logo Section */
+    .logo-wrapper {
+      margin-bottom: 1.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .relative-container {
+      position: relative;
+    }
+
+    .logo-glow {
+      position: absolute;
+      inset: 0;
+      background-color: white;
+      border-radius: 9999px;
+      filter: blur(20px);
+      opacity: 0.4;
+      animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+    }
+
+    .logo-bg {
+      position: relative;
+      width: 6rem;
+      height: 6rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: white;
+      border-radius: 9999px;
+      padding: 1.5rem;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+      animation: bounce 1s ease-in-out infinite;
+      will-change: transform;
+    }
+
+    .logo-img {
+      width: 6rem;
+      height: 6rem;
+      object-fit: contain;
+    }
+
+    /* Typography */
+    .title {
+      color: white;
+      font-size: 3.75rem;
+      font-weight: 700;
+      margin-bottom: 0.75rem;
+      letter-spacing: 0.05em;
+      animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+    }
+
+    .subtitle {
+      color: rgba(255, 255, 255, 0.9);
+      font-size: 1.5rem;
+      font-weight: 500;
+      animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+    }
+
+    /* Decorators */
+    .decorator-row {
+      margin-top: 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+    }
+
+    .line {
+      width: 3rem;
+      height: 0.25rem;
+      background-color: rgba(255, 255, 255, 0.6);
+      border-radius: 9999px;
+    }
+
+    .dot {
+      width: 0.5rem;
+      height: 0.5rem;
+      background-color: white;
+      border-radius: 9999px;
+    }
+
+    /* Keyframes */
+    @keyframes bounce {
+      0%,
+      100% {
+        transform: translateY(0);
+        animation-timing-function: cubic-bezier(0.8, 0, 1, 1);
+      }
+      50% {
+        transform: translateY(-25%);
+        animation-timing-function: cubic-bezier(0, 0, 0.2, 1);
+      }
+    }
+
+    @keyframes pulse {
+      0%,
+      100% {
+        opacity: 1;
+      }
+      50% {
+        opacity: 0.5;
+      }
+    }
+  </style>
+  <body>
+    <div id="custom-splash" class="overlay-container">
+      <div class="text-center">
+        <div class="logo-wrapper">
+          <div class="relative-container">
+            <div class="logo-glow"></div>
+            <div class="logo-bg">
+              <img
+                src="/logo.png"
+                alt="Tadil Logo"
+                width="96"
+                height="96"
+                class="logo-img"
+              />
+            </div>
+          </div>
+        </div>
+
+        <h1 class="title" style="font-family: Cairo, sans-serif">Tadil</h1>
+
+        <p class="subtitle" style="font-family: Cairo, sans-serif">تعديل</p>
+
+        <div class="decorator-row">
+          <div class="line"></div>
+          <div class="dot"></div>
+          <div class="line"></div>
+        </div>
+      </div>
+    </div>
+    <div id="app"></div>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>

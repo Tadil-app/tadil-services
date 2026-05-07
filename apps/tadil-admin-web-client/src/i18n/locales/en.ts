@@ -1,0 +1,313 @@
+export const en = {
+  nav: {
+    informations: "Required informations",
+    alterations: "Alterations",
+    extras: "Extras",
+    models: "Models",
+    users: "Users",
+  },
+  common: {
+    currencies: {
+      ras: "RAS",
+      usd: "$",
+    },
+    tableHeaders: {
+      id: "ID",
+      englishName: "English Name",
+      arabicName: "Arabic Name",
+      hindiName: "Hindi Name",
+      bengaliName: "Bengali Name",
+      urduName: "Urdu Name",
+      unit: "Unit",
+      price: "Price",
+      actions: "Actions",
+    },
+    inputs: {
+      englishName: {
+        label: "English Name",
+        placeholder: "Enter English Name",
+        errorMessage: "English Name is required",
+      },
+      arabicName: {
+        label: "Arabic Name",
+        placeholder: "Enter Arabic Name",
+        errorMessage: "Arabic Name is required",
+      },
+      hindiName: {
+        label: "Hindi Name",
+        placeholder: "Enter Hindi Name",
+        errorMessage: "Hindi Name is required",
+      },
+      bengaliName: {
+        label: "Bengali Name",
+        placeholder: "Enter Bengali Name",
+        errorMessage: "Bengali Name is required",
+      },
+      urduName: {
+        label: "Urdu Name",
+        placeholder: "Enter Urdu Name",
+        errorMessage: "Urdu Name is required",
+      },
+      category: {
+        options: {
+          all: "All",
+          men: "Men",
+          women: "Women",
+          kids: "Kids",
+        },
+        label: "Category",
+        placeholder: "Select Category",
+        errorMessage: "Category is required",
+        validation: {
+          required: "Category is required",
+        },
+      },
+      unit: {
+        label: "Unit (optional)",
+        placeholder: "Select Unit",
+        errorMessage: "Unit is required",
+        options: {
+          cm: "cm",
+          inch: "inch",
+        },
+      },
+      infoType: {
+        label: "Type",
+        placeholder: "Select Type",
+        errorMessage: "Type is required",
+        options: {
+          label: "Options",
+          placeholder: "Type Options",
+          newButtonText: "New Option",
+          text: "Text",
+          number: "Number",
+          selectMenu: "Select Menu",
+          checkbox: "Checkbox",
+          required: "Required",
+          optional: "Optional",
+        },
+      },
+      imageFile: {
+        label: "Image",
+        placeholder: "Select Image",
+        errorMessage: "Image is required",
+      },
+      price: {
+        label: "Price",
+        placeholder: "0.00",
+        errorMessage: "Price is required",
+      },
+      sections: {
+        label: "Sections",
+        placeholder: "Select Sections",
+        errorMessage: "Sections are required",
+      },
+      informations: {
+        label: "Informations",
+        placeholder: "Select Required Informations",
+        errorMessage: "Informations are required",
+      },
+      alterations: {
+        label: "Alterations",
+        placeholder: "Select Alterations",
+        errorMessage: "Alterations are required",
+      },
+      extras: {
+        label: "Extras",
+        placeholder: "Select Extras",
+        errorMessage: "Extras are required",
+      },
+      userRole: {
+        label: "User Role",
+        placeholder: "Select User Role",
+        errorMessage: "User Role is required",
+      },
+      phone: {
+        label: "Phone Number",
+        placeholder: "Enter Phone Number",
+        undefinedErrorMessage: "Phone Number is required",
+        numericErrorMessage: "Phone Number must be numeric",
+        lengthErrorMessage: "Phone Number must be 10 digits",
+      },
+      firstName: {
+        label: "First Name",
+        placeholder: "Enter First Name",
+        errorMessage: "First Name is required",
+      },
+      lastName: {
+        label: "Last Name",
+        placeholder: "Enter Last Name",
+        errorMessage: "Last Name is required",
+      },
+      email: {
+        label: "Email",
+        placeholder: "Enter Email",
+        errorMessage: "Email is required",
+      },
+    },
+    buttons: {
+      cancel: "Cancel",
+      add: "Add",
+      save: "Save",
+      delete: "Delete",
+      confirm: "Confirm",
+    },
+  },
+  informations: {
+    noInformations: {
+      title: "No Informations Available",
+      subTitle: "Add an Information to start",
+    },
+    addNewInformationModal: {
+      title: "Add New Information",
+      success: "Information created successfully",
+      error: "An error occurred while adding the Information",
+    },
+    editInformationModal: {
+      title: "Edit Information",
+      success: "Information updated successfully",
+      error: "An error occurred while updating the Information",
+    },
+    deleteInformation: {
+      title: "Are you sure you want to delete this Information?",
+      confirmMessage: "Are you sure you want to delete this Information?",
+      success: "Information deleted successfully",
+      error: "An error occurred while deleting the Information",
+    },
+  },
+  models: {
+    noModels: {
+      title: "No Models Available",
+      subTitle: "Add a model to start",
+    },
+    modelsListCard: {
+      sections: "Sections",
+    },
+    noModelSelected: {
+      title: "No Model Selected",
+      subTitle: "Select a model from the list",
+    },
+    addNewModelModal: {
+      title: "Add New Model",
+      success: "Model created successfully",
+      error: "An error occurred while creating new model",
+    },
+    editModel: {
+      title: "Model Names",
+      success: "Model updated successfully",
+      error: "An error occurred while updating the model",
+    },
+    deleteModel: {
+      confirmMessage: "Are you sure you want to delete this model?",
+      deleteButton: "Delete Model",
+      success: "Model deleted successfully",
+      error: "An error occurred while deleting the model",
+    },
+    images: {
+      deleteImage: {
+        confirmMessage: "Are you sure you want to delete this image?",
+        deleteButton: "Delete Image",
+        success: "Image deleted successfully",
+        error: "An error occurred while deleting the image",
+      },
+    },
+    sections: {
+      title: "Sections",
+      createSection: {
+        addNewSection: "Add New Section",
+        drawTitle: "Draw Section",
+        formTitle: "Section Details",
+        coordinatesPlaceholder:
+          "Draw on the image and select at least 3 points",
+        coordinatesValidated: "Section selected successfully",
+        success: "Section created successfully",
+        error: "An error occurred while creating the section",
+      },
+      editSection: {
+        drawTitle: "Edit Section Drawing",
+        formTitle: "Edit Section Details",
+        success: "Section updated successfully",
+        error: "An error occurred while updating the section",
+      },
+      deleteSection: {
+        confirmMessage: "Are you sure you want to delete this section?",
+        success: "Section deleted successfully",
+        error: "An error occurred while deleting the section",
+      },
+    },
+  },
+  alterations: {
+    noAlterations: {
+      title: "No Alterations Available",
+      subTitle: "Add an Alteration to start",
+    },
+    addNewAlterationModal: {
+      title: "Add New Alteration",
+      success: "Alteration created successfully",
+      error: "An error occurred while creating new Alteration",
+    },
+    editAlterationModal: {
+      title: "Edit Alteration",
+      success: "Alteration updated successfully",
+      error: "An error occurred while updating the Alteration",
+    },
+    deleteAlteration: {
+      confirmMessage: "Are you sure you want to delete this Alteration?",
+      success: "Alteration deleted successfully",
+      error: "An error occurred while deleting the Alteration",
+    },
+  },
+  extras: {
+    noExtras: {
+      title: "No Extras Available",
+      subTitle: "Add an Extra to start",
+    },
+    addNewExtraModal: {
+      title: "Add New Extra",
+      success: "Extra created successfully",
+      error: "An error occurred while creating new Extra",
+    },
+    editExtraModal: {
+      title: "Edit Extra",
+      success: "Extra updated successfully",
+      error: "An error occurred while updating the Extra",
+    },
+    deleteExtra: {
+      confirmMessage: "Are you sure you want to delete this Extra?",
+      success: "Extra deleted successfully",
+      error: "An error occurred while deleting the Extra",
+    },
+  },
+  users: {
+    roles: {
+      tailor: "Tailor",
+      customer: "Customer",
+      courier: "Courier",
+    },
+    tableHeaders: {
+      firstName: "First Name",
+      lastName: "Last Name",
+      phone: "Phone Number",
+      email: "Email",
+    },
+    addNewUserModal: {
+      title: "Add New User",
+      success: "User created successfully",
+      error: "An error occurred while creating new new User",
+    },
+    editUserModal: {
+      title: "Edit User",
+      success: "User updated successfully",
+      error: "An error occurred while updating the User",
+    },
+    deleteUser: {
+      confirmMessage: "Are you sure you want to delete this User?",
+      success: "User deleted successfully",
+      error: "An error occurred while deleting the User",
+    },
+  },
+  toast: {
+    showDetails: "Show Details",
+    hideDetails: "Hide Details",
+  },
+};

@@ -3,13 +3,19 @@
   "version": "0.0.0",
   "license": "MIT",
   "scripts": {
-    "start-admin": "nx serve tadil-api",
-    "start-mobile": "nx serve tadil-mobile-api",
-    "build-admin": "nx build tadil-api",
-    "build-mobile": "nx build tadil-mobile-api",
+    "start-all": "nx run-many --target=serve tadil-api tadil-admin-web-client tadil-mobile-api tadil-mobile-app --parallel",
+    "start-admin": "nx run-many --target=serve tadil-api tadil-admin-web-client",
+    "start-admin-api": "nx serve tadil-api",
+    "start-admin-ui": "nx serve tadil-admin-web-client",
+    "start-mobile": "nx run-many --target=serve tadil-mobile-api tadil-mobile-app",
+    "start-mobile-api": "nx serve tadil-mobile-api",
+    "start-mobile-ui": "nx serve tadil-mobile-app",
+    "build-admin-api": "nx build tadil-api",
+    "build-mobile-api": "nx build tadil-mobile-api",
     "test": "nx test",
     "db-generate": "npm run prisma-generate -w tadil-database",
     "db-migrate-dev": "npm run prisma-migrate-dev -w tadil-database",
+    "db-migrate-reset": "npm run prisma-reset -w tadil-database",
     "db-migrate-deploy": "npm run prisma-migrate-deploy -w tadil-database",
     "db-studio": "npm run prisma-studio -w tadil-database",
     "db-seed": "npm run prisma-seed -w tadil-database"
@@ -76,6 +82,8 @@
     "libs/core/tadil-tailor",
     "libs/core/tadil-users",
     "libs/core/tadil-auth",
-    "libs/infra/sms-provider"
+    "libs/infra/sms-provider",
+    "apps/tadil-admin-web-client",
+    "apps/tadil-mobile-app"
   ]
 }

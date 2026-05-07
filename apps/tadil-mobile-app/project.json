@@ -1,0 +1,63 @@
+{
+  "name": "tadil-mobile-app",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "application",
+  "sourceRoot": "apps/tadil-mobile-app/src",
+  "tags": [],
+  "targets": {
+    "serve": {
+      "command": "npm run dev",
+      "options": {
+        "cwd": "apps/tadil-mobile-app"
+      }
+    },
+    "build": {
+      "command": "npm run build",
+      "options": {
+        "cwd": "apps/tadil-mobile-app"
+      }
+    },
+    "build-mobile": {
+      "command": "npm run build-mobile",
+      "options": {
+        "cwd": "apps/tadil-mobile-app"
+      }
+    },
+    "android-studio": {
+      "command": "npm run android-studio",
+      "options": {
+        "cwd": "apps/tadil-mobile-app"
+      }
+    },
+    "android-device": {
+      "command": "npm run android-device",
+      "options": {
+        "cwd": "apps/tadil-mobile-app"
+      }
+    },
+    "ios-device": {
+      "command": "npm run ios-device",
+      "options": {
+        "cwd": "apps/tadil-mobile-app"
+      }
+    },
+    "generate-client": {
+      "command": "npm run generate-client",
+      "options": {
+        "cwd": "apps/tadil-mobile-app"
+      }
+    },
+    "lint": {
+      "command": "npm run lint",
+      "options": {
+        "cwd": "apps/tadil-mobile-app"
+      }
+    },
+    "test": {
+      "command": "npm run test:unit",
+      "options": {
+        "cwd": "apps/tadil-mobile-app"
+      }
+    }
+  }
+}

@@ -1,0 +1,72 @@
+/* cairo-200 - arabic_latin */
+@font-face {
+  font-display: block;
+  font-family: "Cairo";
+  font-style: normal;
+  font-weight: 200;
+  src: url("./cairo-200.woff2") format("woff2"),
+    url("./cairo-200.ttf") format("truetype");
+}
+/* cairo-300 - arabic_latin */
+@font-face {
+  font-display: block;
+  font-family: "Cairo";
+  font-style: normal;
+  font-weight: 300;
+  src: url("./cairo-300.woff2") format("woff2"),
+    url("./cairo-300.ttf") format("truetype");
+}
+/* cairo-regular - arabic_latin */
+@font-face {
+  font-display: block;
+  font-family: "Cairo";
+  font-style: normal;
+  font-weight: 400;
+  src: url("./cairo-regular.woff2") format("woff2"),
+    url("./cairo-regular.ttf") format("truetype");
+}
+/* cairo-500 - arabic_latin */
+@font-face {
+  font-display: block;
+  font-family: "Cairo";
+  font-style: normal;
+  font-weight: 500;
+  src: url("./cairo-500.woff2") format("woff2"),
+    url("./cairo-500.ttf") format("truetype");
+}
+/* cairo-600 - arabic_latin */
+@font-face {
+  font-display: block;
+  font-family: "Cairo";
+  font-style: normal;
+  font-weight: 600;
+  src: url("./cairo-600.woff2") format("woff2"),
+    url("./cairo-600.ttf") format("truetype");
+}
+/* cairo-700 - arabic_latin */
+@font-face {
+  font-display: block;
+  font-family: "Cairo";
+  font-style: normal;
+  font-weight: 700;
+  src: url("./cairo-700.woff2") format("woff2"),
+    url("./cairo-700.ttf") format("truetype");
+}
+/* cairo-800 - arabic_latin */
+@font-face {
+  font-display: block;
+  font-family: "Cairo";
+  font-style: normal;
+  font-weight: 800;
+  src: url("./cairo-800.woff2") format("woff2"),
+    url("./cairo-800.ttf") format("truetype");
+}
+/* cairo-900 - arabic_latin */
+@font-face {
+  font-display: block;
+  font-family: "Cairo";
+  font-style: normal;
+  font-weight: 900;
+  src: url("./cairo-900.woff2") format("woff2"),
+    url("./cairo-900.ttf") format("truetype");
+}

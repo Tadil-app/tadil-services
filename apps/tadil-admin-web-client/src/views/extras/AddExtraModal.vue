@@ -1,0 +1,117 @@
+<template>
+  <Button @click="isOpen = true">
+    {{ $t("extras.addNewExtraModal.title") }}
+  </Button>
+  <Modal v-model="isOpen" @close-modal="closeModal">
+    <div class="space-y-4">
+      <h1 class="text-xl font-bold">
+        {{ $t("extras.addNewExtraModal.title") }}
+      </h1>
+      <div class="flex gap-4">
+        <MultiLanguageNameForm ref="namesForm" v-model="newExtra" />
+        <div class="space-y-2">
+          <InputLabel for="price">
+            {{ $t("common.inputs.price.label") }}
+          </InputLabel>
+          <div class="grid grid-cols-[1fr_auto] items-center gap-2">
+            <TextInput
+              id="price"
+              v-model="newExtra.price"
+              type="number"
+              placeholder="0.00"
+              :validation-error-message="$t(priceValidationError)"
+              @update:model-value="validatePrice"
+            />
+            <p>{{ $t("common.currencies.ras") }}</p>
+          </div>
+        </div>
+      </div>
+      <div class="flex justify-evenly">
+        <Button variant="outline" @click="closeModal">
+          {{ $t("common.buttons.cancel") }}
+        </Button>
+        <Button @click="createExtra">
+          {{ $t("common.buttons.save") }}
+        </Button>
+      </div>
+    </div>
+  </Modal>
+</template>
+
+<script setup lang="ts">
+import {
+  Button,
+  useToast,
+  Modal,
+  MultiLanguageNameForm,
+  InputLabel,
+} from "@/components";
+import TextInput from "@/components/ui/inputs/TextInput.vue";
+import { apiClient, type CreateExtraDTO } from "@/integration";
+import { ref } from "vue";
+import { useI18n } from "vue-i18n";
+
+const { t } = useI18n();
+const { openToast } = useToast();
+
+const emit = defineEmits<{
+  (e: "created:extra"): void;
+}>();
+
+const isOpen = ref<boolean>(false);
+
+const newExtra = ref<CreateExtraDTO>({
+  englishName: "",
+  arabicName: "",
+  hindiName: "",
+  urduName: "",
+  bengaliName: "",
+  price: 0,
+});
+const namesForm = ref<InstanceType<typeof MultiLanguageNameForm>>();
+
+const priceValidationError = ref<string>("");
+function validatePrice() {
+  if (!newExtra.value.price) {
+    priceValidationError.value = "common.inputs.price.errorMessage";
+    return false;
+  }
+  priceValidationError.value = "";
+  return true;
+}
+
+async function createExtra() {
+  if (!namesForm.value) return;
+  try {
+    if (namesForm.value.validateForm() && validatePrice()) {
+      await apiClient.extrasControllerCreateExtra(
+        newExtra.value
+      );
+      openToast(t("extras.addNewExtraModal.success"));
+      emit("created:extra");
+      closeModal();
+      return;
+    }
+  } catch (error: any) {
+    openToast(
+      t("extras.addNewExtraModal.error"),
+      error.response?.data?.message || undefined,
+      undefined,
+      "destructive"
+    );
+  }
+}
+
+function closeModal() {
+  newExtra.value = {
+    englishName: "",
+    arabicName: "",
+    hindiName: "",
+    urduName: "",
+    bengaliName: "",
+    price: 0,
+  };
+  priceValidationError.value = "";
+  isOpen.value = false;
+}
+</script>

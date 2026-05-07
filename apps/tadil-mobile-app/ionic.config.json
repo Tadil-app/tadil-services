@@ -1,0 +1,7 @@
+{
+  "name": "Tadil-تعديل",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "vue-vite"
+}

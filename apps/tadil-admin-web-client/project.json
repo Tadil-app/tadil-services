@@ -1,0 +1,33 @@
+{
+  "name": "tadil-admin-web-client",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "application",
+  "sourceRoot": "apps/tadil-admin-web-client/src",
+  "tags": [],
+  "targets": {
+    "serve": {
+      "command": "npm run dev",
+      "options": {
+        "cwd": "apps/tadil-admin-web-client"
+      }
+    },
+    "build": {
+      "command": "npm run build",
+      "options": {
+        "cwd": "apps/tadil-admin-web-client"
+      }
+    },
+    "preview": {
+      "command": "npm run preview",
+      "options": {
+        "cwd": "apps/tadil-admin-web-client"
+      }
+    },
+    "generate-client": {
+      "command": "npm run generate-client",
+      "options": {
+        "cwd": "apps/tadil-admin-web-client"
+      }
+    }
+  }
+}
