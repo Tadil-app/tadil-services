@@ -15,6 +15,7 @@ import {
   ApiParam,
   ApiQuery,
   ApiTags,
+  ApiOperation,
 } from '@nestjs/swagger';
 import { ReadableFile, type FileStorageService } from '@tadil-common';
 import { DataReader } from '@tadil-database';
@@ -30,6 +31,7 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { v4 as uuidv4 } from 'uuid';
 import { extname } from 'path';
 import { UploadFileDto } from './dtos/uploadFile.dto';
+import { ConfirmReceiptUseCase } from '@tadil-customer';
 
 @Controller('customer')
 @ApiTags('Customer')
@@ -37,8 +39,15 @@ export class CustomerController {
   constructor(
     private readonly _dataReader: DataReader,
     @Inject('FileStorageService')
-    private readonly _fileStorageService: FileStorageService
+    private readonly _fileStorageService: FileStorageService,
+    private readonly _confirmReceiptUseCase: ConfirmReceiptUseCase
   ) {}
+
+  @Post('orders/:orderId/confirm-receipt')
+  @ApiOperation({ summary: 'Confirm receipt of items from return courier' })
+  async confirmReceipt(@Param('orderId') orderId: string) {
+    await this._confirmReceiptUseCase.execute({ orderId });
+  }
 
   @Get('models')
   @ApiOkResponse({ type: DisplayModelDTO, isArray: true })

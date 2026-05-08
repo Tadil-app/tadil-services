@@ -203,8 +203,7 @@ function handleNavigation(role?: string) {
   if (role === "tailor") {
     router.push({ name: "tailor-dashboard" });
   } else if (role === "courier") {
-    // router.push({ name: "courier-dashboard" });
-    router.push({ name: "customer-dashboard" }); // Fallback if no courier dashboard yet
+    router.push({ name: "courier-dashboard" });
   } else {
     router.push({ name: "customer-dashboard" });
   }

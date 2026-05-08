@@ -12,6 +12,7 @@ Core libraries are independent of any specific framework (like NestJS) or infras
 ## Key Libraries
 - `tadil-auth`: Authentication and authorization logic (login, token validation, approvals).
 - `tadil-users`: User management logic.
+- `tadil-courier`: Logic for courier order assignments and deliveries.
 - `tadil-alterations`: Logic for managing alteration definitions.
 - `tadil-models`: Logic for predefined clothing models.
 - `tadil-orders`: Core order processing workflow.

@@ -11,8 +11,7 @@
         <StatsGrid
           :pending-count="pendingOrders.length"
           :in-progress-count="inProgressOrders.length"
-          :completed-count="completedOrders.length"
-          :waiting-for-pickup-count="waitingForPickupOrders.length"
+          :done-count="doneOrders.length"
         />
       </div>
 
@@ -53,7 +52,6 @@ const {
   mockOrders,
   pendingOrders,
   inProgressOrders,
-  completedOrders,
-  waitingForPickupOrders,
+  doneOrders,
 } = useCustomerOrders();
 </script>

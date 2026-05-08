@@ -23,91 +23,49 @@
                 level="H"
                 class="border border-black p-1 rounded-lg"
               />
-<StatusPill :status="order.status" />
+              <StatusPill :status="order.status" />
             </div>
           </div>
         </IonCard>
+
+        <!-- Alterations omitted for brevity in this replace call, but they should remain -->
+        <!-- I'll use write_file to be sure I don't break the complex UI -->
 
         <IonCard color="transparent" class="ion-padding">
           <p>{{ $t("tailor.orderDetails.alterations.title") }}</p>
           <IonCard v-for="item in order.items" :key="item.id">
             <ImageContainer :imageUrl="item.imageFileUrl" class="max-h-40" />
             <div class="divide-y divide-border space-y-2">
-              <div
-                v-for="section in item.sections"
-                :key="section.id"
-                class="p-2"
-              >
-                <TranslatedName
-                  :names="section"
-                  class="text-lg font-semibold"
-                />
-                <div
-                  v-for="alteration in section.alterations"
-                  :key="alteration.id"
-                  class="px-4"
-                >
+              <div v-for="section in item.sections" :key="section.id" class="p-2">
+                <TranslatedName :names="section" class="text-lg font-semibold" />
+                <div v-for="alteration in section.alterations" :key="alteration.id" class="px-4">
                   <TranslatedName :names="alteration" class="font-semibold" />
                   <div class="grid grid-cols-2 gap-4">
-                    <div
-                      v-for="information in alteration.informations"
-                      :key="information.id"
-                      class="col-span-1 px-4 py-2 bg-gray-100 rounded-lg"
-                    >
+                    <div v-for="information in alteration.informations" :key="information.id" class="col-span-1 px-4 py-2 bg-gray-100 rounded-lg">
                       <TranslatedName :names="information" />
-                      <p>
-                        {{ information.value }}
-                        {{
-                          information.unit
-                            ? $t("common.units." + information.unit)
-                            : ""
-                        }}
-                      </p>
+                      <p>{{ information.value }} {{ information.unit ? $t("common.units." + information.unit) : "" }}</p>
                     </div>
                   </div>
                 </div>
               </div>
               <div class="font-semibold text-secondary text-lg p-2">
-                {{ $t("common.price") }}: {{ item.price }}
-                {{ $t("common.currencies.sar") }}
+                {{ $t("common.price") }}: {{ item.price }} {{ $t("common.currencies.sar") }}
               </div>
             </div>
           </IonCard>
-          <IonCard
-            v-for="item in order.customItems"
-            :key="item.id"
-            class="space-y-2"
-          >
+          <IonCard v-for="item in order.customItems" :key="item.id" class="space-y-2">
             <ImageContainer :imageUrl="item.imageFileUrl" class="max-h-40" />
-            <div
-              v-for="alteration in item.alterations"
-              :key="alteration.id"
-              class="px-4"
-            >
+            <div v-for="alteration in item.alterations" :key="alteration.id" class="px-4">
               <TranslatedName :names="alteration" class="font-semibold" />
               <div class="grid grid-cols-2 gap-4">
-                <div
-                  v-for="information in alteration.informations"
-                  :key="information.id"
-                  class="px-4 py-2 bg-gray-100 rounded-lg"
-                >
+                <div v-for="information in alteration.informations" :key="information.id" class="px-4 py-2 bg-gray-100 rounded-lg">
                   <TranslatedName :names="information" />
-                  <p class="truncate">
-                    {{ information.value }}
-                    {{
-                      information.unit
-                        ? $t("common.units." + information.unit)
-                        : ""
-                    }}
-                  </p>
+                  <p class="truncate">{{ information.value }} {{ information.unit ? $t("common.units." + information.unit) : "" }}</p>
                 </div>
               </div>
             </div>
-            <div
-              class="border-t border-border font-semibold text-secondary text-lg p-2"
-            >
-              {{ $t("common.price") }}: {{ item.price }}
-              {{ $t("common.currencies.sar") }}
+            <div class="border-t border-border font-semibold text-secondary text-lg p-2">
+              {{ $t("common.price") }}: {{ item.price }} {{ $t("common.currencies.sar") }}
             </div>
           </IonCard>
         </IonCard>
@@ -117,37 +75,38 @@
           <Chat />
         </IonCard>
 
-        <div
-          class="grid grid-cols-2 gap-4"
-          v-if="order.status === ORDER_STATUS.PENDING"
-        >
-          <IonButton expand="block" color="danger" @click="declineOrder">{{
-            $t("tailor.orderDetails.declineOrder.buttonText")
-          }}</IonButton>
-          <IonButton expand="block" color="success" @click="acceptOrder">{{
-            $t("tailor.orderDetails.acceptOrder.buttonText")
-          }}</IonButton>
+        <!-- Action Buttons based on New Flow -->
+        <div class="space-y-3">
+          <div class="grid grid-cols-2 gap-4" v-if="order.status === ORDER_STATUS.WAITING_FOR_TAILOR_ASSIGNMENT">
+            <IonButton expand="block" color="danger" @click="declineOrder">{{ $t("tailor.orderDetails.declineOrder.buttonText") }}</IonButton>
+            <IonButton expand="block" color="success" @click="acceptOrder">{{ $t("tailor.orderDetails.acceptOrder.buttonText") }}</IonButton>
+          </div>
+
+          <IonButton
+            v-if="order.status === ORDER_STATUS.WAITING_FOR_DROPOFF_TO_TAILOR"
+            expand="block"
+            color="success"
+            @click="confirmReceipt"
+          >
+            Confirm Receipt from Courier
+          </IonButton>
+
+          <IonButton
+            v-if="order.status === ORDER_STATUS.IN_PROGRESS"
+            expand="block"
+            color="secondary"
+            @click="markReady"
+          >
+            Mark Work as Ready
+          </IonButton>
         </div>
-        <IonButton
-          v-if="order.status === ORDER_STATUS.IN_PROGRESS"
-          expand="block"
-          color="secondary"
-          @click="markAsCompleted"
-        >
-          {{ $t("tailor.orderDetails.markOrderAsCompleted.buttonText") }}
-        </IonButton>
       </template>
     </IonContent>
   </IonPage>
 </template>
 
 <script setup lang="ts">
-import {
-  IonButton,
-  IonCard,
-  IonContent,
-  IonPage,
-} from "@ionic/vue";
+import { IonButton, IonCard, IonContent, IonPage } from "@ionic/vue";
 import { onBeforeMount, onBeforeUnmount, ref } from "vue";
 import { useRouter } from "vue-router";
 import { QrcodeSvg } from "qrcode.vue";
@@ -178,11 +137,7 @@ async function findOrderById() {
     router.replace({ name: "tailor-orders" });
     return;
   }
-  
-  if (orders.value.length === 0) {
-    await getOrders();
-  }
-
+  await getOrders();
   order.value = orders.value.find((o) => o.reference === props.orderId);
   if (!order.value) {
     router.replace({ name: "tailor-orders" });
@@ -193,11 +148,7 @@ async function findOrderById() {
 async function acceptOrder() {
   try {
     if (!order.value) return;
-    await apiClient.tailorControllerAcceptOrder(
-      authStore.userId,
-      order.value.id,
-    );
-    await getOrders();
+    await apiClient.tailorControllerAcceptOrder(authStore.userId, order.value.id);
     await findOrderById();
     showToast({ message: t("tailor.orderDetails.acceptOrder.successMessage") });
   } catch (error) {
@@ -208,29 +159,33 @@ async function acceptOrder() {
 async function declineOrder() {
   try {
     if (!order.value) return;
-    await apiClient.tailorControllerDeclineOrder(
-      authStore.userId,
-      order.value.id,
-    );
-    await getOrders();
-    showToast({
-      message: t("tailor.orderDetails.declineOrder.successMessage"),
-    });
+    await apiClient.tailorControllerDeclineOrder(authStore.userId, order.value.id);
+    showToast({ message: t("tailor.orderDetails.declineOrder.successMessage") });
     router.replace({ name: "tailor-orders" });
   } catch (error) {
     showToast({ message: t("tailor.orderDetails.declineOrder.errorMessage") });
   }
 }
 
-async function markAsCompleted() {
+async function confirmReceipt() {
   try {
-    showToast({
-      message: t("tailor.orderDetails.markOrderAsCompleted.successMessage"),
-    });
+    if (!order.value) return;
+    await apiClient.tailorControllerConfirmReceipt(authStore.userId, order.value.id);
+    await findOrderById();
+    showToast({ message: "Receipt confirmed" });
   } catch (error) {
-    showToast({
-      message: t("tailor.orderDetails.markOrderAsCompleted.errorMessage"),
-    });
+    showToast({ message: "Failed to confirm receipt" });
+  }
+}
+
+async function markReady() {
+  try {
+    if (!order.value) return;
+    await apiClient.tailorControllerMarkReady(authStore.userId, order.value.id);
+    await findOrderById();
+    showToast({ message: "Order marked as ready for return" });
+  } catch (error) {
+    showToast({ message: "Failed to mark as ready" });
   }
 }
 
@@ -242,6 +197,3 @@ onBeforeUnmount(() => {
   dismissToast();
 });
 </script>
-
-<style scoped>
-</style>

@@ -17,13 +17,15 @@ const props = defineProps<{
 
 const statusClasses = computed(() => {
   switch (props.status) {
-    case ORDER_STATUS.COMPLETED:
+    case ORDER_STATUS.DONE:
       return "text-green-700 bg-green-500/20 dark:text-green-400 dark:bg-green-500/10 border border-green-500/30";
     case ORDER_STATUS.PENDING:
       return "text-amber-700 bg-amber-500/20 dark:text-amber-400 dark:bg-amber-500/10 border border-amber-500/30";
     case ORDER_STATUS.IN_PROGRESS:
       return "text-blue-700 bg-blue-500/20 dark:text-blue-400 dark:bg-blue-500/10 border border-blue-500/30";
-    case ORDER_STATUS.WAITING_FOR_PICKUP:
+    case ORDER_STATUS.WAITING_FOR_TAILOR_ASSIGNMENT:
+    case ORDER_STATUS.WAITING_FOR_COURIER_ASSIGNMENT:
+    case ORDER_STATUS.WAITING_FOR_RETURN_COURIER_ASSIGNMENT:
       return "text-purple-700 bg-purple-500/20 dark:text-purple-400 dark:bg-purple-500/10 border border-purple-500/30";
     default:
       return "text-gray-600 bg-gray-500/20 dark:text-gray-400 dark:bg-gray-500/10 border border-gray-500/30";

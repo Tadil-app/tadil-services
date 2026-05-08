@@ -41,6 +41,12 @@
     },
     {
       "path": "./libs/infra/sms-provider"
+    },
+    {
+      "path": "./libs/core/tadil-courier"
+    },
+    {
+      "path": "./libs/core/tadil-customer"
     }
   ]
 }

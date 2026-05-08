@@ -31,6 +31,12 @@
       "path": "../../libs/core/tadil-auth"
     },
     {
+      "path": "../../libs/core/tadil-courier"
+    },
+    {
+      "path": "../../libs/core/tadil-customer"
+    },
+    {
       "path": "../../libs/infra/tadil-database"
     },
     {

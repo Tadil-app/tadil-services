@@ -16,7 +16,7 @@ export function useOrders() {
 
   const pendingOrders = computed(() => {
     return orders.value.filter(
-      (order) => order.status === ORDER_STATUS.PENDING,
+      (order) => order.status === ORDER_STATUS.WAITING_FOR_TAILOR_ASSIGNMENT,
     );
   });
   const inProgressOrders = computed(() => {
@@ -24,14 +24,9 @@ export function useOrders() {
       (order) => order.status === ORDER_STATUS.IN_PROGRESS,
     );
   });
-  const completedOrders = computed(() => {
+  const doneOrders = computed(() => {
     return orders.value.filter(
-      (order) => order.status === ORDER_STATUS.COMPLETED,
-    );
-  });
-  const waitingForPickupOrders = computed(() => {
-    return orders.value.filter(
-      (order) => order.status === ORDER_STATUS.WAITING_FOR_PICKUP,
+      (order) => order.status === ORDER_STATUS.DONE,
     );
   });
 
@@ -57,8 +52,7 @@ export function useOrders() {
     orders,
     pendingOrders,
     inProgressOrders,
-    completedOrders,
-    waitingForPickupOrders,
+    doneOrders,
     getOrders,
   };
 }

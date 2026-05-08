@@ -13,9 +13,15 @@ export enum ModelCategory {
 }
 export const ORDER_STATUS = {
   PENDING: "pending",
+  WAITING_FOR_TAILOR_ASSIGNMENT: "waitingForTailorAssignement",
+  WAITING_FOR_COURIER_ASSIGNMENT: "waitingForCourierAssignement",
+  WAITING_FOR_PICKUP_FROM_CUSTOMER: "waitingForPickupFromCustomer",
+  WAITING_FOR_DROPOFF_TO_TAILOR: "waitingForDropoffToTailor",
   IN_PROGRESS: "inProgress",
-  COMPLETED: "completed",
-  WAITING_FOR_PICKUP: "waitingForPickup",
+  WAITING_FOR_RETURN_COURIER_ASSIGNMENT: "waitingForReturnCourierAssignement",
+  WAITING_FOR_PICKUP_FROM_TAILOR: "waitingForPickupFromTailor",
+  WAITING_FOR_DROPOFF_TO_CUSTOMER: "waitingForDropoffToCustomer",
+  DONE: "done",
 };
 export type OrderStatusType = (typeof ORDER_STATUS)[keyof typeof ORDER_STATUS];
 

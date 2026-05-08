@@ -22,6 +22,12 @@
       "path": "../../core/tadil-users"
     },
     {
+      "path": "../../core/tadil-courier"
+    },
+    {
+      "path": "../../core/tadil-customer"
+    },
+    {
       "path": "./tsconfig.lib.json"
     }
   ]

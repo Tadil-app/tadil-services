@@ -12,4 +12,5 @@ Welcome to the documentation for the Tadil platform. This `docs` folder contains
 ## Libraries
 
 - [Core Libraries](./libs-core.md)
+- [Courier Core Library](./libs-core-courier.md)
 - [Infrastructure Libraries](./libs-infra.md)

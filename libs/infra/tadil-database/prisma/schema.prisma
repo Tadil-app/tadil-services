@@ -27,9 +27,15 @@ enum InformationType {
 
 enum OrderStatus {
     pending
+    waitingForTailorAssignement
+    waitingForCourierAssignement
+    waitingForPickupFromCustomer
+    waitingForDropoffToTailor
     inProgress
-    completed
-    waitingForPickup
+    waitingForReturnCourierAssignement
+    waitingForPickupFromTailor
+    waitingForDropoffToCustomer
+    done
 }
 
 enum LoginRequestStatus {
@@ -236,6 +242,10 @@ model Order {
     assignedCourier   User?   @relation("courier-assigned-order", fields: [assignedCourierId], references: [id], onDelete: Cascade)
     rejectedCouriers  User[]  @relation("courier-rejected-orders")
 
+    assignedReturnCourierId String?
+    assignedReturnCourier   User?   @relation("return-courier-assigned-order", fields: [assignedReturnCourierId], references: [id], onDelete: Cascade)
+    rejectedReturnCouriers  User[]  @relation("return-courier-rejected-orders")
+
     @@map("orders")
 }
 
@@ -257,6 +267,9 @@ model User {
 
     assignedCouriers Order[] @relation("courier-assigned-order")
     rejectedCouriers Order[] @relation("courier-rejected-orders")
+
+    assignedReturnOrders Order[] @relation("return-courier-assigned-order")
+    rejectedReturnOrders Order[] @relation("return-courier-rejected-orders")
 
     @@map("users")
 }

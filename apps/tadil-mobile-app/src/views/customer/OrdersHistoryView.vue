@@ -69,8 +69,7 @@ const orderStatus = [
   "all",
   ORDER_STATUS.PENDING,
   ORDER_STATUS.IN_PROGRESS,
-  ORDER_STATUS.COMPLETED,
-  ORDER_STATUS.WAITING_FOR_PICKUP,
+  ORDER_STATUS.DONE,
 ];
 const selectedStatus = ref("all");
 

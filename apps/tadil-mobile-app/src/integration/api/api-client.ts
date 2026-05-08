@@ -213,6 +213,150 @@ export class Api<
     /**
      * No description
      *
+     * @tags Courier
+     * @name CourierControllerGetOrders
+     * @request GET:/api/courier/{id}/orders
+     */
+    courierControllerGetOrders: (id: string, params: RequestParams = {}) =>
+      this.request<DisplayOrderDTO[], any>({
+        path: `/api/courier/${id}/orders`,
+        method: "GET",
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Courier
+     * @name CourierControllerAccept
+     * @request POST:/api/courier/{id}/orders/{orderId}/accept
+     */
+    courierControllerAccept: (
+      id: string,
+      orderId: string,
+      query: { isReturn: string },
+      params: RequestParams = {},
+    ) =>
+      this.request<void, any>({
+        path: `/api/courier/${id}/orders/${orderId}/accept`,
+        method: "POST",
+        query: query,
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Courier
+     * @name CourierControllerDecline
+     * @request POST:/api/courier/{id}/orders/{orderId}/decline
+     */
+    courierControllerDecline: (
+      id: string,
+      orderId: string,
+      query: { isReturn: string },
+      params: RequestParams = {},
+    ) =>
+      this.request<void, any>({
+        path: `/api/courier/${id}/orders/${orderId}/decline`,
+        method: "POST",
+        query: query,
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Courier
+     * @name CourierControllerPickup
+     * @request POST:/api/courier/{id}/orders/{orderId}/pickup
+     */
+    courierControllerPickup: (
+      id: string,
+      orderId: string,
+      params: RequestParams = {},
+    ) =>
+      this.request<void, any>({
+        path: `/api/courier/${id}/orders/${orderId}/pickup`,
+        method: "POST",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Courier
+     * @name CourierControllerDeliver
+     * @request POST:/api/courier/{id}/orders/{orderId}/deliver
+     */
+    courierControllerDeliver: (
+      id: string,
+      orderId: string,
+      params: RequestParams = {},
+    ) =>
+      this.request<void, any>({
+        path: `/api/courier/${id}/orders/${orderId}/deliver`,
+        method: "POST",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Tailor
+     * @name TailorControllerConfirmReceipt
+     * @request POST:/api/tailor/{id}/orders/{orderId}/confirm-receipt
+     */
+    tailorControllerConfirmReceipt: (
+      id: string,
+      orderId: string,
+      params: RequestParams = {},
+    ) =>
+      this.request<void, any>({
+        path: `/api/tailor/${id}/orders/${orderId}/confirm-receipt`,
+        method: "POST",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Tailor
+     * @name TailorControllerMarkReady
+     * @request POST:/api/tailor/{id}/orders/{orderId}/mark-ready
+     */
+    tailorControllerMarkReady: (
+      id: string,
+      orderId: string,
+      params: RequestParams = {},
+    ) =>
+      this.request<void, any>({
+        path: `/api/tailor/${id}/orders/${orderId}/mark-ready`,
+        method: "POST",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Customer
+     * @name CustomerControllerConfirmReceipt
+     * @request POST:/api/customer/orders/{orderId}/confirm-receipt
+     */
+    customerControllerConfirmReceipt: (
+      orderId: string,
+      params: RequestParams = {},
+    ) =>
+      this.request<void, any>({
+        path: `/api/customer/orders/${orderId}/confirm-receipt`,
+        method: "POST",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
      * @tags Customer
      * @name CustomerControllerGetModels
      * @request GET:/api/customer/models

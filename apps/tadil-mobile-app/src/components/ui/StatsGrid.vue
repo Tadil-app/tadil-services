@@ -20,14 +20,12 @@ import { ORDER_STATUS } from "@/integration/dtos";
 const props = defineProps<{
   pendingCount: number;
   inProgressCount: number;
-  completedCount: number;
-  waitingForPickupCount: number;
+  doneCount: number;
 }>();
 
 const stats = computed(() => [
-  { label: ORDER_STATUS.IN_PROGRESS, count: props.inProgressCount },
   { label: ORDER_STATUS.PENDING, count: props.pendingCount },
-  { label: ORDER_STATUS.COMPLETED, count: props.completedCount },
-  { label: ORDER_STATUS.WAITING_FOR_PICKUP, count: props.waitingForPickupCount },
+  { label: ORDER_STATUS.IN_PROGRESS, count: props.inProgressCount },
+  { label: ORDER_STATUS.DONE, count: props.doneCount },
 ]);
 </script>

@@ -9,8 +9,7 @@
         <StatsGrid
           :pending-count="pendingOrders.length"
           :in-progress-count="inProgressOrders.length"
-          :completed-count="completedOrders.length"
-          :waiting-for-pickup-count="waitingForPickupOrders.length"
+          :done-count="doneOrders.length"
         />
       </div>
       <div>
@@ -55,8 +54,7 @@ import { useRouter } from "vue-router";
 const {
   pendingOrders,
   inProgressOrders,
-  completedOrders,
-  waitingForPickupOrders,
+  doneOrders,
 } = useOrders();
 
 const router = useRouter();

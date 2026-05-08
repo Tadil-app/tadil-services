@@ -1,6 +1,8 @@
 import {
   AcceptOrderUseCase,
   DeclineOrderUseCase,
+  ConfirmReceiptUseCase,
+  MarkOrderReadyUseCase,
   TailorRepository,
 } from '@tadil-tailor';
 import { Provider, Scope } from '@nestjs/common';
@@ -29,8 +31,26 @@ const DeclineOrderUseCaseProvider: Provider<DeclineOrderUseCase> = {
   inject: ['TailorRepository'],
 };
 
+const ConfirmReceiptUseCaseProvider: Provider<ConfirmReceiptUseCase> = {
+  provide: ConfirmReceiptUseCase,
+  useFactory: (tailorRepository: TailorRepository) =>
+    new ConfirmReceiptUseCase(tailorRepository),
+  scope: Scope.REQUEST,
+  inject: ['TailorRepository'],
+};
+
+const MarkOrderReadyUseCaseProvider: Provider<MarkOrderReadyUseCase> = {
+  provide: MarkOrderReadyUseCase,
+  useFactory: (tailorRepository: TailorRepository) =>
+    new MarkOrderReadyUseCase(tailorRepository),
+  scope: Scope.REQUEST,
+  inject: ['TailorRepository'],
+};
+
 export {
   TailorRepositoryProvider,
   AcceptOrderUseCaseProvider,
   DeclineOrderUseCaseProvider,
+  ConfirmReceiptUseCaseProvider,
+  MarkOrderReadyUseCaseProvider,
 };

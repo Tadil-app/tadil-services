@@ -84,6 +84,7 @@
     "libs/core/tadil-auth",
     "libs/infra/sms-provider",
     "apps/tadil-admin-web-client",
-    "apps/tadil-mobile-app"
+    "apps/tadil-mobile-app",
+    "libs/core/*"
   ]
 }

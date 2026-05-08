@@ -155,6 +155,35 @@ const routes: Array<RouteRecordRaw> = [
       },
     ],
   },
+  {
+    path: "/courier",
+    name: "courier",
+    component: () => import("../views/courier/CourierLayout.vue"),
+    redirect: { name: "courier-dashboard" },
+    children: [
+      {
+        path: "dashboard",
+        name: "courier-dashboard",
+        component: () => import("../views/courier/CourierDashboardView.vue"),
+      },
+      {
+        path: "orders",
+        name: "courier-orders",
+        component: () => import("../views/courier/CourierOrdersView.vue"),
+      },
+      {
+        path: "orders/:id",
+        name: "courier-order-details",
+        props: true,
+        component: () => import("../views/courier/CourierOrderDetailsView.vue"),
+      },
+      {
+        path: "wallet",
+        name: "courier-wallet",
+        component: () => import("../views/courier/CourierWalletView.vue"),
+      },
+    ],
+  },
 ];
 
 const router = createRouter({

@@ -1,6 +1,8 @@
 import { Module } from '@nestjs/common';
 import {
   AlterationsRepositoryProvider,
+  ConfirmReceiptUseCaseProvider,
+  CustomerRepositoryProvider,
   InformationsRepositoryProvider,
   ModelsRepositoryProvider,
 } from './customer.providers';
@@ -11,9 +13,11 @@ import { CustomerController } from './customer.controller';
   imports: [CommonModule],
   controllers: [CustomerController],
   providers: [
+    CustomerRepositoryProvider,
     ModelsRepositoryProvider,
     AlterationsRepositoryProvider,
     InformationsRepositoryProvider,
+    ConfirmReceiptUseCaseProvider,
   ],
   exports: [],
 })

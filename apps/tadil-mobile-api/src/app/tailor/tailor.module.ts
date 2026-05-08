@@ -3,6 +3,8 @@ import {
   TailorRepositoryProvider,
   AcceptOrderUseCaseProvider,
   DeclineOrderUseCaseProvider,
+  ConfirmReceiptUseCaseProvider,
+  MarkOrderReadyUseCaseProvider,
 } from './tailor.providers';
 import { CommonModule } from '../common/common.module';
 import { TailorController } from './tailor.controller';
@@ -14,6 +16,8 @@ import { TailorController } from './tailor.controller';
     TailorRepositoryProvider,
     AcceptOrderUseCaseProvider,
     DeclineOrderUseCaseProvider,
+    ConfirmReceiptUseCaseProvider,
+    MarkOrderReadyUseCaseProvider,
   ],
   exports: [],
 })

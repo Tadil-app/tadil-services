@@ -1,9 +1,14 @@
 import { Controller, Get, Param, Post } from '@nestjs/common';
-import { ApiOkResponse, ApiTags } from '@nestjs/swagger';
+import { ApiOkResponse, ApiTags, ApiOperation } from '@nestjs/swagger';
 import { DataReader } from '@tadil-database';
 import { DisplayOrderDTO } from './dtos/order';
-import { InformationType } from '@tadil-informations';
-import { AcceptOrderUseCase, DeclineOrderUseCase } from '@tadil-tailor';
+import { InformationType } from '../customer/dtos';
+import { 
+  AcceptOrderUseCase, 
+  DeclineOrderUseCase, 
+  ConfirmReceiptUseCase, 
+  MarkOrderReadyUseCase 
+} from '@tadil-tailor';
 
 @Controller('tailor/:id')
 @ApiTags('Tailor')
@@ -11,7 +16,9 @@ export class TailorController {
   constructor(
     private readonly _dataReader: DataReader,
     private readonly _acceptOrderUseCase: AcceptOrderUseCase,
-    private readonly _declineOrderUseCase: DeclineOrderUseCase
+    private readonly _declineOrderUseCase: DeclineOrderUseCase,
+    private readonly _confirmReceiptUseCase: ConfirmReceiptUseCase,
+    private readonly _markReadyUseCase: MarkOrderReadyUseCase
   ) {}
 
   @Get('/orders')
@@ -22,84 +29,24 @@ export class TailorController {
         OR: [
           {
             AND: [
-              {
-                status: 'pending',
-              },
-              {
-                NOT: {
-                  rejectedTailors: {
-                    some: {
-                      id: tailorId,
-                    },
-                  },
-                },
-              },
+              { status: 'waitingForTailorAssignement' },
+              { NOT: { rejectedTailors: { some: { id: tailorId } } } }
             ],
           },
-          {
-            assignedTailorId: tailorId,
-          },
+          { assignedTailorId: tailorId },
         ],
       },
       include: {
-        items: {
-          include: {
-            sections: {
-              include: {
-                alterations: {
-                  include: {
-                    informations: true,
-                  },
-                },
-              },
-            },
-          },
-        },
-        customItems: {
-          include: {
-            alterations: {
-              include: {
-                informations: true,
-              },
-            },
-          },
-        },
+        items: { include: { sections: { include: { alterations: { include: { informations: true } } } } } },
+        customItems: { include: { alterations: { include: { informations: true } } } },
       },
     });
 
-    return orders.map((order) => ({
-      ...order,
-      items: order.items.map((item) => ({
-        ...item,
-        imageFileUrl: `${process.env.Tadil_MOBILE_API}/api/files/${item.imageFileId}`,
-        sections: item.sections.map((section) => ({
-          ...section,
-          alterations: section.alterations.map((alteration) => ({
-            ...alteration,
-            informations: alteration.informations.map((information) => ({
-              ...information,
-              type: information.type as InformationType,
-              unit: information.unit ?? undefined,
-            })),
-          })),
-        })),
-      })),
-      customItems: order.customItems.map((customItem) => ({
-        ...customItem,
-        imageFileUrl: `${process.env.Tadil_MOBILE_API}/api/files/${customItem.imageFileId}`,
-        alterations: customItem.alterations.map((alteration) => ({
-          ...alteration,
-          informations: alteration.informations.map((information) => ({
-            ...information,
-            type: information.type as InformationType,
-            unit: information.unit ?? undefined,
-          })),
-        })),
-      })),
-    }));
+    return orders.map((order) => this._mapOrder(order));
   }
 
   @Post('/orders/:orderId/accept')
+  @ApiOperation({ summary: 'Accept a tailor assignment' })
   async acceptOrder(
     @Param('id') tailorId: string,
     @Param('orderId') orderId: string
@@ -111,6 +58,7 @@ export class TailorController {
   }
 
   @Post('/orders/:orderId/decline')
+  @ApiOperation({ summary: 'Decline a tailor assignment' })
   async declineOrder(
     @Param('id') tailorId: string,
     @Param('orderId') orderId: string
@@ -119,5 +67,50 @@ export class TailorController {
       tailorId,
       orderId,
     });
+  }
+
+  @Post('/orders/:orderId/confirm-receipt')
+  @ApiOperation({ summary: 'Confirm receipt of items from courier' })
+  async confirmReceipt(@Param('orderId') orderId: string) {
+    await this._confirmReceiptUseCase.execute({ orderId });
+  }
+
+  @Post('/orders/:orderId/mark-ready')
+  @ApiOperation({ summary: 'Mark work as ready for return courier' })
+  async markReady(@Param('orderId') orderId: string) {
+    await this._markReadyUseCase.execute({ orderId });
+  }
+
+  private _mapOrder(order: any): DisplayOrderDTO {
+    return {
+      ...order,
+      items: order.items.map((item: any) => ({
+        ...item,
+        imageFileUrl: `${process.env.Tadil_MOBILE_API}/api/files/${item.imageFileId}`,
+        sections: item.sections.map((section: any) => ({
+          ...section,
+          alterations: section.alterations.map((alt: any) => ({
+            ...alt,
+            informations: alt.informations.map((info: any) => ({
+              ...info,
+              type: info.type as InformationType,
+              unit: info.unit ?? undefined,
+            })),
+          })),
+        })),
+      })),
+      customItems: order.customItems.map((item: any) => ({
+        ...item,
+        imageFileUrl: `${process.env.Tadil_MOBILE_API}/api/files/${item.imageFileId}`,
+        alterations: item.alterations.map((alt: any) => ({
+          ...alt,
+          informations: alt.informations.map((info: any) => ({
+            ...info,
+            type: info.type as InformationType,
+            unit: info.unit ?? undefined,
+          })),
+        })),
+      })),
+    };
   }
 }
