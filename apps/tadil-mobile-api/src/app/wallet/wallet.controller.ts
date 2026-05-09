@@ -26,6 +26,6 @@ export class WalletController {
     @Param('userId') userId: string,
     @Body() dto: RequestPayoutDto
   ) {
-    await this._requestPayoutUseCase.execute({ userId, amount: dto.amount });
+    await this._requestPayoutUseCase.execute({ userId, amount: Number(dto.amount) });
   }
 }
