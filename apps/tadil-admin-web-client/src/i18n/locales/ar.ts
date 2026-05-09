@@ -5,6 +5,42 @@ export const ar = {
     extras: "إضافات",
     models: "النماذج",
     users: "المستخدمين",
+    loginRequests: "طلبات تسجيل الدخول",
+    payoutRequests: "طلبات السحب",
+  },
+  loginRequests: {
+    title: "طلبات تسجيل الدخول",
+    subtitle: "إدارة طلبات الموافقة على تسجيل الدخول للخياطين والمندوبين",
+    table: {
+      name: "الاسم",
+      phone: "الهاتف",
+      role: "الدور",
+      actions: "الإجراءات",
+      empty: "لا توجد طلبات تسجيل دخول معلقة",
+    },
+    buttons: {
+      approve: "موافقة",
+      reject: "رفض",
+    },
+  },
+  payoutRequests: {
+    title: "طلبات السحب",
+    subtitle: "إدارة طلبات سحب الرصيد من الخياطين والمندوبين",
+    table: {
+      user: "المستخدم",
+      amount: "المبلغ",
+      date: "التاريخ",
+      actions: "الإجراءات",
+      empty: "لا توجد طلبات سحب معلقة",
+    },
+    buttons: {
+      fulfill: "تنفيذ",
+      reject: "رفض",
+    },
+    confirmations: {
+      fulfill: "هل أكملت التحويل البنكي؟ سيتم خصم المبلغ من رصيد المستخدم.",
+      reject: "هل أنت متأكد من رفض هذا الطلب؟",
+    },
   },
   common: {
     currencies: {
@@ -77,6 +113,9 @@ export const ar = {
         placeholder: "اختر نوع البيانات",
         errorMessage: "نوع البيانات مطلوب",
         options: {
+          label: "خيارات",
+          placeholder: "خيارات النوع",
+          newButtonText: "خيار جديد",
           text: "نص",
           number: "رقم",
           selectMenu: "قائمة اختيارات",
@@ -141,6 +180,11 @@ export const ar = {
         label: "البريد الالكتروني",
         placeholder: "اختر البريد الالكتروني",
         errorMessage: "البريد الالكتروني مطلوب",
+      },
+      commissionRate: {
+        label: "نسبة العموله (%)",
+        placeholder: "ادخل نسبة العموله (مثال: 10)",
+        errorMessage: "نسبة العموله مطلوبة",
       },
     },
     buttons: {

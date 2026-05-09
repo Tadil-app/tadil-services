@@ -1,11 +1,52 @@
 export const hi = {
   nav: {
-    informations: "बदलाव",
-    alterations: "सेवाएं",
+    informations: "आवश्यक जानकारी",
+    alterations: "बदलाव",
     extras: "अतिरिक्त",
     models: "प्रारूप",
+    users: "उपयोगकर्ता",
+    loginRequests: "लॉगइन अनुरोध",
+    payoutRequests: "भुगतान अनुरोध",
+  },
+  loginRequests: {
+    title: "लॉगइन अनुरोध",
+    subtitle: "दर्जी और कूरियर लॉगइन अनुमोदन अनुरोधों का प्रबंधन करें",
+    table: {
+      name: "नाम",
+      phone: "फ़ोन",
+      role: "भूमिका",
+      actions: "कार्यवाई",
+      empty: "कोई लंबित लॉगइन अनुरोध नहीं है",
+    },
+    buttons: {
+      approve: "स्वीकार करें",
+      reject: "अस्वीकार करें",
+    },
+  },
+  payoutRequests: {
+    title: "भुगतान अनुरोध",
+    subtitle: "दर्जी और कूरियर के निकासी अनुरोधों का प्रबंधन करें",
+    table: {
+      user: "उपयोगकर्ता",
+      amount: "राशि",
+      date: "तारीख",
+      actions: "कार्यवाई",
+      empty: "कोई लंबित भुगतान अनुरोध नहीं है",
+    },
+    buttons: {
+      fulfill: "पूरा करें",
+      reject: "अस्वीकार करें",
+    },
+    confirmations: {
+      fulfill: "क्या आपने बैंक ट्रांसफर पूरा कर लिया है? इससे उपयोगकर्ता का बैलेंस कम हो जाएगा।",
+      reject: "क्या आप वाकई इस अनुरोध को अस्वीकार करना चाहते हैं?",
+    },
   },
   common: {
+    currencies: {
+      ras: "RAS",
+      usd: "$",
+    },
     tableHeaders: {
       id: "आईडी",
       englishName: "अंग्रेजी नाम",
@@ -60,6 +101,22 @@ export const hi = {
         placeholder: "इकाई दर्ज करें",
         errorMessage: "इकाई आवश्यक है",
       },
+      infoType: {
+        label: "प्रकार",
+        placeholder: "प्रकार चुनें",
+        errorMessage: "प्रकार आवश्यक है",
+        options: {
+          label: "विकल्प",
+          placeholder: "प्रकार विकल्प",
+          newButtonText: "नया विकल्प",
+          text: "टेक्स्ट",
+          number: "नंबर",
+          selectMenu: "सेलेक्ट मेनू",
+          checkbox: "चेकबॉक्स",
+          required: "आवश्यक",
+          optional: "वैकल्पिक",
+        },
+      },
       imageFile: {
         label: "छवि",
         placeholder: "छवि चुनें",
@@ -75,10 +132,52 @@ export const hi = {
         placeholder: "खंड चुनें",
         errorMessage: "खंड आवश्यक हैं",
       },
+      informations: {
+        label: "जानकारी",
+        placeholder: "आवश्यक जानकारी चुनें",
+        errorMessage: "जानकारी आवश्यक है",
+      },
       alterations: {
         label: "बदलाव",
         placeholder: "बदलाव चुनें",
         errorMessage: "बदलाव आवश्यक हैं",
+      },
+      extras: {
+        label: "अतिरिक्त",
+        placeholder: "अतिरिक्त चुनें",
+        errorMessage: "अतिरिक्त आवश्यक है",
+      },
+      userRole: {
+        label: "उपयोगकर्ता भूमिका",
+        placeholder: "उपयोगकर्ता भूमिका चुनें",
+        errorMessage: "उपयोगकर्ता भूमिका आवश्यक है",
+      },
+      phone: {
+        label: "फ़ोन नंबर",
+        placeholder: "फ़ोन नंबर दर्ज करें",
+        undefinedErrorMessage: "फ़ोन नंबर आवश्यक है",
+        numericErrorMessage: "फ़ोन नंबर संख्यात्मक होना चाहिए",
+        lengthErrorMessage: "फ़ोन नंबर 10 अंकों का होना चाहिए",
+      },
+      firstName: {
+        label: "पहला नाम",
+        placeholder: "पहला नाम दर्ज करें",
+        errorMessage: "पहला नाम आवश्यक है",
+      },
+      lastName: {
+        label: "अंतिम नाम",
+        placeholder: "अंतिम नाम दर्ज करें",
+        errorMessage: "अंतिम नाम आवश्यक है",
+      },
+      email: {
+        label: "ईमेल",
+        placeholder: "ईमेल दर्ज करें",
+        errorMessage: "ईमेल आवश्यक है",
+      },
+      commissionRate: {
+        label: "कमीशन दर (%)",
+        placeholder: "कमीशन दर दर्ज करें (जैसे: 10)",
+        errorMessage: "कमीशन दर आवश्यक है",
       },
     },
     buttons: {
@@ -86,6 +185,29 @@ export const hi = {
       add: "जोड़ें",
       save: "सहेजें",
       delete: "मिटाएँ",
+      confirm: "पुष्टि करें",
+    },
+  },
+  informations: {
+    noInformations: {
+      title: "कोई जानकारी उपलब्ध नहीं है",
+      subTitle: "शुरू करने के लिए एक जानकारी जोड़ें",
+    },
+    addNewInformationModal: {
+      title: "नई जानकारी जोड़ें",
+      success: "जानकारी सफलतापूर्वक बनाई गई",
+      error: "जानकारी जोड़ते समय त्रुटि हुई",
+    },
+    editInformationModal: {
+      title: "जानकारी संपादित करें",
+      success: "जानकारी सफलतापूर्वक अपडेट की गई",
+      error: "जानकारी अपडेट करते समय त्रुटि हुई",
+    },
+    deleteInformation: {
+      title: "क्या आप वाकई इस जानकारी को हटाना चाहते हैं?",
+      confirmMessage: "क्या आप वाकई इस जानकारी को हटाना चाहते हैं?",
+      success: "जानकारी सफलतापूर्वक हटा दी गई",
+      error: "जानकारी हटाते समय त्रुटि हुई",
     },
   },
   alterations: {
@@ -161,27 +283,6 @@ export const hi = {
       },
     },
   },
-  services: {
-    noServices: {
-      title: "कोई सेवाएं उपलब्ध नहीं",
-      subTitle: "शुरू करने के लिए एक सेवा जोड़ें",
-    },
-    addNewServiceModal: {
-      title: "नई सेवा जोड़ें",
-      success: "सेवा सफलतापूर्वक बनाई गई",
-      error: "नई सेवा बनाते समय एक त्रुटि हुई",
-    },
-    editService: {
-      title: "सेवा संपादित करें",
-      success: "सेवा सफलतापूर्वक अपडेट की गई",
-      error: "सेवा अपडेट करते समय एक त्रुटि हुई",
-    },
-    deleteService: {
-      confirmMessage: "क्या आप वाकई इस सेवा को हटाना चाहते हैं?",
-      success: "सेवा सफलतापूर्वक हटाई गई",
-      error: "सेवा हटाते समय एक त्रुटि हुई",
-    },
-  },
   extras: {
     noExtras: {
       title: "कोई अतिरिक्त सुविधा उपलब्ध नहीं है",
@@ -202,5 +303,37 @@ export const hi = {
       success: "अतिरिक्त सुविधा सफलतापूर्वक हटा दी गई",
       error: "अतिरिक्त सुविधा हटाते समय त्रुटि हुई",
     },
+  },
+  users: {
+    roles: {
+      tailor: "दर्जी",
+      customer: "ग्राहक",
+      courier: "कूरियर",
+    },
+    tableHeaders: {
+      firstName: "पहला नाम",
+      lastName: "अंतिम नाम",
+      phone: "फ़ोन नंबर",
+      email: "ईमेल",
+    },
+    addNewUserModal: {
+      title: "नया उपयोगकर्ता जोड़ें",
+      success: "उपयोगकर्ता सफलतापूर्वक बनाया गया",
+      error: "नया उपयोगकर्ता बनाते समय त्रुटि हुई",
+    },
+    editUserModal: {
+      title: "उपयोगकर्ता संपादित करें",
+      success: "उपयोगकर्ता सफलतापूर्वक अपडेट किया गया",
+      error: "उपयोगकर्ता अपडेट करते समय त्रुटि हुई",
+    },
+    deleteUser: {
+      confirmMessage: "क्या आप वाकई इस उपयोगकर्ता को हटाना चाहते हैं?",
+      success: "उपयोगकर्ता सफलतापूर्वक हटा दिया गया",
+      error: "उपयोगकर्ता हटाते समय त्रुटि हुई",
+    },
+  },
+  toast: {
+    showDetails: "विवरण दिखाएं",
+    hideDetails: "विवरण छिपाएं",
   },
 };

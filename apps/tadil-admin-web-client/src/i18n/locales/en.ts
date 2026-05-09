@@ -23,6 +23,25 @@ export const en = {
       reject: "Reject",
     },
   },
+  payoutRequests: {
+    title: "Payout Requests",
+    subtitle: "Manage withdrawal requests from tailors and couriers",
+    table: {
+      user: "User",
+      amount: "Amount",
+      date: "Date",
+      actions: "Actions",
+      empty: "No pending payout requests",
+    },
+    buttons: {
+      fulfill: "Fulfill",
+      reject: "Reject",
+    },
+    confirmations: {
+      fulfill: "Have you completed the bank transfer? This will deduct the user's balance.",
+      reject: "Are you sure you want to reject this request?",
+    },
+  },
   common: {
     currencies: {
       ras: "RAS",
@@ -160,6 +179,11 @@ export const en = {
         label: "Email",
         placeholder: "Enter Email",
         errorMessage: "Email is required",
+      },
+      commissionRate: {
+        label: "Commission Rate (%)",
+        placeholder: "Enter Commission Rate (e.g. 10)",
+        errorMessage: "Commission Rate is required",
       },
     },
     buttons: {

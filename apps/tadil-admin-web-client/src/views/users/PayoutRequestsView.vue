@@ -1,8 +1,8 @@
 <template>
   <div class="space-y-6">
     <div>
-      <h1 class="text-2xl font-bold tracking-tight">Payout Requests</h1>
-      <p class="text-muted-foreground">Manage withdrawal requests from tailors and couriers.</p>
+      <h1 class="text-2xl font-bold tracking-tight">{{ $t("payoutRequests.title") }}</h1>
+      <p class="text-muted-foreground">{{ $t("payoutRequests.subtitle") }}</p>
     </div>
 
     <div class="bg-card rounded-lg border shadow-sm">
@@ -10,22 +10,22 @@
         <table class="w-full text-sm text-left">
           <thead class="text-xs uppercase bg-muted/50">
             <tr>
-              <th class="px-6 py-4 font-medium">User</th>
-              <th class="px-6 py-4 font-medium">Amount</th>
-              <th class="px-6 py-4 font-medium">Date</th>
-              <th class="px-6 py-4 font-medium text-right">Actions</th>
+              <th class="px-6 py-4 font-medium">{{ $t("payoutRequests.table.user") }}</th>
+              <th class="px-6 py-4 font-medium">{{ $t("payoutRequests.table.amount") }}</th>
+              <th class="px-6 py-4 font-medium">{{ $t("payoutRequests.table.date") }}</th>
+              <th class="px-6 py-4 font-medium text-right">{{ $t("payoutRequests.table.actions") }}</th>
             </tr>
           </thead>
           <tbody class="divide-y">
             <tr v-if="isLoading">
               <td colspan="4" class="px-6 py-10 text-center text-muted-foreground">
                 <Loader2 class="h-6 w-6 animate-spin mx-auto mb-2" />
-                Loading...
+                {{ $t("common.loading") }}
               </td>
             </tr>
             <tr v-else-if="requests.length === 0">
               <td colspan="4" class="px-6 py-10 text-center text-muted-foreground">
-                No pending payout requests.
+                {{ $t("payoutRequests.table.empty") }}
               </td>
             </tr>
             <tr v-for="req in requests" :key="req.id" class="hover:bg-muted/30 transition-colors">
@@ -33,14 +33,14 @@
                 {{ req.user?.firstName }} {{ req.user?.lastName }}
                 <span class="text-xs text-muted-foreground block">{{ req.user?.phone }}</span>
               </td>
-              <td class="px-6 py-4">{{ req.amount }} SAR</td>
+              <td class="px-6 py-4">{{ req.amount }} {{ $t("common.currencies.ras") }}</td>
               <td class="px-6 py-4 text-xs">{{ formatDate(req.date) }}</td>
               <td class="px-6 py-4 text-right space-x-2">
                 <Button variant="outline" size="sm" @click="handleFulfill(req.id)" :disabled="isProcessing === req.id">
-                  Fulfill
+                  {{ $t("payoutRequests.buttons.fulfill") }}
                 </Button>
                 <Button variant="destructive" size="sm" @click="handleReject(req.id)" :disabled="isProcessing === req.id">
-                  Reject
+                  {{ $t("payoutRequests.buttons.reject") }}
                 </Button>
               </td>
             </tr>
@@ -56,7 +56,9 @@ import { ref, onMounted } from "vue";
 import { apiClient } from "@/integration";
 import Button from "@/components/ui/Button.vue";
 import { Loader2 } from "lucide-vue-next";
+import { useI18n } from "vue-i18n";
 
+const { t } = useI18n();
 const requests = ref<any[]>([]);
 const isLoading = ref(true);
 const isProcessing = ref<string | null>(null);
@@ -74,7 +76,7 @@ const fetchRequests = async () => {
 };
 
 const handleFulfill = async (id: string) => {
-  if (!confirm("Have you completed the bank transfer? This will deduct the user's balance.")) return;
+  if (!confirm(t("payoutRequests.confirmations.fulfill"))) return;
   isProcessing.value = id;
   try {
     await apiClient.payoutRequestsControllerFulfill(id);
@@ -87,7 +89,7 @@ const handleFulfill = async (id: string) => {
 };
 
 const handleReject = async (id: string) => {
-  if (!confirm("Are you sure you want to reject this request?")) return;
+  if (!confirm(t("payoutRequests.confirmations.reject"))) return;
   isProcessing.value = id;
   try {
     await apiClient.payoutRequestsControllerReject(id);

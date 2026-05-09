@@ -1,11 +1,52 @@
 export const bn = {
   nav: {
-    informations: "পরিবর্তনসমূহ",
-    alterations: "সেবাসমূহ",
+    informations: "প্রয়োজনীয় তথ্য",
+    alterations: "পরিবর্তনসমূহ",
     extras: "অতিরিক্ত",
     models: "নমুনা",
+    users: "ব্যবহারকারী",
+    loginRequests: "লগইন অনুরোধ",
+    payoutRequests: "পেমেন্ট অনুরোধ",
+  },
+  loginRequests: {
+    title: "লগইন অনুরোধ",
+    subtitle: "দর্জি এবং কুরিয়ার লগইন অনুমোদনের অনুরোধ পরিচালনা করুন",
+    table: {
+      name: "নাম",
+      phone: "ফোন",
+      role: "ভূমিকা",
+      actions: "ক্রিয়াকলাপ",
+      empty: "কোনো মুলতবি লগইন অনুরোধ নেই",
+    },
+    buttons: {
+      approve: "অনুমোদন করুন",
+      reject: "প্রত্যাখ্যান করুন",
+    },
+  },
+  payoutRequests: {
+    title: "পেমেন্ট অনুরোধ",
+    subtitle: "দর্জি এবং কুরিয়ারদের কাছ থেকে অর্থ উত্তোলনের অনুরোধ পরিচালনা করুন",
+    table: {
+      user: "ব্যবহারকারী",
+      amount: "পরিমাণ",
+      date: "তারিখ",
+      actions: "ক্রিয়াকলাপ",
+      empty: "কোনো মুলতবি পেমেন্ট অনুরোধ নেই",
+    },
+    buttons: {
+      fulfill: "সম্পন্ন করুন",
+      reject: "প্রত্যাখ্যান করুন",
+    },
+    confirmations: {
+      fulfill: "আপনি কি ব্যাংক ট্রান্সফার সম্পন্ন করেছেন? এটি ব্যবহারকারীর ব্যালেন্স থেকে বিয়োগ করা হবে।",
+      reject: "আপনি কি নিশ্চিত যে আপনি এই অনুরোধটি প্রত্যাখ্যান করতে চান?",
+    },
   },
   common: {
+    currencies: {
+      ras: "RAS",
+      usd: "$",
+    },
     tableHeaders: {
       id: "আইডি",
       englishName: "ইংরেজি নাম",
@@ -60,6 +101,22 @@ export const bn = {
         placeholder: "একক লিখুন",
         errorMessage: "একক আবশ্যক",
       },
+      infoType: {
+        label: "ধরন",
+        placeholder: "ধরন নির্বাচন করুন",
+        errorMessage: "ধরন আবশ্যক",
+        options: {
+          label: "অপশন",
+          placeholder: "ধরন অপশন",
+          newButtonText: "নতুন অপশন",
+          text: "টেক্সট",
+          number: "নম্বর",
+          selectMenu: "সিলেক্ট মেনু",
+          checkbox: "চেকবক্স",
+          required: "আবশ্যক",
+          optional: "ঐচ্ছিক",
+        },
+      },
       imageFile: {
         label: "ছবি",
         placeholder: "ছবি নির্বাচন করুন",
@@ -75,10 +132,52 @@ export const bn = {
         placeholder: "বিভাগসমূহ নির্বাচন করুন",
         errorMessage: "বিভাগসমূহ আবশ্যক",
       },
+      informations: {
+        label: "তথ্য",
+        placeholder: "প্রয়োজনীয় তথ্য নির্বাচন করুন",
+        errorMessage: "তথ্য আবশ্যক",
+      },
       alterations: {
         label: "পরিবর্তনসমূহ",
         placeholder: "পরিবর্তনসমূহ নির্বাচন করুন",
         errorMessage: "পরিবর্তনসমূহ আবশ্যক",
+      },
+      extras: {
+        label: "অতিরিক্ত",
+        placeholder: "অতিরিক্ত নির্বাচন করুন",
+        errorMessage: "অতিরিক্ত আবশ্যক",
+      },
+      userRole: {
+        label: "ব্যবহারকারীর ভূমিকা",
+        placeholder: "ব্যবহারকারীর ভূমিকা নির্বাচন করুন",
+        errorMessage: "ব্যবহারকারীর ভূমিকা আবশ্যক",
+      },
+      phone: {
+        label: "ফোন নম্বর",
+        placeholder: "ফোন নম্বর লিখুন",
+        undefinedErrorMessage: "ফোন নম্বর আবশ্যক",
+        numericErrorMessage: "ফোন নম্বর অবশ্যই সংখ্যা হতে হবে",
+        lengthErrorMessage: "ফোন নম্বর অবশ্যই ১০ ডিজিটের হতে হবে",
+      },
+      firstName: {
+        label: "প্রথম নাম",
+        placeholder: "প্রথম নাম লিখুন",
+        errorMessage: "প্রথম নাম আবশ্যক",
+      },
+      lastName: {
+        label: "শেষ নাম",
+        placeholder: "শেষ নাম লিখুন",
+        errorMessage: "শেষ নাম আবশ্যক",
+      },
+      email: {
+        label: "ইমেল",
+        placeholder: "ইমেল লিখুন",
+        errorMessage: "ইমেল আবশ্যক",
+      },
+      commissionRate: {
+        label: "কমিশন রেট (%)",
+        placeholder: "কমিশন রেট লিখুন (যেমন: ১০)",
+        errorMessage: "কমিশন রেট আবশ্যক",
       },
     },
     buttons: {
@@ -86,6 +185,7 @@ export const bn = {
       add: "যোগ করুন",
       save: "সংরক্ষণ করুন",
       delete: "মুছে ফেলুন",
+      confirm: "নিশ্চিত করুন",
     },
   },
   informations: {
@@ -203,5 +303,37 @@ export const bn = {
       success: "অতিরিক্তটি সফলভাবে মুছে ফেলা হয়েছে",
       error: "অতিরিক্ত মুছে ফেলার সময় একটি ত্রুটি ঘটেছে",
     },
+  },
+  users: {
+    roles: {
+      tailor: "দর্জি",
+      customer: "গ্রাহক",
+      courier: "কুরিয়ার",
+    },
+    tableHeaders: {
+      firstName: "প্রথম নাম",
+      lastName: "শেষ নাম",
+      phone: "ফোন নম্বর",
+      email: "ইমেল",
+    },
+    addNewUserModal: {
+      title: "নতুন ব্যবহারকারী যোগ করুন",
+      success: "ব্যবহারকারী সফলভাবে তৈরি করা হয়েছে",
+      error: "নতুন ব্যবহারকারী তৈরি করার সময় একটি ত্রুটি ঘটেছে",
+    },
+    editUserModal: {
+      title: "ব্যবহারকারী সম্পাদনা করুন",
+      success: "ব্যবহারকারী সফলভাবে আপডেট করা হয়েছে",
+      error: "ব্যবহারকারী আপডেট করার সময় একটি ত্রুটি ঘটেছে",
+    },
+    deleteUser: {
+      confirmMessage: "আপনি কি নিশ্চিত যে আপনি এই ব্যবহারকারীকে মুছে ফেলতে চান?",
+      success: "ব্যবহারকারী সফলভাবে মুছে ফেলা হয়েছে",
+      error: "ব্যবহারকারী মুছে ফেলার সময় একটি ত্রুটি ঘটেছে",
+    },
+  },
+  toast: {
+    showDetails: "বিস্তারিত দেখুন",
+    hideDetails: "বিস্তারিত লুকান",
   },
 };

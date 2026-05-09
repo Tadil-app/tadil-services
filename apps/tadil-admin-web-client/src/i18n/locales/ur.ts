@@ -1,11 +1,52 @@
 export const ur = {
   nav: {
-    informations: "تبدیلیاں",
-    alterations: "خدمات",
+    informations: "مطلوبہ معلومات",
+    alterations: "تبدیلیاں",
     extras: "اضافہ",
     models: "خاکے",
+    users: "صارفین",
+    loginRequests: "لاگ ان کی درخواستیں",
+    payoutRequests: "ادائیگی کی درخواستیں",
+  },
+  loginRequests: {
+    title: "لاگ ان کی درخواستیں",
+    subtitle: "درزی اور کورئیر کے لاگ ان کی منظوری کی درخواستوں کا انتظام کریں",
+    table: {
+      name: "نام",
+      phone: "فون",
+      role: "عہدہ",
+      actions: "کارروائیاں",
+      empty: "کوئی زیر التواء لاگ ان درخواستیں نہیں ہیں",
+    },
+    buttons: {
+      approve: "منظور کریں",
+      reject: "مسترد کریں",
+    },
+  },
+  payoutRequests: {
+    title: "ادائیگی کی درخواستیں",
+    subtitle: "درزی اور کورئیر کی رقم نکلوانے کی درخواستوں کا انتظام کریں",
+    table: {
+      user: "صارف",
+      amount: "رقم",
+      date: "تاریخ",
+      actions: "کارروائیاں",
+      empty: "کوئی زیر التواء ادائیگی کی درخواستیں نہیں ہیں",
+    },
+    buttons: {
+      fulfill: "مکمل کریں",
+      reject: "مسترد کریں",
+    },
+    confirmations: {
+      fulfill: "کیا آپ نے بینک ٹرانسفر مکمل کر لیا ہے؟ اس سے صارف کے بیلنس میں کمی آئے گی۔",
+      reject: "کیا آپ واقعی اس درخواست کو مسترد کرنا چاہتے ہیں؟",
+    },
   },
   common: {
+    currencies: {
+      ras: "RAS",
+      usd: "$",
+    },
     tableHeaders: {
       id: "شناختی کارڈ",
       englishName: "انگریزی نام",
@@ -60,6 +101,22 @@ export const ur = {
         placeholder: "یونٹ درج کریں",
         errorMessage: "یونٹ درکار ہے",
       },
+      infoType: {
+        label: "قسم",
+        placeholder: "قسم منتخب کریں",
+        errorMessage: "قسم درکار ہے",
+        options: {
+          label: "آپشنز",
+          placeholder: "قسم کے آپشنز",
+          newButtonText: "نیا آپشن",
+          text: "ٹیکسٹ",
+          number: "نمبر",
+          selectMenu: "سلیکٹ مینیو",
+          checkbox: "چیک باکس",
+          required: "لازمی",
+          optional: "اختیاری",
+        },
+      },
       imageFile: {
         label: "تصویر",
         placeholder: "تصویر منتخب کریں",
@@ -75,10 +132,52 @@ export const ur = {
         placeholder: "سیکشنز منتخب کریں",
         errorMessage: "سیکشنز درکار ہیں",
       },
+      informations: {
+        label: "معلومات",
+        placeholder: "معلومات منتخب کریں",
+        errorMessage: "معلومات درکار ہیں",
+      },
       alterations: {
         label: "تبدیلیاں",
         placeholder: "تبدیلیاں منتخب کریں",
         errorMessage: "تبدیلیاں درکار ہیں",
+      },
+      extras: {
+        label: "اضافی",
+        placeholder: "اضافی منتخب کریں",
+        errorMessage: "اضافی درکار ہے",
+      },
+      userRole: {
+        label: "صارف کا کردار",
+        placeholder: "صارف کا کردار منتخب کریں",
+        errorMessage: "صارف کا کردار درکار ہے",
+      },
+      phone: {
+        label: "فون نمبر",
+        placeholder: "فون نمبر درج کریں",
+        undefinedErrorMessage: "فون نمبر درکار ہے",
+        numericErrorMessage: "فون نمبر عددی ہونا چاہیے",
+        lengthErrorMessage: "فون نمبر 10 ہندسوں کا ہونا چاہیے",
+      },
+      firstName: {
+        label: "پہلا نام",
+        placeholder: "پہلا نام درج کریں",
+        errorMessage: "پہلا نام درکار ہے",
+      },
+      lastName: {
+        label: "آخری نام",
+        placeholder: "آخری نام درج کریں",
+        errorMessage: "آخری نام درکار ہے",
+      },
+      email: {
+        label: "ای میل",
+        placeholder: "ای میل درج کریں",
+        errorMessage: "ای میل درکار ہے",
+      },
+      commissionRate: {
+        label: "کمیشن کی شرح (%)",
+        placeholder: "کمیشن کی شرح درج کریں (مثلاً: 10)",
+        errorMessage: "کمیشن کی شرح درکار ہے",
       },
     },
     buttons: {
@@ -86,6 +185,29 @@ export const ur = {
       add: "شامل کریں",
       save: "محفوظ کریں",
       delete: "حذف کریں",
+      confirm: "تصدیق کریں",
+    },
+  },
+  informations: {
+    noInformations: {
+      title: "کوئی معلومات دستیاب نہیں",
+      subTitle: "شروع کرنے کے لیے ایک معلومات شامل کریں",
+    },
+    addNewInformationModal: {
+      title: "نئی معلومات شامل کریں",
+      success: "معلومات کامیابی سے بن گئی",
+      error: "معلومات شامل کرتے وقت ایک خرابی پیش آئی",
+    },
+    editInformationModal: {
+      title: "معلومات میں ترمیم کریں",
+      success: "معلومات کامیابی سے اپ ڈیٹ ہو گئی",
+      error: "معلومات کو اپ ڈیٹ کرتے وقت ایک خرابی پیش آئی",
+    },
+    deleteInformation: {
+      title: "کیا آپ واقعی اس معلومات کو حذف کرنا چاہتے ہیں؟",
+      confirmMessage: "کیا آپ واقعی اس معلومات کو حذف کرنا چاہتے ہیں؟",
+      success: "معلومات کامیابی سے حذف ہو گئی",
+      error: "معلومات کو حذف کرتے وقت ایک خرابی پیش آئی",
     },
   },
   alterations: {
@@ -162,27 +284,6 @@ export const ur = {
       },
     },
   },
-  services: {
-    noServices: {
-      title: "کوئی خدمات دستیاب نہیں",
-      subTitle: "شروع کرنے کے لیے ایک خدمت شامل کریں",
-    },
-    addNewServiceModal: {
-      title: "نئی خدمت شامل کریں",
-      success: "خدمت کامیابی سے بن گئی",
-      error: "نئی خدمت بناتے وقت ایک خرابی پیش آئی",
-    },
-    editService: {
-      title: "خدمت میں ترمیم کریں",
-      success: "خدمت کامیابی سے اپ ڈیٹ ہو گئی",
-      error: "خدمت کو اپ ڈیٹ کرتے وقت ایک خرابی پیش آئی",
-    },
-    deleteService: {
-      confirmMessage: "کیا آپ واقعی اس خدمت کو حذف کرنا چاہتے ہیں؟",
-      success: "خدمت کامیابی سے حذف ہو گئی",
-      error: "خدمت کو حذف کرتے وقت ایک خرابی پیش آئی",
-    },
-  },
   extras: {
     noExtras: {
       title: "کوئی اضافی سہولت دستیاب نہیں ہے",
@@ -203,5 +304,37 @@ export const ur = {
       success: "اضافہ کامیابی سے حذف ہو گیا",
       error: "اضافہ حذف کرتے وقت غلطی ہوئی",
     },
+  },
+  users: {
+    roles: {
+      tailor: "درزی",
+      customer: "صارف",
+      courier: "کورئیر",
+    },
+    tableHeaders: {
+      firstName: "پہلا نام",
+      lastName: "آخری نام",
+      phone: "فون نمبر",
+      email: "ای میل",
+    },
+    addNewUserModal: {
+      title: "نیا صارف شامل کریں",
+      success: "صارف کامیابی سے تخلیق ہو گیا",
+      error: "نیا صارف تخلیق کرتے وقت غلطی ہوئی",
+    },
+    editUserModal: {
+      title: "صارف کی ترمیم کریں",
+      success: "صارف کامیابی سے اپ ڈیٹ ہو گیا",
+      error: "صارف اپ ڈیٹ کرتے وقت غلطی ہوئی",
+    },
+    deleteUser: {
+      confirmMessage: "کیا آپ واقعی اس صارف کو حذف کرنا چاہتے ہیں؟",
+      success: "صارف کامیابی سے حذف ہو گیا",
+      error: "صارف حذف کرتے وقت غلطی ہوئی",
+    },
+  },
+  toast: {
+    showDetails: "تفصیلات دکھائیں",
+    hideDetails: "تفصیلات چھپائیں",
   },
 };
