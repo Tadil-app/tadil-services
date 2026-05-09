@@ -634,6 +634,45 @@ export class Api<
     /**
      * No description
      *
+     * @tags Wallet
+     * @name WalletControllerGetDetails
+     * @request GET:/api/wallet/{userId}
+     * @secure
+     */
+    walletControllerGetDetails: (userId: string, params: RequestParams = {}) =>
+      this.request<any, any>({
+        path: `/api/wallet/${userId}`,
+        method: "GET",
+        secure: true,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Wallet
+     * @name WalletControllerRequestPayout
+     * @request POST:/api/wallet/{userId}/payout
+     * @secure
+     */
+    walletControllerRequestPayout: (
+      userId: string,
+      amount: number,
+      params: RequestParams = {},
+    ) =>
+      this.request<void, any>({
+        path: `/api/wallet/${userId}/payout`,
+        method: "POST",
+        body: amount,
+        secure: true,
+        type: ContentType.Json,
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
      * @tags Auth
      * @name AuthControllerLogin
      * @request POST:/api/auth/login

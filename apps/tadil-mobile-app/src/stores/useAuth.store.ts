@@ -11,6 +11,7 @@ export const useAuthStore = defineStore("auth", () => {
   const token = ref("");
   const userInfo = ref<User | null>(null);
   const userAddresses = ref<DisplayAddressDto[]>([]);
+  const walletDetails = ref<any>(null);
   const router = useRouter();
 
   async function initAuth() {
@@ -25,6 +26,9 @@ export const useAuthStore = defineStore("auth", () => {
       apiInstance.setSecurityData(token.value);
       await fetchProfile();
       await fetchAddresses();
+      if (userRole.value === 'tailor' || userRole.value === 'courier') {
+        await fetchWallet();
+      }
     }
   }
 
@@ -90,6 +94,22 @@ export const useAuthStore = defineStore("auth", () => {
     await fetchAddresses();
   }
 
+  async function fetchWallet() {
+    if (!userId.value) return;
+    try {
+      const { data } = await apiClient.walletControllerGetDetails(userId.value);
+      walletDetails.value = data;
+    } catch (error) {
+      console.error("Failed to fetch wallet", error);
+    }
+  }
+
+  async function requestPayout(amount: number) {
+    if (!userId.value) return;
+    await apiClient.walletControllerRequestPayout(userId.value, amount);
+    await fetchWallet();
+  }
+
   async function setSession(newToken: string, user: User) {
     token.value = newToken;
     userId.value = user.id;
@@ -103,6 +123,9 @@ export const useAuthStore = defineStore("auth", () => {
     await Preferences.set({ key: "userRole", value: user.role });
 
     await fetchAddresses();
+    if (user.role === 'tailor' || user.role === 'courier') {
+      await fetchWallet();
+    }
   }
 
   async function logout() {
@@ -111,6 +134,7 @@ export const useAuthStore = defineStore("auth", () => {
     userRole.value = "";
     userInfo.value = null;
     userAddresses.value = [];
+    walletDetails.value = null;
     apiInstance.setSecurityData(null);
     await Preferences.remove({ key: "token" });
     await Preferences.remove({ key: "userId" });
@@ -124,6 +148,7 @@ export const useAuthStore = defineStore("auth", () => {
     token, 
     userInfo, 
     userAddresses, 
+    walletDetails,
     initAuth, 
     login, 
     completeProfile, 
@@ -132,6 +157,8 @@ export const useAuthStore = defineStore("auth", () => {
     fetchAddresses, 
     addAddress, 
     updateAddress, 
+    fetchWallet,
+    requestPayout,
     logout 
   };
 });

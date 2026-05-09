@@ -4,28 +4,40 @@ import {
   TailorsController,
   CouriersController,
   LoginRequestsController,
+  PayoutRequestsController,
 } from './controllers';
 import {
   UsersRepositoryProvider,
+  WalletRepositoryProvider,
   CreateUserUseCaseProvider,
   UpdateUserUseCaseProvider,
   DeleteUserUseCaseProvider,
   ApproveLoginRequestUseCaseProvider,
   RejectLoginRequestUseCaseProvider,
   GetPendingLoginRequestsUseCaseProvider,
+  FulfillPayoutUseCaseProvider,
+  RejectPayoutUseCaseProvider,
 } from './users.providers';
 
 @Module({
   imports: [CommonModule],
-  controllers: [TailorsController, CouriersController, LoginRequestsController],
+  controllers: [
+    TailorsController,
+    CouriersController,
+    LoginRequestsController,
+    PayoutRequestsController,
+  ],
   providers: [
     UsersRepositoryProvider,
+    WalletRepositoryProvider,
     CreateUserUseCaseProvider,
     UpdateUserUseCaseProvider,
     DeleteUserUseCaseProvider,
     ApproveLoginRequestUseCaseProvider,
     RejectLoginRequestUseCaseProvider,
     GetPendingLoginRequestsUseCaseProvider,
+    FulfillPayoutUseCaseProvider,
+    RejectPayoutUseCaseProvider,
   ],
 })
 export class UsersModule {}

@@ -1,5 +1,5 @@
 import { Provider, Scope } from '@nestjs/common';
-import { DbClient, PrismaUsersRepository } from '@tadil-database';
+import { DbClient, PrismaUsersRepository, PrismaWalletRepository } from '@tadil-database';
 import {
   UsersRepository,
   CreateUserUseCase,
@@ -11,12 +11,26 @@ import {
   RejectLoginRequestUseCase,
   GetPendingLoginRequestsUseCase,
 } from '@tadil-auth';
+import {
+  WalletRepository,
+  FulfillPayoutUseCase,
+  RejectPayoutUseCase,
+} from '@tadil-wallet';
 import { environment } from '../../environments/environment';
 
 const UsersRepositoryProvider: Provider<UsersRepository> = {
   provide: 'UsersRepository',
   useFactory: (dbClient: DbClient) => {
     return new PrismaUsersRepository(dbClient);
+  },
+  scope: Scope.REQUEST,
+  inject: [DbClient],
+};
+
+const WalletRepositoryProvider: Provider<WalletRepository> = {
+  provide: 'WalletRepository',
+  useFactory: (dbClient: DbClient) => {
+    return new PrismaWalletRepository(dbClient);
   },
   scope: Scope.REQUEST,
   inject: [DbClient],
@@ -77,12 +91,29 @@ const GetPendingLoginRequestsUseCaseProvider: Provider<GetPendingLoginRequestsUs
   inject: ['UsersRepository'],
 };
 
+const FulfillPayoutUseCaseProvider: Provider<FulfillPayoutUseCase> = {
+  provide: FulfillPayoutUseCase,
+  useFactory: (repo: WalletRepository) => new FulfillPayoutUseCase(repo),
+  inject: ['WalletRepository'],
+  scope: Scope.REQUEST,
+};
+
+const RejectPayoutUseCaseProvider: Provider<RejectPayoutUseCase> = {
+  provide: RejectPayoutUseCase,
+  useFactory: (repo: WalletRepository) => new RejectPayoutUseCase(repo),
+  inject: ['WalletRepository'],
+  scope: Scope.REQUEST,
+};
+
 export {
   UsersRepositoryProvider,
+  WalletRepositoryProvider,
   CreateUserUseCaseProvider,
   UpdateUserUseCaseProvider,
   DeleteUserUseCaseProvider,
   ApproveLoginRequestUseCaseProvider,
   RejectLoginRequestUseCaseProvider,
   GetPendingLoginRequestsUseCaseProvider,
+  FulfillPayoutUseCaseProvider,
+  RejectPayoutUseCaseProvider,
 };

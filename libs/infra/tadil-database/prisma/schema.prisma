@@ -50,6 +50,17 @@ enum Role {
     courier
 }
 
+enum TransactionType {
+    EARNING
+    PAYOUT
+}
+
+enum PayoutStatus {
+    PENDING
+    FULFILLED
+    REJECTED
+}
+
 model Section {
     id          String @id @default(uuid())
     englishName String
@@ -276,6 +287,9 @@ model User {
     loginRequestStatus LoginRequestStatus?
     loginToken         String?
 
+    walletBalance  Float @default(0)
+    commissionRate Float @default(10)
+
     addresses Address[]
 
     orders Order[] @relation("customer-orders")
@@ -289,5 +303,35 @@ model User {
     assignedReturnOrders Order[] @relation("return-courier-assigned-order")
     rejectedReturnOrders Order[] @relation("return-courier-rejected-orders")
 
+    transactions   Transaction[]
+    payoutRequests PayoutRequest[]
+
     @@map("users")
+}
+
+model Transaction {
+    id        String          @id @default(uuid())
+    reference String          @unique
+    amount    Float
+    type      TransactionType
+    date      DateTime        @default(now())
+
+    userId String
+    user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+    orderId String?
+
+    @@map("transactions")
+}
+
+model PayoutRequest {
+    id     String       @id @default(uuid())
+    amount Float
+    status PayoutStatus @default(PENDING)
+    date   DateTime     @default(now())
+
+    userId String
+    user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+    @@map("payout-requests")
 }

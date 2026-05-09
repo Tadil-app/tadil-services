@@ -54,4 +54,8 @@ export interface Order {
   status: OrderStatusType;
   items: OrderItem[];
   customItems: CustomOrderItem[];
+
+  assignedTailorId?: string;
+  assignedCourierId?: string;
+  assignedReturnCourierId?: string;
 }

@@ -96,7 +96,13 @@ export class CustomerController {
   ): Promise<DisplayModelDTO[]> {
     const data = await this._dataReader.queries.model.findMany({
       where:
-        category && category !== ModelCategory.ALL ? { category } : undefined,
+        {
+          OR: category            ? [
+                { category: category },
+                { category: ModelCategory.ALL },
+              ]
+            : undefined,
+        },
       include: { images: { select: { fileId: true } } },
     });
     const models = data.map((model) => {

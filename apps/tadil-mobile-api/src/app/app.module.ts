@@ -5,9 +5,10 @@ import { CommonModule } from './common/common.module';
 import { TailorModule } from './tailor/tailor.module';
 import { CourierModule } from './courier/courier.module';
 import { AuthModule } from './auth/auth.module';
+import { WalletModule } from './wallet/wallet.module';
 
 @Module({
-  imports: [CommonModule, CustomerModule, TailorModule, CourierModule, AuthModule],
+  imports: [CommonModule, CustomerModule, TailorModule, CourierModule, AuthModule, WalletModule],
   controllers: [AppController],
   providers: [],
 })

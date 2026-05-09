@@ -74,6 +74,8 @@ export class PrismaUsersRepository implements UsersRepository {
         email: user.email,
         loginRequestStatus: user.loginRequestStatus,
         loginToken: user.loginToken,
+        walletBalance: user.walletBalance ?? 0,
+        commissionRate: user.commissionRate ?? 10,
       },
     });
   }
@@ -89,6 +91,8 @@ export class PrismaUsersRepository implements UsersRepository {
         email: user.email,
         loginRequestStatus: user.loginRequestStatus,
         loginToken: user.loginToken,
+        walletBalance: user.walletBalance,
+        commissionRate: user.commissionRate,
       },
     });
   }

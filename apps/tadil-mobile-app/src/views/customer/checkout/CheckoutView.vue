@@ -166,7 +166,7 @@ function initMoyasar() {
       description: `Order #${createdOrder.value?.reference} for Tadil`,
       publishable_api_key: import.meta.env.VITE_MOYASAR_PUBLISHABLE_KEY || 'pk_test_placeholder',
       callback_url: window.location.origin + '/customer/checkout', // Moyasar will redirect back here if not handled by on_completed
-      methods: ['creditcard', 'stcpay', 'applepay'],
+      methods: ['creditcard'],
       on_completed: async (payment: any) => {
         if (payment.status === 'paid') {
           try {

@@ -37,5 +37,6 @@ const navItems = computed(() => [
   { path: "/models", label: t("nav.models"), icon: ScissorsLineDashed },
   { path: "/users", label: t("nav.users"), icon: Users },
   { path: "/login-requests", label: t("nav.loginRequests"), icon: KeyRound },
+  { path: "/payout-requests", label: t("nav.payoutRequests"), icon: HandCoins },
 ]);
 </script>

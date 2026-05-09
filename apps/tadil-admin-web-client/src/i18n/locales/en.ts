@@ -6,6 +6,7 @@ export const en = {
     models: "Models",
     users: "Users",
     loginRequests: "Login Requests",
+    payoutRequests: "Payout Requests",
   },
   loginRequests: {
     title: "Login Requests",

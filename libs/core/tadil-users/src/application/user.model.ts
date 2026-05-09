@@ -31,4 +31,7 @@ export interface User {
   loginRequestStatus?: LoginRequestStatusType;
   loginToken?: string;
   addresses?: Address[];
+
+  walletBalance?: number;
+  commissionRate?: number;
 }

@@ -53,6 +53,9 @@
     },
     {
       "path": "./libs/core/tadil-orders"
+    },
+    {
+      "path": "./libs/core/tadil-wallet"
     }
   ]
 }

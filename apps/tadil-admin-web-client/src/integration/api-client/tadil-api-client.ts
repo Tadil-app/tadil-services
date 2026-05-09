@@ -879,6 +879,49 @@ export class Api<
     /**
      * No description
      *
+     * @tags Payout Requests
+     * @name PayoutRequestsControllerGetPending
+     * @request GET:/api/payout-requests
+     */
+    payoutRequestsControllerGetPending: (params: RequestParams = {}) =>
+      this.request<any[], any>({
+        path: `/api/payout-requests`,
+        method: "GET",
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Payout Requests
+     * @name PayoutRequestsControllerFulfill
+     * @request POST:/api/payout-requests/{id}/fulfill
+     */
+    payoutRequestsControllerFulfill: (id: string, params: RequestParams = {}) =>
+      this.request<void, any>({
+        path: `/api/payout-requests/${id}/fulfill`,
+        method: "POST",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Payout Requests
+     * @name PayoutRequestsControllerReject
+     * @request POST:/api/payout-requests/{id}/reject
+     */
+    payoutRequestsControllerReject: (id: string, params: RequestParams = {}) =>
+      this.request<void, any>({
+        path: `/api/payout-requests/${id}/reject`,
+        method: "POST",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
      * @tags Login Requests
      * @name LoginRequestsControllerGetPending
      * @request GET:/api/login-requests/pending

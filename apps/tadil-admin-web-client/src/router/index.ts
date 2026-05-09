@@ -31,6 +31,10 @@ const routes = [
       {
         path: "/login-requests",
         component: () => import("@/views/users/LoginRequestsView.vue"),
+      },
+      {
+        path: "/payout-requests",
+        component: () => import("@/views/users/PayoutRequestsView.vue"),
       }
     ],
   },

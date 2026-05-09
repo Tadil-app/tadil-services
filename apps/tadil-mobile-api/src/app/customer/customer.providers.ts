@@ -6,6 +6,8 @@ import {
   PrismaInformationsRepository,
   PrismaModelsRepository,
   PrismaOrdersRepository,
+  PrismaUsersRepository,
+  PrismaWalletRepository,
 } from '@tadil-database';
 import {
   CustomerRepository,
@@ -14,11 +16,16 @@ import {
 import { ModelsRepository } from '@tadil-models';
 import { AlterationsRepository } from '@tadil-alterations';
 import { InformationsRepository } from '@tadil-informations';
+import { UsersRepository } from '@tadil-users';
 import {
   OrdersRepository,
   CreateOrderUseCase,
   ConfirmPaymentUseCase,
 } from '@tadil-orders';
+import {
+  WalletRepository,
+  CreditOrderEarningUseCase,
+} from '@tadil-wallet';
 
 const CustomerRepositoryProvider: Provider<CustomerRepository> = {
   provide: 'CustomerRepository',
@@ -55,10 +62,36 @@ const OrdersRepositoryProvider: Provider<OrdersRepository> = {
   scope: Scope.REQUEST,
 };
 
+const UsersRepositoryProvider: Provider<UsersRepository> = {
+  provide: 'UsersRepository',
+  useFactory: (dbClient: DbClient) => new PrismaUsersRepository(dbClient),
+  inject: [DbClient],
+  scope: Scope.REQUEST,
+};
+
+const WalletRepositoryProvider: Provider<WalletRepository> = {
+  provide: 'WalletRepository',
+  useFactory: (dbClient: DbClient) => new PrismaWalletRepository(dbClient),
+  inject: [DbClient],
+  scope: Scope.REQUEST,
+};
+
+const CreditOrderEarningUseCaseProvider: Provider<CreditOrderEarningUseCase> = {
+  provide: CreditOrderEarningUseCase,
+  useFactory: (repo: WalletRepository) => new CreditOrderEarningUseCase(repo),
+  inject: ['WalletRepository'],
+  scope: Scope.REQUEST,
+};
+
 const ConfirmReceiptUseCaseProvider: Provider<ConfirmReceiptUseCase> = {
   provide: ConfirmReceiptUseCase,
-  useFactory: (repository: CustomerRepository) => new ConfirmReceiptUseCase(repository),
-  inject: ['CustomerRepository'],
+  useFactory: (
+    custRepo: CustomerRepository,
+    orderRepo: OrdersRepository,
+    userRepo: UsersRepository,
+    creditUseCase: CreditOrderEarningUseCase
+  ) => new ConfirmReceiptUseCase(custRepo, orderRepo, userRepo, creditUseCase),
+  inject: ['CustomerRepository', 'OrdersRepository', 'UsersRepository', CreditOrderEarningUseCase],
   scope: Scope.REQUEST,
 };
 
@@ -82,7 +115,10 @@ export {
   AlterationsRepositoryProvider,
   InformationsRepositoryProvider,
   OrdersRepositoryProvider,
+  UsersRepositoryProvider,
+  WalletRepositoryProvider,
   ConfirmReceiptUseCaseProvider,
   CreateOrderUseCaseProvider,
   ConfirmPaymentUseCaseProvider,
+  CreditOrderEarningUseCaseProvider,
 };
