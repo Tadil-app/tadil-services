@@ -47,6 +47,7 @@ export interface CustomOrderItem {
 export interface Order {
   id: string
   customerId: string;
+  addressId: string;
   reference: string;
   date: string;
   totalPrice: number;

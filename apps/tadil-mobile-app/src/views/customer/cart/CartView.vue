@@ -65,7 +65,7 @@
           >
             {{ $t("cart.clearAll") }}
           </IonButton>
-          <IonButton fill="solid" color="tertiary" shape="round">
+          <IonButton fill="solid" color="tertiary" shape="round" router-link="/customer/checkout">
             {{ $t("cart.checkout") }}
           </IonButton>
         </div>

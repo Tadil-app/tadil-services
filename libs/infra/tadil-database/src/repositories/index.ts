@@ -6,3 +6,4 @@ export * from './tailor';
 export * from './users';
 export * from './courier';
 export * from './customer';
+export * from './orders';

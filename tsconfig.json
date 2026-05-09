@@ -47,6 +47,12 @@
     },
     {
       "path": "./libs/core/tadil-customer"
+    },
+    {
+      "path": "./libs/core/tadil-orders"
+    },
+    {
+      "path": "./libs/core/tadil-orders"
     }
   ]
 }

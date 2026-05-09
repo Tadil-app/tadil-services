@@ -8,6 +8,8 @@ import {
   Query,
   UploadedFile,
   UseInterceptors,
+  Req,
+  UseGuards,
 } from '@nestjs/common';
 import {
   ApiConsumes,
@@ -16,6 +18,7 @@ import {
   ApiQuery,
   ApiTags,
   ApiOperation,
+  ApiBearerAuth,
 } from '@nestjs/swagger';
 import { ReadableFile, type FileStorageService } from '@tadil-common';
 import { DataReader } from '@tadil-database';
@@ -25,6 +28,7 @@ import {
   DisplayModelImageDTO,
   InformationType,
   ModelCategory,
+  CreateOrderDto,
 } from './dtos';
 import { fileUploadLocalPath } from '../utils';
 import { FileInterceptor } from '@nestjs/platform-express';
@@ -32,6 +36,8 @@ import { v4 as uuidv4 } from 'uuid';
 import { extname } from 'path';
 import { UploadFileDto } from './dtos/uploadFile.dto';
 import { ConfirmReceiptUseCase } from '@tadil-customer';
+import { CreateOrderUseCase, ConfirmPaymentUseCase } from '@tadil-orders';
+import { AuthGuard } from '../auth/auth.guard';
 
 @Controller('customer')
 @ApiTags('Customer')
@@ -40,8 +46,37 @@ export class CustomerController {
     private readonly _dataReader: DataReader,
     @Inject('FileStorageService')
     private readonly _fileStorageService: FileStorageService,
-    private readonly _confirmReceiptUseCase: ConfirmReceiptUseCase
+    private readonly _confirmReceiptUseCase: ConfirmReceiptUseCase,
+    private readonly _createOrderUseCase: CreateOrderUseCase,
+    private readonly _confirmPaymentUseCase: ConfirmPaymentUseCase
   ) {}
+
+  @Post('orders')
+  @UseGuards(AuthGuard)
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Create a new order from cart' })
+  async createOrder(@Req() req: any, @Body() dto: CreateOrderDto) {
+    return this._createOrderUseCase.execute({
+      customerId: req.user.sub,
+      addressId: dto.addressId,
+      items: dto.items,
+      customItems: dto.customItems,
+    });
+  }
+
+  @Post('orders/:orderId/payment')
+  @UseGuards(AuthGuard)
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Confirm payment for an order' })
+  async confirmPayment(
+    @Param('orderId') orderId: string,
+    @Body('paymentId') paymentId: string
+  ) {
+    await this._confirmPaymentUseCase.execute({
+      orderId,
+      paymentId,
+    });
+  }
 
   @Post('orders/:orderId/confirm-receipt')
   @ApiOperation({ summary: 'Confirm receipt of items from return courier' })

@@ -5,6 +5,7 @@ import {
   PrismaCustomerRepository,
   PrismaInformationsRepository,
   PrismaModelsRepository,
+  PrismaOrdersRepository,
 } from '@tadil-database';
 import {
   CustomerRepository,
@@ -13,6 +14,11 @@ import {
 import { ModelsRepository } from '@tadil-models';
 import { AlterationsRepository } from '@tadil-alterations';
 import { InformationsRepository } from '@tadil-informations';
+import {
+  OrdersRepository,
+  CreateOrderUseCase,
+  ConfirmPaymentUseCase,
+} from '@tadil-orders';
 
 const CustomerRepositoryProvider: Provider<CustomerRepository> = {
   provide: 'CustomerRepository',
@@ -42,10 +48,31 @@ const InformationsRepositoryProvider: Provider<InformationsRepository> = {
   scope: Scope.REQUEST,
 };
 
+const OrdersRepositoryProvider: Provider<OrdersRepository> = {
+  provide: 'OrdersRepository',
+  useFactory: (dbClient: DbClient) => new PrismaOrdersRepository(dbClient),
+  inject: [DbClient],
+  scope: Scope.REQUEST,
+};
+
 const ConfirmReceiptUseCaseProvider: Provider<ConfirmReceiptUseCase> = {
   provide: ConfirmReceiptUseCase,
   useFactory: (repository: CustomerRepository) => new ConfirmReceiptUseCase(repository),
   inject: ['CustomerRepository'],
+  scope: Scope.REQUEST,
+};
+
+const CreateOrderUseCaseProvider: Provider<CreateOrderUseCase> = {
+  provide: CreateOrderUseCase,
+  useFactory: (repository: OrdersRepository) => new CreateOrderUseCase(repository),
+  inject: ['OrdersRepository'],
+  scope: Scope.REQUEST,
+};
+
+const ConfirmPaymentUseCaseProvider: Provider<ConfirmPaymentUseCase> = {
+  provide: ConfirmPaymentUseCase,
+  useFactory: (repository: OrdersRepository) => new ConfirmPaymentUseCase(repository),
+  inject: ['OrdersRepository'],
   scope: Scope.REQUEST,
 };
 
@@ -54,5 +81,8 @@ export {
   ModelsRepositoryProvider,
   AlterationsRepositoryProvider,
   InformationsRepositoryProvider,
+  OrdersRepositoryProvider,
   ConfirmReceiptUseCaseProvider,
+  CreateOrderUseCaseProvider,
+  ConfirmPaymentUseCaseProvider,
 };

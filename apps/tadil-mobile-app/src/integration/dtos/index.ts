@@ -162,6 +162,12 @@ export interface DisplayOrderDTO {
   customItems: DisplayCustomOrderItemDTO[];
 }
 
+export interface CreateOrderDto {
+  addressId: string;
+  items: any[];
+  customItems: any[];
+}
+
 export interface LoginDto {
   phone: string;
 }

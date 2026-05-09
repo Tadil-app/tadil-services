@@ -28,6 +28,9 @@
       "path": "../../core/tadil-customer"
     },
     {
+      "path": "../../core/tadil-orders"
+    },
+    {
       "path": "./tsconfig.lib.json"
     }
   ]

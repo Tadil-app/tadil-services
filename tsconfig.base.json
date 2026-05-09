@@ -31,6 +31,7 @@
       "@tadil-auth": ["libs/core/tadil-auth/src/index.ts"],
       "@tadil-courier": ["libs/core/tadil-courier/src/index.ts"],
       "@tadil-customer": ["libs/core/tadil-customer/src/index.ts"],
+      "@tadil-orders": ["libs/core/tadil-orders/src/index.ts"],
       "@tadil-sms": ["libs/infra/sms-provider/src/index.ts"]
     }
   }

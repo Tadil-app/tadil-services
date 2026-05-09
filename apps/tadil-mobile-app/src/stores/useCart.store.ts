@@ -5,6 +5,7 @@ import { v4 as uuidv4 } from "uuid";
 import type { DisplayModelDTO } from "@/integration/dtos";
 import { calculateConfigurationPrice } from "@/utils";
 import type { CartItem, CartItemConfiguration } from "@/types/cart.types";
+import { apiClient } from "@/integration/api";
 
 export const useCartStore = defineStore("cart", () => {
   const items = ref<CartItem[]>([]);
@@ -58,6 +59,60 @@ export const useCartStore = defineStore("cart", () => {
     await saveCart();
   }
 
+  async function createOrder(addressId: string) {
+    // Map internal cart items to backend DTO structure
+    const payload = {
+      addressId,
+      items: items.value.map(item => ({
+        id: uuidv4(),
+        price: calculateConfigurationPrice(item.configuration),
+        modelId: item.model.id,
+        sections: item.configuration.modelImages.flatMap(img => 
+          img.sections.map(sec => ({
+            id: uuidv4(),
+            sourceSectionId: sec.sectionId,
+            englishName: sec.englishName,
+            arabicName: sec.arabicName,
+            urduName: sec.urduName,
+            hindiName: sec.hindiName,
+            bengaliName: sec.bengaliName,
+            alterations: sec.alterations.map(alt => ({
+              id: uuidv4(),
+              sourceAlterationId: alt.alterationId,
+              price: alt.price,
+              englishName: alt.englishName,
+              arabicName: alt.arabicName,
+              urduName: alt.urduName,
+              hindiName: alt.hindiName,
+              bengaliName: alt.bengaliName,
+              informations: alt.informations.map(info => ({
+                id: uuidv4(),
+                sourceInformationId: info.informationId,
+                englishName: info.englishName,
+                arabicName: info.arabicName,
+                urduName: info.urduName,
+                hindiName: info.hindiName,
+                bengaliName: info.bengaliName,
+                value: info.value || '',
+                unit: info.unit || '',
+                type: 'text' // Fallback
+              }))
+            }))
+          }))
+        )
+      })),
+      customItems: [] // Handle custom items later if needed
+    };
+
+    const { data } = await apiClient.customerControllerCreateOrder(payload);
+    return data;
+  }
+
+  async function confirmPayment(orderId: string, paymentId: string) {
+    await apiClient.customerControllerConfirmPayment(orderId, paymentId);
+    await clearCart();
+  }
+
   return {
     items,
     itemsCount,
@@ -68,5 +123,7 @@ export const useCartStore = defineStore("cart", () => {
     updateItem,
     removeItem,
     clearCart,
+    createOrder,
+    confirmPayment,
   };
 });

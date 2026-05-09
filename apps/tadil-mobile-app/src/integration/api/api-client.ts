@@ -14,6 +14,7 @@ import {
   DisplayModelImageDTO,
   DisplayAlterationDTO,
   DisplayOrderDTO,
+  CreateOrderDto,
   LoginDto,
   CompleteProfileDto,
   AuthResponseDto,
@@ -354,6 +355,50 @@ export class Api<
       this.request<void, any>({
         path: `/api/customer/orders/${orderId}/confirm-receipt`,
         method: "POST",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Customer
+     * @name CustomerControllerCreateOrder
+     * @request POST:/api/customer/orders
+     * @secure
+     */
+    customerControllerCreateOrder: (
+      data: CreateOrderDto,
+      params: RequestParams = {},
+    ) =>
+      this.request<DisplayOrderDTO, any>({
+        path: `/api/customer/orders`,
+        method: "POST",
+        body: data,
+        secure: true,
+        type: ContentType.Json,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Customer
+     * @name CustomerControllerConfirmPayment
+     * @request POST:/api/customer/orders/{orderId}/payment
+     * @secure
+     */
+    customerControllerConfirmPayment: (
+      orderId: string,
+      paymentId: string,
+      params: RequestParams = {},
+    ) =>
+      this.request<void, any>({
+        path: `/api/customer/orders/${orderId}/payment`,
+        method: "POST",
+        body: paymentId,
+        secure: true,
+        type: ContentType.Json,
         ...params,
       }),
 

@@ -5,6 +5,9 @@ import {
   CustomerRepositoryProvider,
   InformationsRepositoryProvider,
   ModelsRepositoryProvider,
+  OrdersRepositoryProvider,
+  CreateOrderUseCaseProvider,
+  ConfirmPaymentUseCaseProvider,
 } from './customer.providers';
 import { CommonModule } from '../common/common.module';
 import { CustomerController } from './customer.controller';
@@ -17,7 +20,10 @@ import { CustomerController } from './customer.controller';
     ModelsRepositoryProvider,
     AlterationsRepositoryProvider,
     InformationsRepositoryProvider,
+    OrdersRepositoryProvider,
     ConfirmReceiptUseCaseProvider,
+    CreateOrderUseCaseProvider,
+    ConfirmPaymentUseCaseProvider,
   ],
   exports: [],
 })
