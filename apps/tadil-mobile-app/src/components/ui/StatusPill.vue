@@ -27,6 +27,12 @@ const statusClasses = computed(() => {
     case ORDER_STATUS.WAITING_FOR_COURIER_ASSIGNMENT:
     case ORDER_STATUS.WAITING_FOR_RETURN_COURIER_ASSIGNMENT:
       return "text-purple-700 bg-purple-500/20 dark:text-purple-400 dark:bg-purple-500/10 border border-purple-500/30";
+    case ORDER_STATUS.WAITING_FOR_PICKUP_FROM_CUSTOMER:
+    case ORDER_STATUS.WAITING_FOR_PICKUP_FROM_TAILOR:
+      return "text-pink-700 bg-pink-500/20 dark:text-pink-400 dark:bg-pink-500/10 border border-pink-500/30";
+    case ORDER_STATUS.WAITING_FOR_DROPOFF_TO_TAILOR:
+    case ORDER_STATUS.WAITING_FOR_DROPOFF_TO_CUSTOMER:
+      return "text-cyan-700 bg-cyan-500/20 dark:text-cyan-400 dark:bg-cyan-500/10 border border-cyan-500/30";
     default:
       return "text-gray-600 bg-gray-500/20 dark:text-gray-400 dark:bg-gray-500/10 border border-gray-500/30";
   }

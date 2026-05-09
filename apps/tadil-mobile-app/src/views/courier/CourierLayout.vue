@@ -1,26 +1,21 @@
 <template>
   <IonPage>
     <IonTabs>
-      <IonRouterOutlet></IonRouterOutlet>
-      <IonTabBar slot="bottom">
+      <IonRouterOutlet />
+      <IonTabBar slot="bottom" class="flex rtl:flex-row-reverse">
         <IonTabButton tab="dashboard" href="/courier/dashboard">
-          <LayoutDashboard />
+          <House />
           <IonLabel>{{ $t("tailor.navBar.dashboard") }}</IonLabel>
         </IonTabButton>
 
         <IonTabButton tab="orders" href="/courier/orders">
-          <ClipboardList />
+          <PackageSearch />
           <IonLabel>{{ $t("tailor.navBar.orders") }}</IonLabel>
         </IonTabButton>
 
         <IonTabButton tab="wallet" href="/courier/wallet">
           <Wallet />
           <IonLabel>{{ $t("tailor.navBar.wallet") }}</IonLabel>
-        </IonTabButton>
-
-        <IonTabButton tab="profile" href="/profile-settings">
-          <User />
-          <IonLabel>{{ $t("profileSettings.title") }}</IonLabel>
         </IonTabButton>
       </IonTabBar>
     </IonTabs>
@@ -37,5 +32,5 @@ import {
   IonTabButton,
   IonTabs,
 } from "@ionic/vue";
-import { ClipboardList, LayoutDashboard, Wallet, User } from "lucide-vue-next";
+import { PackageSearch, House, Wallet } from "lucide-vue-next";
 </script>

@@ -1,90 +1,154 @@
 <template>
   <IonPage>
-    <SecondaryHeader :title="order ? '#' + order.reference : 'Order Details'" default-href="/courier/orders" />
-    <IonContent class="ion-padding">
+    <SecondaryHeader
+      :title="order ? '#' + order.reference : $t('tailor.orderDetails.title')"
+      default-href="/courier/orders"
+    />
+    <IonContent class="ion-padding space-y-6">
       <div v-if="isLoading" class="flex justify-center py-10">
         <IonSpinner name="crescent" />
       </div>
-      <div v-else-if="order" class="space-y-6">
-        <!-- Order Info -->
-        <IonCard class="m-0 ion-padding">
-          <div class="flex justify-between items-start mb-4">
+      <template v-else-if="order">
+        <IonCard class="ion-padding">
+          <div class="flex justify-between">
             <div>
-              <h2 class="text-xl font-bold">#{{ order.reference }}</h2>
-              <p class="text-sm text-muted-foreground">{{ formatDate(order.date) }}</p>
+              <p class="font-light">{{ $t("tailor.orderDetails.referenceLabel") }}</p>
+              <p class="font-semibold text-lg">#{{ order.reference }}</p>
+              <p class="mt-4 font-light">{{ formatDate(order.date) }}</p>
+              <p class="text-lg text-secondary font-semibold">
+                {{ $t("common.currencies.sar") }} {{ order.totalPrice }}
+              </p>
             </div>
-            <IonBadge :color="getStatusColor(order.status)">
-              {{ order.status }}
-            </IonBadge>
+            <div class="flex flex-col justify-between items-end">
+              <QrcodeSvg
+                :value="order.reference"
+                :size="80"
+                level="H"
+                class="border border-black p-1 rounded-lg"
+              />
+              <StatusPill :status="order.status" />
+            </div>
           </div>
-          <p class="text-lg font-semibold">{{ order.totalPrice }} SAR</p>
         </IonCard>
 
-        <!-- Actions -->
-        <div class="space-y-3">
-          <!-- Accept/Decline Assignment -->
-          <div v-if="isPendingAssignment" class="flex gap-4">
-            <IonButton expand="block" class="flex-1" @click="handleAccept" :disabled="isActionLoading">
-              Accept
-            </IonButton>
-            <IonButton expand="block" color="danger" fill="outline" class="flex-1" @click="handleDecline" :disabled="isActionLoading">
+        <!-- Address Info -->
+        <IonCard class="ion-padding space-y-2">
+          <h3 class="font-bold flex items-center gap-2">
+            <MapPin class="w-4 h-4 text-primary" />
+            Delivery Address
+          </h3>
+          <div v-if="order.address" class="text-sm">
+            <p class="font-medium">{{ order.address.city }}</p>
+            <p class="text-muted-foreground">{{ order.address.district }} {{ order.address.street }}</p>
+          </div>
+          <p v-else class="text-sm text-muted-foreground italic">No address provided</p>
+        </IonCard>
+
+        <!-- Order Items -->
+        <IonCard color="transparent" class="ion-padding">
+          <p class="mb-4 font-bold">{{ $t("tailor.orderDetails.alterations.title") }}</p>
+          <IonCard v-for="item in order.items" :key="item.id" class="m-0 mb-4 overflow-hidden">
+            <ImageContainer :imageUrl="item.imageFileUrl" class="max-h-40" />
+            <div class="divide-y divide-border space-y-2 p-2">
+              <div v-for="section in item.sections" :key="section.id" class="py-2">
+                <TranslatedName :names="section" class="text-lg font-semibold" />
+                <div v-for="alteration in section.alterations" :key="alteration.id" class="px-4">
+                  <TranslatedName :names="alteration" class="font-semibold" />
+                  <div class="grid grid-cols-2 gap-4">
+                    <div v-for="information in alteration.informations" :key="information.id" class="col-span-1 px-4 py-2 bg-gray-100 rounded-lg">
+                      <TranslatedName :names="information" />
+                      <p>{{ information.value }} {{ information.unit ? $t("common.units." + information.unit) : "" }}</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </IonCard>
+          
+          <IonCard v-for="item in order.customItems" :key="item.id" class="m-0 mb-4 overflow-hidden space-y-2">
+            <ImageContainer :imageUrl="item.imageFileUrl" class="max-h-40" />
+            <div v-for="alteration in item.alterations" :key="alteration.id" class="px-4 py-2">
+              <TranslatedName :names="alteration" class="font-semibold" />
+              <div class="grid grid-cols-2 gap-4">
+                <div v-for="information in alteration.informations" :key="information.id" class="px-4 py-2 bg-gray-100 rounded-lg">
+                  <TranslatedName :names="information" />
+                  <p class="truncate">{{ information.value }} {{ information.unit ? $t("common.units." + information.unit) : "" }}</p>
+                </div>
+              </div>
+            </div>
+          </IonCard>
+        </IonCard>
+
+        <IonCard class="ion-padding space-y-4">
+          <p class="font-bold">{{ $t("tailor.orderDetails.chat.title") }}</p>
+          <Chat />
+        </IonCard>
+
+        <!-- Action Buttons -->
+        <div class="space-y-3 pb-10">
+          <div v-if="isPendingAssignment" class="grid grid-cols-2 gap-4">
+            <IonButton expand="block" color="danger" fill="outline" @click="handleDecline" :disabled="isActionLoading">
               Decline
+            </IonButton>
+            <IonButton expand="block" color="success" @click="handleAccept" :disabled="isActionLoading">
+              Accept
             </IonButton>
           </div>
 
-          <!-- Confirm Pickup -->
           <IonButton
             v-if="canConfirmPickup"
             expand="block"
+            color="primary"
             @click="handlePickup"
             :disabled="isActionLoading"
           >
-            Confirm Pickup
+            <IonSpinner v-if="isActionLoading" name="crescent" />
+            <span v-else>Confirm Pickup</span>
           </IonButton>
 
-          <!-- Mark Delivered -->
           <IonButton
             v-if="canMarkDelivered"
             expand="block"
+            color="success"
             @click="handleDeliver"
             :disabled="isActionLoading"
           >
-            Mark as Delivered
+            <IonSpinner v-if="isActionLoading" name="crescent" />
+            <span v-else>Mark as Delivered</span>
           </IonButton>
         </div>
-
-        <!-- Address/Items Summary (Simplified) -->
-        <IonCard class="m-0 ion-padding">
-          <h3 class="font-bold mb-2">Order Items</h3>
-          <p class="text-sm text-muted-foreground">
-            {{ order.items.length + order.customItems.length }} items to be handled.
-          </p>
-        </IonCard>
-      </div>
+      </template>
     </IonContent>
   </IonPage>
 </template>
 
 <script setup lang="ts">
-import { SecondaryHeader } from "@/components";
 import {
-  IonPage,
-  IonContent,
+  IonButton,
   IonCard,
+  IonContent,
+  IonPage,
   IonSpinner,
   IonBadge,
-  IonButton,
   toastController,
 } from "@ionic/vue";
-import { ref, onMounted, computed } from "vue";
+import { onMounted, ref, computed } from "vue";
 import { useRoute, useRouter } from "vue-router";
-import { useAuthStore } from "@/stores";
-import { apiClient } from "@/integration/api";
+import { QrcodeSvg } from "qrcode.vue";
+import { MapPin } from "lucide-vue-next";
+import Chat from "@/components/chat/Chat.vue";
 import { DisplayOrderDTO, ORDER_STATUS } from "@/integration/dtos";
+import { formatDate } from "@/utils";
+import { useToast } from "@/composables";
+import { apiClient } from "@/integration/api";
+import { useAuthStore } from "@/stores";
+import { ImageContainer, TranslatedName, StatusPill, SecondaryHeader } from "@/components";
 
 const route = useRoute();
 const router = useRouter();
 const authStore = useAuthStore();
+const { showToast } = useToast();
+
 const order = ref<DisplayOrderDTO>();
 const isLoading = ref(true);
 const isActionLoading = ref(false);
@@ -117,7 +181,7 @@ async function fetchOrder() {
   isLoading.value = true;
   try {
     const { data } = await apiClient.courierControllerGetOrders(authStore.userId);
-    order.value = data.find((o: DisplayOrderDTO) => o.id === orderId.value);
+    order.value = data.find((o: DisplayOrderDTO) => o.id === orderId.value || o.reference === orderId.value);
   } catch (error) {
     console.error("Failed to fetch order", error);
   } finally {
@@ -127,26 +191,26 @@ async function fetchOrder() {
 
 async function handleAccept() {
   await performAction(() => 
-    apiClient.courierControllerAccept(authStore.userId, orderId.value, { isReturn: String(isReturnTrip.value) })
+    apiClient.courierControllerAccept(authStore.userId, order.value!.id, { isReturn: String(isReturnTrip.value) })
   );
 }
 
 async function handleDecline() {
   await performAction(() => 
-    apiClient.courierControllerDecline(authStore.userId, orderId.value, { isReturn: String(isReturnTrip.value) })
+    apiClient.courierControllerDecline(authStore.userId, order.value!.id, { isReturn: String(isReturnTrip.value) })
   );
   router.push('/courier/orders');
 }
 
 async function handlePickup() {
   await performAction(() => 
-    apiClient.courierControllerPickup(authStore.userId, orderId.value)
+    apiClient.courierControllerPickup(authStore.userId, order.value!.id)
   );
 }
 
 async function handleDeliver() {
   await performAction(() => 
-    apiClient.courierControllerDeliver(authStore.userId, orderId.value)
+    apiClient.courierControllerDeliver(authStore.userId, order.value!.id)
   );
 }
 
@@ -155,33 +219,17 @@ async function performAction(action: () => Promise<any>) {
   try {
     await action();
     await fetchOrder();
-    showToast("Action successful");
+    showToast({ message: "Action successful" });
   } catch (error) {
     console.error("Action failed", error);
-    showToast("Action failed", "danger");
+    showToast({ message: "Action failed", color: "danger" });
   } finally {
     isActionLoading.value = false;
   }
 }
 
-async function showToast(message: string, color = "success") {
-  const toast = await toastController.create({
-    message,
-    duration: 2000,
-    color,
-  });
-  toast.present();
-}
-
-function formatDate(dateStr: string) {
-  return new Date(dateStr).toLocaleDateString();
-}
-
-function getStatusColor(status?: string) {
-  if (status === ORDER_STATUS.DONE) return "success";
-  if (isPendingAssignment.value) return "warning";
-  return "primary";
-}
-
 onMounted(fetchOrder);
 </script>
+
+<style scoped>
+</style>

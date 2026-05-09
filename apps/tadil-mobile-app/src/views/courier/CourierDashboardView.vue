@@ -1,59 +1,57 @@
 <template>
   <IonPage>
-    <MainHeader :title="$t('tailor.dashboard.title')" />
-    <IonContent class="ion-padding">
-      <div class="space-y-6">
-        <!-- Summary Cards -->
-        <div class="grid grid-cols-2 gap-4">
-          <IonCard class="m-0 ion-padding text-center">
-            <IonLabel class="text-xs text-muted-foreground block mb-1">
-              {{ $t('tailor.wallet.income') }}
-            </IonLabel>
-            <p class="text-xl font-bold">0 {{ $t('common.currencies.sar') }}</p>
-          </IonCard>
-          <IonCard class="m-0 ion-padding text-center">
-            <IonLabel class="text-xs text-muted-foreground block mb-1">
-              {{ $t('tailor.navBar.orders') }}
-            </IonLabel>
-            <p class="text-xl font-bold">{{ activeOrdersCount }}</p>
-          </IonCard>
+    <MainHeader />
+    <IonContent>
+      <div
+        class="ion-padding text-white bg-linear-to-br from-primary via-secondary to-tertiary shadow-lg rounded-b-4xl"
+      >
+        <h3 class="text-2xl font-bold mb-4">{{ $t("tailor.dashboard.title") }}</h3>
+        <div v-if="isLoading" class="flex justify-center py-4">
+          <IonSpinner name="crescent" color="light" />
         </div>
+        <StatsGrid
+          v-else
+          :pending-count="pendingPickups.length"
+          :in-progress-count="activeOrdersCount"
+          :done-count="0"
+        />
+      </div>
 
-        <!-- Pending Pickups Section -->
-        <div>
-          <h2 class="text-lg font-bold mb-3">{{ $t('customer.dashboard.recentOrders') }}</h2>
-          <div v-if="isLoading" class="flex justify-center py-10">
-            <IonSpinner name="crescent" />
-          </div>
-          <div v-else-if="pendingPickups.length === 0" class="text-center py-10 text-muted-foreground">
-            <p>No pending pickups available</p>
-          </div>
-          <div v-else class="space-y-4">
-            <IonCard
-              v-for="order in pendingPickups"
-              :key="order.id"
-              class="m-0 ion-padding"
-              @click="goToOrder(order.id)"
+      <div class="mt-4">
+        <h2 class="px-4 py-2 font-bold flex items-center justify-between">
+          <span>
+            {{ $t("customer.dashboard.recentOrders") }}
+            <span
+              v-if="pendingPickups.length > 0"
+              class="ms-2 px-2 py-0.5 rounded-full bg-tertiary text-xs text-tertiary-contrast animate-pulse"
             >
-              <div class="flex justify-between items-start">
-                <div>
-                  <p class="font-medium">#{{ order.reference }}</p>
-                  <p class="text-xs text-muted-foreground">
-                    {{ formatDate(order.date) }}
-                  </p>
-                </div>
-                <IonBadge :color="getStatusColor(order.status)">
-                  {{ getStatusLabel(order.status) }}
-                </IonBadge>
-              </div>
-              <div class="mt-3 flex justify-between items-center">
-                <p class="text-sm font-semibold">{{ order.totalPrice }} SAR</p>
-                <IonButton size="small" fill="clear">
-                  View Details
-                </IonButton>
-              </div>
-            </IonCard>
-          </div>
+              {{ pendingPickups.length }}
+            </span>
+          </span>
+          <RouterLink
+            to="/courier/orders"
+            class="text-primary text-sm font-semibold no-underline"
+          >
+            {{ $t("orderStatus.all") }}
+          </RouterLink>
+        </h2>
+
+        <div v-if="isLoading" class="flex justify-center py-10">
+          <IonSpinner name="crescent" />
+        </div>
+        <div v-else-if="pendingPickups.length === 0" class="text-center py-10 text-muted-foreground bg-gray-50 mx-4 rounded-2xl">
+          <p>No pending pickups available</p>
+        </div>
+        <div v-else class="px-2 space-y-2">
+          <OrderListItem
+            v-for="order in pendingPickups.slice(0, 5)"
+            :key="order.id"
+            :reference="order.reference"
+            :date="order.date"
+            :total-price="order.totalPrice"
+            :status="order.status"
+            @click="goToOrder(order.id)"
+          />
         </div>
       </div>
     </IonContent>
@@ -61,15 +59,11 @@
 </template>
 
 <script setup lang="ts">
-import { MainHeader } from "@/components";
+import { MainHeader, StatsGrid, OrderListItem } from "@/components";
 import {
   IonPage,
   IonContent,
-  IonCard,
-  IonLabel,
   IonSpinner,
-  IonBadge,
-  IonButton,
 } from "@ionic/vue";
 import { ref, onMounted, computed } from "vue";
 import { useRouter } from "vue-router";
@@ -113,21 +107,6 @@ async function fetchOrders() {
 
 function goToOrder(id: string) {
   router.push(`/courier/orders/${id}`);
-}
-
-function formatDate(dateStr: string) {
-  return new Date(dateStr).toLocaleDateString();
-}
-
-function getStatusLabel(status: string) {
-  if (status === ORDER_STATUS.WAITING_FOR_COURIER_ASSIGNMENT) return "New Assignment";
-  if (status === ORDER_STATUS.WAITING_FOR_RETURN_COURIER_ASSIGNMENT) return "Return Trip";
-  return status;
-}
-
-function getStatusColor(status: string) {
-  if (status === ORDER_STATUS.WAITING_FOR_COURIER_ASSIGNMENT || status === ORDER_STATUS.WAITING_FOR_RETURN_COURIER_ASSIGNMENT) return "warning";
-  return "primary";
 }
 
 onMounted(fetchOrders);

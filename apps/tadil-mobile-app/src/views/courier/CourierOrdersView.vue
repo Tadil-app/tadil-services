@@ -1,55 +1,73 @@
 <template>
   <IonPage>
-    <MainHeader :title="$t('tailor.orders.title')" />
-    <IonContent class="ion-padding">
-      <div class="space-y-4">
-        <IonSearchbar :placeholder="$t('tailor.orders.search')" v-model="searchQuery" />
+    <IonHeader class="ion-no-border">
+      <SecondaryHeader
+        :title="$t('tailor.orders.title')"
+        :subtitle="$t('tailor.orders.subtitle')"
+        :show-back-button="false"
+      />
+      <div class="px-4 pb-2 bg-background">
+        <IonSearchbar
+          show-clear-button="always"
+          :placeholder="$t('tailor.orders.search')"
+          v-model="searchQuery"
+          class="custom-searchbar"
+        />
         
-        <div v-if="isLoading" class="flex justify-center py-10">
-          <IonSpinner name="crescent" />
-        </div>
-        
-        <div v-else-if="filteredOrders.length === 0" class="text-center py-10 text-muted-foreground">
-          <p>No orders found</p>
-        </div>
-
-        <div v-else class="space-y-4">
-          <IonCard
-            v-for="order in filteredOrders"
-            :key="order.id"
-            class="m-0 ion-padding"
-            @click="goToOrder(order.id)"
+        <div class="flex overflow-x-auto pb-2 scrollbar-hide">
+          <div
+            v-for="status in orderStatuses"
+            :key="status"
+            class="mx-1 px-4 py-2 text-sm rounded-xl border border-medium/20 text-medium whitespace-nowrap transition-colors active:scale-95"
+            :class="{
+              'bg-primary text-primary-contrast border-primary shadow-sm': status === selectedStatus,
+            }"
+            @click="selectedStatus = status"
           >
-            <div class="flex justify-between items-start">
-              <div>
-                <p class="font-medium">#{{ order.reference }}</p>
-                <p class="text-xs text-muted-foreground">
-                  {{ formatDate(order.date) }}
-                </p>
-              </div>
-              <IonBadge :color="getStatusColor(order.status)">
-                {{ getStatusLabel(order.status) }}
-              </IonBadge>
-            </div>
-            <div class="mt-3">
-              <p class="text-sm font-semibold">{{ order.totalPrice }} SAR</p>
-            </div>
-          </IonCard>
+            {{ status === 'all' ? $t('orderStatus.all') : $t('orderStatus.' + status) }}
+          </div>
         </div>
+      </div>
+    </IonHeader>
+
+    <IonContent>
+      <IonRefresher slot="fixed" @ion-refresh="handleRefresh">
+        <IonRefresherContent refreshing-spinner="bubbles" />
+      </IonRefresher>
+
+      <div v-if="isLoading" class="flex justify-center py-20">
+        <IonSpinner name="crescent" />
+      </div>
+      
+      <div v-else-if="filteredOrders.length === 0" class="text-center py-20 text-muted-foreground bg-gray-50 mx-4 rounded-2xl mt-4">
+        <p>No orders found</p>
+      </div>
+
+      <div v-else class="px-2 space-y-2 mt-2">
+        <OrderListItem
+          v-for="order in filteredOrders"
+          :key="order.id"
+          :reference="order.reference"
+          :date="order.date"
+          :total-price="order.totalPrice"
+          :status="order.status"
+          @click="goToOrder(order.id)"
+        />
       </div>
     </IonContent>
   </IonPage>
 </template>
 
 <script setup lang="ts">
-import { MainHeader } from "@/components";
+import { SecondaryHeader, OrderListItem } from "@/components";
 import {
   IonPage,
   IonContent,
-  IonCard,
+  IonHeader,
   IonSpinner,
-  IonBadge,
   IonSearchbar,
+  IonRefresher,
+  IonRefresherContent,
 } from "@ionic/vue";
 import { ref, onMounted, computed } from "vue";
 import { useRouter } from "vue-router";
@@ -62,10 +80,31 @@ const authStore = useAuthStore();
 const orders = ref<DisplayOrderDTO[]>([]);
 const isLoading = ref(true);
 const searchQuery = ref("");
+const selectedStatus = ref("all");
+
+const orderStatuses = [
+  "all",
+  ORDER_STATUS.WAITING_FOR_COURIER_ASSIGNMENT,
+  ORDER_STATUS.WAITING_FOR_PICKUP_FROM_CUSTOMER,
+  ORDER_STATUS.WAITING_FOR_DROPOFF_TO_TAILOR,
+  ORDER_STATUS.WAITING_FOR_RETURN_COURIER_ASSIGNMENT,
+  ORDER_STATUS.WAITING_FOR_PICKUP_FROM_TAILOR,
+  ORDER_STATUS.WAITING_FOR_DROPOFF_TO_CUSTOMER,
+  ORDER_STATUS.DONE
+];
 
 const filteredOrders = computed(() => {
-  if (!searchQuery.value) return orders.value;
-  return orders.value.filter(o => o.reference.toLowerCase().includes(searchQuery.value.toLowerCase()));
+  let list = orders.value;
+  
+  if (selectedStatus.value !== "all") {
+    list = list.filter(o => o.status === selectedStatus.value);
+  }
+  
+  if (searchQuery.value) {
+    list = list.filter(o => o.reference.toLowerCase().includes(searchQuery.value.toLowerCase()));
+  }
+  
+  return list;
 });
 
 async function fetchOrders() {
@@ -81,23 +120,24 @@ async function fetchOrders() {
   }
 }
 
+async function handleRefresh(event: any) {
+  await fetchOrders();
+  event.target.complete();
+}
+
 function goToOrder(id: string) {
   router.push(`/courier/orders/${id}`);
 }
 
-function formatDate(dateStr: string) {
-  return new Date(dateStr).toLocaleDateString();
-}
-
-function getStatusLabel(status: string) {
-  return status; // Should use translation or a mapper
-}
-
-function getStatusColor(status: string) {
-  if (status === ORDER_STATUS.DONE) return "success";
-  if (status === ORDER_STATUS.WAITING_FOR_COURIER_ASSIGNMENT || status === ORDER_STATUS.WAITING_FOR_RETURN_COURIER_ASSIGNMENT) return "warning";
-  return "primary";
-}
-
 onMounted(fetchOrders);
 </script>
+
+<style scoped>
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+</style>

@@ -160,6 +160,7 @@ export interface DisplayOrderDTO {
   status: OrderStatusType;
   items: DisplayOrderItemDTO[];
   customItems: DisplayCustomOrderItemDTO[];
+  address?: DisplayAddressDto;
 }
 
 export interface CreateOrderDto {

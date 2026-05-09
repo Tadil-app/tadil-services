@@ -1,84 +1,89 @@
 <template>
   <IonPage>
-    <MainHeader :title="$t('tailor.wallet.title')" />
-    <IonContent class="ion-padding">
-      <div class="space-y-6">
-        <!-- Balance Card -->
-        <IonCard class="m-0 bg-primary text-primary-foreground ion-padding text-center">
-          <IonLabel class="text-primary-foreground/80 block mb-2 uppercase tracking-wider text-xs font-semibold">
-            {{ $t('tailor.wallet.currentBalance') }}
-          </IonLabel>
-          <p class="text-4xl font-bold">
-            {{ authStore.walletDetails?.balance || 0 }} 
-            <span class="text-xl font-normal">{{ $t('common.currencies.sar') }}</span>
-          </p>
-          <div class="mt-4">
-            <IonButton 
-              expand="block" 
-              color="light" 
-              @click="isPayoutModalOpen = true"
-              :disabled="!authStore.walletDetails?.balance"
-            >
-              Request Payout
-            </IonButton>
-          </div>
-        </IonCard>
-
-        <!-- Stats -->
-        <div class="grid grid-cols-2 gap-4">
-          <IonCard class="m-0 ion-padding">
-            <IonLabel class="text-xs text-muted-foreground block mb-1">
-              {{ $t('tailor.wallet.income') }}
-            </IonLabel>
-            <p class="font-bold">{{ totalIncome }} SAR</p>
-          </IonCard>
-          <IonCard class="m-0 ion-padding">
-            <IonLabel class="text-xs text-muted-foreground block mb-1">
-              {{ $t('tailor.wallet.transfers') }}
-            </IonLabel>
-            <p class="font-bold">{{ totalPayouts }} SAR</p>
-          </IonCard>
-        </div>
-
-        <!-- Transactions -->
+    <SecondaryHeader
+      :title="$t('tailor.wallet.title')"
+      :subtitle="$t('tailor.wallet.subtitle')"
+      :show-back-button="false"
+    >
+      <IonCard
+        color="transparent"
+        class="ion-padding ion-margin bg-light/20"
+      >
         <div>
-          <h2 class="text-lg font-bold mb-3">{{ $t('tailor.wallet.recentTransaction') }}</h2>
-          <div v-if="transactions.length === 0" class="text-center py-10 text-muted-foreground">
-            <p>No recent transactions</p>
-          </div>
-          <IonCard
-            v-for="trx in transactions"
-            :key="trx.id"
-            class="m-0 mb-4 ion-padding flex justify-between items-center"
+          <p class="text-sm">{{ $t("tailor.wallet.currentBalance") }}</p>
+          <p class="text-2xl font-semibold mt-2 mb-4">
+            {{ $t("common.currencies.sar") }} {{ authStore.walletDetails?.balance || 0 }}
+          </p>
+          <IonButton 
+            expand="block" 
+            color="light" 
+            @click="isPayoutModalOpen = true"
+            :disabled="!authStore.walletDetails?.balance"
           >
-            <div class="flex gap-2 items-center">
-              <ArrowDown
-                v-if="trx.type === 'EARNING'"
-                class="text-success bg-success/10 rounded-full p-1 w-8 h-8"
-              />
-              <ArrowUp v-else class="text-danger bg-danger/10 rounded-full p-1 w-8 h-8" />
-              <div>
-                <p class="font-semibold text-sm">
-                  {{
-                    trx.type === "EARNING"
-                      ? $t("tailor.wallet.payementRecieved")
-                      : $t("tailor.wallet.transferSent")
-                  }}
-                </p>
-                <p class="text-xs font-light text-muted-foreground">{{ formatDate(trx.date) }}</p>
-              </div>
-            </div>
-            <p
-              class="font-bold"
-              :class="{
-                'text-success': trx.type === 'EARNING',
-                'text-danger': trx.type === 'PAYOUT',
-              }"
-            >
-              {{ trx.type === "EARNING" ? "+" : "-" }}{{ trx.amount }}
-            </p>
-          </IonCard>
+            {{ $t("common.buttons.transfer") }}
+          </IonButton>
         </div>
+      </IonCard>
+    </SecondaryHeader>
+
+    <IonContent class="ion-padding space-y-6">
+      <div class="flex gap-4 items-center">
+        <div class="ion-padding w-full rounded-2xl bg-success/20">
+          <ArrowDown class="text-success mb-2" />
+          <p class="text-success text-xl font-semibold mt-1">
+            {{ $t("common.currencies.sar") }} {{ totalIncome }}
+          </p>
+          <p class="text-sm text-success">{{ $t("tailor.wallet.income") }}</p>
+        </div>
+        <div class="ion-padding w-full rounded-2xl bg-danger/20">
+          <ArrowUp class="text-danger mb-2" />
+          <p class="text-danger text-xl font-semibold mt-1">
+            {{ $t("common.currencies.sar") }} {{ totalPayouts }}
+          </p>
+          <p class="text-sm text-danger">{{ $t("tailor.wallet.transfers") }}</p>
+        </div>
+      </div>
+
+      <div class="space-y-4">
+        <p class="text-lg font-semibold mb-4">
+          {{ $t("tailor.wallet.recentTransaction") }}
+        </p>
+        <div v-if="transactions.length === 0" class="text-center py-10 text-muted-foreground">
+          <p>No transactions found</p>
+        </div>
+        <IonCard
+          v-for="trx in transactions"
+          :key="trx.id"
+          class="m-0 mb-4 ion-padding flex justify-between items-center"
+        >
+          <div class="flex gap-2 items-center">
+            <ArrowDown
+              v-if="trx.type === 'EARNING'"
+              class="text-success bg-success/10 rounded-full p-1"
+            />
+            <ArrowUp v-else class="text-danger bg-danger/10 rounded-full p-1" />
+            <div>
+              <p class="font-semibold">
+                {{
+                  trx.type === "EARNING"
+                    ? $t("tailor.wallet.payementRecieved")
+                    : $t("tailor.wallet.transferSent")
+                }}
+              </p>
+              <p class="text-xs font-light text-muted-foreground">{{ formatDate(trx.date) }}</p>
+            </div>
+          </div>
+          <p
+            class="font-semibold"
+            :class="{
+              'text-success': trx.type === 'EARNING',
+              'text-danger': trx.type === 'PAYOUT',
+            }"
+          >
+            {{ trx.type === "EARNING" ? "+" : "-" }}{{ trx.amount }}
+            {{ $t("common.currencies.sar") }}
+          </p>
+        </IonCard>
       </div>
 
       <!-- Payout Request Modal -->
@@ -93,7 +98,7 @@
         </IonHeader>
         <IonContent class="ion-padding">
           <div class="space-y-6">
-            <p class="text-sm text-muted-foreground text-center">
+            <p class="text-sm text-muted-foreground">
               Available balance: {{ authStore.walletDetails?.balance || 0 }} SAR
             </p>
             <IonItem>
@@ -121,25 +126,25 @@
 </template>
 
 <script setup lang="ts">
-import { MainHeader } from "@/components";
 import {
-  IonPage,
-  IonContent,
-  IonCard,
-  IonLabel,
   IonButton,
+  IonCard,
+  IonContent,
+  IonPage,
   IonModal,
   IonHeader,
   IonToolbar,
   IonTitle,
   IonButtons,
   IonItem,
+  IonLabel,
   IonInput,
   IonSpinner,
   toastController,
 } from "@ionic/vue";
 import { ArrowDown, ArrowUp } from "lucide-vue-next";
 import { computed, ref, onMounted } from "vue";
+import { SecondaryHeader } from "@/components";
 import { useAuthStore } from "@/stores";
 import { formatDate } from "@/utils";
 
@@ -193,3 +198,6 @@ onMounted(() => {
   authStore.fetchWallet();
 });
 </script>
+
+<style scoped>
+</style>
