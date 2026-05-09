@@ -7,4 +7,5 @@ export interface DisplayUserDTO {
   phone: string;
   role: RoleType;
   email?: string;
+  commissionRate?: number;
 }

@@ -65,6 +65,17 @@
             :placeholder="$t('common.inputs.email.placeholder')"
           />
         </div>
+        <div class="space-y-1.5" v-if="selectedUserRole !== ROLE.CUSTOMER">
+          <InputLabel for="commissionRate">
+            {{ $t("common.inputs.commissionRate.label") }}
+          </InputLabel>
+          <TextInput
+            id="commissionRate"
+            type="number"
+            v-model="newUser.commissionRate"
+            :placeholder="$t('common.inputs.commissionRate.placeholder')"
+          />
+        </div>
       </div>
       <div class="flex justify-evenly">
         <Button variant="outline" @click="closeModal">
@@ -116,6 +127,7 @@ const newUser = ref<CreateUserDTO>({
   firstName: "",
   lastName: "",
   email: undefined,
+  commissionRate: 10,
 });
 const newUserValidationErrors = ref({
   phone: "",
@@ -210,6 +222,7 @@ function closeModal() {
     firstName: "",
     lastName: "",
     email: undefined,
+    commissionRate: 10,
   };
   isOpen.value = false;
 }
