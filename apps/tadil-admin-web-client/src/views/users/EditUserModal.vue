@@ -65,6 +65,16 @@
           />
         </div>
         <div class="space-y-1.5" v-if="selectedUserRole !== ROLE.CUSTOMER">
+          <InputLabel for="city">
+            {{ $t("common.inputs.city.label") }}
+          </InputLabel>
+          <TextInput
+            id="city"
+            v-model="newUser.city"
+            :placeholder="$t('common.inputs.city.placeholder')"
+          />
+        </div>
+        <div class="space-y-1.5" v-if="selectedUserRole !== ROLE.CUSTOMER">
           <InputLabel for="commissionRate">
             {{ $t("common.inputs.commissionRate.label") }}
           </InputLabel>
@@ -130,6 +140,7 @@ const newUser = ref<UpdateUserDTO>({
   lastName: props.user.lastName,
   email: props.user.email,
   commissionRate: props.user.commissionRate ?? 10,
+  city: props.user.city || "",
 });
 const newUserValidationErrors = ref({
   phone: "",
@@ -231,6 +242,7 @@ function closeModal() {
     lastName: props.user.lastName,
     email: props.user.email,
     commissionRate: props.user.commissionRate ?? 10,
+    city: props.user.city || "",
   };
   isOpen.value = false;
 }

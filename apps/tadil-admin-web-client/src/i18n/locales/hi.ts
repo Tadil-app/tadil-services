@@ -7,6 +7,37 @@ export const hi = {
     users: "उपयोगकर्ता",
     loginRequests: "लॉगइन अनुरोध",
     payoutRequests: "भुगतान अनुरोध",
+    orders: "ऑर्डर",
+  },
+  orders: {
+    title: "ऑर्डर निगरानी",
+    subtitle: "सिस्टम के सभी ऑर्डर्स की निगरानी और प्रबंधन करें",
+    filters: {
+      status: "स्थिति",
+      tailor: "दर्जी",
+      courier: "कूरियर",
+    },
+    table: {
+      reference: "संदर्भ",
+      date: "तारीख",
+      customer: "ग्राहक",
+      tailor: "दर्जी",
+      courier: "कूरियर",
+      status: "स्थिति",
+      total: "कुल",
+      actions: "कार्यवाई",
+      empty: "कोई ऑर्डर नहीं मिला",
+    },
+    buttons: {
+      reset: "फ़िल्टर रीसेट करें",
+      assignTailor: "दर्जी नियुक्त करें",
+    },
+    assignModal: {
+      title: "दर्जी नियुक्त करें",
+      subtitle: "ऑर्डर {ref} के लिए मैन्युअल रूप से दर्जी नियुक्त करें",
+      selectLabel: "एक दर्जी चुनें",
+      submit: "अभी नियुक्त करें",
+    },
   },
   loginRequests: {
     title: "लॉगइन अनुरोध",
@@ -43,6 +74,7 @@ export const hi = {
     },
   },
   common: {
+    loading: "लोड हो रहा है...",
     currencies: {
       ras: "RAS",
       usd: "$",
@@ -173,6 +205,11 @@ export const hi = {
         label: "ईमेल",
         placeholder: "ईमेल दर्ज करें",
         errorMessage: "ईमेल आवश्यक है",
+      },
+      city: {
+        label: "शहर",
+        placeholder: "शहर दर्ज करें",
+        errorMessage: "शहर आवश्यक है",
       },
       commissionRate: {
         label: "कमीशन दर (%)",

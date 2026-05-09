@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import type { RoleType } from '@tadil-users';
+import { type RoleType } from '@tadil-users';
 
 export class DisplayUserDTO {
   @ApiProperty()
@@ -12,6 +12,10 @@ export class DisplayUserDTO {
   phone!: string;
   @ApiProperty()
   role!: RoleType;
-  @ApiProperty()
+  @ApiProperty({ required: false })
   email?: string;
+  @ApiProperty({ required: false })
+  commissionRate?: number;
+  @ApiProperty({ required: false })
+  city?: string;
 }

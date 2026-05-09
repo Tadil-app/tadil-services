@@ -3,6 +3,7 @@ import {
   InvalidCommandException,
 } from '@tadil-common';
 import { UsersRepository } from './users.repository';
+import { v4 as uuid } from 'uuid';
 
 export class UpdateUserUseCase {
   private readonly _usersRepository: UsersRepository;
@@ -46,7 +47,24 @@ export class UpdateUserUseCase {
         phone: command.phone,
         role: user.role,
         email: command.email,
+        commissionRate: command.commissionRate ?? user.commissionRate,
       });
+
+      if (command.city) {
+        const currentAddresses = await this._usersRepository.getAddressesByUserId(user.id);
+        if (currentAddresses.length === 0) {
+          await this._usersRepository.addAddress({
+            id: uuid(),
+            userId: user.id,
+            city: command.city
+          });
+        } else {
+          await this._usersRepository.updateAddress({
+            ...currentAddresses[0],
+            city: command.city
+          });
+        }
+      }
     } catch (error) {
       if (error instanceof Error)
         throw new InfrastructureException(error.message);
@@ -61,18 +79,24 @@ export class UpdateUserCommand {
   readonly lastName: string;
   readonly phone: string;
   readonly email?: string;
+  readonly commissionRate?: number;
+  readonly city?: string;
 
   constructor(
     id: string,
     firstName: string,
     lastName: string,
     phone: string,
-    email?: string
+    email?: string,
+    commissionRate?: number,
+    city?: string
   ) {
     this.id = id;
     this.firstName = firstName;
     this.lastName = lastName;
     this.phone = phone;
     this.email = email;
+    this.commissionRate = commissionRate;
+    this.city = city;
   }
 }

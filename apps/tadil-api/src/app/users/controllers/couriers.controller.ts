@@ -32,12 +32,16 @@ export class CouriersController {
   async getCouriers(): Promise<DisplayUserDTO[]> {
     const users = await this._dataReader.queries.user.findMany({
       where: { role: ROLE.COURIER },
+      include: { addresses: true },
     });
+
     return users.map((user) => ({
       ...user,
       email: user.email ?? undefined,
+      city: user.addresses.length > 0 ? user.addresses[0].city : undefined,
     }));
   }
+
 
   @Get('/phone/:phone')
   @ApiOkResponse({ type: DisplayUserDTO })

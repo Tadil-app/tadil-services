@@ -29,6 +29,7 @@ import type {
   CreateUserDTO,
   UpdateUserDTO,
   UpdateSectionDTO,
+  DisplayOrderDTO,
 } from "../DTOs";
 
 import type {
@@ -873,6 +874,49 @@ export class Api<
       this.request<void, any>({
         path: `/api/couriers/${id}/delete`,
         method: "DELETE",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Orders
+     * @name OrdersControllerGetOrders
+     * @request GET:/api/orders
+     */
+    ordersControllerGetOrders: (
+      query?: {
+        status?: string;
+        tailorId?: string;
+        courierId?: string;
+      },
+      params: RequestParams = {},
+    ) =>
+      this.request<DisplayOrderDTO[], any>({
+        path: `/api/orders`,
+        method: "GET",
+        query: query,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Orders
+     * @name OrdersControllerAssignTailor
+     * @request POST:/api/orders/{id}/assign-tailor
+     */
+    ordersControllerAssignTailor: (
+      id: string,
+      tailorId: string,
+      params: RequestParams = {},
+    ) =>
+      this.request<void, any>({
+        path: `/api/orders/${id}/assign-tailor`,
+        method: "POST",
+        body: tailorId,
+        type: ContentType.Json,
         ...params,
       }),
 

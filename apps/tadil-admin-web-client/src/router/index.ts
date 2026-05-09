@@ -35,6 +35,10 @@ const routes = [
       {
         path: "/payout-requests",
         component: () => import("@/views/users/PayoutRequestsView.vue"),
+      },
+      {
+        path: "/orders",
+        component: () => import("@/views/orders/OrdersManagementView.vue"),
       }
     ],
   },

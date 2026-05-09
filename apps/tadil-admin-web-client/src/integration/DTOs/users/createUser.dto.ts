@@ -4,4 +4,5 @@ export interface CreateUserDTO {
   phone: string;
   email?: string;
   commissionRate?: number;
+  city?: string;
 }

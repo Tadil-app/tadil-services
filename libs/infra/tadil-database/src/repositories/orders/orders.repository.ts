@@ -118,4 +118,14 @@ export class PrismaOrdersRepository implements OrdersRepository {
       data: { status: status as OrderStatus },
     });
   }
+
+  async assignTailor(id: string, tailorId: string): Promise<void> {
+    await this._db.order.update({
+      where: { id },
+      data: {
+        status: OrderStatus.waitingForCourierAssignement,
+        assignedTailorId: tailorId,
+      },
+    });
+  }
 }

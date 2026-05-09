@@ -7,6 +7,37 @@ export const ar = {
     users: "المستخدمين",
     loginRequests: "طلبات تسجيل الدخول",
     payoutRequests: "طلبات السحب",
+    orders: "الطلبات",
+  },
+  orders: {
+    title: "مراقبة الطلبات",
+    subtitle: "مراقبة وإدارة جميع طلبات النظام",
+    filters: {
+      status: "الحالة",
+      tailor: "الخياط",
+      courier: "المندوب",
+    },
+    table: {
+      reference: "المرجع",
+      date: "التاريخ",
+      customer: "العميل",
+      tailor: "الخياط",
+      courier: "المندوب",
+      status: "الحالة",
+      total: "الإجمالي",
+      actions: "الإجراءات",
+      empty: "لم يتم العثور على طلبات",
+    },
+    buttons: {
+      reset: "إعادة ضبط الفلاتر",
+      assignTailor: "تعيين خياط",
+    },
+    assignModal: {
+      title: "تعيين خياط",
+      subtitle: "تعيين خياط يدوياً للطلب {ref}",
+      selectLabel: "اختر خياطاً",
+      submit: "تعيين الآن",
+    },
   },
   loginRequests: {
     title: "طلبات تسجيل الدخول",
@@ -43,6 +74,7 @@ export const ar = {
     },
   },
   common: {
+    loading: "جاري التحميل...",
     currencies: {
       ras: "ر.س",
       usd: "$",
@@ -180,6 +212,11 @@ export const ar = {
         label: "البريد الالكتروني",
         placeholder: "اختر البريد الالكتروني",
         errorMessage: "البريد الالكتروني مطلوب",
+      },
+      city: {
+        label: "المدينة",
+        placeholder: "أدخل المدينة",
+        errorMessage: "المدينة مطلوبة",
       },
       commissionRate: {
         label: "نسبة العموله (%)",

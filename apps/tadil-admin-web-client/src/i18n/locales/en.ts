@@ -7,6 +7,37 @@ export const en = {
     users: "Users",
     loginRequests: "Login Requests",
     payoutRequests: "Payout Requests",
+    orders: "Orders",
+  },
+  orders: {
+    title: "Order Monitoring",
+    subtitle: "Monitor and manage all system orders",
+    filters: {
+      status: "Status",
+      tailor: "Tailor",
+      courier: "Courier",
+    },
+    table: {
+      reference: "Ref",
+      date: "Date",
+      customer: "Customer",
+      tailor: "Tailor",
+      courier: "Courier",
+      status: "Status",
+      total: "Total",
+      actions: "Actions",
+      empty: "No orders found",
+    },
+    buttons: {
+      reset: "Reset Filters",
+      assignTailor: "Assign Tailor",
+    },
+    assignModal: {
+      title: "Assign Tailor",
+      subtitle: "Manually assign a tailor to order {ref}",
+      selectLabel: "Choose a Tailor",
+      submit: "Assign Now",
+    },
   },
   loginRequests: {
     title: "Login Requests",
@@ -43,6 +74,7 @@ export const en = {
     },
   },
   common: {
+    loading: "Loading...",
     currencies: {
       ras: "RAS",
       usd: "$",
@@ -179,6 +211,11 @@ export const en = {
         label: "Email",
         placeholder: "Enter Email",
         errorMessage: "Email is required",
+      },
+      city: {
+        label: "City",
+        placeholder: "Enter City",
+        errorMessage: "City is required",
       },
       commissionRate: {
         label: "Commission Rate (%)",

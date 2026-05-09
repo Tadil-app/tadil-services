@@ -19,6 +19,7 @@
 
 <script setup lang="ts">
 import {
+  ClipboardList,
   GitBranchPlus,
   HandCoins,
   KeyRound,
@@ -38,5 +39,6 @@ const navItems = computed(() => [
   { path: "/users", label: t("nav.users"), icon: Users },
   { path: "/login-requests", label: t("nav.loginRequests"), icon: KeyRound },
   { path: "/payout-requests", label: t("nav.payoutRequests"), icon: HandCoins },
+  { path: "/orders", label: t("nav.orders"), icon: ClipboardList },
 ]);
 </script>

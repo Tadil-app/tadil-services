@@ -7,6 +7,37 @@ export const bn = {
     users: "ব্যবহারকারী",
     loginRequests: "লগইন অনুরোধ",
     payoutRequests: "পেমেন্ট অনুরোধ",
+    orders: "অর্ডার",
+  },
+  orders: {
+    title: "অর্ডার মনিটরিং",
+    subtitle: "সিস্টেমের সমস্ত অর্ডার মনিটর এবং পরিচালনা করুন",
+    filters: {
+      status: "অবস্থা",
+      tailor: "দর্জি",
+      courier: "কুরিয়ার",
+    },
+    table: {
+      reference: "রেফ",
+      date: "তারিখ",
+      customer: "গ্রাহক",
+      tailor: "দর্জি",
+      courier: "কুরিয়ার",
+      status: "অবস্থা",
+      total: "মোট",
+      actions: "ক্রিয়াকলাপ",
+      empty: "কোনো অর্ডার পাওয়া যায়নি",
+    },
+    buttons: {
+      reset: "ফিল্টার রিসেট করুন",
+      assignTailor: "দর্জি নিযুক্ত করুন",
+    },
+    assignModal: {
+      title: "দর্জি নিযুক্ত করুন",
+      subtitle: "{ref} অর্ডারের জন্য ম্যানুয়ালি একজন দর্জি নিযুক্ত করুন",
+      selectLabel: "একজন দর্জি চয়ন করুন",
+      submit: "এখনই নিযুক্ত করুন",
+    },
   },
   loginRequests: {
     title: "লগইন অনুরোধ",
@@ -43,6 +74,7 @@ export const bn = {
     },
   },
   common: {
+    loading: "লোড হচ্ছে...",
     currencies: {
       ras: "RAS",
       usd: "$",
@@ -173,6 +205,11 @@ export const bn = {
         label: "ইমেল",
         placeholder: "ইমেল লিখুন",
         errorMessage: "ইমেল আবশ্যক",
+      },
+      city: {
+        label: "শহর",
+        placeholder: "শহর লিখুন",
+        errorMessage: "শহর আবশ্যক",
       },
       commissionRate: {
         label: "কমিশন রেট (%)",

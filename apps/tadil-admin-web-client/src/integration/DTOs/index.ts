@@ -3,6 +3,7 @@ export * from "./informations";
 export * from "./alterations";
 export * from "./extras";
 export * from "./users";
+export * from "./orders/displayOrder.dto";
 
 export enum ContentType {
   Json = "application/json",

@@ -4,4 +4,5 @@ export interface UpdateUserDTO {
   phone: string;
   email?: string;
   commissionRate?: number;
+  city?: string;
 }

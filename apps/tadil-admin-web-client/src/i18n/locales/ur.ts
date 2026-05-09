@@ -7,6 +7,37 @@ export const ur = {
     users: "صارفین",
     loginRequests: "لاگ ان کی درخواستیں",
     payoutRequests: "ادائیگی کی درخواستیں",
+    orders: "آرڈرز",
+  },
+  orders: {
+    title: "آرڈرز کی نگرانی",
+    subtitle: "سسٹم کے تمام آرڈرز کی نگرانی اور انتظام کریں",
+    filters: {
+      status: "حالت",
+      tailor: "درزی",
+      courier: "کورئیر",
+    },
+    table: {
+      reference: "حوالہ",
+      date: "تاریخ",
+      customer: "گاہک",
+      tailor: "درزی",
+      courier: "کورئیر",
+      status: "حالت",
+      total: "کل",
+      actions: "کارروائیاں",
+      empty: "کوئی آرڈر نہیں ملا",
+    },
+    buttons: {
+      reset: "فلٹرز ری سیٹ کریں",
+      assignTailor: "درزی مقرر کریں",
+    },
+    assignModal: {
+      title: "درزی مقرر کریں",
+      subtitle: "آرڈر {ref} کے لیے دستی طور پر درزی مقرر کریں",
+      selectLabel: "درزی منتخب کریں",
+      submit: "ابھی مقرر کریں",
+    },
   },
   loginRequests: {
     title: "لاگ ان کی درخواستیں",
@@ -43,6 +74,7 @@ export const ur = {
     },
   },
   common: {
+    loading: "لوڈنگ ہو رہی ہے...",
     currencies: {
       ras: "RAS",
       usd: "$",
@@ -173,6 +205,11 @@ export const ur = {
         label: "ای میل",
         placeholder: "ای میل درج کریں",
         errorMessage: "ای میل درکار ہے",
+      },
+      city: {
+        label: "شہر",
+        placeholder: "شہر درج کریں",
+        errorMessage: "شہر درکار ہے",
       },
       commissionRate: {
         label: "کمیشن کی شرح (%)",

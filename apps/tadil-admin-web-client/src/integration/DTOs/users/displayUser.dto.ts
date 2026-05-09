@@ -8,4 +8,5 @@ export interface DisplayUserDTO {
   role: RoleType;
   email?: string;
   commissionRate?: number;
+  city?: string;
 }
