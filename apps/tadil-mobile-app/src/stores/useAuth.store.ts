@@ -1,5 +1,5 @@
-import { apiClient } from "@/integration/api";
-import { AuthResponseDto, User, UpdateProfileDto } from "@/integration/dtos";
+import { apiClient, apiInstance } from "@/integration/api";
+import { AuthResponseDto, User, UpdateProfileDto, DisplayAddressDto, CreateAddressDto, UpdateAddressDto } from "@/integration/dtos";
 import { Preferences } from "@capacitor/preferences";
 import { defineStore } from "pinia";
 import { ref } from "vue";
@@ -10,6 +10,7 @@ export const useAuthStore = defineStore("auth", () => {
   const userRole = ref("");
   const token = ref("");
   const userInfo = ref<User | null>(null);
+  const userAddresses = ref<DisplayAddressDto[]>([]);
   const router = useRouter();
 
   async function initAuth() {
@@ -21,8 +22,9 @@ export const useAuthStore = defineStore("auth", () => {
     userRole.value = storedUserRole || "";
 
     if (token.value) {
-      // apiClient.setSecurityData(token.value);
+      apiInstance.setSecurityData(token.value);
       await fetchProfile();
+      await fetchAddresses();
     }
   }
 
@@ -69,17 +71,38 @@ export const useAuthStore = defineStore("auth", () => {
     userInfo.value = data;
   }
 
+  async function fetchAddresses() {
+    try {
+      const { data } = await apiClient.authControllerGetAddresses();
+      userAddresses.value = data;
+    } catch (error) {
+      console.error("Failed to fetch addresses", error);
+    }
+  }
+
+  async function addAddress(dto: CreateAddressDto) {
+    await apiClient.authControllerAddAddress(dto);
+    await fetchAddresses();
+  }
+
+  async function updateAddress(id: string, dto: UpdateAddressDto) {
+    await apiClient.authControllerUpdateAddress(id, dto);
+    await fetchAddresses();
+  }
+
   async function setSession(newToken: string, user: User) {
     token.value = newToken;
     userId.value = user.id;
     userRole.value = user.role;
     userInfo.value = user;
     
-    // apiClient.setSecurityData(newToken);
+    apiInstance.setSecurityData(newToken);
 
     await Preferences.set({ key: "token", value: newToken });
     await Preferences.set({ key: "userId", value: user.id });
     await Preferences.set({ key: "userRole", value: user.role });
+
+    await fetchAddresses();
   }
 
   async function logout() {
@@ -87,12 +110,28 @@ export const useAuthStore = defineStore("auth", () => {
     userId.value = "";
     userRole.value = "";
     userInfo.value = null;
-    // apiClient.setSecurityData(null);
+    userAddresses.value = [];
+    apiInstance.setSecurityData(null);
     await Preferences.remove({ key: "token" });
     await Preferences.remove({ key: "userId" });
     await Preferences.remove({ key: "userRole" });
     router.push({ name: "login" });
   }
 
-  return { userId, userRole, token, userInfo, initAuth, login, completeProfile, fetchProfile, updateProfile, logout };
+  return { 
+    userId, 
+    userRole, 
+    token, 
+    userInfo, 
+    userAddresses, 
+    initAuth, 
+    login, 
+    completeProfile, 
+    fetchProfile, 
+    updateProfile, 
+    fetchAddresses, 
+    addAddress, 
+    updateAddress, 
+    logout 
+  };
 });

@@ -10,7 +10,12 @@ import {
   RejectLoginRequestUseCase,
   GetPendingLoginRequestsUseCase,
 } from '@tadil-auth';
-import { UsersRepository } from '@tadil-users';
+import {
+  UsersRepository,
+  AddAddressUseCase,
+  UpdateAddressUseCase,
+  GetMyAddressesUseCase,
+} from '@tadil-users';
 import { environment } from '../../environments/environment';
 
 const UsersRepositoryProvider: Provider<UsersRepository> = {
@@ -69,6 +74,33 @@ const GetPendingLoginRequestsUseCaseProvider: Provider<GetPendingLoginRequestsUs
   inject: ['UsersRepository'],
 };
 
+const AddAddressUseCaseProvider: Provider<AddAddressUseCase> = {
+  provide: AddAddressUseCase,
+  useFactory: (usersRepository: UsersRepository) => {
+    return new AddAddressUseCase(usersRepository);
+  },
+  scope: Scope.REQUEST,
+  inject: ['UsersRepository'],
+};
+
+const UpdateAddressUseCaseProvider: Provider<UpdateAddressUseCase> = {
+  provide: UpdateAddressUseCase,
+  useFactory: (usersRepository: UsersRepository) => {
+    return new UpdateAddressUseCase(usersRepository);
+  },
+  scope: Scope.REQUEST,
+  inject: ['UsersRepository'],
+};
+
+const GetMyAddressesUseCaseProvider: Provider<GetMyAddressesUseCase> = {
+  provide: GetMyAddressesUseCase,
+  useFactory: (usersRepository: UsersRepository) => {
+    return new GetMyAddressesUseCase(usersRepository);
+  },
+  scope: Scope.REQUEST,
+  inject: ['UsersRepository'],
+};
+
 export {
   UsersRepositoryProvider,
   LoginUseCaseProvider,
@@ -76,4 +108,7 @@ export {
   ApproveLoginRequestUseCaseProvider,
   RejectLoginRequestUseCaseProvider,
   GetPendingLoginRequestsUseCaseProvider,
+  AddAddressUseCaseProvider,
+  UpdateAddressUseCaseProvider,
+  GetMyAddressesUseCaseProvider,
 };

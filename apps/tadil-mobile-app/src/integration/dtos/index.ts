@@ -178,6 +178,26 @@ export interface UpdateProfileDto {
   email?: string;
 }
 
+export interface CreateAddressDto {
+  city: string;
+  street?: string;
+  district?: string;
+}
+
+export interface UpdateAddressDto {
+  city?: string;
+  street?: string;
+  district?: string;
+}
+
+export interface DisplayAddressDto {
+  id: string;
+  city: string;
+  street?: string;
+  district?: string;
+  userId: string;
+}
+
 export interface User {
   id: string;
   firstName: string;
@@ -185,6 +205,7 @@ export interface User {
   phone: string;
   role: "tailor" | "customer" | "courier";
   email?: string;
+  addresses?: DisplayAddressDto[];
 }
 
 export interface AuthResponseDto {

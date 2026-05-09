@@ -18,6 +18,9 @@ import {
   CompleteProfileDto,
   AuthResponseDto,
   UpdateProfileDto,
+  CreateAddressDto,
+  UpdateAddressDto,
+  DisplayAddressDto,
   User,
 } from "../dtos";
 export interface UploadFileDto {
@@ -520,6 +523,66 @@ export class Api<
         secure: true,
         type: ContentType.Json,
         format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Auth
+     * @name AuthControllerGetAddresses
+     * @request GET:/api/auth/me/addresses
+     * @secure
+     */
+    authControllerGetAddresses: (params: RequestParams = {}) =>
+      this.request<DisplayAddressDto[], any>({
+        path: `/api/auth/me/addresses`,
+        method: "GET",
+        secure: true,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Auth
+     * @name AuthControllerAddAddress
+     * @request POST:/api/auth/me/addresses
+     * @secure
+     */
+    authControllerAddAddress: (
+      data: CreateAddressDto,
+      params: RequestParams = {},
+    ) =>
+      this.request<void, any>({
+        path: `/api/auth/me/addresses`,
+        method: "POST",
+        body: data,
+        secure: true,
+        type: ContentType.Json,
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Auth
+     * @name AuthControllerUpdateAddress
+     * @request PUT:/api/auth/me/addresses/{id}
+     * @secure
+     */
+    authControllerUpdateAddress: (
+      id: string,
+      data: UpdateAddressDto,
+      params: RequestParams = {},
+    ) =>
+      this.request<void, any>({
+        path: `/api/auth/me/addresses/${id}`,
+        method: "PUT",
+        body: data,
+        secure: true,
+        type: ContentType.Json,
         ...params,
       }),
 

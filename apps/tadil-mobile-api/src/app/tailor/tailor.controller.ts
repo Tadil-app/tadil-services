@@ -24,12 +24,26 @@ export class TailorController {
   @Get('/orders')
   @ApiOkResponse({ type: DisplayOrderDTO, isArray: true })
   async getOrders(@Param('id') tailorId: string): Promise<DisplayOrderDTO[]> {
+    // 1. Fetch tailor's city
+    const tailorAddress = await this._dataReader.queries.address.findFirst({
+      where: { userId: tailorId },
+      select: { city: true },
+    });
+
+    if (!tailorAddress) {
+      return []; // No address, no orders
+    }
+
+    const tailorCity = tailorAddress.city;
+
+    // 2. Fetch orders within that city
     const orders = await this._dataReader.queries.order.findMany({
       where: {
         OR: [
           {
             AND: [
               { status: 'waitingForTailorAssignement' },
+              { address: { city: tailorCity } },
               { NOT: { rejectedTailors: { some: { id: tailorId } } } }
             ],
           },
@@ -37,6 +51,7 @@ export class TailorController {
         ],
       },
       include: {
+        address: true,
         items: { include: { sections: { include: { alterations: { include: { informations: true } } } } } },
         customItems: { include: { alterations: { include: { informations: true } } } },
       },

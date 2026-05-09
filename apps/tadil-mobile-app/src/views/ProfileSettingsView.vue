@@ -17,12 +17,51 @@
             {{ authStore.userInfo?.phone }}
           </p>
         </IonCard>
+
+        <!-- Profile Section -->
         <IonCard class="ion-padding">
           <IonItem button lines="none" fill="clear" color="" :detail="false" @click="openUpdateProfileModal">
             <CircleUserRound aria-hidden="true" slot="start" class="me-2" />
             <IonLabel>{{ $t("profileSettings.profile.title") }}</IonLabel>
           </IonItem>
         </IonCard>
+
+        <!-- Address Section -->
+        <IonCard class="ion-padding">
+          <div class="flex justify-between items-center mb-2 px-2">
+            <IonLabel class="font-bold">
+              {{ $t("profileSettings.profile.addresses") }}
+            </IonLabel>
+            <IonButton 
+              v-if="canAddAddress" 
+              fill="clear" 
+              size="small" 
+              @click="openAddressModal()"
+            >
+              <Plus class="w-4 h-4 me-1" />
+              {{ $t("profileSettings.profile.addAddress") }}
+            </IonButton>
+          </div>
+          <IonList lines="full">
+            <div v-if="authStore.userAddresses.length === 0" class="text-center py-4 text-sm text-muted-foreground">
+              {{ $t("profileSettings.profile.noAddresses") }}
+            </div>
+            <IonItem 
+              v-for="address in authStore.userAddresses" 
+              :key="address.id" 
+              button 
+              @click="openAddressModal(address.id)"
+            >
+              <MapPin slot="start" class="me-2 w-5 h-5 text-primary" />
+              <IonLabel>
+                <h2>{{ address.city }}</h2>
+                <p>{{ address.district }} {{ address.street }}</p>
+              </IonLabel>
+              <Settings2 slot="end" class="w-4 h-4 text-muted-foreground" />
+            </IonItem>
+          </IonList>
+        </IonCard>
+
         <IonCard class="ion-padding">
           <IonLabel class="font-bold">
             {{ $t("profileSettings.preferences.title") }}
@@ -58,6 +97,7 @@
             </IonItem>
           </IonList>
         </IonCard>
+
         <IonCard class="ion-padding">
           <IonList lines="none">
             <IonItem button :detail="false" @click="authStore.logout">
@@ -85,6 +125,7 @@ import {
   IonSelectOption,
   IonLabel,
   IonCard,
+  IonButton,
   modalController,
 } from "@ionic/vue";
 import {
@@ -92,16 +133,26 @@ import {
   Languages,
   LogOut,
   Moon,
+  Plus,
+  MapPin,
+  Settings2,
 } from "lucide-vue-next";
 import { SecondaryHeader } from "@/components";
-import { onMounted, ref } from "vue";
+import { onMounted, ref, computed } from "vue";
 import UpdateProfileModal from "./auth/components/UpdateProfileModal.vue";
+import AddressModal from "./auth/components/AddressModal.vue";
 
 const languageStore = useLanguageStore();
 const themeStore = useThemeStore();
 const authStore = useAuthStore();
 
 const isReady = ref(false);
+
+const canAddAddress = computed(() => {
+  if (authStore.userRole === 'customer') return true;
+  // Tailors and Couriers only allowed one address
+  return authStore.userAddresses.length === 0;
+});
 
 async function openUpdateProfileModal() {
   const modal = await modalController.create({
@@ -110,10 +161,21 @@ async function openUpdateProfileModal() {
   modal.present();
 }
 
+async function openAddressModal(addressId?: string) {
+  const modal = await modalController.create({
+    component: AddressModal,
+    componentProps: {
+      addressId
+    }
+  });
+  modal.present();
+}
+
 onMounted(async () => {
   if (!authStore.userInfo) {
     await authStore.fetchProfile();
   }
+  await authStore.fetchAddresses();
   isReady.value = true;
 });
 </script>

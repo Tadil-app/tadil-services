@@ -6,6 +6,9 @@ import {
   UsersRepositoryProvider,
   LoginUseCaseProvider,
   CompleteProfileUseCaseProvider,
+  AddAddressUseCaseProvider,
+  UpdateAddressUseCaseProvider,
+  GetMyAddressesUseCaseProvider,
 } from './auth.providers';
 
 @Module({
@@ -16,6 +19,9 @@ import {
     UsersRepositoryProvider,
     LoginUseCaseProvider,
     CompleteProfileUseCaseProvider,
+    AddAddressUseCaseProvider,
+    UpdateAddressUseCaseProvider,
+    GetMyAddressesUseCaseProvider,
   ],
   exports: [AuthGuard],
 })

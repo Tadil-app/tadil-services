@@ -25,22 +25,37 @@ export class CourierController {
   @ApiOperation({ summary: 'Get available assignments and my active orders' })
   @ApiOkResponse({ type: DisplayOrderDTO, isArray: true })
   async getOrders(@Param('id') courierId: string): Promise<DisplayOrderDTO[]> {
+    // 1. Fetch courier's city
+    const courierAddress = await this._dataReader.queries.address.findFirst({
+      where: { userId: courierId },
+      select: { city: true },
+    });
+
+    if (!courierAddress) {
+      return []; // No address, no orders
+    }
+
+    const courierCity = courierAddress.city;
+
+    // 2. Fetch orders within that city
     const orders = await this._dataReader.queries.order.findMany({
       where: {
         OR: [
-          // Available initial assignments
+          // Available initial assignments in my city
           {
             AND: [
               { status: 'waitingForCourierAssignement' },
+              { address: { city: courierCity } },
               { NOT: { rejectedCouriers: { some: { id: courierId } } } }
             ]
           },
           // My initial active orders
           { assignedCourierId: courierId },
-          // Available return assignments
+          // Available return assignments in my city
           {
             AND: [
               { status: 'waitingForReturnCourierAssignement' },
+              { address: { city: courierCity } },
               { NOT: { rejectedReturnCouriers: { some: { id: courierId } } } }
             ]
           },
@@ -49,6 +64,7 @@ export class CourierController {
         ]
       },
       include: {
+        address: true,
         items: { include: { sections: { include: { alterations: { include: { informations: true } } } } } },
         customItems: { include: { alterations: { include: { informations: true } } } },
       },

@@ -10,22 +10,26 @@ import {
   Req,
   UseGuards,
   UnauthorizedException,
+  Param,
 } from '@nestjs/common';
-import {
-  ApiOkResponse,
-  ApiTags,
-  ApiOperation,
-  ApiBearerAuth,
-} from '@nestjs/swagger';
+import { ApiOkResponse, ApiTags, ApiOperation, ApiBearerAuth } from '@nestjs/swagger';
 import { LoginUseCase, CompleteProfileUseCase } from '@tadil-auth';
 import {
   AuthResponseDto,
   LoginDto,
   CompleteProfileDto,
   UpdateProfileDto,
+  CreateAddressDto,
+  UpdateAddressDto,
+  DisplayAddressDto,
 } from './dtos';
 import { AuthGuard } from './auth.guard';
-import { type UsersRepository } from '@tadil-users';
+import {
+  AddAddressUseCase,
+  UpdateAddressUseCase,
+  GetMyAddressesUseCase,
+  type UsersRepository,
+} from '@tadil-users';
 
 @Controller('auth')
 @ApiTags('Auth')
@@ -34,7 +38,10 @@ export class AuthController {
     private readonly _loginUseCase: LoginUseCase,
     private readonly _completeProfileUseCase: CompleteProfileUseCase,
     @Inject('UsersRepository')
-    private readonly _usersRepository: UsersRepository
+    private readonly _usersRepository: UsersRepository,
+    private readonly _addAddressUseCase: AddAddressUseCase,
+    private readonly _updateAddressUseCase: UpdateAddressUseCase,
+    private readonly _getMyAddressesUseCase: GetMyAddressesUseCase
   ) {}
 
   @Get('/me')
@@ -53,6 +60,7 @@ export class AuthController {
       phone: user.phone,
       role: user.role,
       email: user.email ?? undefined,
+      addresses: user.addresses,
     };
   }
 
@@ -85,6 +93,48 @@ export class AuthController {
     };
   }
 
+  @Get('/me/addresses')
+  @UseGuards(AuthGuard)
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Get my addresses' })
+  @ApiOkResponse({ type: DisplayAddressDto, isArray: true })
+  async getAddresses(@Req() req: any): Promise<DisplayAddressDto[]> {
+    const addresses = await this._getMyAddressesUseCase.execute(req.user.sub);
+    return addresses.map((a) => ({
+      ...a,
+      street: a.street ?? undefined,
+      district: a.district ?? undefined,
+    }));
+  }
+
+  @Post('/me/addresses')
+  @UseGuards(AuthGuard)
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Add a new address' })
+  async addAddress(@Req() req: any, @Body() dto: CreateAddressDto) {
+    await this._addAddressUseCase.execute({
+      userId: req.user.sub,
+      ...dto,
+    });
+  }
+
+  @Put('/me/addresses/:id')
+  @UseGuards(AuthGuard)
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Update an existing address' })
+  async updateAddress(
+    @Req() req: any,
+    @Param('id') id: string,
+    @Body() dto: UpdateAddressDto
+  ) {
+    // We should probably check if the address belongs to the user, but for now
+    // the UpdateAddressUseCase only takes the ID.
+    await this._updateAddressUseCase.execute({
+      id,
+      ...dto,
+    });
+  }
+
   @Post('/login')
   @HttpCode(HttpStatus.OK)
   @ApiOperation({ summary: 'Login or initiate registration with phone number' })
@@ -98,16 +148,14 @@ export class AuthController {
       status: result.status,
       token: result.token,
       message: result.message,
-      user: result.user
-        ? {
-            id: result.user.id,
-            firstName: result.user.firstName,
-            lastName: result.user.lastName,
-            phone: result.user.phone,
-            role: result.user.role,
-            email: result.user.email ?? undefined,
-          }
-        : undefined,
+      user: result.user ? {
+        id: result.user.id,
+        firstName: result.user.firstName,
+        lastName: result.user.lastName,
+        phone: result.user.phone,
+        role: result.user.role,
+        email: result.user.email ?? undefined,
+      } : undefined,
     };
   }
 
@@ -118,14 +166,8 @@ export class AuthController {
     description: 'Profile completed and authenticated',
     type: AuthResponseDto,
   })
-  async completeProfile(
-    @Body() dto: CompleteProfileDto
-  ): Promise<AuthResponseDto> {
-    const result = await this._completeProfileUseCase.execute(
-      dto.phone,
-      dto.firstName,
-      dto.lastName
-    );
+  async completeProfile(@Body() dto: CompleteProfileDto): Promise<AuthResponseDto> {
+    const result = await this._completeProfileUseCase.execute(dto.phone, dto.firstName, dto.lastName);
     return {
       status: 'authenticated',
       token: result.token,

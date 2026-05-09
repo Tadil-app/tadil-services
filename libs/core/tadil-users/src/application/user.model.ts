@@ -13,6 +13,14 @@ export const LOGIN_REQUEST_STATUS = {
 export type LoginRequestStatusType =
   (typeof LOGIN_REQUEST_STATUS)[keyof typeof LOGIN_REQUEST_STATUS];
 
+export interface Address {
+  id: string;
+  city: string;
+  street?: string;
+  district?: string;
+  userId: string;
+}
+
 export interface User {
   id: string;
   firstName: string;
@@ -22,4 +30,5 @@ export interface User {
   email?: string;
   loginRequestStatus?: LoginRequestStatusType;
   loginToken?: string;
+  addresses?: Address[];
 }

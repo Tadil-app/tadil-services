@@ -1,7 +1,18 @@
 import { Api } from "./api-client";
 
-const apiClient = new Api({
+const apiInstance = new Api({
   baseURL: import.meta.env.VITE_TADIL_MOBILE_API_URL,
-}).api;
+  securityWorker: (token) => {
+    if (token) {
+      return {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      };
+    }
+  },
+});
 
-export { apiClient };
+const apiClient = apiInstance.api;
+
+export { apiClient, apiInstance };

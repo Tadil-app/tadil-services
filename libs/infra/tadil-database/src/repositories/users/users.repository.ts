@@ -1,4 +1,4 @@
-import { User, UsersRepository, LoginRequestStatusType } from '@tadil-users';
+import { User, UsersRepository, LoginRequestStatusType, Address } from '@tadil-users';
 import { DbClient } from '../../dbClient';
 
 export class PrismaUsersRepository implements UsersRepository {
@@ -7,6 +7,7 @@ export class PrismaUsersRepository implements UsersRepository {
   async getUserById(id: string): Promise<User | undefined> {
     const user = await this._db.user.findUnique({
       where: { id },
+      include: { addresses: true },
     });
 
     if (!user) return undefined;
@@ -15,12 +16,18 @@ export class PrismaUsersRepository implements UsersRepository {
       email: user.email ?? undefined,
       loginRequestStatus: (user.loginRequestStatus as LoginRequestStatusType) ?? undefined,
       loginToken: user.loginToken ?? undefined,
+      addresses: user.addresses.map((a) => ({
+        ...a,
+        street: a.street ?? undefined,
+        district: a.district ?? undefined,
+      })),
     };
   }
 
   async getUserByPhone(phone: string): Promise<User | undefined> {
     const user = await this._db.user.findUnique({
       where: { phone },
+      include: { addresses: true },
     });
     if (!user) return undefined;
     return {
@@ -28,6 +35,11 @@ export class PrismaUsersRepository implements UsersRepository {
       email: user.email ?? undefined,
       loginRequestStatus: (user.loginRequestStatus as LoginRequestStatusType) ?? undefined,
       loginToken: user.loginToken ?? undefined,
+      addresses: user.addresses.map((a) => ({
+        ...a,
+        street: a.street ?? undefined,
+        district: a.district ?? undefined,
+      })),
     };
   }
 
@@ -36,12 +48,18 @@ export class PrismaUsersRepository implements UsersRepository {
   ): Promise<User[]> {
     const users = await this._db.user.findMany({
       where: { loginRequestStatus: status },
+      include: { addresses: true },
     });
     return users.map((user) => ({
       ...user,
       email: user.email ?? undefined,
       loginRequestStatus: (user.loginRequestStatus as LoginRequestStatusType) ?? undefined,
       loginToken: user.loginToken ?? undefined,
+      addresses: user.addresses.map((a) => ({
+        ...a,
+        street: a.street ?? undefined,
+        district: a.district ?? undefined,
+      })),
     }));
   }
 
@@ -77,6 +95,59 @@ export class PrismaUsersRepository implements UsersRepository {
 
   async deleteUser(id: string): Promise<void> {
     await this._db.user.delete({
+      where: { id },
+    });
+  }
+
+  // Address Management
+  async getAddressesByUserId(userId: string): Promise<Address[]> {
+    const addresses = await this._db.address.findMany({
+      where: { userId },
+    });
+    return addresses.map((a) => ({
+      ...a,
+      street: a.street ?? undefined,
+      district: a.district ?? undefined,
+    }));
+  }
+
+  async getAddressById(id: string): Promise<Address | undefined> {
+    const address = await this._db.address.findUnique({
+      where: { id },
+    });
+    if (!address) return undefined;
+    return {
+      ...address,
+      street: address.street ?? undefined,
+      district: address.district ?? undefined,
+    };
+  }
+
+  async addAddress(address: Address): Promise<void> {
+    await this._db.address.create({
+      data: {
+        id: address.id,
+        city: address.city,
+        street: address.street,
+        district: address.district,
+        userId: address.userId,
+      },
+    });
+  }
+
+  async updateAddress(address: Address): Promise<void> {
+    await this._db.address.update({
+      where: { id: address.id },
+      data: {
+        city: address.city,
+        street: address.street,
+        district: address.district,
+      },
+    });
+  }
+
+  async deleteAddress(id: string): Promise<void> {
+    await this._db.address.delete({
       where: { id },
     });
   }
