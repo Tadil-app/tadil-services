@@ -150,12 +150,12 @@ function initMoyasar() {
   // 1. Inject Styles
   const link = document.createElement('link');
   link.rel = 'stylesheet';
-  link.href = 'https://cdn.moyasar.com/mpf/1.7.3/moyasar.css';
+  link.href = 'https://cdn.jsdelivr.net/npm/moyasar-payment-form@2.2.7/dist/moyasar.css';
   document.head.appendChild(link);
 
   // 2. Inject Script
   const script = document.createElement('script');
-  script.src = 'https://cdn.moyasar.com/mpf/1.7.3/moyasar.js';
+  script.src = 'https://cdn.jsdelivr.net/npm/moyasar-payment-form@2.2.7/dist/moyasar.umd.min.js';
   script.async = true;
   script.onload = () => {
     // @ts-ignore
