@@ -109,7 +109,7 @@ export const useCartStore = defineStore("cart", () => {
   }
 
   async function confirmPayment(orderId: string, paymentId: string) {
-    await apiClient.customerControllerConfirmPayment(orderId, paymentId);
+    await apiClient.customerControllerConfirmPayment(orderId, { paymentId });
     await clearCart();
   }
 

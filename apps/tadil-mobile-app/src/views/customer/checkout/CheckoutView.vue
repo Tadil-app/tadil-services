@@ -63,6 +63,11 @@
         <div v-if="paymentError" class="p-4 bg-danger/10 text-danger rounded-lg text-sm text-center">
           {{ paymentError }}
         </div>
+
+        <!-- Temporary bypass for testing -->
+        <IonButton expand="block" color="secondary" @click="bypassPayment" class="mt-4">
+          Bypass Payment (Testing)
+        </IonButton>
       </div>
 
       <!-- Step 3: Success -->
@@ -141,6 +146,21 @@ async function proceedToPayment() {
       color: "danger",
     });
     toast.present();
+  } finally {
+    isProcessing.value = false;
+  }
+}
+
+async function bypassPayment() {
+  if (!createdOrder.value) return;
+  
+  isProcessing.value = true;
+  try {
+    await cartStore.confirmPayment(createdOrder.value.id, 'fake-payment-id-' + Date.now());
+    step.value = "success";
+  } catch (err) {
+    console.error("Bypass failed", err);
+    paymentError.value = "Failed to bypass payment.";
   } finally {
     isProcessing.value = false;
   }

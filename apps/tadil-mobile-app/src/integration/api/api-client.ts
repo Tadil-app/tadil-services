@@ -15,6 +15,7 @@ import {
   DisplayAlterationDTO,
   DisplayOrderDTO,
   CreateOrderDto,
+  ConfirmPaymentDto,
   LoginDto,
   CompleteProfileDto,
   AuthResponseDto,
@@ -390,17 +391,18 @@ export class Api<
      */
     customerControllerConfirmPayment: (
       orderId: string,
-      paymentId: string,
+      data: ConfirmPaymentDto,
       params: RequestParams = {},
     ) =>
       this.request<void, any>({
         path: `/api/customer/orders/${orderId}/payment`,
         method: "POST",
-        body: paymentId,
+        body: data,
         secure: true,
         type: ContentType.Json,
         ...params,
       }),
+
 
     /**
      * No description

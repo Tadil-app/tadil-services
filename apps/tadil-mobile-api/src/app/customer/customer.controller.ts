@@ -29,6 +29,7 @@ import {
   InformationType,
   ModelCategory,
   CreateOrderDto,
+  ConfirmPaymentDto,
 } from './dtos';
 import { fileUploadLocalPath } from '../utils';
 import { FileInterceptor } from '@nestjs/platform-express';
@@ -70,11 +71,11 @@ export class CustomerController {
   @ApiOperation({ summary: 'Confirm payment for an order' })
   async confirmPayment(
     @Param('orderId') orderId: string,
-    @Body('paymentId') paymentId: string
+    @Body() dto: ConfirmPaymentDto
   ) {
     await this._confirmPaymentUseCase.execute({
       orderId,
-      paymentId,
+      paymentId: dto.paymentId,
     });
   }
 

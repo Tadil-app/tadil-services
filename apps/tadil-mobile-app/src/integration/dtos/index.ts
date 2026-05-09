@@ -168,6 +168,10 @@ export interface CreateOrderDto {
   customItems: any[];
 }
 
+export interface ConfirmPaymentDto {
+  paymentId: string;
+}
+
 export interface LoginDto {
   phone: string;
 }
