@@ -2,6 +2,7 @@ import { Controller, Get, Post, Param, Body, UseGuards } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiBearerAuth } from '@nestjs/swagger';
 import { GetWalletDetailsUseCase, RequestPayoutUseCase } from '@tadil-wallet';
 import { AuthGuard } from '../auth/auth.guard';
+import { RequestPayoutDto } from './dtos';
 
 @Controller('wallet')
 @ApiTags('Wallet')
@@ -23,8 +24,8 @@ export class WalletController {
   @ApiOperation({ summary: 'Submit a payout request' })
   async requestPayout(
     @Param('userId') userId: string,
-    @Body('amount') amount: number
+    @Body() dto: RequestPayoutDto
   ) {
-    await this._requestPayoutUseCase.execute({ userId, amount });
+    await this._requestPayoutUseCase.execute({ userId, amount: dto.amount });
   }
 }

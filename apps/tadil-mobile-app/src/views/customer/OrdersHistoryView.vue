@@ -5,32 +5,38 @@
         :title="$t('customer.ordersHistory.title')"
         :subtitle="$t('customer.ordersHistory.subtitle')"
         default-href="/customer/dashboard"
-        :show-back-button="true"
       />
-      <div class="px-4 pb-2 bg-background">
+      <div class="px-4 pb-4">
         <IonSearchbar
-          show-clear-button="always"
+          class="custom-searchbar"
           :placeholder="$t('customer.ordersHistory.search')"
           v-model="searchFilter"
         />
-        <div class="flex overflow-x-auto pb-2 scrollbar-hide">
-          <div
+
+        <div class="flex gap-2 overflow-x-auto scrollbar-hide py-2">
+          <IonChip
             v-for="status in orderStatus"
             :key="status"
-            class="mx-1 px-4 py-2 text-sm rounded-xl border border-medium/20 text-medium whitespace-nowrap transition-colors active:scale-95"
-            :class="{
-              'bg-primary text-primary-contrast border-primary shadow-sm': status === selectedStatus,
-            }"
+            :outline="selectedStatus !== status"
+            :color="selectedStatus === status ? 'primary' : ''"
             @click="selectedStatus = status"
+            class="transition-all"
           >
-            {{ $t("orderStatus." + status) }}
-          </div>
+            <IonLabel>{{ $t(`orderStatus.${status}`) }}</IonLabel>
+          </IonChip>
         </div>
       </div>
     </IonHeader>
 
-    <IonContent>
-      <div class="px-2 space-y-2 mt-2">
+    <IonContent class="ion-padding">
+      <div v-if="isLoading" class="flex justify-center py-20">
+        <IonSpinner name="crescent" />
+      </div>
+      <div v-else-if="filteredOrders.length === 0" class="text-center py-20 text-muted-foreground">
+        <Package class="mx-auto w-12 h-12 mb-2 opacity-20" />
+        <p>No orders found match your criteria.</p>
+      </div>
+      <div v-else class="space-y-4">
         <OrderListItem
           v-for="order in filteredOrders"
           :key="order.reference"
@@ -38,12 +44,7 @@
           :date="order.date"
           :total-price="order.totalPrice"
           :status="order.status"
-        />
-        
-        <EmptyState
-          v-if="filteredOrders.length === 0"
-          :title="$t('cart.emptyTitle')"
-          :description="$t('cart.emptyDescription')"
+          @click="router.push({ name: 'customer-order-details', params: { orderId: order.reference } })"
         />
       </div>
     </IonContent>
@@ -52,17 +53,23 @@
 
 <script setup lang="ts">
 import {
+  IonChip,
   IonContent,
   IonHeader,
+  IonLabel,
   IonPage,
   IonSearchbar,
+  IonSpinner,
 } from "@ionic/vue";
-import { computed, ref } from "vue";
-import { useCustomerOrders } from "./composables/useCustomerOrders.composable";
+import { computed, ref, onMounted } from "vue";
 import { ORDER_STATUS } from "@/integration/dtos";
-import { OrderListItem, SecondaryHeader, EmptyState } from "@/components";
+import { useCustomerOrders } from "./composables/useCustomerOrders.composable";
+import { SecondaryHeader, OrderListItem } from "@/components";
+import { Package } from "lucide-vue-next";
+import { useRouter } from "vue-router";
 
-const { mockOrders } = useCustomerOrders();
+const router = useRouter();
+const { orders, isLoading, fetchOrders } = useCustomerOrders();
 
 const searchFilter = ref("");
 const orderStatus = [
@@ -74,13 +81,18 @@ const orderStatus = [
 const selectedStatus = ref("all");
 
 const filteredOrders = computed(() => {
-  return mockOrders.value.filter((order) => {
+  return orders.value.filter((order) => {
     const matchesSearch = order.reference
-      .toLocaleLowerCase()
-      .includes(searchFilter.value.toLocaleLowerCase());
-    const matchesStatus = selectedStatus.value === "all" || order.status === selectedStatus.value;
+      .toLowerCase()
+      .includes(searchFilter.value.toLowerCase());
+    const matchesStatus =
+      selectedStatus.value === "all" || order.status === selectedStatus.value;
     return matchesSearch && matchesStatus;
   });
+});
+
+onMounted(() => {
+  fetchOrders();
 });
 </script>
 

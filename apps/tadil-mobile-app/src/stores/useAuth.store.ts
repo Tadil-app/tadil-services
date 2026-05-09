@@ -106,7 +106,7 @@ export const useAuthStore = defineStore("auth", () => {
 
   async function requestPayout(amount: number) {
     if (!userId.value) return;
-    await apiClient.walletControllerRequestPayout(userId.value, amount);
+    await apiClient.walletControllerRequestPayout(userId.value, { amount });
     await fetchWallet();
   }
 

@@ -172,6 +172,10 @@ export interface ConfirmPaymentDto {
   paymentId: string;
 }
 
+export interface RequestPayoutDto {
+  amount: number;
+}
+
 export interface LoginDto {
   phone: string;
 }

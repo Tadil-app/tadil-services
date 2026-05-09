@@ -33,6 +33,12 @@ const routes: Array<RouteRecordRaw> = [
         component: () => import("../views/customer/OrdersHistoryView.vue"),
       },
       {
+        path: "orders/:orderId",
+        name: "customer-order-details",
+        props: true,
+        component: () => import("../views/customer/OrderDetailsView.vue"),
+      },
+      {
         path: "cart",
         name: "customer-cart",
         component: () => import("../views/customer/cart/CartView.vue"),

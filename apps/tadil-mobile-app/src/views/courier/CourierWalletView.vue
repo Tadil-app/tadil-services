@@ -167,7 +167,7 @@ async function submitPayoutRequest() {
   
   isSubmitting.value = true;
   try {
-    await authStore.requestPayout(payoutAmount.value);
+    await authStore.requestPayout(Number(payoutAmount.value));
     isPayoutModalOpen.value = false;
     payoutAmount.value = undefined;
     const toast = await toastController.create({

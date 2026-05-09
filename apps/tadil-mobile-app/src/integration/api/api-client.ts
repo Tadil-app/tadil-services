@@ -16,6 +16,7 @@ import {
   DisplayOrderDTO,
   CreateOrderDto,
   ConfirmPaymentDto,
+  RequestPayoutDto,
   LoginDto,
   CompleteProfileDto,
   AuthResponseDto,
@@ -218,133 +219,6 @@ export class Api<
     /**
      * No description
      *
-     * @tags Courier
-     * @name CourierControllerGetOrders
-     * @request GET:/api/courier/{id}/orders
-     */
-    courierControllerGetOrders: (id: string, params: RequestParams = {}) =>
-      this.request<DisplayOrderDTO[], any>({
-        path: `/api/courier/${id}/orders`,
-        method: "GET",
-        format: "json",
-        ...params,
-      }),
-
-    /**
-     * No description
-     *
-     * @tags Courier
-     * @name CourierControllerAccept
-     * @request POST:/api/courier/{id}/orders/{orderId}/accept
-     */
-    courierControllerAccept: (
-      id: string,
-      orderId: string,
-      query: { isReturn: string },
-      params: RequestParams = {},
-    ) =>
-      this.request<void, any>({
-        path: `/api/courier/${id}/orders/${orderId}/accept`,
-        method: "POST",
-        query: query,
-        ...params,
-      }),
-
-    /**
-     * No description
-     *
-     * @tags Courier
-     * @name CourierControllerDecline
-     * @request POST:/api/courier/{id}/orders/{orderId}/decline
-     */
-    courierControllerDecline: (
-      id: string,
-      orderId: string,
-      query: { isReturn: string },
-      params: RequestParams = {},
-    ) =>
-      this.request<void, any>({
-        path: `/api/courier/${id}/orders/${orderId}/decline`,
-        method: "POST",
-        query: query,
-        ...params,
-      }),
-
-    /**
-     * No description
-     *
-     * @tags Courier
-     * @name CourierControllerPickup
-     * @request POST:/api/courier/{id}/orders/{orderId}/pickup
-     */
-    courierControllerPickup: (
-      id: string,
-      orderId: string,
-      params: RequestParams = {},
-    ) =>
-      this.request<void, any>({
-        path: `/api/courier/${id}/orders/${orderId}/pickup`,
-        method: "POST",
-        ...params,
-      }),
-
-    /**
-     * No description
-     *
-     * @tags Courier
-     * @name CourierControllerDeliver
-     * @request POST:/api/courier/{id}/orders/{orderId}/deliver
-     */
-    courierControllerDeliver: (
-      id: string,
-      orderId: string,
-      params: RequestParams = {},
-    ) =>
-      this.request<void, any>({
-        path: `/api/courier/${id}/orders/${orderId}/deliver`,
-        method: "POST",
-        ...params,
-      }),
-
-    /**
-     * No description
-     *
-     * @tags Tailor
-     * @name TailorControllerConfirmReceipt
-     * @request POST:/api/tailor/{id}/orders/{orderId}/confirm-receipt
-     */
-    tailorControllerConfirmReceipt: (
-      id: string,
-      orderId: string,
-      params: RequestParams = {},
-    ) =>
-      this.request<void, any>({
-        path: `/api/tailor/${id}/orders/${orderId}/confirm-receipt`,
-        method: "POST",
-        ...params,
-      }),
-
-    /**
-     * No description
-     *
-     * @tags Tailor
-     * @name TailorControllerMarkReady
-     * @request POST:/api/tailor/{id}/orders/{orderId}/mark-ready
-     */
-    tailorControllerMarkReady: (
-      id: string,
-      orderId: string,
-      params: RequestParams = {},
-    ) =>
-      this.request<void, any>({
-        path: `/api/tailor/${id}/orders/${orderId}/mark-ready`,
-        method: "POST",
-        ...params,
-      }),
-
-    /**
-     * No description
-     *
      * @tags Customer
      * @name CustomerControllerConfirmReceipt
      * @request POST:/api/customer/orders/{orderId}/confirm-receipt
@@ -356,6 +230,23 @@ export class Api<
       this.request<void, any>({
         path: `/api/customer/orders/${orderId}/confirm-receipt`,
         method: "POST",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Customer
+     * @name CustomerControllerGetOrders
+     * @request GET:/api/customer/orders
+     * @secure
+     */
+    customerControllerGetOrders: (params: RequestParams = {}) =>
+      this.request<DisplayOrderDTO[], any>({
+        path: `/api/customer/orders`,
+        method: "GET",
+        secure: true,
+        format: "json",
         ...params,
       }),
 
@@ -402,7 +293,6 @@ export class Api<
         type: ContentType.Json,
         ...params,
       }),
-
 
     /**
      * No description
@@ -537,6 +427,133 @@ export class Api<
     /**
      * No description
      *
+     * @tags Tailor
+     * @name TailorControllerConfirmReceipt
+     * @request POST:/api/tailor/{id}/orders/{orderId}/confirm-receipt
+     */
+    tailorControllerConfirmReceipt: (
+      id: string,
+      orderId: string,
+      params: RequestParams = {},
+    ) =>
+      this.request<void, any>({
+        path: `/api/tailor/${id}/orders/${orderId}/confirm-receipt`,
+        method: "POST",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Tailor
+     * @name TailorControllerMarkReady
+     * @request POST:/api/tailor/{id}/orders/{orderId}/mark-ready
+     */
+    tailorControllerMarkReady: (
+      id: string,
+      orderId: string,
+      params: RequestParams = {},
+    ) =>
+      this.request<void, any>({
+        path: `/api/tailor/${id}/orders/${orderId}/mark-ready`,
+        method: "POST",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Courier
+     * @name CourierControllerGetOrders
+     * @request GET:/api/courier/{id}/orders
+     */
+    courierControllerGetOrders: (id: string, params: RequestParams = {}) =>
+      this.request<DisplayOrderDTO[], any>({
+        path: `/api/courier/${id}/orders`,
+        method: "GET",
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Courier
+     * @name CourierControllerAccept
+     * @request POST:/api/courier/{id}/orders/{orderId}/accept
+     */
+    courierControllerAccept: (
+      id: string,
+      orderId: string,
+      query: { isReturn: string },
+      params: RequestParams = {},
+    ) =>
+      this.request<void, any>({
+        path: `/api/courier/${id}/orders/${orderId}/accept`,
+        method: "POST",
+        query: query,
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Courier
+     * @name CourierControllerDecline
+     * @request POST:/api/courier/{id}/orders/{orderId}/decline
+     */
+    courierControllerDecline: (
+      id: string,
+      orderId: string,
+      query: { isReturn: string },
+      params: RequestParams = {},
+    ) =>
+      this.request<void, any>({
+        path: `/api/courier/${id}/orders/${orderId}/decline`,
+        method: "POST",
+        query: query,
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Courier
+     * @name CourierControllerPickup
+     * @request POST:/api/courier/{id}/orders/{orderId}/pickup
+     */
+    courierControllerPickup: (
+      id: string,
+      orderId: string,
+      params: RequestParams = {},
+    ) =>
+      this.request<void, any>({
+        path: `/api/courier/${id}/orders/${orderId}/pickup`,
+        method: "POST",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Courier
+     * @name CourierControllerDeliver
+     * @request POST:/api/courier/{id}/orders/{orderId}/deliver
+     */
+    courierControllerDeliver: (
+      id: string,
+      orderId: string,
+      params: RequestParams = {},
+    ) =>
+      this.request<void, any>({
+        path: `/api/courier/${id}/orders/${orderId}/deliver`,
+        method: "POST",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
      * @tags Auth
      * @name AuthControllerGetProfile
      * @request GET:/api/auth/me
@@ -660,13 +677,13 @@ export class Api<
      */
     walletControllerRequestPayout: (
       userId: string,
-      amount: number,
+      data: RequestPayoutDto,
       params: RequestParams = {},
     ) =>
       this.request<void, any>({
         path: `/api/wallet/${userId}/payout`,
         method: "POST",
-        body: amount,
+        body: data,
         secure: true,
         type: ContentType.Json,
         ...params,

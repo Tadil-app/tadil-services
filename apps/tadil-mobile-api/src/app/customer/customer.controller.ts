@@ -30,6 +30,7 @@ import {
   ModelCategory,
   CreateOrderDto,
   ConfirmPaymentDto,
+  DisplayOrderDTO,
 } from './dtos';
 import { fileUploadLocalPath } from '../utils';
 import { FileInterceptor } from '@nestjs/platform-express';
@@ -51,6 +52,24 @@ export class CustomerController {
     private readonly _createOrderUseCase: CreateOrderUseCase,
     private readonly _confirmPaymentUseCase: ConfirmPaymentUseCase
   ) {}
+
+  @Get('orders')
+  @UseGuards(AuthGuard)
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Get all orders for the current customer' })
+  @ApiOkResponse({ type: DisplayOrderDTO, isArray: true })
+  async getOrders(@Req() req: any): Promise<DisplayOrderDTO[]> {
+    const orders = await this._dataReader.queries.order.findMany({
+      where: { customerId: req.user.sub },
+      orderBy: { date: 'desc' },
+      include: {
+        items: { include: { sections: { include: { alterations: { include: { informations: true } } } } } },
+        customItems: { include: { alterations: { include: { informations: true } } } },
+      },
+    });
+
+    return orders.map((order) => this._mapOrder(order));
+  }
 
   @Post('orders')
   @UseGuards(AuthGuard)
@@ -225,5 +244,38 @@ export class CustomerController {
     await this._fileStorageService.uploadFile(imageFileId, imageFile);
 
     return `${process.env.Tadil_MOBILE_API}/api/files/${imageFileId}`;
+  }
+
+  private _mapOrder(order: any): DisplayOrderDTO {
+    return {
+      ...order,
+      items: order.items.map((item: any) => ({
+        ...item,
+        imageFileUrl: `${process.env.Tadil_MOBILE_API}/api/files/${item.imageFileId}`,
+        sections: item.sections.map((section: any) => ({
+          ...section,
+          alterations: section.alterations.map((alt: any) => ({
+            ...alt,
+            informations: alt.informations.map((info: any) => ({
+              ...info,
+              type: info.type as InformationType,
+              unit: info.unit ?? undefined,
+            })),
+          })),
+        })),
+      })),
+      customItems: order.customItems.map((item: any) => ({
+        ...item,
+        imageFileUrl: `${process.env.Tadil_MOBILE_API}/api/files/${item.imageFileId}`,
+        alterations: item.alterations.map((alt: any) => ({
+          ...alt,
+          informations: alt.informations.map((info: any) => ({
+            ...info,
+            type: info.type as InformationType,
+            unit: info.unit ?? undefined,
+          })),
+        })),
+      })),
+    };
   }
 }
