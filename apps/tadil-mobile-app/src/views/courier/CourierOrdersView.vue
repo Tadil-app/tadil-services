@@ -40,7 +40,7 @@
       </div>
       
       <div v-else-if="filteredOrders.length === 0" class="text-center py-20 text-muted-foreground bg-gray-50 mx-4 rounded-2xl mt-4">
-        <p>No orders found</p>
+        <p>{{ $t("courier.orders.noOrders") }}</p>
       </div>
 
       <div v-else class="px-2 space-y-2 mt-2">

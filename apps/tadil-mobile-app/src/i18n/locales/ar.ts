@@ -16,6 +16,7 @@ export const ar = {
     },
     price: "السعر",
     optional: "اختياري",
+    noAddress: "لا يوجد عنوان",
     buttons: {
       save: "حفظ",
       cancel: "إلغاء",
@@ -23,6 +24,10 @@ export const ar = {
       transfer: "تحويل",
       leave: "مغادرة",
       change: "تغيير",
+    },
+    messages: {
+      actionSuccess: "تمت العملية بنجاح",
+      actionError: "فشلت العملية",
     },
     inputs: {
       imageInput: {
@@ -113,6 +118,7 @@ export const ar = {
       city: "المدينة",
       district: "الحي",
       street: "الشارع",
+      updateError: "فشل تحديث الملف الشخصي",
     },
     preferences: {
       title: "التفضيلات",
@@ -213,11 +219,37 @@ export const ar = {
     dashboard: {
       title: "لوحة التحكم الخاصة بي",
       recentOrders: "الطلبات الحديثة",
+      noOrders: "لا توجد طلبات بعد.",
     },
     ordersHistory: {
       title: "سجل الطلبات",
       subtitle: "تتبع طلبات التعديل الخاصة بك",
       search: "بحث برقم المرجع...",
+      noOrders: "لم يتم العثور على طلبات تطابق معاييرك.",
+    },
+    orderDetails: {
+      confirmReceipt: "تأكيد استلام الطلب من المندوب",
+      confirmReceiptSuccess: "تم تأكيد الاستلام. الطلب مكتمل الآن!",
+      confirmReceiptError: "فشل تأكيد الاستلام. يرجى المحاولة مرة أخرى.",
+    },
+  },
+  checkout: {
+    address: {
+      title: "اختر عنوان التوصيل",
+      empty: "لم تقم بإضافة أي عناوين بعد.",
+      addInProfile: "أضف عنواناً في الملف الشخصي",
+    },
+    orderInfo: {
+      reference: "مرجع الطلب:",
+      totalAmount: "المبلغ الإجمالي:",
+    },
+    success: {
+      title: "تم تقديم الطلب!",
+      message: "تم تقديم طلبك رقم #{reference} بنجاح وهو في انتظار تعيين الخياط.",
+    },
+    buttons: {
+      proceedToPayment: "المتابعة للدفع",
+      bypassPayment: "تجاوز الدفع (للتجربة)",
     },
   },
   chat: {
@@ -277,6 +309,32 @@ export const ar = {
         successMessage: "تم انهاء الطلب بنجاح",
         errorMessage: "حدث خطأ اثناء انهاء الطلب",
       },
+    },
+  },
+  courier: {
+    dashboard: {
+      noPendingPickups: "لا توجد استلامات معلقة متاحة",
+    },
+    orders: {
+      noOrders: "لم يتم العثور على طلبات",
+      newAssignment: "مهمة جديدة",
+      returnTrip: "رحلة عودة",
+    },
+    orderDetails: {
+      confirmPickup: "تأكيد الاستلام",
+      markAsDelivered: "تحديد كتم التسليم",
+      deliveryAddress: "عنوان التوصيل",
+    },
+  },
+  wallet: {
+    noTransactions: "لم يتم العثور على معاملات",
+    payoutRequest: {
+      title: "طلب سحب",
+      amountLabel: "المبلغ المراد سحبه",
+      submit: "تقديم الطلب",
+      success: "تم تقديم طلب السحب بنجاح",
+      error: "فشل تقديم طلب السحب",
+      availableBalance: "الرصيد المتاح",
     },
   },
 };

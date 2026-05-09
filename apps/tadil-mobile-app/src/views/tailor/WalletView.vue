@@ -10,8 +10,8 @@
         class="ion-padding ion-margin bg-light/20"
       >
         <div>
-          <p class="text-sm">{{ $t("tailor.wallet.currentBalance") }}</p>
-          <p class="text-2xl font-semibold mt-2 mb-4">
+          <p class="text-sm text-white">{{ $t("tailor.wallet.currentBalance") }}</p>
+          <p class="text-2xl font-semibold mt-2 mb-4 text-white">
             {{ $t("common.currencies.sar") }} {{ authStore.walletDetails?.balance || 0 }}
           </p>
           <IonButton 
@@ -20,7 +20,7 @@
             @click="isPayoutModalOpen = true"
             :disabled="!authStore.walletDetails?.balance"
           >
-            {{ $t("common.buttons.transfer") }}
+            {{ $t("wallet.payoutRequest.title") }}
           </IonButton>
         </div>
       </IonCard>
@@ -49,7 +49,7 @@
           {{ $t("tailor.wallet.recentTransaction") }}
         </p>
         <div v-if="transactions.length === 0" class="text-center py-10 text-muted-foreground">
-          <p>No transactions found</p>
+          <p>{{ $t("wallet.noTransactions") }}</p>
         </div>
         <IonCard
           v-for="trx in transactions"
@@ -59,29 +59,28 @@
           <div class="flex gap-2 items-center">
             <ArrowDown
               v-if="trx.type === 'EARNING'"
-              class="text-success bg-success/10 rounded-full p-1"
+              class="text-success bg-success/10 rounded-full p-1 w-8 h-8"
             />
-            <ArrowUp v-else class="text-danger bg-danger/10 rounded-full p-1" />
+            <ArrowUp v-else class="text-danger bg-danger/10 rounded-full p-1 w-8 h-8" />
             <div>
-              <p class="font-semibold">
+              <p class="font-semibold text-sm">
                 {{
                   trx.type === "EARNING"
                     ? $t("tailor.wallet.payementRecieved")
                     : $t("tailor.wallet.transferSent")
                 }}
               </p>
-              <p class="text-xs font-light">{{ formatDate(trx.date) }}</p>
+              <p class="text-xs font-light text-muted-foreground">{{ formatDate(trx.date) }}</p>
             </div>
           </div>
           <p
-            class="font-semibold"
+            class="font-bold"
             :class="{
               'text-success': trx.type === 'EARNING',
               'text-danger': trx.type === 'PAYOUT',
             }"
           >
             {{ trx.type === "EARNING" ? "+" : "-" }}{{ trx.amount }}
-            {{ $t("common.currencies.sar") }}
           </p>
         </IonCard>
       </div>
@@ -90,19 +89,19 @@
       <IonModal :is-open="isPayoutModalOpen" @didDismiss="isPayoutModalOpen = false">
         <IonHeader>
           <IonToolbar>
-            <IonTitle>Request Payout</IonTitle>
+            <IonTitle>{{ $t("wallet.payoutRequest.title") }}</IonTitle>
             <IonButtons slot="end">
-              <IonButton @click="isPayoutModalOpen = false">Close</IonButton>
+              <IonButton @click="isPayoutModalOpen = false">{{ $t("common.buttons.cancel") }}</IonButton>
             </IonButtons>
           </IonToolbar>
         </IonHeader>
         <IonContent class="ion-padding">
           <div class="space-y-6">
-            <p class="text-sm text-muted-foreground">
-              Available balance: {{ authStore.walletDetails?.balance || 0 }} SAR
+            <p class="text-sm text-muted-foreground text-center">
+              {{ $t("wallet.payoutRequest.availableBalance") }}: {{ authStore.walletDetails?.balance || 0 }} {{ $t("common.currencies.sar") }}
             </p>
             <IonItem>
-              <IonLabel position="stacked">Amount to Withdraw</IonLabel>
+              <IonLabel position="stacked">{{ $t("wallet.payoutRequest.amountLabel") }}</IonLabel>
               <IonInput 
                 v-model="payoutAmount" 
                 type="number" 
@@ -116,7 +115,7 @@
               :disabled="!payoutAmount || payoutAmount <= 0 || payoutAmount > (authStore.walletDetails?.balance || 0) || isSubmitting"
             >
               <IonSpinner v-if="isSubmitting" name="crescent" />
-              <span v-else>Submit Request</span>
+              <span v-else>{{ $t("wallet.payoutRequest.submit") }}</span>
             </IonButton>
           </div>
         </IonContent>
@@ -147,7 +146,9 @@ import { computed, ref, onMounted } from "vue";
 import { SecondaryHeader } from "@/components";
 import { useAuthStore } from "@/stores";
 import { formatDate } from "@/utils";
+import { useI18n } from "vue-i18n";
 
+const { t } = useI18n();
 const authStore = useAuthStore();
 const isPayoutModalOpen = ref(false);
 const payoutAmount = ref<number>();
@@ -176,7 +177,7 @@ async function submitPayoutRequest() {
     isPayoutModalOpen.value = false;
     payoutAmount.value = undefined;
     const toast = await toastController.create({
-      message: "Payout request submitted successfully",
+      message: t("wallet.payoutRequest.success"),
       duration: 2000,
       color: "success",
     });
@@ -184,7 +185,7 @@ async function submitPayoutRequest() {
   } catch (error) {
     console.error("Payout request failed", error);
     const toast = await toastController.create({
-      message: "Failed to submit payout request",
+      message: t("wallet.payoutRequest.error"),
       duration: 2000,
       color: "danger",
     });

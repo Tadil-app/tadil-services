@@ -4,11 +4,11 @@
     <IonContent class="ion-padding">
       <!-- Step 1: Address Selection -->
       <div v-if="step === 'address'" class="space-y-6">
-        <h2 class="text-xl font-bold">Select Delivery Address</h2>
+        <h2 class="text-xl font-bold">{{ $t("checkout.address.title") }}</h2>
         <div v-if="authStore.userAddresses.length === 0" class="text-center py-10 bg-gray-50 rounded-2xl">
           <MapPin class="mx-auto w-12 h-12 text-muted-foreground mb-2" />
-          <p>You haven't added any addresses yet.</p>
-          <IonButton fill="clear" @click="goToProfile">Add Address in Profile</IonButton>
+          <p>{{ $t("checkout.address.empty") }}</p>
+          <IonButton fill="clear" @click="goToProfile">{{ $t("checkout.address.addInProfile") }}</IonButton>
         </div>
         <div v-else class="space-y-4">
           <IonCard
@@ -40,7 +40,7 @@
             @click="proceedToPayment"
           >
             <IonSpinner v-if="isProcessing" name="crescent" />
-            <span v-else>Proceed to Payment</span>
+            <span v-else>{{ $t("checkout.buttons.proceedToPayment") }}</span>
           </IonButton>
         </div>
       </div>
@@ -49,12 +49,12 @@
       <div v-if="step === 'payment'" class="space-y-6">
         <div class="bg-gray-50 p-4 rounded-xl mb-6">
           <div class="flex justify-between mb-2">
-            <span>Order Reference:</span>
+            <span>{{ $t("checkout.orderInfo.reference") }}</span>
             <span class="font-bold">#{{ createdOrder?.reference }}</span>
           </div>
           <div class="flex justify-between">
-            <span>Total Amount:</span>
-            <span class="font-bold text-primary">{{ createdOrder?.totalPrice }} SAR</span>
+            <span>{{ $t("checkout.orderInfo.totalAmount") }}</span>
+            <span class="font-bold text-primary">{{ createdOrder?.totalPrice }} {{ $t("common.currencies.sar") }}</span>
           </div>
         </div>
 
@@ -66,7 +66,7 @@
 
         <!-- Temporary bypass for testing -->
         <IonButton expand="block" color="secondary" @click="bypassPayment" class="mt-4">
-          Bypass Payment (Testing)
+          {{ $t("checkout.buttons.bypassPayment") }}
         </IonButton>
       </div>
 
@@ -76,13 +76,13 @@
           <Check class="w-12 h-12 text-success" />
         </div>
         <div>
-          <h2 class="text-2xl font-bold">Order Placed!</h2>
+          <h2 class="text-2xl font-bold">{{ $t("checkout.success.title") }}</h2>
           <p class="text-muted-foreground mt-2">
-            Your order #{{ createdOrder?.reference }} has been successfully placed and is pending tailor assignment.
+            {{ $t("checkout.success.message", { reference: createdOrder?.reference }) }}
           </p>
         </div>
         <IonButton expand="block" class="w-full" @click="goToOrders">
-          View My Orders
+          {{ $t("customer.ordersHistory.title") }}
         </IonButton>
       </div>
     </IonContent>
@@ -104,7 +104,9 @@ import { useAuthStore, useCartStore } from "@/stores";
 import { useRouter } from "vue-router";
 import { MapPin, Check } from "lucide-vue-next";
 import { DisplayOrderDTO } from "@/integration/dtos";
+import { useI18n } from "vue-i18n";
 
+const { t } = useI18n();
 const authStore = useAuthStore();
 const cartStore = useCartStore();
 const router = useRouter();
@@ -116,9 +118,9 @@ const createdOrder = ref<DisplayOrderDTO | null>(null);
 const paymentError = ref("");
 
 const stepTitle = computed(() => {
-  if (step.value === "address") return "Checkout - Address";
-  if (step.value === "payment") return "Checkout - Payment";
-  return "Checkout Success";
+  if (step.value === "address") return t("checkout.address.title");
+  if (step.value === "payment") return t("tailor.orderDetails.title");
+  return t("checkout.success.title");
 });
 
 function goToProfile() {

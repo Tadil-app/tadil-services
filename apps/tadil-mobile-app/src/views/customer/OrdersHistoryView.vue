@@ -34,7 +34,7 @@
       </div>
       <div v-else-if="filteredOrders.length === 0" class="text-center py-20 text-muted-foreground">
         <Package class="mx-auto w-12 h-12 mb-2 opacity-20" />
-        <p>No orders found match your criteria.</p>
+        <p>{{ $t("customer.ordersHistory.noOrders") }}</p>
       </div>
       <div v-else class="space-y-4">
         <OrderListItem

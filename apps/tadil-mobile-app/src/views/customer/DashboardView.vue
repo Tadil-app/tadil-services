@@ -36,7 +36,7 @@
           <IonSpinner name="crescent" />
         </div>
         <div v-else-if="orders.length === 0" class="text-center py-10 text-muted-foreground bg-gray-50 rounded-2xl">
-          <p>No orders yet.</p>
+          <p>{{ $t("customer.dashboard.noOrders") }}</p>
         </div>
         <div v-else class="space-y-4">
           <OrderListItem

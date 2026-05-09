@@ -35,13 +35,13 @@
         <IonCard class="ion-padding space-y-2">
           <h3 class="font-bold flex items-center gap-2">
             <MapPin class="w-4 h-4 text-primary" />
-            Delivery Address
+            {{ $t("courier.orderDetails.deliveryAddress") }}
           </h3>
           <div v-if="order.address" class="text-sm">
             <p class="font-medium">{{ order.address.city }}</p>
             <p class="text-muted-foreground">{{ order.address.district }} {{ order.address.street }}</p>
           </div>
-          <p v-else class="text-sm text-muted-foreground italic">No address provided</p>
+          <p v-else class="text-sm text-muted-foreground italic">{{ $t("common.noAddress") }}</p>
         </IonCard>
 
         <!-- Order Items -->
@@ -88,10 +88,10 @@
         <div class="space-y-3 pb-10">
           <div v-if="isPendingAssignment" class="grid grid-cols-2 gap-4">
             <IonButton expand="block" color="danger" fill="outline" @click="handleDecline" :disabled="isActionLoading">
-              Decline
+              {{ $t("tailor.orderDetails.declineOrder.buttonText") }}
             </IonButton>
             <IonButton expand="block" color="success" @click="handleAccept" :disabled="isActionLoading">
-              Accept
+              {{ $t("tailor.orderDetails.acceptOrder.buttonText") }}
             </IonButton>
           </div>
 
@@ -103,7 +103,7 @@
             :disabled="isActionLoading"
           >
             <IonSpinner v-if="isActionLoading" name="crescent" />
-            <span v-else>Confirm Pickup</span>
+            <span v-else>{{ $t("courier.orderDetails.confirmPickup") }}</span>
           </IonButton>
 
           <IonButton
@@ -114,7 +114,7 @@
             :disabled="isActionLoading"
           >
             <IonSpinner v-if="isActionLoading" name="crescent" />
-            <span v-else>Mark as Delivered</span>
+            <span v-else>{{ $t("courier.orderDetails.markAsDelivered") }}</span>
           </IonButton>
         </div>
       </template>
@@ -129,8 +129,6 @@ import {
   IonContent,
   IonPage,
   IonSpinner,
-  IonBadge,
-  toastController,
 } from "@ionic/vue";
 import { onMounted, ref, computed } from "vue";
 import { useRoute, useRouter } from "vue-router";
@@ -143,7 +141,9 @@ import { useToast } from "@/composables";
 import { apiClient } from "@/integration/api";
 import { useAuthStore } from "@/stores";
 import { ImageContainer, TranslatedName, StatusPill, SecondaryHeader } from "@/components";
+import { useI18n } from "vue-i18n";
 
+const { t } = useI18n();
 const route = useRoute();
 const router = useRouter();
 const authStore = useAuthStore();
@@ -190,12 +190,14 @@ async function fetchOrder() {
 }
 
 async function handleAccept() {
+  if (!order.value) return;
   await performAction(() => 
     apiClient.courierControllerAccept(authStore.userId, order.value!.id, { isReturn: String(isReturnTrip.value) })
   );
 }
 
 async function handleDecline() {
+  if (!order.value) return;
   await performAction(() => 
     apiClient.courierControllerDecline(authStore.userId, order.value!.id, { isReturn: String(isReturnTrip.value) })
   );
@@ -203,12 +205,14 @@ async function handleDecline() {
 }
 
 async function handlePickup() {
+  if (!order.value) return;
   await performAction(() => 
     apiClient.courierControllerPickup(authStore.userId, order.value!.id)
   );
 }
 
 async function handleDeliver() {
+  if (!order.value) return;
   await performAction(() => 
     apiClient.courierControllerDeliver(authStore.userId, order.value!.id)
   );
@@ -219,10 +223,10 @@ async function performAction(action: () => Promise<any>) {
   try {
     await action();
     await fetchOrder();
-    showToast({ message: "Action successful" });
+    showToast({ message: t("common.messages.actionSuccess") });
   } catch (error) {
     console.error("Action failed", error);
-    showToast({ message: "Action failed", color: "danger" });
+    showToast({ message: t("common.messages.actionError"), color: "danger" });
   } finally {
     isActionLoading.value = false;
   }

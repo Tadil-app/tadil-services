@@ -67,9 +67,12 @@ import {
   IonButton,
   IonSpinner,
   modalController,
+  toastController,
 } from "@ionic/vue";
 import { reactive, ref, onMounted } from "vue";
+import { useI18n } from "vue-i18n";
 
+const { t } = useI18n();
 const authStore = useAuthStore();
 const isLoading = ref(false);
 
@@ -102,6 +105,12 @@ async function handleUpdate() {
     closeModal();
   } catch (error) {
     console.error("Failed to update profile", error);
+    const toast = await toastController.create({
+      message: t("profileSettings.profile.updateError"),
+      duration: 2000,
+      color: "danger",
+    });
+    toast.present();
   } finally {
     isLoading.value = false;
   }

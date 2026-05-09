@@ -16,12 +16,14 @@ export const bn = {
     },
     price: "মূল্য",
     optional: "ঐচ্ছিক",
+    noAddress: "কোন ঠিকানা প্রদান করা হয়নি",
     buttons: {
       save: "সংরক্ষণ করুন",
       cancel: "বাতিল করুন",
       addToCart: "কার্টে যোগ করুন",
       leave: "ত্যাগ করুন",
       change: "পরিবর্তন করুন",
+      transfer: "স্থানান্তর করুন",
     },
     inputs: {
       imageInput: {
@@ -50,6 +52,10 @@ export const bn = {
       },
       noAlterations: "দয়া করে অন্তত একটি পরিবর্তন যোগ করুন।",
       itemAdded: "আইটেম সফলভাবে কার্টে যোগ করা হয়েছে।",
+    },
+    messages: {
+      actionSuccess: "কাজটি সফল হয়েছে",
+      actionError: "কাজটি ব্যর্থ হয়েছে",
     },
     errors: {
       voiceRecorder: {
@@ -112,6 +118,7 @@ export const bn = {
       city: "শহর",
       district: "জেলা",
       street: "রাস্তা",
+      updateError: "প্রোফাইল আপডেট করতে ব্যর্থ হয়েছে",
     },
     preferences: {
       title: "পছন্দসমূহ",
@@ -212,11 +219,37 @@ export const bn = {
     dashboard: {
       title: "আমার ড্যাশবোর্ড",
       recentOrders: "সাম্প্রতিক অর্ডার",
+      noOrders: "এখনও কোন অর্ডার নেই।",
     },
     ordersHistory: {
       title: "অর্ডারের ইতিহাস",
       subtitle: "আপনার সব টেইলরিং অনুরোধ ট্র্যাক করুন",
       search: "রেফারেন্স দিয়ে খুঁজুন...",
+      noOrders: "আপনার মানদণ্ডের সাথে মেলে এমন কোনো অর্ডার পাওয়া যায়নি।",
+    },
+    orderDetails: {
+      confirmReceipt: "কুরিয়ার থেকে রসিদ নিশ্চিত করুন",
+      confirmReceiptSuccess: "রসিদ নিশ্চিত করা হয়েছে। অর্ডার এখন সম্পন্ন!",
+      confirmReceiptError: "রসিদ নিশ্চিত করতে ব্যর্থ হয়েছে। অনুগ্রহ করে আবার চেষ্টা করুন।",
+    },
+  },
+  checkout: {
+    address: {
+      title: "ডেলিভারি ঠিকানা নির্বাচন করুন",
+      empty: "আপনি এখনও কোন ঠিকানা যোগ করেননি।",
+      addInProfile: "প্রোফাইলে ঠিকানা যোগ করুন",
+    },
+    orderInfo: {
+      reference: "অর্ডার রেফারেন্স:",
+      totalAmount: "মোট পরিমাণ:",
+    },
+    success: {
+      title: "অর্ডার সম্পন্ন!",
+      message: "আপনার অর্ডার #{reference} সফলভাবে সম্পন্ন হয়েছে এবং দর্জি নিয়োগের অপেক্ষায় আছে।",
+    },
+    buttons: {
+      proceedToPayment: "পেমেন্টে এগিয়ে যান",
+      bypassPayment: "পেমেন্ট বাইপাস করুন (টেস্টিং)",
     },
   },
   chat: {
@@ -225,6 +258,32 @@ export const bn = {
     mockMessages: {
       customer: "হ্যালো, আপনি কি এটি করতে পারবেন?",
       tailor: "হ্যাঁ অবশ্যই, আমরা আপনার জন্য এটি করতে পারি।",
+    },
+  },
+  courier: {
+    dashboard: {
+      noPendingPickups: "কোন পেন্ডিং পিকআপ নেই",
+    },
+    orders: {
+      noOrders: "কোন অর্ডার পাওয়া যায়নি",
+      newAssignment: "নতুন অ্যাসাইনমেন্ট",
+      returnTrip: "ফেরত ট্রিপ",
+    },
+    orderDetails: {
+      confirmPickup: "পিকআপ নিশ্চিত করুন",
+      markAsDelivered: "ডেলিভারি হিসেবে চিহ্নিত করুন",
+      deliveryAddress: "ডেলিভারি ঠিকানা",
+    },
+  },
+  wallet: {
+    noTransactions: "কোন লেনদেন পাওয়া যায়নি",
+    payoutRequest: {
+      title: "পেআউট অনুরোধ",
+      amountLabel: "উত্তোলনের পরিমাণ",
+      submit: "অনুরোধ জমা দিন",
+      success: "পেআউট অনুরোধ সফলভাবে জমা দেওয়া হয়েছে",
+      error: "পেআউট অনুরোধ জমা দিতে ব্যর্থ হয়েছে",
+      availableBalance: "উপলব্ধ ব্যালেন্স",
     },
   },
 };

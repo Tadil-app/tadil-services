@@ -16,12 +16,14 @@ export const ur = {
     },
     price: "قیمت",
     optional: "اختیاری",
+    noAddress: "کوئی پتہ فراہم نہیں کیا گیا",
     buttons: {
       save: "محفوظ کریں",
       cancel: "منسوخ کریں",
       addToCart: "کارٹ میں شامل کریں",
       leave: "چھوڑ دیں",
       change: "تبدیل کریں",
+      transfer: "منتقل کریں",
     },
     inputs: {
       imageInput: {
@@ -50,6 +52,10 @@ export const ur = {
       },
       noAlterations: "براہ کرم کم از کم ایک تبدیلی شامل کریں۔",
       itemAdded: "آئٹم کامیابی کے ساتھ کارٹ میں شامل کر دیا گیا۔",
+    },
+    messages: {
+      actionSuccess: "عمل کامیاب رہا",
+      actionError: "عمل ناکام رہا",
     },
     errors: {
       voiceRecorder: {
@@ -112,6 +118,7 @@ export const ur = {
       city: "شہر",
       district: "ضلع",
       street: "سڑک",
+      updateError: "پروفائل اپ ڈیٹ کرنے میں ناکام",
     },
     preferences: {
       title: "ترجیحات",
@@ -212,11 +219,122 @@ export const ur = {
     dashboard: {
       title: "میرا ڈیش بورڈ",
       recentOrders: "حالیہ آرڈرز",
+      noOrders: "ابھی تک کوئی آرڈر نہیں ہے۔",
     },
     ordersHistory: {
       title: "آرڈر کی تاریخ",
       subtitle: "اپنی تمام سلائی کی درخواستوں کو ٹریک کریں",
       search: "حوالہ کے ذریعے تلاش کریں...",
+      noOrders: "آپ کے معیار سے مطابقت رکھنے والے کوئی آرڈر نہیں ملے۔",
+    },
+    orderDetails: {
+      confirmReceipt: "کوریئر سے وصولی کی تصدیق کریں",
+      confirmReceiptSuccess: "وصولی کی تصدیق ہو گئی! آرڈر اب مکمل ہو گیا ہے!",
+      confirmReceiptError: "وصولی کی تصدیق کرنے میں ناکام۔ براہ کرم دوبارہ کوشش کریں۔",
+    },
+  },
+  checkout: {
+    address: {
+      title: "ڈیلیوری ایڈریس منتخب کریں",
+      empty: "آپ نے ابھی تک کوئی پتہ شامل نہیں کیا ہے۔",
+      addInProfile: "پروفائل میں پتہ شامل کریں",
+    },
+    orderInfo: {
+      reference: "آرڈر کا حوالہ:",
+      totalAmount: "کل رقم:",
+    },
+    success: {
+      title: "آرڈر دے دیا گیا!",
+      message: "آپ کا آرڈر نمبر #{reference} کامیابی کے ساتھ دے دیا گیا ہے اور درزی کے تعین کا منتظر ہے۔",
+    },
+    buttons: {
+      proceedToPayment: "ادائیگی کے لیے آگے بڑھیں",
+      bypassPayment: "ادائیگی نظر انداز کریں (ٹیسٹنگ)",
+    },
+  },
+  chat: {
+    placeholder: "پیغام لکھیں...",
+    recording: "ریکارڈنگ ہو رہی ہے...",
+    mockMessages: {
+      customer: "ہیلو، کیا آپ یہ کر سکتے ہیں؟",
+      tailor: "جی بالکل، ہم آپ کے لیے یہ کر سکتے ہیں۔",
+    },
+  },
+  tailor: {
+    navBar: {
+      dashboard: "ڈیش بورڈ",
+      orders: "آرڈرز",
+      wallet: "والٹ",
+    },
+    dashboard: {
+      title: "خلاصہ",
+    },
+    orders: {
+      title: "آرڈرز کی فہرست",
+      subtitle: "اپنے آرڈرز کا انتظام کریں",
+      search: "آرڈرز تلاش کریں...",
+    },
+    wallet: {
+      title: "والٹ",
+      subtitle: "اپنے والٹ کا انتظام کریں",
+      currentBalance: "موجودہ بیلنس",
+      income: "آمدنی",
+      transfers: "منتقلی",
+      recentTransaction: "حالیہ لین دین",
+      payementRecieved: "ادائیگی موصول ہوئی",
+      transferSent: "منتقلی بھیجی گئی",
+    },
+    orderDetails: {
+      title: "آرڈر کی تفصیلات",
+      reference: "آرڈر کا حوالہ",
+      referenceLabel: "حوالہ",
+      alterations: {
+        title: "تبدیلیاں",
+      },
+      chat: {
+        title: "گاہک کے ساتھ چیٹ",
+      },
+      acceptOrder: {
+        buttonText: "آرڈر قبول کریں",
+        successMessage: "آرڈر کامیابی سے قبول کر لیا گیا",
+        errorMessage: "آرڈر قبول کرنے میں خرابی",
+      },
+      declineOrder: {
+        buttonText: "آرڈر مسترد کریں",
+        successMessage: "آرڈر کامیابی سے مسترد کر دیا گیا",
+        errorMessage: "آرڈر مسترد کرنے میں خرابی",
+      },
+      markAsCompleted: {
+        buttonText: "مکمل نشان زد کریں",
+        successMessage: "آرڈر کامیابی سے مکمل نشان زد کر دیا گیا",
+        errorMessage: "آرڈر مکمل نشان زد کرنے میں خرابی",
+      },
+    },
+  },
+  courier: {
+    dashboard: {
+      noPendingPickups: "کوئی زیر التواء پک اپ دستیاب نہیں ہے",
+    },
+    orders: {
+      noOrders: "کوئی آرڈر نہیں ملا",
+      newAssignment: "نئی تفویض",
+      returnTrip: "واپسی کا سفر",
+    },
+    orderDetails: {
+      confirmPickup: "پک اپ کی تصدیق کریں",
+      markAsDelivered: "ڈیلیور شدہ نشان زد کریں",
+      deliveryAddress: "ڈیلیوری ایڈریس",
+    },
+  },
+  wallet: {
+    noTransactions: "کوئی لین دین نہیں ملا",
+    payoutRequest: {
+      title: "رقم نکالنے کی درخواست",
+      amountLabel: "نکالنے کی رقم",
+      submit: "درخواست جمع کرائیں",
+      success: "رقم نکالنے کی درخواست کامیابی سے جمع کرائی گئی",
+      error: "رقم نکالنے کی درخواست جمع کرانے میں ناکام",
+      availableBalance: "دستیاب بیلنس",
     },
   },
 };

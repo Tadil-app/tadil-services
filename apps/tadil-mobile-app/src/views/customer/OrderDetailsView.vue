@@ -79,7 +79,7 @@
         <div v-if="order.status === ORDER_STATUS.WAITING_FOR_DROPOFF_TO_CUSTOMER" class="pt-4">
           <IonButton expand="block" color="success" @click="confirmReceipt" :disabled="isActionLoading">
             <IonSpinner v-if="isActionLoading" name="crescent" />
-            <span v-else>Confirm Receipt from Courier</span>
+            <span v-else>{{ $t("customer.orderDetails.confirmReceipt") }}</span>
           </IonButton>
         </div>
       </template>
@@ -97,6 +97,7 @@ import { DisplayOrderDTO, ORDER_STATUS } from "@/integration/dtos";
 import { useCustomerOrders } from "./composables/useCustomerOrders.composable";
 import { formatDate } from "@/utils";
 import { useToast } from "@/composables";
+import { useI18n } from "vue-i18n";
 import { apiClient } from "@/integration/api";
 import { ImageContainer, TranslatedName, StatusPill, SecondaryHeader } from "@/components";
 
@@ -104,6 +105,7 @@ const props = defineProps<{
   orderId: string;
 }>();
 
+const { t } = useI18n();
 const { showToast } = useToast();
 const router = useRouter();
 

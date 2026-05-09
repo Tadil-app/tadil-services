@@ -40,7 +40,7 @@
           <IonSpinner name="crescent" />
         </div>
         <div v-else-if="pendingPickups.length === 0" class="text-center py-10 text-muted-foreground bg-gray-50 mx-4 rounded-2xl">
-          <p>No pending pickups available</p>
+          <p>{{ $t("courier.dashboard.noPendingPickups") }}</p>
         </div>
         <div v-else class="px-2 space-y-2">
           <OrderListItem

@@ -16,12 +16,14 @@ export const hi = {
     },
     price: "कीमत",
     optional: "वैकल्पिक",
+    noAddress: "कोई पता नहीं दिया गया",
     buttons: {
       save: "सहेजें",
       cancel: "रद्द करें",
       addToCart: "कार्ट में डालें",
       leave: "छोड़ें",
       change: "बदलें",
+      transfer: "स्थानांतरण",
     },
     inputs: {
       imageInput: {
@@ -50,6 +52,10 @@ export const hi = {
       },
       noAlterations: "कृपया कम से कम एक बदलाव जोड़ें।",
       itemAdded: "आइटम सफलतापूर्वक कार्ट में जोड़ दिया गया।",
+    },
+    messages: {
+      actionSuccess: "कार्य सफल रहा",
+      actionError: "कार्य विफल रहा",
     },
     errors: {
       voiceRecorder: {
@@ -112,6 +118,7 @@ export const hi = {
       city: "शहर",
       district: "ज़िला",
       street: "सड़क",
+      updateError: "प्रोफ़ाइल अपडेट करने में विफल",
     },
     preferences: {
       title: "पसंद",
@@ -213,11 +220,71 @@ export const hi = {
     dashboard: {
       title: "मेरा डैशबोर्ड",
       recentOrders: "हाल के ऑर्डर",
+      noOrders: "अभी तक कोई ऑर्डर नहीं।",
     },
     ordersHistory: {
       title: "ऑर्डर इतिहास",
       subtitle: "अपने सभी सिलाई अनुरोधों को ट्रैक करें",
       search: "रेफरेंस द्वारा खोजें...",
+      noOrders: "आपके मापदंडों से मेल खाने वाला कोई ऑर्डर नहीं मिला।",
+    },
+    orderDetails: {
+      confirmReceipt: "कूरियर से रसीद की पुष्टि करें",
+      confirmReceiptSuccess: "रसीद की पुष्टि हो गई। ऑर्डर अब पूरा हो गया है!",
+      confirmReceiptError: "रसीद की पुष्टि करने में विफल। कृपया पुन: प्रयास करें।",
+    },
+  },
+  checkout: {
+    address: {
+      title: "वितरण पता चुनें",
+      empty: "आपने अभी तक कोई पता नहीं जोड़ा है।",
+      addInProfile: "प्रोफ़ाइल में पता जोड़ें",
+    },
+    orderInfo: {
+      reference: "ऑर्डर संदर्भ:",
+      totalAmount: "कुल राशि:",
+    },
+    success: {
+      title: "ऑर्डर दिया गया!",
+      message: "आपका ऑर्डर #{reference} सफलतापूर्वक दे दिया गया है और दर्जी के आवंटन के लिए लंबित है।",
+    },
+    buttons: {
+      proceedToPayment: "भुगतान के लिए आगे बढ़ें",
+      bypassPayment: "भुगतान बायपास करें (परीक्षण)",
+    },
+  },
+  chat: {
+    placeholder: "एक संदेश टाइप करें...",
+    recording: "रिकॉर्डिंग हो रही है...",
+    mockMessages: {
+      customer: "नमस्ते, क्या आप यह कर सकते हैं?",
+      tailor: "हाँ ज़रूर, हम आपके लिए यह कर सकते हैं।",
+    },
+  },
+  courier: {
+    dashboard: {
+      noPendingPickups: "कोई लंबित पिकअप उपलब्ध नहीं है",
+    },
+    orders: {
+      noOrders: "कोई ऑर्डर नहीं मिला",
+      newAssignment: "नया असाइनमेंट",
+      returnTrip: "वापसी यात्रा",
+    },
+    orderDetails: {
+      confirmPickup: "पिकअप की पुष्टि करें",
+      markAsDelivered: "डिलीवर के रूप में चिह्नित करें",
+      deliveryAddress: "वितरण पता",
+    },
+  },
+  wallet: {
+    noTransactions: "कोई लेनदेन नहीं मिला",
+    payoutRequest: {
+      title: "पेआउट का अनुरोध करें",
+      amountLabel: "निकालने की राशि",
+      submit: "अनुरोध जमा करें",
+      success: "पेआउट अनुरोध सफलतापूर्वक सबमिट किया गया",
+      error: "पेआउट अनुरोध सबमिट करने में विफल",
+      availableBalance: "उपलब्ध शेष राशि",
     },
   },
 };

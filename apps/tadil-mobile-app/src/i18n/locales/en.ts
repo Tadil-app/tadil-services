@@ -16,12 +16,18 @@ export const en = {
     },
     price: "Price",
     optional: "Optional",
+    noAddress: "No address provided",
     buttons: {
       save: "Save",
       cancel: "Cancel",
       addToCart: "Add to Cart",
       leave: "Leave",
       change: "Change",
+      transfer: "Transfer",
+    },
+    messages: {
+      actionSuccess: "Action successful",
+      actionError: "Action failed",
     },
     inputs: {
       imageInput: {
@@ -112,6 +118,7 @@ export const en = {
       city: "City",
       district: "District",
       street: "Street",
+      updateError: "Failed to update profile",
     },
     preferences: {
       title: "Preferences",
@@ -212,11 +219,37 @@ export const en = {
     dashboard: {
       title: "My Dashboard",
       recentOrders: "Recent Orders",
+      noOrders: "No orders yet.",
     },
     ordersHistory: {
       title: "Orders History",
       subtitle: "Track your tailoring requests",
       search: "Search by reference...",
+      noOrders: "No orders found match your criteria.",
+    },
+    orderDetails: {
+      confirmReceipt: "Confirm Receipt from Courier",
+      confirmReceiptSuccess: "Receipt confirmed. Order is now complete!",
+      confirmReceiptError: "Failed to confirm receipt. Please try again.",
+    },
+  },
+  checkout: {
+    address: {
+      title: "Select Delivery Address",
+      empty: "You haven't added any addresses yet.",
+      addInProfile: "Add Address in Profile",
+    },
+    orderInfo: {
+      reference: "Order Reference:",
+      totalAmount: "Total Amount:",
+    },
+    success: {
+      title: "Order Placed!",
+      message: "Your order #{reference} has been successfully placed and is pending tailor assignment.",
+    },
+    buttons: {
+      proceedToPayment: "Proceed to Payment",
+      bypassPayment: "Bypass Payment (Testing)",
     },
   },
   chat: {
@@ -276,6 +309,32 @@ export const en = {
         successMessage: "Order marked as completed successfully",
         errorMessage: "Error marking order as completed",
       },
+    },
+  },
+  courier: {
+    dashboard: {
+      noPendingPickups: "No pending pickups available",
+    },
+    orders: {
+      noOrders: "No orders found",
+      newAssignment: "New Assignment",
+      returnTrip: "Return Trip",
+    },
+    orderDetails: {
+      confirmPickup: "Confirm Pickup",
+      markAsDelivered: "Mark as Delivered",
+      deliveryAddress: "Delivery Address",
+    },
+  },
+  wallet: {
+    noTransactions: "No transactions found",
+    payoutRequest: {
+      title: "Request Payout",
+      amountLabel: "Amount to Withdraw",
+      submit: "Submit Request",
+      success: "Payout request submitted successfully",
+      error: "Failed to submit payout request",
+      availableBalance: "Available balance",
     },
   },
 };
