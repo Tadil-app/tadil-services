@@ -15,6 +15,7 @@ export const hi = {
       kids: "बच्चे",
     },
     price: "कीमत",
+    avatar: "प्रोफ़ाइल चित्र",
     optional: "वैकल्पिक",
     noAddress: "कोई पता नहीं दिया गया",
     buttons: {
@@ -24,6 +25,14 @@ export const hi = {
       leave: "छोड़ें",
       change: "बदलें",
       transfer: "स्थानांतरण",
+    },
+    messages: {
+      actionSuccess: "कार्य सफल रहा",
+      actionError: "कार्य विफल रहा",
+      confirmReceiptSuccess: "रसीद की पुष्टि हो गई। अब ऑर्डर पूरा हो गया है!",
+      confirmReceiptError: "रसीद की पुष्टि करने में विफल। कृपया पुन: प्रयास करें।",
+      markReadySuccess: "ऑर्डर को वापसी के लिए तैयार चिह्नित किया गया है।",
+      markReadyError: "तैयार चिह्नित करने में विफल। कृपया पुन: प्रयास करें।",
     },
     inputs: {
       imageInput: {
@@ -52,10 +61,6 @@ export const hi = {
       },
       noAlterations: "कृपया कम से कम एक बदलाव जोड़ें।",
       itemAdded: "आइटम सफलतापूर्वक कार्ट में जोड़ दिया गया।",
-    },
-    messages: {
-      actionSuccess: "कार्य सफल रहा",
-      actionError: "कार्य विफल रहा",
     },
     errors: {
       voiceRecorder: {
@@ -266,6 +271,59 @@ export const hi = {
       tailor: "हाँ ज़रूर, हम आपके लिए यह कर सकते हैं।",
     },
   },
+  tailor: {
+    navBar: {
+      dashboard: "होम",
+      orders: "ऑर्डर",
+      wallet: "वॉलेट",
+    },
+    dashboard: {
+      title: "अवलोकन",
+    },
+    orders: {
+      title: "ऑर्डर सूची",
+      subtitle: "अपने ऑर्डर प्रबंधित करें",
+      search: "ऑर्डर खोजें...",
+    },
+    wallet: {
+      title: "वॉलेट",
+      subtitle: "अपना वॉलेट प्रबंधित करें",
+      currentBalance: "वर्तमान शेष राशि",
+      income: "कुल कमाई",
+      transfers: "कुल निकासी",
+      recentTransaction: "हाल के लेनदेन",
+      payementRecieved: "भुगतान प्राप्त हुआ",
+      transferSent: "स्थानांतरण भेजा गया",
+    },
+    orderDetails: {
+      title: "ऑर्डर विवरण",
+      reference: "ऑर्डर संदर्भ",
+      referenceLabel: "संदर्भ",
+      confirmReceiptFromCourier: "कूरियर से रसीद की पुष्टि करें",
+      markWorkAsReady: "कार्य को तैयार चिह्नित करें",
+      alterations: {
+        title: "बदलाव",
+      },
+      chat: {
+        title: "ग्राहक के साथ चैट",
+      },
+      acceptOrder: {
+        buttonText: "ऑर्डर स्वीकार करें",
+        successMessage: "ऑर्डर सफलतापूर्वक स्वीकार कर लिया गया",
+        errorMessage: "ऑर्डर स्वीकार करने में त्रुटि",
+      },
+      declineOrder: {
+        buttonText: "ऑर्डर अस्वीकार करें",
+        successMessage: "ऑर्डर सफलतापूर्वक अस्वीकार कर दिया गया",
+        errorMessage: "ऑर्डर अस्वीकार करने में त्रुटि",
+      },
+      markAsCompleted: {
+        buttonText: "पूरा हुआ चिह्नित करें",
+        successMessage: "ऑर्डर सफलतापूर्वक पूरा चिह्नित किया गया",
+        errorMessage: "ऑर्डर को पूरा चिह्नित करने में त्रुटि",
+      },
+    },
+  },
   courier: {
     dashboard: {
       noPendingPickups: "कोई लंबित पिकअप उपलब्ध नहीं है",
@@ -277,6 +335,10 @@ export const hi = {
     },
     orderDetails: {
       confirmPickup: "पिकअप की पुष्टि करें",
+      confirmPickupFromCustomer: "ग्राहक से पिकअप की पुष्टि करें",
+      confirmPickupFromTailor: "दर्जी से पिकअप की पुष्टि करें",
+      deliverToTailor: "दर्जी को सुपुर्द करें",
+      deliverToCustomer: "ग्राहक को सुपुर्द करें",
       markAsDelivered: "डिलीवर के रूप में चिह्नित करें",
       deliveryAddress: "वितरण पता",
     },

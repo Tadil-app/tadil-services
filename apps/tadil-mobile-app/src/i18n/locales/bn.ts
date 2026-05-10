@@ -15,6 +15,7 @@ export const bn = {
       kids: "শিশু",
     },
     price: "মূল্য",
+    avatar: "অ্যাভাটার",
     optional: "ঐচ্ছিক",
     noAddress: "কোন ঠিকানা প্রদান করা হয়নি",
     buttons: {
@@ -24,6 +25,14 @@ export const bn = {
       leave: "ত্যাগ করুন",
       change: "পরিবর্তন করুন",
       transfer: "স্থানান্তর করুন",
+    },
+    messages: {
+      actionSuccess: "কাজটি সফল হয়েছে",
+      actionError: "কাজটি ব্যর্থ হয়েছে",
+      confirmReceiptSuccess: "রসিদ নিশ্চিত করা হয়েছে। অর্ডার এখন সম্পন্ন!",
+      confirmReceiptError: "রসিদ নিশ্চিত করতে ব্যর্থ হয়েছে। অনুগ্রহ করে আবার চেষ্টা করুন।",
+      markReadySuccess: "অর্ডারটি ফেরতের জন্য প্রস্তুত হিসেবে চিহ্নিত করা হয়েছে।",
+      markReadyError: "প্রস্তুত হিসেবে চিহ্নিত করতে ব্যর্থ হয়েছে। অনুগ্রহ করে আবার চেষ্টা করুন।",
     },
     inputs: {
       imageInput: {
@@ -52,10 +61,6 @@ export const bn = {
       },
       noAlterations: "দয়া করে অন্তত একটি পরিবর্তন যোগ করুন।",
       itemAdded: "আইটেম সফলভাবে কার্টে যোগ করা হয়েছে।",
-    },
-    messages: {
-      actionSuccess: "কাজটি সফল হয়েছে",
-      actionError: "কাজটি ব্যর্থ হয়েছে",
     },
     errors: {
       voiceRecorder: {
@@ -165,7 +170,7 @@ export const bn = {
     },
     custom: {
       title: "কাস্টম",
-      description: "আপনার নিজের ছবি अपलोड করুন",
+      description: "আপনার নিজের ছবি আপলোড করুন",
     },
   },
   predefinedModelsList: {
@@ -265,6 +270,59 @@ export const bn = {
       tailor: "হ্যাঁ অবশ্যই, আমরা আপনার জন্য এটি করতে পারি।",
     },
   },
+  tailor: {
+    navBar: {
+      dashboard: "হোম",
+      orders: "অর্ডার",
+      wallet: "ওয়ালেট",
+    },
+    dashboard: {
+      title: "ওভারভিউ",
+    },
+    orders: {
+      title: "অর্ডারের তালিকা",
+      subtitle: "আপনার অর্ডার পরিচালনা করুন",
+      search: "অর্ডার খুঁজুন...",
+    },
+    wallet: {
+      title: "ওয়ালেট",
+      subtitle: "আপনার ওয়ালেট পরিচালনা করুন",
+      currentBalance: "বর্তমান ব্যালেন্স",
+      income: "মোট উপার্জন",
+      transfers: "মোট উত্তোলন",
+      recentTransaction: "সাম্প্রতিক লেনদেন",
+      payementRecieved: "পেমেন্ট পাওয়া গেছে",
+      transferSent: "স্থানান্তর পাঠানো হয়েছে",
+    },
+    orderDetails: {
+      title: "অর্ডারের বিবরণ",
+      reference: "অর্ডার রেফারেন্স",
+      referenceLabel: "রেফারেন্স",
+      confirmReceiptFromCourier: "কুরিয়ার থেকে রসিদ নিশ্চিত করুন",
+      markWorkAsReady: "কাজটি প্রস্তুত হিসেবে চিহ্নিত করুন",
+      alterations: {
+        title: "পরিবর্তনসমূহ",
+      },
+      chat: {
+        title: "গ্রাহকের সাথে চ্যাট",
+      },
+      acceptOrder: {
+        buttonText: "অর্ডার গ্রহণ করুন",
+        successMessage: "অর্ডার সফলভাবে গ্রহণ করা হয়েছে",
+        errorMessage: "অর্ডার গ্রহণে ত্রুটি",
+      },
+      declineOrder: {
+        buttonText: "অর্ডার প্রত্যাখ্যান করুন",
+        successMessage: "অর্ডার সফলভাবে প্রত্যাখ্যান করা হয়েছে",
+        errorMessage: "অর্ডার প্রত্যাখ্যানে ত্রুটি",
+      },
+      markAsCompleted: {
+        buttonText: "সম্পন্ন হিসেবে চিহ্নিত করুন",
+        successMessage: "অর্ডার সফলভাবে সম্পন্ন হিসেবে চিহ্নিত করা হয়েছে",
+        errorMessage: "অর্ডার সম্পন্ন হিসেবে চিহ্নিত করতে ত্রুটি",
+      },
+    },
+  },
   courier: {
     dashboard: {
       noPendingPickups: "কোন পেন্ডিং পিকআপ নেই",
@@ -276,6 +334,10 @@ export const bn = {
     },
     orderDetails: {
       confirmPickup: "পিকআপ নিশ্চিত করুন",
+      confirmPickupFromCustomer: "গ্রাহকের থেকে পিকআপ নিশ্চিত করুন",
+      confirmPickupFromTailor: "দর্জির থেকে পিকআপ নিশ্চিত করুন",
+      deliverToTailor: "দর্জিকে ডেলিভারি করুন",
+      deliverToCustomer: "গ্রাহককে ডেলিভারি করুন",
       markAsDelivered: "ডেলিভারি হিসেবে চিহ্নিত করুন",
       deliveryAddress: "ডেলিভারি ঠিকানা",
     },

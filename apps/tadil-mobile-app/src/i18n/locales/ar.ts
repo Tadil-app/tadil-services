@@ -15,6 +15,7 @@ export const ar = {
       kids: "أطفال",
     },
     price: "السعر",
+    avatar: "الصورة الشخصية",
     optional: "اختياري",
     noAddress: "لا يوجد عنوان",
     buttons: {
@@ -28,6 +29,10 @@ export const ar = {
     messages: {
       actionSuccess: "تمت العملية بنجاح",
       actionError: "فشلت العملية",
+      confirmReceiptSuccess: "تم تأكيد الاستلام. الطلب مكتمل الآن!",
+      confirmReceiptError: "فشل تأكيد الاستلام. يرجى المحاولة مرة أخرى.",
+      markReadySuccess: "تم تحديد الطلب كجاهز للإرجاع.",
+      markReadyError: "فشل التحديد كجاهز. يرجى المحاولة مرة أخرى.",
     },
     inputs: {
       imageInput: {
@@ -268,9 +273,9 @@ export const ar = {
   },
   tailor: {
     navBar: {
-      dashboard: "الملخص",
+      dashboard: "الرئيسية",
       orders: "الطلبات",
-      wallet: "المحفظة",
+      wallet: "محفظتي",
     },
     dashboard: {
       title: "الملخص",
@@ -284,8 +289,8 @@ export const ar = {
       title: "المحفظة",
       subtitle: "ادارة المحفظة",
       currentBalance: "الرصيد الحالي",
-      income: "الدخل",
-      transfers: "التحويلات",
+      income: "إجمالي الأرباح",
+      transfers: "إجمالي السحوبات",
       recentTransaction: "المعاملات الحديثة",
       payementRecieved: "الدفعات المستلمة",
       transferSent: "التحويلات المرسلة",
@@ -294,6 +299,8 @@ export const ar = {
       title: "تفاصيل الطلب",
       reference: "الرقم التعريفي",
       referenceLabel: "المرجع",
+      confirmReceiptFromCourier: "تأكيد الاستلام من المندوب",
+      markWorkAsReady: "تحديد العمل كجاهز",
       alterations: {
         title: "التعديلات",
       },
@@ -310,7 +317,7 @@ export const ar = {
         successMessage: "تم رفض الطلب بنجاح",
         errorMessage: "حدث خطأ اثناء رفض الطلب",
       },
-      markOrderAsCompleted: {
+      markAsCompleted: {
         buttonText: "انهاء الطلب",
         successMessage: "تم انهاء الطلب بنجاح",
         errorMessage: "حدث خطأ اثناء انهاء الطلب",
@@ -328,6 +335,10 @@ export const ar = {
     },
     orderDetails: {
       confirmPickup: "تأكيد الاستلام",
+      confirmPickupFromCustomer: "تأكيد الاستلام من العميل",
+      confirmPickupFromTailor: "تأكيد الاستلام من الخياط",
+      deliverToTailor: "التسليم للخياط",
+      deliverToCustomer: "التسليم للعميل",
       markAsDelivered: "تحديد كتم التسليم",
       deliveryAddress: "عنوان التوصيل",
     },

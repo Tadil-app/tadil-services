@@ -15,6 +15,7 @@ export const ur = {
       kids: "بچوں کے",
     },
     price: "قیمت",
+    avatar: "پروفائل تصویر",
     optional: "اختیاری",
     noAddress: "کوئی پتہ فراہم نہیں کیا گیا",
     buttons: {
@@ -24,6 +25,14 @@ export const ur = {
       leave: "چھوڑ دیں",
       change: "تبدیل کریں",
       transfer: "منتقل کریں",
+    },
+    messages: {
+      actionSuccess: "عمل کامیاب رہا",
+      actionError: "عمل ناکام رہا",
+      confirmReceiptSuccess: "وصولی کی تصدیق ہو گئی! آرڈر اب مکمل ہو گیا ہے!",
+      confirmReceiptError: "وصولی کی تصدیق کرنے میں ناکام۔ براہ کرم دوبارہ کوشش کریں۔",
+      markReadySuccess: "آرڈر واپسی کے لیے تیار نشان زد کر دیا گیا ہے۔",
+      markReadyError: "تیار نشان زد کرنے میں ناکام۔ براہ کرم دوبارہ کوشش کریں۔",
     },
     inputs: {
       imageInput: {
@@ -52,10 +61,6 @@ export const ur = {
       },
       noAlterations: "براہ کرم کم از کم ایک تبدیلی شامل کریں۔",
       itemAdded: "آئٹم کامیابی کے ساتھ کارٹ میں شامل کر دیا گیا۔",
-    },
-    messages: {
-      actionSuccess: "عمل کامیاب رہا",
-      actionError: "عمل ناکام رہا",
     },
     errors: {
       voiceRecorder: {
@@ -267,7 +272,7 @@ export const ur = {
   },
   tailor: {
     navBar: {
-      dashboard: "ڈیش بورڈ",
+      dashboard: "ہوم",
       orders: "آرڈرز",
       wallet: "والٹ",
     },
@@ -283,8 +288,8 @@ export const ur = {
       title: "والٹ",
       subtitle: "اپنے والٹ کا انتظام کریں",
       currentBalance: "موجودہ بیلنس",
-      income: "آمدنی",
-      transfers: "منتقلی",
+      income: "کل آمدنی",
+      transfers: "کل نکاسی",
       recentTransaction: "حالیہ لین دین",
       payementRecieved: "ادائیگی موصول ہوئی",
       transferSent: "منتقلی بھیجی گئی",
@@ -293,6 +298,8 @@ export const ur = {
       title: "آرڈر کی تفصیلات",
       reference: "آرڈر کا حوالہ",
       referenceLabel: "حوالہ",
+      confirmReceiptFromCourier: "کوریئر سے وصولی کی تصدیق کریں",
+      markWorkAsReady: "کام کو تیار نشان زد کریں",
       alterations: {
         title: "تبدیلیاں",
       },
@@ -327,6 +334,10 @@ export const ur = {
     },
     orderDetails: {
       confirmPickup: "پک اپ کی تصدیق کریں",
+      confirmPickupFromCustomer: "گاہک سے پک اپ کی تصدیق کریں",
+      confirmPickupFromTailor: "درزی سے پک اپ کی تصدیق کریں",
+      deliverToTailor: "درزی کو پہنچائیں",
+      deliverToCustomer: "گاہک کو پہنچائیں",
       markAsDelivered: "ڈیلیور شدہ نشان زد کریں",
       deliveryAddress: "ڈیلیوری ایڈریس",
     },

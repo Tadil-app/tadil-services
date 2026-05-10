@@ -90,7 +90,7 @@
             color="success"
             @click="confirmReceipt"
           >
-            Confirm Receipt from Courier
+            {{ $t("tailor.orderDetails.confirmReceiptFromCourier") }}
           </IonButton>
 
           <IonButton
@@ -99,7 +99,7 @@
             color="secondary"
             @click="markReady"
           >
-            Mark Work as Ready
+            {{ $t("tailor.orderDetails.markWorkAsReady") }}
           </IonButton>
         </div>
       </template>
@@ -174,9 +174,9 @@ async function confirmReceipt() {
     if (!order.value) return;
     await apiClient.tailorControllerConfirmReceipt(authStore.userId, order.value.id);
     await findOrderById();
-    showToast({ message: "Receipt confirmed" });
+    showToast({ message: t("common.messages.confirmReceiptSuccess") });
   } catch (error) {
-    showToast({ message: "Failed to confirm receipt" });
+    showToast({ message: t("common.messages.confirmReceiptError"), color: "danger" });
   }
 }
 
@@ -185,9 +185,9 @@ async function markReady() {
     if (!order.value) return;
     await apiClient.tailorControllerMarkReady(authStore.userId, order.value.id);
     await findOrderById();
-    showToast({ message: "Order marked as ready for return" });
+    showToast({ message: t("common.messages.markReadySuccess") });
   } catch (error) {
-    showToast({ message: "Failed to mark as ready" });
+    showToast({ message: t("common.messages.markReadyError"), color: "danger" });
   }
 }
 

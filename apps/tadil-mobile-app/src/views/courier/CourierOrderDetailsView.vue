@@ -105,7 +105,9 @@
             :disabled="isActionLoading"
           >
             <IonSpinner v-if="isActionLoading" name="crescent" />
-            <span v-else>{{ $t("courier.orderDetails.confirmPickup") }}</span>
+            <span v-else>
+              {{ isReturnTrip ? $t("courier.orderDetails.confirmPickupFromTailor") : $t("courier.orderDetails.confirmPickupFromCustomer") }}
+            </span>
           </IonButton>
 
           <IonButton
@@ -116,7 +118,9 @@
             :disabled="isActionLoading"
           >
             <IonSpinner v-if="isActionLoading" name="crescent" />
-            <span v-else>{{ $t("courier.orderDetails.markAsDelivered") }}</span>
+            <span v-else>
+              {{ isReturnTrip ? $t("courier.orderDetails.deliverToCustomer") : $t("courier.orderDetails.deliverToTailor") }}
+            </span>
           </IonButton>
         </div>
       </template>

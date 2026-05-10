@@ -134,10 +134,10 @@ async function confirmReceipt() {
   try {
     await apiClient.customerControllerConfirmReceipt(order.value.id);
     await findOrderById();
-    showToast({ message: "Receipt confirmed. Order is now complete!" });
+    showToast({ message: t("common.messages.confirmReceiptSuccess") });
   } catch (error) {
     console.error("Failed to confirm receipt", error);
-    showToast({ message: "Failed to confirm receipt. Please try again.", color: "danger" });
+    showToast({ message: t("common.messages.confirmReceiptError"), color: "danger" });
   } finally {
     isActionLoading.value = false;
   }

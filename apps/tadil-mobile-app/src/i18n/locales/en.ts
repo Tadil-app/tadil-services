@@ -15,6 +15,7 @@ export const en = {
       kids: "Kids",
     },
     price: "Price",
+    avatar: "Avatar",
     optional: "Optional",
     noAddress: "No address provided",
     buttons: {
@@ -28,6 +29,10 @@ export const en = {
     messages: {
       actionSuccess: "Action successful",
       actionError: "Action failed",
+      confirmReceiptSuccess: "Receipt confirmed. Order is now complete!",
+      confirmReceiptError: "Failed to confirm receipt. Please try again.",
+      markReadySuccess: "Order marked as ready for return.",
+      markReadyError: "Failed to mark as ready. Please try again.",
     },
     inputs: {
       imageInput: {
@@ -267,7 +272,7 @@ export const en = {
   },
   tailor: {
     navBar: {
-      dashboard: "Dashboard",
+      dashboard: "Home",
       orders: "Orders",
       wallet: "Wallet",
     },
@@ -283,8 +288,8 @@ export const en = {
       title: "Wallet",
       subtitle: "Manage your wallet",
       currentBalance: "Current Balance",
-      income: "Income",
-      transfers: "Transfers",
+      income: "Total Earnings",
+      transfers: "Total Withdrawals",
       recentTransaction: "Recent Transactions",
       payementRecieved: "Payment Received",
       transferSent: "Transfer Sent",
@@ -293,6 +298,8 @@ export const en = {
       title: "Order Details",
       reference: "Order Reference",
       referenceLabel: "Reference",
+      confirmReceiptFromCourier: "Confirm Receipt from Courier",
+      markWorkAsReady: "Mark Work as Ready",
       alterations: {
         title: "Alterations",
       },
@@ -327,6 +334,10 @@ export const en = {
     },
     orderDetails: {
       confirmPickup: "Confirm Pickup",
+      confirmPickupFromCustomer: "Confirm Pickup from Customer",
+      confirmPickupFromTailor: "Confirm Pickup from Tailor",
+      deliverToTailor: "Deliver to Tailor",
+      deliverToCustomer: "Deliver to Customer",
       markAsDelivered: "Mark as Delivered",
       deliveryAddress: "Delivery Address",
     },
