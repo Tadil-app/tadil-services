@@ -10,7 +10,7 @@ The `libs/infra` directory contains implementations for external concerns like d
 - Sending SMS or emails.
 
 ## Key Libraries
-- `tadil-database`: Contains the `schema.prisma`, Prisma Client generation, migrations, and repository implementations (`PrismaUsersRepository`, etc.).
+- `tadil-database`: Contains the `schema.prisma` with 10-state order lifecycle, history tracking, wallet balances, and user addresses. Provides Prisma Client generation, migrations, and repository implementations (`PrismaUsersRepository`, `PrismaOrdersRepository`, etc.).
 - `file-storage`: Service integration for uploading and retrieving images.
 - `tadil-sms`: Integrations for sending SMS messages (e.g., Twilio).
 

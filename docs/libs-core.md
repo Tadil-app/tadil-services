@@ -15,7 +15,8 @@ Core libraries are independent of any specific framework (like NestJS) or infras
 - `tadil-courier`: Logic for courier order assignments and deliveries.
 - `tadil-alterations`: Logic for managing alteration definitions.
 - `tadil-models`: Logic for predefined clothing models.
-- `tadil-orders`: Core order processing workflow.
+- `tadil-orders`: Core order processing workflow and status tracking.
+- `tadil-wallet`: Management of user balances, commissions, and payout requests.
 - `tadil-common`: Shared exceptions, utilities, and common models.
 
 ## Location

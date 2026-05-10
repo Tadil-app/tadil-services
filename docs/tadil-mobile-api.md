@@ -6,8 +6,10 @@
 ## Responsibilities
 - Authenticating mobile users via phone number.
 - Serving pre-defined and custom models for customers.
-- Handling orders and tailoring requests.
-- Providing order management functionalities for tailors and couriers.
+- Handling the complete order lifecycle across 10 states with automated history tracking.
+- Orchestrating multi-party commission distribution (Customer -> Tailor/Couriers) upon order completion.
+- Managing city-based order visibility and routing for tailors and couriers.
+- Providing wallet balance and payout request management for service providers.
 
 ## Location
 `apps/tadil-mobile-api`
