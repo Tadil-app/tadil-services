@@ -10,17 +10,20 @@ const routes: Array<RouteRecordRaw> = [
     path: "/login",
     name: "login",
     component: () => import("../views/auth/LogInView.vue"),
+    meta: { guestOnly: true },
   },
   {
     path: "/profile",
     name: "profile",
     component: () => import("../views/ProfileSettingsView.vue"),
+    meta: { requiresAuth: true },
   },
   {
     path: "/customer",
     name: "customer",
     component: () => import("../views/customer/CustomerLayout.vue"),
     redirect: { name: "customer-dashboard" },
+    meta: { requiresAuth: true, role: "customer" },
     children: [
       {
         path: "dashboard",
@@ -142,6 +145,7 @@ const routes: Array<RouteRecordRaw> = [
     name: "tailor",
     component: () => import("../views/tailor/TailorLayout.vue"),
     redirect: { name: "tailor-dashboard" },
+    meta: { requiresAuth: true, role: "tailor" },
     children: [
       {
         path: "dashboard",
@@ -171,6 +175,7 @@ const routes: Array<RouteRecordRaw> = [
     name: "courier",
     component: () => import("../views/courier/CourierLayout.vue"),
     redirect: { name: "courier-dashboard" },
+    meta: { requiresAuth: true, role: "courier" },
     children: [
       {
         path: "dashboard",
@@ -197,9 +202,55 @@ const routes: Array<RouteRecordRaw> = [
   },
 ];
 
+import { useAuthStore } from "@/stores";
+
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes,
+});
+
+router.beforeEach(async (to, from, next) => {
+  const authStore = useAuthStore();
+  
+  // 1. Ensure auth is initialized from storage
+  if (!authStore.userId && !from.name) {
+    await authStore.initAuth();
+  }
+
+  const isAuthenticated = !!authStore.token;
+  const userRole = authStore.userRole;
+
+  // 2. Handle guest-only routes (like /login)
+  if (to.meta.guestOnly && isAuthenticated) {
+    if (userRole === "tailor") return next({ name: "tailor-dashboard" });
+    if (userRole === "courier") return next({ name: "courier-dashboard" });
+    return next({ name: "customer-dashboard" });
+  }
+
+  // 3. Handle routes that require authentication
+  if (to.meta.requiresAuth && !isAuthenticated) {
+    return next({ name: "login" });
+  }
+
+  // 4. Handle role-based access
+  if (to.meta.role && to.meta.role !== userRole) {
+    if (userRole === "tailor") return next({ name: "tailor-dashboard" });
+    if (userRole === "courier") return next({ name: "courier-dashboard" });
+    if (userRole === "customer") return next({ name: "customer-dashboard" });
+  }
+
+  // 5. Handle root path specifically
+  if (to.path === "/") {
+    if (isAuthenticated) {
+      if (userRole === "tailor") return next({ name: "tailor-dashboard" });
+      if (userRole === "courier") return next({ name: "courier-dashboard" });
+      return next({ name: "customer-dashboard" });
+    } else {
+      return next({ name: "login" });
+    }
+  }
+
+  next();
 });
 
 export default router;
