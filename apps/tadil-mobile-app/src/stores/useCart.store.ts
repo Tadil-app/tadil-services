@@ -63,45 +63,50 @@ export const useCartStore = defineStore("cart", () => {
     // Map internal cart items to backend DTO structure
     const payload = {
       addressId,
-      items: items.value.map(item => ({
+      items: items.value.map((item) => ({
         id: uuidv4(),
         price: calculateConfigurationPrice(item.configuration),
-        modelId: item.model.id,
-        sections: item.configuration.modelImages.flatMap(img => 
-          img.sections.map(sec => ({
+        englishName: item.model.englishName,
+        arabicName: item.model.arabicName,
+        urduName: item.model.urduName,
+        hindiName: item.model.hindiName,
+        bengaliName: item.model.bengaliName,
+        imageFileId: item.model.thumbnailImageUrl?.split("/").pop() || "",
+        sections: item.configuration.modelImages.flatMap((img) =>
+          img.sections.map((sec) => ({
             id: uuidv4(),
-            sourceSectionId: sec.sectionId,
             englishName: sec.englishName,
             arabicName: sec.arabicName,
             urduName: sec.urduName,
             hindiName: sec.hindiName,
             bengaliName: sec.bengaliName,
-            alterations: sec.alterations.map(alt => ({
+            imageFileId: img.imageUrl.split("/").pop() || "",
+            coordinates: sec.coordinates,
+            alterations: sec.alterations.map((alt) => ({
               id: uuidv4(),
-              sourceAlterationId: alt.alterationId,
               price: alt.price,
               englishName: alt.englishName,
               arabicName: alt.arabicName,
               urduName: alt.urduName,
               hindiName: alt.hindiName,
               bengaliName: alt.bengaliName,
-              informations: alt.informations.map(info => ({
+              customCoordinates: [],
+              informations: alt.informations.map((info) => ({
                 id: uuidv4(),
-                sourceInformationId: info.informationId,
                 englishName: info.englishName,
                 arabicName: info.arabicName,
                 urduName: info.urduName,
                 hindiName: info.hindiName,
                 bengaliName: info.bengaliName,
-                value: info.value || '',
-                unit: info.unit || '',
-                type: 'text' // Fallback
-              }))
-            }))
-          }))
-        )
+                value: info.value || "",
+                unit: info.unit || "",
+                type: "text", // Fallback
+              })),
+            })),
+          })),
+        ),
       })),
-      customItems: [] // Handle custom items later if needed
+      customItems: [], // Handle custom items later if needed
     };
 
     const { data } = await apiClient.customerControllerCreateOrder(payload);

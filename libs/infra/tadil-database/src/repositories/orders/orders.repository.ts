@@ -24,12 +24,12 @@ export class PrismaOrdersRepository implements OrdersRepository {
           create: order.items.map((item) => ({
             id: item.id,
             price: item.price,
-            englishName: '', // These should probably be passed or fetched, but for now we prioritize the ID and price
-            arabicName: '',
-            urduName: '',
-            hindiName: '',
-            bengaliName: '',
-            imageFileId: '', 
+            englishName: item.englishName,
+            arabicName: item.arabicName,
+            urduName: item.urduName,
+            hindiName: item.hindiName,
+            bengaliName: item.bengaliName,
+            imageFileId: item.imageFileId,
             sections: {
               create: item.sections.map((section: any) => ({
                 id: section.id,
@@ -38,8 +38,8 @@ export class PrismaOrdersRepository implements OrdersRepository {
                 urduName: section.urduName,
                 hindiName: section.hindiName,
                 bengaliName: section.bengaliName,
-                imageFileId: '',
-                coordinates: [],
+                imageFileId: section.imageFileId,
+                coordinates: section.coordinates,
                 alterations: {
                   create: section.alterations.map((alt: any) => ({
                     id: alt.id,
@@ -49,6 +49,7 @@ export class PrismaOrdersRepository implements OrdersRepository {
                     hindiName: alt.hindiName,
                     bengaliName: alt.bengaliName,
                     price: alt.price,
+                    customCoordinates: alt.customCoordinates,
                     informations: {
                       create: alt.informations.map((info: any) => ({
                         id: info.id,
@@ -72,7 +73,7 @@ export class PrismaOrdersRepository implements OrdersRepository {
           create: order.customItems.map((item) => ({
             id: item.id,
             price: item.price,
-            imageFileId: '',
+            imageFileId: item.imageFileId,
             alterations: {
               create: item.alterations.map((alt: any) => ({
                 id: alt.id,
@@ -82,6 +83,7 @@ export class PrismaOrdersRepository implements OrdersRepository {
                 hindiName: alt.hindiName,
                 bengaliName: alt.bengaliName,
                 price: alt.price,
+                customCoordinates: alt.customCoordinates,
                 informations: {
                   create: alt.informations.map((info: any) => ({
                     id: info.id,

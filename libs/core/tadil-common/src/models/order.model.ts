@@ -14,33 +14,56 @@ export type OrderStatusType = (typeof ORDER_STATUS)[keyof typeof ORDER_STATUS];
 
 export interface OrderItemAlterationInformation {
   id: string;
-  sourceInformationId: string;
+  englishName: string;
+  arabicName: string;
+  urduName: string;
+  hindiName: string;
+  bengaliName: string;
+  type: string;
+  unit?: string;
   value: string;
 }
 
 export interface OrderItemAlteration {
   id: string;
-  sourceAlterationId: string;
+  englishName: string;
+  arabicName: string;
+  urduName: string;
+  hindiName: string;
+  bengaliName: string;
   price: number;
+  customCoordinates: { x: number; y: number }[];
   informations: OrderItemAlterationInformation[];
 }
 
 export interface OrderItemSection {
   id: string;
-  sourceSectionId: string;
+  englishName: string;
+  arabicName: string;
+  urduName: string;
+  hindiName: string;
+  bengaliName: string;
+  coordinates: { x: number; y: number }[];
+  imageFileId: string;
   alterations: OrderItemAlteration[];
 }
 
 export interface OrderItem {
   id: string;
   price: number;
-  modelId: string;
+  englishName: string;
+  arabicName: string;
+  urduName: string;
+  hindiName: string;
+  bengaliName: string;
+  imageFileId: string;
   sections: OrderItemSection[];
 }
 
 export interface CustomOrderItem {
   id: string;
   price: number;
+  imageFileId: string;
   alterations: OrderItemAlteration[];
 }
 
