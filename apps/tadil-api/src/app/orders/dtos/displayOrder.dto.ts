@@ -39,4 +39,7 @@ export class DisplayOrderDto {
   
   @ApiProperty({ required: false })
   city?: string;
+
+  @ApiProperty({ required: false })
+  history?: { status: string; timestamp: string }[];
 }

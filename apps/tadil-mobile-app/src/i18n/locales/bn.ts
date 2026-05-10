@@ -139,6 +139,11 @@ export const bn = {
     women: "মহিলাদের জন্য",
     kids: "শিশুদের জন্য",
   },
+  order: {
+    history: {
+      title: "অর্ডারের অগ্রগতি",
+    },
+  },
   orderStatus: {
     all: "সব",
     pending: "পেন্ডিং",

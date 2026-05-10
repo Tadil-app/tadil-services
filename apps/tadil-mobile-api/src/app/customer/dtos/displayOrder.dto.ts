@@ -2,7 +2,7 @@ import { ApiProperty } from '@nestjs/swagger';
 import { type OrderStatusType } from '@tadil-common';
 import { InformationType } from '@tadil-informations';
 
-export class Point {
+export class OrderPoint {
   @ApiProperty()
   x!: number;
   @ApiProperty()
@@ -45,8 +45,8 @@ export class DisplayItemAlterationDTO {
   bengaliName!: string;
   @ApiProperty()
   price!: number;
-  @ApiProperty({ type: Point, isArray: true })
-  customCoordinates!: Point[];
+  @ApiProperty({ type: OrderPoint, isArray: true })
+  customCoordinates!: OrderPoint[];
   @ApiProperty({ type: DisplayItemInformationDTO, isArray: true })
   informations!: DisplayItemInformationDTO[];
 }
@@ -65,7 +65,7 @@ export class DisplayOrderItemSectionDTO {
   @ApiProperty()
   bengaliName!: string;
   @ApiProperty()
-  coordinates!: Point[];
+  coordinates!: OrderPoint[];
   @ApiProperty({ type: DisplayItemAlterationDTO, isArray: true })
   alterations!: DisplayItemAlterationDTO[];
 }

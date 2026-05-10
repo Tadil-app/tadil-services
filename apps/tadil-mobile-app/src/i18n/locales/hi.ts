@@ -139,6 +139,11 @@ export const hi = {
     women: "महिलाओं के लिए",
     kids: "बच्चों के लिए",
   },
+  order: {
+    history: {
+      title: "ऑर्डर की प्रगति",
+    },
+  },
   orderStatus: {
     all: "सभी",
     pending: "लंबित",

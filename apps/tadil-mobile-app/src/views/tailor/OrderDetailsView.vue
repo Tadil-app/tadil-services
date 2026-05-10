@@ -28,6 +28,8 @@
           </div>
         </IonCard>
 
+        <OrderTimeline v-if="order.history && order.history.length > 0" :history="order.history" />
+
         <!-- Alterations omitted for brevity in this replace call, but they should remain -->
         <!-- I'll use write_file to be sure I don't break the complex UI -->
 
@@ -118,7 +120,7 @@ import { useToast } from "@/composables";
 import { useI18n } from "vue-i18n";
 import { apiClient } from "@/integration/api";
 import { useAuthStore } from "@/stores";
-import { ImageContainer, TranslatedName, StatusPill, SecondaryHeader } from "@/components";
+import { ImageContainer, TranslatedName, StatusPill, SecondaryHeader, OrderTimeline } from "@/components";
 
 const props = defineProps<{
   orderId: string;

@@ -67,6 +67,7 @@ export class CourierController {
         address: true,
         items: { include: { sections: { include: { alterations: { include: { informations: true } } } } } },
         customItems: { include: { alterations: { include: { informations: true } } } },
+        history: { orderBy: { timestamp: 'desc' } },
       },
     });
 
@@ -143,6 +144,7 @@ export class CourierController {
           })),
         })),
       })),
+      history: order.history || [],
     };
   }
 }

@@ -65,6 +65,7 @@ export class CustomerController {
       include: {
         items: { include: { sections: { include: { alterations: { include: { informations: true } } } } } },
         customItems: { include: { alterations: { include: { informations: true } } } },
+        history: { orderBy: { timestamp: 'desc' } },
       },
     });
 
@@ -276,6 +277,7 @@ export class CustomerController {
           })),
         })),
       })),
+      history: order.history || [],
     };
   }
 }

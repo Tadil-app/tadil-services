@@ -15,6 +15,11 @@ export class PrismaOrdersRepository implements OrdersRepository {
         status: order.status as OrderStatus,
         customerId: order.customerId,
         addressId: order.addressId,
+        history: {
+          create: {
+            status: order.status as OrderStatus,
+          },
+        },
         items: {
           create: order.items.map((item) => ({
             id: item.id,
@@ -115,7 +120,14 @@ export class PrismaOrdersRepository implements OrdersRepository {
   async updateStatus(id: string, status: string): Promise<void> {
     await this._db.order.update({
       where: { id },
-      data: { status: status as OrderStatus },
+      data: {
+        status: status as OrderStatus,
+        history: {
+          create: {
+            status: status as OrderStatus,
+          },
+        },
+      },
     });
   }
 
@@ -125,6 +137,11 @@ export class PrismaOrdersRepository implements OrdersRepository {
       data: {
         status: OrderStatus.waitingForCourierAssignement,
         assignedTailorId: tailorId,
+        history: {
+          create: {
+            status: OrderStatus.waitingForCourierAssignement,
+          },
+        },
       },
     });
   }

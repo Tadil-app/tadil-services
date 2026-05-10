@@ -151,6 +151,11 @@ export interface DisplayCustomOrderItemDTO {
   alterations: DisplayItemAlterationDTO[];
 }
 
+export interface OrderStatusHistoryDTO {
+  status: OrderStatusType;
+  timestamp: string;
+}
+
 export interface DisplayOrderDTO {
   id: string;
   customerId: string;
@@ -161,6 +166,7 @@ export interface DisplayOrderDTO {
   items: DisplayOrderItemDTO[];
   customItems: DisplayCustomOrderItemDTO[];
   address?: DisplayAddressDto;
+  history: OrderStatusHistoryDTO[];
 }
 
 export interface CreateOrderDto {

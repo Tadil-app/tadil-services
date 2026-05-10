@@ -42,6 +42,7 @@ export class OrdersController {
         assignedCourier: true,
         assignedReturnCourier: true,
         address: true,
+        history: { orderBy: { timestamp: 'desc' } },
       },
       orderBy: { date: 'desc' },
     });
@@ -61,6 +62,7 @@ export class OrdersController {
       courierName: order.assignedCourier ? `${order.assignedCourier.firstName} ${order.assignedCourier.lastName}` : 
                   (order.assignedReturnCourier ? `${order.assignedReturnCourier.firstName} ${order.assignedReturnCourier.lastName}` : undefined),
       city: order.address?.city ?? undefined,
+      history: order.history.map(h => ({ status: h.status, timestamp: h.timestamp.toISOString() })),
     }));
   }
 

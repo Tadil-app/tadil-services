@@ -15,6 +15,11 @@ export class PrismaCourierRepository implements CourierRepository {
       data: {
         status: nextStatus,
         [isReturn ? 'assignedReturnCourierId' : 'assignedCourierId']: courierId,
+        history: {
+          create: {
+            status: nextStatus,
+          },
+        },
       },
     });
   }
@@ -47,7 +52,14 @@ export class PrismaCourierRepository implements CourierRepository {
 
     await this._db.order.update({
       where: { id: orderId },
-      data: { status: nextStatus },
+      data: {
+        status: nextStatus,
+        history: {
+          create: {
+            status: nextStatus,
+          },
+        },
+      },
     });
   }
 

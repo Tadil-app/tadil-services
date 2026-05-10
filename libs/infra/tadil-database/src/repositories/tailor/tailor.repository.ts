@@ -13,6 +13,11 @@ export class PrismaTailorRepository implements TailorRepository {
       data: {
         status: OrderStatus.waitingForCourierAssignement,
         assignedTailorId: tailorId,
+        history: {
+          create: {
+            status: OrderStatus.waitingForCourierAssignement,
+          },
+        },
       },
     });
   }
@@ -33,14 +38,28 @@ export class PrismaTailorRepository implements TailorRepository {
   async confirmReceipt(orderId: string): Promise<void> {
     await this._db.order.update({
       where: { id: orderId },
-      data: { status: OrderStatus.inProgress },
+      data: {
+        status: OrderStatus.inProgress,
+        history: {
+          create: {
+            status: OrderStatus.inProgress,
+          },
+        },
+      },
     });
   }
 
   async markReady(orderId: string): Promise<void> {
     await this._db.order.update({
       where: { id: orderId },
-      data: { status: OrderStatus.waitingForReturnCourierAssignement },
+      data: {
+        status: OrderStatus.waitingForReturnCourierAssignement,
+        history: {
+          create: {
+            status: OrderStatus.waitingForReturnCourierAssignement,
+          },
+        },
+      },
     });
   }
 }

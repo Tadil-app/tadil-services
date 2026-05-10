@@ -8,7 +8,14 @@ export class PrismaCustomerRepository implements CustomerRepository {
   async confirmReceipt(orderId: string): Promise<void> {
     await this._db.order.update({
       where: { id: orderId },
-      data: { status: OrderStatus.done },
+      data: {
+        status: OrderStatus.done,
+        history: {
+          create: {
+            status: OrderStatus.done,
+          },
+        },
+      },
     });
   }
 }

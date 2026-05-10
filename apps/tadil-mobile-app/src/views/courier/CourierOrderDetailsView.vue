@@ -31,6 +31,8 @@
           </div>
         </IonCard>
 
+        <OrderTimeline v-if="order.history && order.history.length > 0" :history="order.history" />
+
         <!-- Address Info -->
         <IonCard class="ion-padding space-y-2">
           <h3 class="font-bold flex items-center gap-2">
@@ -140,7 +142,7 @@ import { formatDate } from "@/utils";
 import { useToast } from "@/composables";
 import { apiClient } from "@/integration/api";
 import { useAuthStore } from "@/stores";
-import { ImageContainer, TranslatedName, StatusPill, SecondaryHeader } from "@/components";
+import { ImageContainer, TranslatedName, StatusPill, SecondaryHeader, OrderTimeline } from "@/components";
 import { useI18n } from "vue-i18n";
 
 const { t } = useI18n();

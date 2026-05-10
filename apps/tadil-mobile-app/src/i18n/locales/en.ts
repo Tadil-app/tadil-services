@@ -139,6 +139,11 @@ export const en = {
     women: "Modify Women's Clothes",
     kids: "Modify Kids' Clothes",
   },
+  order: {
+    history: {
+      title: "Order Progress",
+    },
+  },
   orderStatus: {
     all: "All",
     pending: "Pending",

@@ -31,6 +31,8 @@
           </div>
         </IonCard>
 
+        <OrderTimeline v-if="order.history && order.history.length > 0" :history="order.history" />
+
         <IonCard color="transparent" class="ion-padding">
           <p>{{ $t("tailor.orderDetails.alterations.title") }}</p>
           <IonCard v-for="item in order.items" :key="item.id" class="m-0 mb-4 overflow-hidden">
@@ -99,7 +101,7 @@ import { formatDate } from "@/utils";
 import { useToast } from "@/composables";
 import { useI18n } from "vue-i18n";
 import { apiClient } from "@/integration/api";
-import { ImageContainer, TranslatedName, StatusPill, SecondaryHeader } from "@/components";
+import { ImageContainer, TranslatedName, StatusPill, SecondaryHeader, OrderTimeline } from "@/components";
 
 const props = defineProps<{
   orderId: string;

@@ -139,6 +139,11 @@ export const ur = {
     women: "خواتین کے لیے",
     kids: "بچوں کے لیے",
   },
+  order: {
+    history: {
+      title: "آرڈر کی پیشرفت",
+    },
+  },
   orderStatus: {
     all: "تمام",
     pending: "زیر التواء",

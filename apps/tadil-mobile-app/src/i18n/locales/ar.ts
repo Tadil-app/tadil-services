@@ -133,13 +133,19 @@ export const ar = {
     },
   },
   modelCategory: {
-    title: "اختر الفئة",
+    title: "اختر فئة",
     all: "جميع الفئات",
-    men: "تعديل ملابس رجال",
-    women: "تعديل ملابس نساء",
-    kids: "تعديل ملابس اطفال",
+    men: "تعديل ملابس الرجال",
+    women: "تعديل ملابس النساء",
+    kids: "تعديل ملابس الأطفال",
+  },
+  order: {
+    history: {
+      title: "مسار الطلب",
+    },
   },
   orderStatus: {
+
     all: "الكل",
     pending: "قيد الانتظار",
     waitingForTailorAssignement: "في انتظار تعيين الخياط",

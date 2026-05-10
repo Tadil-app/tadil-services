@@ -260,7 +260,19 @@ model Order {
     assignedReturnCourier   User?   @relation("return-courier-assigned-order", fields: [assignedReturnCourierId], references: [id], onDelete: Cascade)
     rejectedReturnCouriers  User[]  @relation("return-courier-rejected-orders")
 
+    history OrderStatusHistory[]
+
     @@map("orders")
+}
+
+model OrderStatusHistory {
+    id        String      @id @default(uuid())
+    orderId   String
+    order     Order       @relation(fields: [orderId], references: [id], onDelete: Cascade)
+    status    OrderStatus
+    timestamp DateTime    @default(now())
+
+    @@map("order-status-histories")
 }
 
 model Address {
