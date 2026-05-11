@@ -19,7 +19,13 @@
 7. `waitingForReturnCourierAssignement`: Work finished, awaiting courier for return trip.
 8. `waitingForPickupFromTailor`: Return courier assigned, heading to tailor.
 9. `waitingForDropoffToCustomer`: Items picked up from tailor, being delivered back.
-10. `done`: Customer confirmed receipt.
+- `done`: Customer confirmed receipt.
+
+## Data Persistence & Metadata
+- **Metadata Snapshots**: When an order is created, the system snapshots the names (in all languages) and image IDs of the models and sections. This ensures the order record remains accurate even if the original model definition is updated by an Admin later.
+- **Custom Item Support**: The library explicitly handles `CustomOrderItem` entities, which store user-uploaded images and pinpoint-based alterations, separate from the standard `OrderItem` entities used for predefined models.
+- **Audit Logging**: Every status transition is automatically recorded in the `OrderStatusHistory` table with a nanosecond-precision timestamp for later analysis and UI visualization.
 
 ## Location
+
 `libs/core/tadil-orders`

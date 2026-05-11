@@ -150,6 +150,7 @@ import AlterationForm from "../../components/AlterationForm.vue";
 import AlterationSummaryItem from "../../components/AlterationSummaryItem.vue";
 import OrderSummaryFooter from "../../components/OrderSummaryFooter.vue";
 import { SelectedAlteration } from "@/types/cart.types";
+import { Filesystem, Directory } from "@capacitor/filesystem";
 
 const props = defineProps<{
   category: ModelCategory;
@@ -296,12 +297,27 @@ async function changePhoto() {
 async function handleAddToCart() {
   if (!customImageUrl.value || pinpoints.value.length === 0) return;
 
+  isLoading.value = true;
   try {
-    // 1. Upload the image file first
+    // 1. Persist the image locally instead of uploading now
     const response = await fetch(customImageUrl.value);
     const blob = await response.blob();
-    const file = new File([blob], "custom_model.png", { type: blob.type });
-    const remoteUrl = await uploadImage(file);
+    
+    // Convert blob to base64 for filesystem storage
+    const reader = new FileReader();
+    const base64Data = await new Promise<string>((resolve) => {
+      reader.onloadend = () => resolve(reader.result as string);
+      reader.readAsDataURL(blob);
+    });
+
+    const fileName = `custom-model-${crypto.randomUUID()}.jpg`;
+    const savedFile = await Filesystem.writeFile({
+      path: fileName,
+      data: base64Data,
+      directory: Directory.Data,
+    });
+
+    const localUrl = savedFile.uri;
 
     // 2. Prepare Cart Item Configuration
     const customModelId = `custom-${crypto.randomUUID()}`;
@@ -311,7 +327,7 @@ async function handleAddToCart() {
       modelImages: [
         {
           modelImageId: `img-${crypto.randomUUID()}`,
-          imageUrl: remoteUrl!,
+          imageUrl: localUrl, // Store local URI
           sections: pinpoints.value.map((pin, index) => ({
             sectionId: pin.id,
             ...getPinpointNames(index),
@@ -330,14 +346,17 @@ async function handleAddToCart() {
       urduName: "حسب ضرورت ماڈل",
       bengaliName: "কাস্টম মডেল",
       category: props.category,
-      thumbnailImageUrl: remoteUrl,
+      thumbnailImageUrl: localUrl, // Store local URI
     };
 
     await cartStore.addItem(customModel, configuration);
     reset();
     router.replace({ name: "customer-dashboard" });
   } catch (error) {
+    console.error("Add to cart failed", error);
     showToast({ message: t("common.errors.addToCartFailed"), color: "danger" });
+  } finally {
+    isLoading.value = false;
   }
 }
 

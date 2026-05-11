@@ -6,6 +6,7 @@ import type { DisplayModelDTO } from "@/integration/dtos";
 import { calculateConfigurationPrice } from "@/utils";
 import type { CartItem, CartItemConfiguration } from "@/types/cart.types";
 import { apiClient } from "@/integration/api";
+import { Filesystem, Directory } from "@capacitor/filesystem";
 
 export const useCartStore = defineStore("cart", () => {
   const items = ref<CartItem[]>([]);
@@ -60,19 +61,67 @@ export const useCartStore = defineStore("cart", () => {
   }
 
   async function createOrder(addressId: string) {
-    // Map internal cart items to backend DTO structure
+    const localFilePathsToDelete: string[] = [];
+
+    // 1. Process custom items and upload local images
+    const processedItems = await Promise.all(items.value.map(async (item) => {
+      // Skip processing for predefined items (they don't start with 'custom-')
+      if (!item.model.id.startsWith('custom-')) {
+        return { model: item.model, configuration: item.configuration };
+      }
+
+      const configuration = JSON.parse(JSON.stringify(item.configuration)) as CartItemConfiguration;
+      const model = JSON.parse(JSON.stringify(item.model)) as DisplayModelDTO;
+
+      // Check if thumbnail is local
+      if (model.thumbnailImageUrl?.startsWith('file://')) {
+        const path = model.thumbnailImageUrl.split('/').pop()!;
+        const { data: base64Data } = await Filesystem.readFile({
+          path,
+          directory: Directory.Data
+        });
+        const blob = await (await fetch(`data:image/jpeg;base64,${base64Data}`)).blob();
+        const file = new File([blob], path, { type: blob.type });
+        const { data: remoteUrl } = await apiClient.customerControllerUploadFile({ file });
+        model.thumbnailImageUrl = remoteUrl;
+        localFilePathsToDelete.push(path);
+      }
+
+      // Check all section images
+      await Promise.all(configuration.modelImages.map(async (img) => {
+        if (img.imageUrl.startsWith('file://')) {
+          const path = img.imageUrl.split('/').pop()!;
+          const { data: base64Data } = await Filesystem.readFile({
+            path,
+            directory: Directory.Data
+          });
+          const blob = await (await fetch(`data:image/jpeg;base64,${base64Data}`)).blob();
+          const file = new File([blob], path, { type: blob.type });
+          const { data: remoteUrl } = await apiClient.customerControllerUploadFile({ file });
+          img.imageUrl = remoteUrl;
+          if (!localFilePathsToDelete.includes(path)) localFilePathsToDelete.push(path);
+        }
+      }));
+
+      return { model, configuration };
+    }));
+
+    // 2. Map internal cart items to backend DTO structure
+    const predefinedItems = processedItems.filter(({ model }) => !model.id.startsWith('custom-'));
+    const customItems = processedItems.filter(({ model }) => model.id.startsWith('custom-'));
+
     const payload = {
       addressId,
-      items: items.value.map((item) => ({
+      items: predefinedItems.map(({ model, configuration }) => ({
         id: uuidv4(),
-        price: calculateConfigurationPrice(item.configuration),
-        englishName: item.model.englishName,
-        arabicName: item.model.arabicName,
-        urduName: item.model.urduName,
-        hindiName: item.model.hindiName,
-        bengaliName: item.model.bengaliName,
-        imageFileId: item.model.thumbnailImageUrl?.split("/").pop() || "",
-        sections: item.configuration.modelImages.flatMap((img) =>
+        price: calculateConfigurationPrice(configuration),
+        englishName: model.englishName,
+        arabicName: model.arabicName,
+        urduName: model.urduName,
+        hindiName: model.hindiName,
+        bengaliName: model.bengaliName,
+        imageFileId: model.thumbnailImageUrl?.split("/").pop() || "",
+        sections: configuration.modelImages.flatMap((img) =>
           img.sections.map((sec) => ({
             id: uuidv4(),
             englishName: sec.englishName,
@@ -106,10 +155,52 @@ export const useCartStore = defineStore("cart", () => {
           })),
         ),
       })),
-      customItems: [], // Handle custom items later if needed
+      customItems: customItems.map(({ model, configuration }) => ({
+        id: uuidv4(),
+        price: calculateConfigurationPrice(configuration),
+        imageFileId: model.thumbnailImageUrl?.split("/").pop() || "",
+        alterations: configuration.modelImages.flatMap((img) =>
+          img.sections.flatMap((sec) =>
+            sec.alterations.map((alt) => ({
+              id: uuidv4(),
+              price: alt.price,
+              englishName: alt.englishName,
+              arabicName: alt.arabicName,
+              urduName: alt.urduName,
+              hindiName: alt.hindiName,
+              bengaliName: alt.bengaliName,
+              customCoordinates: sec.coordinates, // Taps are points
+              informations: alt.informations.map((info) => ({
+                id: uuidv4(),
+                englishName: info.englishName,
+                arabicName: info.arabicName,
+                urduName: info.urduName,
+                hindiName: info.hindiName,
+                bengaliName: info.bengaliName,
+                value: info.value || "",
+                unit: info.unit || "",
+                type: "text", // Fallback
+              })),
+            })),
+          ),
+        ),
+      })),
     };
 
     const { data } = await apiClient.customerControllerCreateOrder(payload);
+
+    // 3. Cleanup local files after successful order creation
+    for (const path of localFilePathsToDelete) {
+      try {
+        await Filesystem.deleteFile({
+          path,
+          directory: Directory.Data
+        });
+      } catch (e) {
+        console.warn("Failed to delete local file", path, e);
+      }
+    }
+
     return data;
   }
 
