@@ -1,35 +1,28 @@
-# Multi-stage build for Tadil Mobile App
+# Standalone build for Tadil Mobile App (Bypassing Nx)
 FROM node:22-alpine AS build
 
+# Set working directory to the app folder inside the container
 WORKDIR /app
 
-# Copy root package files
-COPY package*.json ./
-COPY tsconfig.base.json ./
-COPY nx.json ./
+# Copy the specific app's package file
+COPY apps/tadil-mobile-app/package.json ./
 
 # Install dependencies
-RUN npm ci
+RUN npm install
 
-# Copy all source
-COPY . .
+# Copy the app's source code
+COPY apps/tadil-mobile-app/ .
 
-# Build the specific app
+# Inject environment variables
 ARG VITE_TADIL_MOBILE_API_URL
 ENV VITE_TADIL_MOBILE_API_URL=${VITE_TADIL_MOBILE_API_URL}
 
-# Run build via Nx
-RUN npx nx build tadil-mobile-app --prod
+# Run the local build script
+RUN npm run build
 
 # Production stage
 FROM nginx:stable-alpine AS production
-
-# Copy custom nginx config
 COPY apps/tadil-mobile-app/nginx.conf /etc/nginx/templates/default.conf.template
-
-# Copy built assets
-COPY --from=build /app/apps/tadil-mobile-app/dist /usr/share/nginx/html
-
+COPY --from=build /app/dist /usr/share/nginx/html
 EXPOSE 80
-
 CMD ["nginx", "-g", "daemon off;"]
