@@ -6,8 +6,7 @@ const apiInstance = new Api({
     if (token) {
       return {
         headers: {
-          Authorization: `Bearer ${token}`,
-          'ngrok-skip-browser-warning': 'true',
+          Authorization: `Bearer ${token}`
         },
       };
     }
