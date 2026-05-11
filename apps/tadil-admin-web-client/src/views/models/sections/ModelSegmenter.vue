@@ -44,7 +44,9 @@ const props = defineProps<{
 }>();
 
 const {
+  // @ts-ignore
   canvasRef,
+  // @ts-ignore
   imageRef,
   canvasWidth,
   canvasHeight,

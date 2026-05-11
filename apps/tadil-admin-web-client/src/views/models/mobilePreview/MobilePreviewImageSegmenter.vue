@@ -32,7 +32,9 @@ const props = defineProps<{
 }>();
 
 const {
+  // @ts-ignore
   previewCanvasRef,
+  // @ts-ignore
   previewImageRef,
   previewCanvasWidth,
   previewCanvasHeight,
