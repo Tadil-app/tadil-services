@@ -12,7 +12,7 @@
       <Play v-else class="w-5 h-5 fill-current ml-0.5" />
     </button>
 
-    <div class="flex-grow min-w-[120px]">
+    <div class="grow min-w-30">
       <!-- Progress Bar -->
       <div class="h-1.5 w-full bg-muted rounded-full overflow-hidden">
         <div 
