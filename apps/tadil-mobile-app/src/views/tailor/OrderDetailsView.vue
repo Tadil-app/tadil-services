@@ -72,10 +72,13 @@
           </IonCard>
         </IonCard>
 
-        <IonCard class="ion-padding space-y-4">
-          <p class="font-bold">{{ $t("tailor.orderDetails.chat.title") }}</p>
-          <Chat />
-        </IonCard>
+        <!-- Chat Section -->
+        <div v-if="order" class="px-4 pb-10">
+          <h3 class="text-lg font-bold mb-3 px-2 text-main">{{ $t('chat.title') }}</h3>
+          <div class="h-125 border border-main/5 rounded-3xl overflow-hidden shadow-sm bg-item">
+            <Chat :key="order.id" :order-id="order.id" channel="TAILOR" />
+          </div>
+        </div>
 
         <!-- Action Buttons based on New Flow -->
         <div class="space-y-3">
@@ -108,11 +111,8 @@
 </template>
 
 <script setup lang="ts">
-import { IonButton, IonCard, IonContent, IonPage } from "@ionic/vue";
 import { onBeforeMount, onBeforeUnmount, ref } from "vue";
 import { useRouter } from "vue-router";
-import { QrcodeSvg } from "qrcode.vue";
-import Chat from "@/components/chat/Chat.vue";
 import { DisplayOrderDTO, ORDER_STATUS } from "@/integration/dtos";
 import { useOrders } from "./composables/useOrders.composable";
 import { formatDate } from "@/utils";
@@ -120,7 +120,9 @@ import { useToast } from "@/composables";
 import { useI18n } from "vue-i18n";
 import { apiClient } from "@/integration/api";
 import { useAuthStore } from "@/stores";
-import { ImageContainer, TranslatedName, StatusPill, SecondaryHeader, OrderTimeline } from "@/components";
+import { ImageContainer, TranslatedName, StatusPill, SecondaryHeader, OrderTimeline, Chat } from "@/components";
+import { IonButton, IonCard, IonContent, IonPage } from "@ionic/vue";
+import { QrcodeSvg } from "qrcode.vue";
 
 const props = defineProps<{
   orderId: string;

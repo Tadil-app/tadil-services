@@ -376,6 +376,47 @@ export class Api<
     /**
      * No description
      *
+     * @tags Chat
+     * @name ChatControllerGetMessages
+     * @request GET:/api/chat/{orderId}/{channel}
+     */
+    chatControllerGetMessages: (
+      orderId: string,
+      channel: "TAILOR" | "COURIER",
+      params: RequestParams = {},
+    ) =>
+      this.request<any[], any>({
+        path: `/api/chat/${orderId}/${channel}`,
+        method: "GET",
+        secure: true,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Chat
+     * @name ChatControllerUploadFile
+     * @request POST:/api/chat/upload
+     * @secure
+     */
+    chatControllerUploadFile: (
+      data: { file: File },
+      params: RequestParams = {},
+    ) =>
+      this.request<string, any>({
+        path: `/api/chat/upload`,
+        method: "POST",
+        body: data,
+        secure: true,
+        type: ContentType.FormData,
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
      * @tags Tailor
      * @name TailorControllerGetOrders
      * @request GET:/api/tailor/{id}/orders

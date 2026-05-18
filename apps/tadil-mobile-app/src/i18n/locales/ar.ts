@@ -264,12 +264,17 @@ export const ar = {
     },
   },
   chat: {
+    title: "دردشة الطلب",
     placeholder: "اكتب رسالة...",
-    recording: "جاري التسجيل...",
-    mockMessages: {
-      customer: "مرحباً، هل يمكنك فعل هذا؟",
-      tailor: "نعم بالطبع، يمكننا فعل ذلك من أجلك.",
+    recording: "جاري تسجيل الصوت...",
+    channels: {
+      tailor: "الدردشة مع الخياط",
+      courier: "الدردشة مع المندوب",
     },
+    mockMessages: {
+      customer: "مرحباً، متى سيكون طلبي جاهزاً؟",
+      tailor: "مرحباً، أنا أعمل عليه. يجب أن يكون جاهزاً بحلول الغد.",
+    }
   },
   tailor: {
     navBar: {
@@ -305,7 +310,7 @@ export const ar = {
         title: "التعديلات",
       },
       chat: {
-        title: "الدردشة مع العميل",
+        title: "دردشة الطلب",
       },
       acceptOrder: {
         buttonText: "قبول الطلب",

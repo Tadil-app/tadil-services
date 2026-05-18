@@ -264,12 +264,17 @@ export const hi = {
     },
   },
   chat: {
+    title: "ऑर्डर चैट",
     placeholder: "एक संदेश टाइप करें...",
-    recording: "रिकॉर्डिंग हो रही है...",
-    mockMessages: {
-      customer: "नमस्ते, क्या आप यह कर सकते हैं?",
-      tailor: "हाँ ज़रूर, हम आपके लिए यह कर सकते हैं।",
+    recording: "ऑडियो रिकॉर्ड हो रहा है...",
+    channels: {
+      tailor: "दर्जी के साथ चैट",
+      courier: "कूरियर के साथ चैट",
     },
+    mockMessages: {
+      customer: "नमस्ते, मेरा ऑर्डर कब तक तैयार हो जाएगा?",
+      tailor: "नमस्ते, मैं इस पर काम कर रहा हूँ। यह कल तक तैयार हो जाना चाहिए।",
+    }
   },
   tailor: {
     navBar: {
@@ -305,7 +310,7 @@ export const hi = {
         title: "बदलाव",
       },
       chat: {
-        title: "ग्राहक के साथ चैट",
+        title: "ऑर्डर चैट",
       },
       acceptOrder: {
         buttonText: "ऑर्डर स्वीकार करें",

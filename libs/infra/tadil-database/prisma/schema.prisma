@@ -261,8 +261,27 @@ model Order {
     rejectedReturnCouriers  User[]  @relation("return-courier-rejected-orders")
 
     history OrderStatusHistory[]
+    chats   Chat[]
 
     @@map("orders")
+}
+
+model Chat {
+    id        String         @id @default(uuid())
+    orderId   String
+    order     Order          @relation(fields: [orderId], references: [id], onDelete: Cascade)
+    channel   MessageChannel
+    /// !Message[]
+    content   Json           @default("[]")
+    updatedAt DateTime       @updatedAt
+
+    @@unique([orderId, channel])
+    @@map("chats")
+}
+
+enum MessageChannel {
+    TAILOR
+    COURIER
 }
 
 model OrderStatusHistory {

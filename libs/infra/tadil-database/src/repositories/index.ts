@@ -8,3 +8,4 @@ export * from './courier';
 export * from './customer';
 export * from './orders';
 export * from './wallet';
+export * from './chat';

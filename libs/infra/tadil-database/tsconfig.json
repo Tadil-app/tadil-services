@@ -31,6 +31,9 @@
       "path": "../../core/tadil-orders"
     },
     {
+      "path": "../../core/tadil-chat"
+    },
+    {
       "path": "./tsconfig.lib.json"
     }
   ]

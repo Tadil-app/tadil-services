@@ -1,109 +1,87 @@
 <template>
-  <div
-    class="flex items-center gap-3 bg-main/5 border border-main/10 p-3 rounded-2xl w-full max-w-70"
+  <div 
+    class="flex items-center gap-3 p-3 rounded-2xl border border-main/10 shadow-sm"
+    :class="isOwn ? 'bg-primary/5 ml-auto' : 'bg-item mr-auto'"
   >
-    <button
+    <button 
+      class="w-10 h-10 rounded-full flex items-center justify-center transition-all active:scale-95"
+      :class="isPlaying ? 'bg-primary text-primary-contrast' : 'bg-tertiary text-tertiary-contrast'"
       @click="togglePlay"
-      class="text-primary p-2 flex items-center justify-center transition-transform active:scale-90"
     >
-      <Play v-if="!isPlaying" class="h-5 w-5 fill-current" />
-      <Pause v-else class="h-5 w-5 fill-current" />
+      <Pause v-if="isPlaying" class="w-5 h-5" />
+      <Play v-else class="w-5 h-5 fill-current ml-0.5" />
     </button>
-    <div class="flex flex-col flex-1 gap-1">
-      <input
-        type="range"
-        min="0"
-        :max="duration"
-        step="0.01"
-        :value="currentTime"
-        @input="onSeek"
-        class="w-full h-1.5 bg-gray-300 rounded-lg appearance-none cursor-pointer accent-primary"
-      />
-      <div class="flex justify-between text-xs">
-        <span>{{ formatTime(currentTime) }}</span>
-        <span>{{ formatTime(duration) }}</span>
+
+    <div class="flex-grow min-w-[120px]">
+      <!-- Progress Bar -->
+      <div class="h-1.5 w-full bg-muted rounded-full overflow-hidden">
+        <div 
+          class="h-full bg-primary transition-all duration-100"
+          :style="{ width: progress + '%' }"
+        ></div>
+      </div>
+      <div class="flex justify-between mt-1">
+        <span class="text-[9px] font-mono text-muted-foreground">{{ formatTime(currentTime) }}</span>
+        <span class="text-[9px] font-mono text-muted-foreground">{{ formatTime(duration) }}</span>
       </div>
     </div>
+    
+    <audio ref="audioPlayer" :src="src" @timeupdate="onTimeUpdate" @loadedmetadata="onLoadedMetadata" @ended="onEnded" class="hidden"></audio>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, onUnmounted, watch } from "vue";
-import { Play, Pause } from "lucide-vue-next";
+import { ref, onUnmounted } from 'vue';
+import { Play, Pause } from 'lucide-vue-next';
 
 const props = defineProps<{
   src: string;
+  isOwn?: boolean;
 }>();
 
-const audio = new Audio(props.src);
+const audioPlayer = ref<HTMLAudioElement | null>(null);
 const isPlaying = ref(false);
+const progress = ref(0);
 const currentTime = ref(0);
 const duration = ref(0);
 
-const togglePlay = () => {
+function togglePlay() {
+  if (!audioPlayer.value) return;
+  
   if (isPlaying.value) {
-    audio.pause();
+    audioPlayer.value.pause();
   } else {
-    audio.play();
+    audioPlayer.value.play();
   }
-};
+  isPlaying.value = !isPlaying.value;
+}
 
-const onSeek = (e: Event) => {
-  const target = e.target as HTMLInputElement;
-  const time = parseFloat(target.value);
-  audio.currentTime = time;
-  currentTime.value = time;
-};
+function onTimeUpdate() {
+  if (!audioPlayer.value) return;
+  currentTime.value = audioPlayer.value.currentTime;
+  progress.value = (currentTime.value / duration.value) * 100;
+}
 
-const formatTime = (seconds: number) => {
-  if (isNaN(seconds)) return "0:00";
+function onLoadedMetadata() {
+  if (!audioPlayer.value) return;
+  duration.value = audioPlayer.value.duration;
+}
+
+function onEnded() {
+  isPlaying.value = false;
+  progress.value = 0;
+  currentTime.value = 0;
+}
+
+function formatTime(seconds: number) {
   const mins = Math.floor(seconds / 60);
   const secs = Math.floor(seconds % 60);
-  return `${mins}:${secs.toString().padStart(2, "0")}`;
-};
-
-// Listeners
-onMounted(() => {
-  audio.addEventListener(
-    "loadedmetadata",
-    () => (duration.value = audio.duration),
-  );
-  audio.addEventListener(
-    "timeupdate",
-    () => (currentTime.value = audio.currentTime),
-  );
-  audio.addEventListener("play", () => (isPlaying.value = true));
-  audio.addEventListener("pause", () => (isPlaying.value = false));
-  audio.addEventListener("ended", () => {
-    isPlaying.value = false;
-    currentTime.value = 0;
-  });
-});
+  return `${mins}:${secs.toString().padStart(2, '0')}`;
+}
 
 onUnmounted(() => {
-  audio.pause();
-  audio.src = "";
-  audio.load();
+  if (audioPlayer.value) {
+    audioPlayer.value.pause();
+  }
 });
-
-// If the src changes (e.g., new recording)
-watch(
-  () => props.src,
-  (newSrc) => {
-    audio.src = newSrc;
-    audio.load();
-  },
-);
 </script>
-
-<style scoped>
-/* Custom styling to make the range slider look cleaner */
-input[type="range"]::-webkit-slider-thumb {
-  appearance: none;
-  width: 12px;
-  height: 12px;
-  background: var(--ion-color-primary, #3880ff);
-  border-radius: 50%;
-  cursor: pointer;
-}
-</style>
