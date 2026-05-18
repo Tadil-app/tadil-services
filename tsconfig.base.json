@@ -33,6 +33,7 @@
       "@tadil-customer": ["libs/core/tadil-customer/src/index.ts"],
       "@tadil-orders": ["libs/core/tadil-orders/src/index.ts"],
       "@tadil-wallet": ["libs/core/tadil-wallet/src/index.ts"],
+      "@tadil-chat": ["libs/core/tadil-chat/src/index.ts"],
       "@tadil-sms": ["libs/infra/sms-provider/src/index.ts"]
     }
   }

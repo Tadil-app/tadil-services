@@ -24,7 +24,7 @@ const DataReaderProvider: Provider<DataReader> = {
     return new DataReader(dbClient);
   },
   inject: [DbClient],
-  scope: Scope.REQUEST,
+  scope: Scope.DEFAULT,
 };
 
 const FileStorageProvider: Provider<FileStorageService> = {
@@ -54,7 +54,7 @@ const FileStorageProvider: Provider<FileStorageService> = {
       environment.minio.useSSL == 'true'
     );
   },
-  scope: Scope.REQUEST,
+  scope: Scope.DEFAULT,
 };
 
 export { DbClientProvider, DataReaderProvider, FileStorageProvider };

@@ -263,12 +263,17 @@ export const en = {
     },
   },
   chat: {
+    title: "Order Chat",
     placeholder: "Type a message...",
-    recording: "Recording...",
-    mockMessages: {
-      customer: "Hello, can you do this?",
-      tailor: "Yes sure, we can do that for you.",
+    recording: "Recording audio...",
+    channels: {
+      tailor: "Chat with Tailor",
+      courier: "Chat with Courier",
     },
+    mockMessages: {
+      customer: "Hello, when will my order be ready?",
+      tailor: "Hello, I am working on it. It should be ready by tomorrow.",
+    }
   },
   tailor: {
     navBar: {
@@ -304,7 +309,7 @@ export const en = {
         title: "Alterations",
       },
       chat: {
-        title: "Chat with Customer",
+        title: "Order Chat",
       },
       acceptOrder: {
         buttonText: "Accept Order",

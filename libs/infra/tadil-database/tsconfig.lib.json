@@ -28,6 +28,12 @@
     },
     {
       "path": "../../core/tadil-users/tsconfig.lib.json"
+    },
+    {
+      "path": "../../core/tadil-orders/tsconfig.lib.json"
+    },
+    {
+      "path": "../../core/tadil-chat/tsconfig.lib.json"
     }
   ]
 }

@@ -72,10 +72,23 @@
           </IonCard>
         </IonCard>
 
-        <IonCard class="ion-padding space-y-4">
-          <p class="font-bold">{{ $t("tailor.orderDetails.chat.title") }}</p>
-          <Chat />
-        </IonCard>
+        <!-- Chat Section -->
+        <div v-if="order" class="px-4 pb-10">
+          <h3 class="text-lg font-bold mb-3 px-2 text-main">{{ $t('chat.title') }}</h3>
+          
+          <IonSegment v-model="selectedChatChannel" class="mb-4 bg-item rounded-2xl p-1 border border-main/5">
+            <IonSegmentButton value="TAILOR" class="rounded-xl">
+              <IonLabel>{{ $t('chat.channels.tailor') }}</IonLabel>
+            </IonSegmentButton>
+            <IonSegmentButton value="COURIER" class="rounded-xl">
+              <IonLabel>{{ $t('chat.channels.courier') }}</IonLabel>
+            </IonSegmentButton>
+          </IonSegment>
+
+          <div v-if="order" class="h-125 border border-main/5 rounded-3xl overflow-hidden shadow-sm bg-item">
+            <Chat :key="order.id + selectedChatChannel" :order-id="order.id" :channel="selectedChatChannel" />
+          </div>
+        </div>
 
         <!-- Action Button: Confirm Receipt from Return Courier -->
         <div v-if="order.status === ORDER_STATUS.WAITING_FOR_DROPOFF_TO_CUSTOMER" class="pt-4">
@@ -90,22 +103,22 @@
 </template>
 
 <script setup lang="ts">
-import { IonButton, IonCard, IonContent, IonPage, IonSpinner } from "@ionic/vue";
 import { onMounted, ref } from "vue";
 import { useRouter } from "vue-router";
-import { QrcodeSvg } from "qrcode.vue";
-import Chat from "@/components/chat/Chat.vue";
 import { DisplayOrderDTO, ORDER_STATUS } from "@/integration/dtos";
 import { useCustomerOrders } from "./composables/useCustomerOrders.composable";
 import { formatDate } from "@/utils";
 import { useToast } from "@/composables";
 import { useI18n } from "vue-i18n";
 import { apiClient } from "@/integration/api";
-import { ImageContainer, TranslatedName, StatusPill, SecondaryHeader, OrderTimeline } from "@/components";
+import { ImageContainer, TranslatedName, StatusPill, SecondaryHeader, OrderTimeline, Chat } from "@/components";
+import { IonSegment, IonSegmentButton, IonLabel, IonButton, IonCard, IonContent, IonPage, IonSpinner } from "@ionic/vue";
 
 const props = defineProps<{
   orderId: string;
 }>();
+
+const selectedChatChannel = ref<'TAILOR' | 'COURIER'>('TAILOR');
 
 const { t } = useI18n();
 const { showToast } = useToast();

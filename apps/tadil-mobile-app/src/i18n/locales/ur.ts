@@ -263,12 +263,17 @@ export const ur = {
     },
   },
   chat: {
+    title: "آرڈر چیٹ",
     placeholder: "پیغام لکھیں...",
-    recording: "ریکارڈنگ ہو رہی ہے...",
-    mockMessages: {
-      customer: "ہیلو، کیا آپ یہ کر سکتے ہیں؟",
-      tailor: "جی بالکل، ہم آپ کے لیے یہ کر سکتے ہیں۔",
+    recording: "آڈیو ریکارڈ ہو رہی ہے...",
+    channels: {
+      tailor: "درزی کے ساتھ چیٹ",
+      courier: "کوریئر کے ساتھ چیٹ",
     },
+    mockMessages: {
+      customer: "ہیلو، میرا آرڈر کب تک تیار ہو جائے گا؟",
+      tailor: "ہیلو، میں اس پر کام کر رہا ہوں۔ یہ کل تک تیار ہو جانا چاہیے۔",
+    }
   },
   tailor: {
     navBar: {
@@ -304,7 +309,7 @@ export const ur = {
         title: "تبدیلیاں",
       },
       chat: {
-        title: "گاہک کے ساتھ چیٹ",
+        title: "آرڈر چیٹ",
       },
       acceptOrder: {
         buttonText: "آرڈر قبول کریں",
