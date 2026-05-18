@@ -113,6 +113,7 @@ import { useI18n } from "vue-i18n";
 import { apiClient } from "@/integration/api";
 import { ImageContainer, TranslatedName, StatusPill, SecondaryHeader, OrderTimeline, Chat } from "@/components";
 import { IonSegment, IonSegmentButton, IonLabel, IonButton, IonCard, IonContent, IonPage, IonSpinner } from "@ionic/vue";
+import { QrcodeSvg } from "qrcode.vue";
 
 const props = defineProps<{
   orderId: string;
