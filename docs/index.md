@@ -13,6 +13,7 @@ Welcome to the documentation for the Tadil platform. This `docs` folder contains
 
 - [Core Libraries](./libs-core.md)
 - [Courier Core Library](./libs-core-courier.md)
+- [Chat Core Library](./libs-core-chat.md)
 - [Orders Core Library](./libs-core-orders.md)
 - [Wallet & Payouts Core Library](./libs-core-wallet.md)
 - [Infrastructure Libraries](./libs-infra.md)

@@ -13,6 +13,12 @@
 
 ## Key Features & Optimizations
 
+### Real-time Communication (Order Chat)
+A full-featured chat system integrated into the order management flow.
+- **Dual Channels**: Separate, private chat rooms for "Customer-Tailor" and "Customer-Courier" coordination.
+- **Multimedia Support**: Standard text messages, voice recordings with a built-in player, and camera-integrated image sharing.
+- **WebSockets**: Leverages `socket.io-client` for immediate, refresh-free communication.
+
 ### Local-First Image Storage
 To minimize server load and improve performance, user-uploaded images for **Custom Models** are stored locally on the device's filesystem (`Directory.Data`) while items are in the cart.
 - **Just-in-Time Upload**: Images are only uploaded to the platform API at the final stage of order creation.

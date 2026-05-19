@@ -18,7 +18,7 @@ import {
 import { AuthGuard } from '../auth/auth.guard';
 import { MessageChannel } from '@prisma/client';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { fileUploadLocalPath } from '../utils';
+import { chatFileUploadOptions } from '../utils';
 import { ReadableFile, type FileStorageService } from '@tadil-common';
 import { ChatRepository } from '@tadil-chat';
 import { v4 as uuidv4 } from 'uuid';
@@ -69,7 +69,7 @@ export class ChatController {
   @Post('upload')
   @ApiConsumes('multipart/form-data')
   @ApiOperation({ summary: 'Upload a file for chat (Image or Audio)' })
-  @UseInterceptors(FileInterceptor('file', fileUploadLocalPath))
+  @UseInterceptors(FileInterceptor('file', chatFileUploadOptions))
   async uploadFile(@UploadedFile() file: Express.Multer.File): Promise<string> {
     const imageFile: ReadableFile = {
       path: file.path,

@@ -25,6 +25,40 @@ export function filterImageFiles(
   cb(null, true);
 }
 
+export function filterChatFiles(
+  _req: Request,
+  file: Express.Multer.File,
+  cb: (err: Error | null, acceptFile: boolean) => void
+) {
+  const allowedMimeTypes = [
+    'image/jpeg',
+    'image/png',
+    'image/svg+xml',
+    'image/webp',
+    'audio/mpeg',
+    'audio/wav',
+    'audio/ogg',
+    'audio/aac',
+    'audio/m4a',
+    'audio/mp4',
+    'audio/x-m4a',
+  ];
+  const isMimeTypeValid = allowedMimeTypes.includes(file.mimetype);
+  const isExtensionValid = RegExp(/\.(jpg|jpeg|png|svg|webp|mp3|wav|ogg|aac|m4a)$/).test(
+    file.originalname.toLowerCase()
+  );
+
+  if (!isMimeTypeValid || !isExtensionValid) {
+    return cb(
+      new BadRequestException(
+        'Invalid file type! Supported formats: images (jpg, png, webp, svg) and audio (mp3, wav, m4a, ogg, aac)'
+      ),
+      false
+    );
+  }
+  cb(null, true);
+}
+
 export const fileUploadLocalPath = {
   storage: diskStorage({
     destination: './uploads',
@@ -34,6 +68,17 @@ export const fileUploadLocalPath = {
     },
   }),
   fileFilter: filterImageFiles,
+};
+
+export const chatFileUploadOptions = {
+  storage: diskStorage({
+    destination: './uploads',
+    filename: (_req, file, cb) => {
+      const fileExtension = extname(file.originalname);
+      cb(null, uuidv4() + fileExtension);
+    },
+  }),
+  fileFilter: filterChatFiles,
 };
 
 export async function cleanupLocalFile(filePath: string) {
