@@ -111,18 +111,19 @@
 </template>
 
 <script setup lang="ts">
-import { onBeforeMount, onBeforeUnmount, ref } from "vue";
+import { onBeforeUnmount, ref } from "vue";
 import { useRouter } from "vue-router";
 import { DisplayOrderDTO, ORDER_STATUS } from "@/integration/dtos";
-import { useOrders } from "./composables/useOrders.composable";
+import { useTailorOrdersStore } from "@/stores";
 import { formatDate } from "@/utils";
 import { useToast } from "@/composables";
 import { useI18n } from "vue-i18n";
 import { apiClient } from "@/integration/api";
 import { useAuthStore } from "@/stores";
 import { ImageContainer, TranslatedName, StatusPill, SecondaryHeader, OrderTimeline, Chat } from "@/components";
-import { IonButton, IonCard, IonContent, IonPage } from "@ionic/vue";
+import { IonButton, IonCard, IonContent, IonPage, onIonViewWillEnter } from "@ionic/vue";
 import { QrcodeSvg } from "qrcode.vue";
+import { storeToRefs } from "pinia";
 
 const props = defineProps<{
   orderId: string;
@@ -134,14 +135,16 @@ const authStore = useAuthStore();
 const router = useRouter();
 
 const order = ref<DisplayOrderDTO>();
-const { orders, getOrders } = useOrders();
+const ordersStore = useTailorOrdersStore();
+const { orders } = storeToRefs(ordersStore);
+const { fetchOrders } = ordersStore;
 
 async function findOrderById() {
   if (!props.orderId) {
     router.replace({ name: "tailor-orders" });
     return;
   }
-  await getOrders();
+  await fetchOrders();
   order.value = orders.value.find((o) => o.reference === props.orderId);
   if (!order.value) {
     router.replace({ name: "tailor-orders" });
@@ -193,7 +196,7 @@ async function markReady() {
   }
 }
 
-onBeforeMount(async () => {
+onIonViewWillEnter(async () => {
   await findOrderById();
 });
 

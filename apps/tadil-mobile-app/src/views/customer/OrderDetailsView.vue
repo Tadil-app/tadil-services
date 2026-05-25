@@ -103,17 +103,18 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref } from "vue";
+import { ref } from "vue";
 import { useRouter } from "vue-router";
 import { DisplayOrderDTO, ORDER_STATUS } from "@/integration/dtos";
-import { useCustomerOrders } from "./composables/useCustomerOrders.composable";
+import { useCustomerOrdersStore } from "@/stores";
 import { formatDate } from "@/utils";
 import { useToast } from "@/composables";
 import { useI18n } from "vue-i18n";
 import { apiClient } from "@/integration/api";
 import { ImageContainer, TranslatedName, StatusPill, SecondaryHeader, OrderTimeline, Chat } from "@/components";
-import { IonSegment, IonSegmentButton, IonLabel, IonButton, IonCard, IonContent, IonPage, IonSpinner } from "@ionic/vue";
+import { IonSegment, IonSegmentButton, IonLabel, IonButton, IonCard, IonContent, IonPage, IonSpinner, onIonViewWillEnter } from "@ionic/vue";
 import { QrcodeSvg } from "qrcode.vue";
+import { storeToRefs } from "pinia";
 
 const props = defineProps<{
   orderId: string;
@@ -127,7 +128,9 @@ const router = useRouter();
 
 const order = ref<DisplayOrderDTO>();
 const isActionLoading = ref(false);
-const { orders, isLoading, fetchOrders } = useCustomerOrders();
+const ordersStore = useCustomerOrdersStore();
+const { orders, isLoading } = storeToRefs(ordersStore);
+const { fetchOrders } = ordersStore;
 
 async function findOrderById() {
   if (!props.orderId) {
@@ -157,7 +160,7 @@ async function confirmReceipt() {
   }
 }
 
-onMounted(async () => {
+onIonViewWillEnter(async () => {
   await findOrderById();
 });
 </script>

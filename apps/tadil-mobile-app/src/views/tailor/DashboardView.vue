@@ -2,6 +2,9 @@
   <IonPage>
     <MainHeader />
     <IonContent>
+      <IonRefresher slot="fixed" @ion-refresh="fetchOrders">
+        <IonRefresherContent refreshing-spinner="bubbles" />
+      </IonRefresher>
       <div
         class="ion-padding text-white bg-linear-to-br from-primary via-secondary to-tertiary shadow-lg"
       >
@@ -45,17 +48,26 @@
 import {
   IonContent,
   IonPage,
+  IonRefresher,
+  IonRefresherContent,
+  onIonViewWillEnter,
 } from "@ionic/vue";
-import { useOrders } from "./composables/useOrders.composable";
+import { useTailorOrdersStore } from "@/stores";
 import MainHeader from "@/components/MainHeader.vue";
 import { StatsGrid, OrderListItem } from "@/components";
 import { useRouter } from "vue-router";
+import { storeToRefs } from "pinia";
 
+const router = useRouter();
+const ordersStore = useTailorOrdersStore();
 const {
   pendingOrders,
   inProgressOrders,
   doneOrders,
-} = useOrders();
+} = storeToRefs(ordersStore);
+const { fetchOrders } = ordersStore;
 
-const router = useRouter();
+onIonViewWillEnter(() => {
+  fetchOrders();
+});
 </script>

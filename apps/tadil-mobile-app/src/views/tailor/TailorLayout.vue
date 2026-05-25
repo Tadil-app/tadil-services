@@ -29,13 +29,14 @@ import {
   IonTabs,
   IonPage,
 } from "@ionic/vue";
-import { useOrders } from "./composables/useOrders.composable";
+import { useTailorOrdersStore } from "@/stores";
 import { onBeforeMount } from "vue";
 import { House, PackageSearch, Wallet } from "lucide-vue-next";
 
-const { getOrders } = useOrders();
+const ordersStore = useTailorOrdersStore();
+const { fetchOrders } = ordersStore;
 
 onBeforeMount(() => {
-  getOrders();
+  fetchOrders();
 });
 </script>

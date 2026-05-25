@@ -29,6 +29,9 @@
     </IonHeader>
 
     <IonContent class="ion-padding">
+      <IonRefresher slot="fixed" @ion-refresh="fetchOrders">
+        <IonRefresherContent refreshing-spinner="bubbles" />
+      </IonRefresher>
       <div v-if="isLoading" class="flex justify-center py-20">
         <IonSpinner name="crescent" />
       </div>
@@ -60,16 +63,22 @@ import {
   IonPage,
   IonSearchbar,
   IonSpinner,
+  IonRefresher,
+  IonRefresherContent,
+  onIonViewWillEnter,
 } from "@ionic/vue";
-import { computed, ref, onMounted } from "vue";
+import { computed, ref } from "vue";
 import { ORDER_STATUS } from "@/integration/dtos";
-import { useCustomerOrders } from "./composables/useCustomerOrders.composable";
+import { useCustomerOrdersStore } from "@/stores";
 import { SecondaryHeader, OrderListItem } from "@/components";
 import { Package } from "lucide-vue-next";
 import { useRouter } from "vue-router";
+import { storeToRefs } from "pinia";
 
 const router = useRouter();
-const { orders, isLoading, fetchOrders } = useCustomerOrders();
+const ordersStore = useCustomerOrdersStore();
+const { orders, isLoading } = storeToRefs(ordersStore);
+const { fetchOrders } = ordersStore;
 
 const searchFilter = ref("");
 const orderStatus = [
@@ -91,7 +100,7 @@ const filteredOrders = computed(() => {
   });
 });
 
-onMounted(() => {
+onIonViewWillEnter(() => {
   fetchOrders();
 });
 </script>

@@ -32,7 +32,7 @@
     </IonHeader>
 
     <IonContent>
-      <IonRefresher slot="fixed" @ion-refresh="getOrders">
+      <IonRefresher slot="fixed" @ion-refresh="fetchOrders">
         <IonRefresherContent refreshing-spinner="bubbles" />
       </IonRefresher>
       <div class="px-2 space-y-2 mt-2">
@@ -65,15 +65,19 @@ import {
   IonSearchbar,
   IonRefresher,
   IonRefresherContent,
+  onIonViewWillEnter,
 } from "@ionic/vue";
 import { computed, ref } from "vue";
-import { useOrders } from "./composables/useOrders.composable";
+import { useTailorOrdersStore } from "@/stores";
 import { ORDER_STATUS } from "@/integration/dtos";
 import { OrderListItem, SecondaryHeader } from "@/components";
 import { useRouter } from "vue-router";
+import { storeToRefs } from "pinia";
 
-const { isLoading, orders, getOrders } = useOrders();
 const router = useRouter();
+const ordersStore = useTailorOrdersStore();
+const { orders, isLoading } = storeToRefs(ordersStore);
+const { fetchOrders } = ordersStore;
 
 const ordersSearchFilter = ref("");
 const orderStatus = [
@@ -95,6 +99,10 @@ const filteredOrders = computed(() =>
         .filter((order) => order.status === selectedStatus.value)
         .filter((order) => order.reference.includes(ordersSearchFilter.value)),
 );
+
+onIonViewWillEnter(() => {
+  fetchOrders();
+});
 </script>
 
 <style scoped>

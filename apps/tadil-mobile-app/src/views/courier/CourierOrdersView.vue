@@ -31,7 +31,7 @@
     </IonHeader>
 
     <IonContent>
-      <IonRefresher slot="fixed" @ion-refresh="handleRefresh">
+      <IonRefresher slot="fixed" @ion-refresh="fetchOrders">
         <IonRefresherContent refreshing-spinner="bubbles" />
       </IonRefresher>
 
@@ -68,17 +68,19 @@ import {
   IonSearchbar,
   IonRefresher,
   IonRefresherContent,
+  onIonViewWillEnter,
 } from "@ionic/vue";
-import { ref, onMounted, computed } from "vue";
+import { ref, computed } from "vue";
 import { useRouter } from "vue-router";
-import { useAuthStore } from "@/stores";
-import { apiClient } from "@/integration/api";
-import { DisplayOrderDTO, ORDER_STATUS } from "@/integration/dtos";
+import { useCourierOrdersStore } from "@/stores";
+import { ORDER_STATUS } from "@/integration/dtos";
+import { storeToRefs } from "pinia";
 
 const router = useRouter();
-const authStore = useAuthStore();
-const orders = ref<DisplayOrderDTO[]>([]);
-const isLoading = ref(true);
+const ordersStore = useCourierOrdersStore();
+const { orders, isLoading } = storeToRefs(ordersStore);
+const { fetchOrders } = ordersStore;
+
 const searchQuery = ref("");
 const selectedStatus = ref("all");
 
@@ -107,29 +109,13 @@ const filteredOrders = computed(() => {
   return list;
 });
 
-async function fetchOrders() {
-  if (!authStore.userId) return;
-  isLoading.value = true;
-  try {
-    const { data } = await apiClient.courierControllerGetOrders(authStore.userId);
-    orders.value = data;
-  } catch (error) {
-    console.error("Failed to fetch courier orders", error);
-  } finally {
-    isLoading.value = false;
-  }
-}
-
-async function handleRefresh(event: any) {
-  await fetchOrders();
-  event.target.complete();
-}
-
 function goToOrder(id: string) {
   router.push(`/courier/orders/${id}`);
 }
 
-onMounted(fetchOrders);
+onIonViewWillEnter(() => {
+  fetchOrders();
+});
 </script>
 
 <style scoped>
