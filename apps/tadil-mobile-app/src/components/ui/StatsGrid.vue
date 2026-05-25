@@ -14,18 +14,12 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from "vue";
-import { ORDER_STATUS } from "@/integration/dtos";
+export interface StatItem {
+  label: string;
+  count: number;
+}
 
-const props = defineProps<{
-  pendingCount: number;
-  inProgressCount: number;
-  doneCount: number;
+defineProps<{
+  stats: StatItem[];
 }>();
-
-const stats = computed(() => [
-  { label: ORDER_STATUS.PENDING, count: props.pendingCount },
-  { label: ORDER_STATUS.IN_PROGRESS, count: props.inProgressCount },
-  { label: ORDER_STATUS.DONE, count: props.doneCount },
-]);
 </script>

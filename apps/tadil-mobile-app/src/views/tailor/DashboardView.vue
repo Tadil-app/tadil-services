@@ -10,9 +10,14 @@
       >
         <h3 class="text-2xl font-bold mb-4">{{ $t("tailor.dashboard.title") }}</h3>
         <StatsGrid
-          :pending-count="pendingOrders.length"
-          :in-progress-count="inProgressOrders.length"
-          :done-count="doneOrders.length"
+          :stats="[
+            {
+              label: 'waitingForTailorAssignement',
+              count: pendingOrders.length,
+            },
+            { label: 'inProgress', count: inProgressOrders.length },
+            { label: 'done', count: doneOrders.length },
+          ]"
         />
       </div>
       <div>

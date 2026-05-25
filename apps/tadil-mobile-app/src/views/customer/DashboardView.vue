@@ -16,9 +16,11 @@
         </div>
         <StatsGrid
           v-else
-          :pending-count="pendingOrders.length"
-          :in-progress-count="inProgressOrders.length"
-          :done-count="doneOrders.length"
+          :stats="[
+            { label: 'pending', count: pendingOrders.length },
+            { label: 'inProgress', count: inProgressOrders.length },
+            { label: 'done', count: doneOrders.length },
+          ]"
         />
       </div>
 

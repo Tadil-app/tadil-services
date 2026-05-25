@@ -14,9 +14,13 @@
         </div>
         <StatsGrid
           v-else
-          :pending-count="pendingPickups.length"
-          :in-progress-count="activeOrdersCount"
-          :done-count="0"
+          :stats="[
+            {
+              label: 'waitingForCourierAssignement',
+              count: pendingPickups.length,
+            },
+            { label: 'inProgress', count: activeOrdersCount },
+          ]"
         />
       </div>
 
