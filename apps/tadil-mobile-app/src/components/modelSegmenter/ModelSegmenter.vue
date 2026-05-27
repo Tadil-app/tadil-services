@@ -4,7 +4,7 @@
   >
     <img
       ref="imageRef"
-      :src="imageUrl"
+      :src="computedImageUrl"
       :alt="alt"
       @load="initCanvas(), highlightPolygon(section)"
       class="max-h-full hidden"
@@ -21,13 +21,26 @@
 <script setup lang="ts">
 import { Point } from "@/integration/dtos";
 import { useModelSegmenter } from "./useModelSegmenter.composable";
-import { onBeforeUnmount } from "vue";
+import { onBeforeUnmount, computed } from "vue";
+import { Capacitor } from "@capacitor/core";
 
-defineProps<{
+const props = defineProps<{
   imageUrl: string;
   section: Point[];
   alt?: string;
 }>();
+
+const computedImageUrl = computed(() => {
+  if (!props.imageUrl) return "";
+  if (
+    props.imageUrl.startsWith("file://") ||
+    props.imageUrl.startsWith("content://") ||
+    props.imageUrl.startsWith("/")
+  ) {
+    return Capacitor.convertFileSrc(props.imageUrl);
+  }
+  return props.imageUrl;
+});
 
 const {
   canvasRef,

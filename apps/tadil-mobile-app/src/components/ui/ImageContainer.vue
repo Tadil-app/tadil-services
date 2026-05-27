@@ -3,7 +3,7 @@
     class="aspect-3/4 h-full w-full flex items-center justify-center bg-primary/10 overflow-hidden"
   >
     <span
-      v-if="!imageUrl"
+      v-if="!computedImageUrl"
       class="w-full h-full flex flex-col items-center justify-center opacity-60"
     >
       <p class="text-xl font-semibold">{{ alt }}</p>
@@ -12,7 +12,7 @@
     <img
       v-else
       ref="imageRef"
-      :src="imageUrl"
+      :src="computedImageUrl"
       :alt="alt"
       class="max-h-full"
       loading="lazy"
@@ -24,7 +24,8 @@
 <script setup lang="ts">
 import { Point } from "@/integration/dtos";
 import { Image } from "lucide-vue-next";
-import { ref } from "vue";
+import { computed, ref } from "vue";
+import { Capacitor } from "@capacitor/core";
 
 const imageRef = ref<HTMLImageElement | null>(null);
 const emit = defineEmits<{
@@ -36,6 +37,18 @@ const props = defineProps<{
   alt?: string;
   isSegmenter?: boolean;
 }>();
+
+const computedImageUrl = computed(() => {
+  if (!props.imageUrl) return undefined;
+  if (
+    props.imageUrl.startsWith("file://") ||
+    props.imageUrl.startsWith("content://") ||
+    props.imageUrl.startsWith("/")
+  ) {
+    return Capacitor.convertFileSrc(props.imageUrl);
+  }
+  return props.imageUrl;
+});
 
 function getOriginalImageCoords(event: MouseEvent) {
   if (!props.isSegmenter) return;

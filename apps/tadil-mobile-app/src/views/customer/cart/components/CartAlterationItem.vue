@@ -2,9 +2,16 @@
   <div
     class="relative flex gap-4 p-3 rounded-2xl border border-border bg-item text-main shadow-sm overflow-hidden"
   >
-    <!-- Left: Small Segmenter -->
-    <div class="w-28 h-28 shrink-0 bg-medium/5 rounded-xl overflow-hidden">
+    <!-- Left: Small Segmenter / Image -->
+    <div class="w-28 h-28 shrink-0 bg-medium/5 rounded-xl overflow-hidden relative">
+      <ImageContainer
+        v-if="model.id.startsWith('custom')"
+        :imageUrl="imageUrl"
+        :alt="section.englishName"
+        class="h-full w-full object-cover"
+      />
       <ModelSegmenter
+        v-else
         :imageUrl="imageUrl"
         :section="section.coordinates"
         :alt="section.englishName"
@@ -65,7 +72,7 @@
 
 <script setup lang="ts">
 import { IonButton } from "@ionic/vue";
-import { TranslatedName, ModelSegmenter } from "@/components";
+import { TranslatedName, ModelSegmenter, ImageContainer } from "@/components";
 import { Pencil, Trash2 } from "lucide-vue-next";
 import type { SelectedAlteration, SelectedSection } from "@/types/cart.types";
 import type { DisplayModelDTO } from "@/integration/dtos";
