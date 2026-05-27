@@ -275,6 +275,7 @@ export const bn = {
     title: "অর্ডার চ্যাট",
     placeholder: "একটি বার্তা লিখুন...",
     recording: "অডিও রেকর্ড হচ্ছে...",
+    newMessage: "নতুন বার্তা",
     channels: {
       tailor: "দর্জির সাথে চ্যাট",
       courier: "কুরিয়ারের সাথে চ্যাট",

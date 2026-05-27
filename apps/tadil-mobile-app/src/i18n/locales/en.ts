@@ -273,6 +273,7 @@ export const en = {
     title: "Order Chat",
     placeholder: "Type a message...",
     recording: "Recording audio...",
+    newMessage: "New Message",
     channels: {
       tailor: "Chat with Tailor",
       courier: "Chat with Courier",
