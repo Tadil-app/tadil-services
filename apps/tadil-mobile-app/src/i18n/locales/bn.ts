@@ -211,8 +211,10 @@ export const bn = {
     price: "মূল্য",
     itemsCount: "মোট আইটেম",
     totalPrice: "মোট মূল্য",
-    clearAll: "সব মুছুন",
+    clearAll: "সব মুছে ফেলুন",
+    clearConfirmMessage: "আপনি কি নিশ্চিত যে আপনি আপনার কার্ট খালি করতে চান? এই ক্রিয়াটি পূর্বাবস্থায় ফেরানো যাবে না।",
     checkout: "চেকআউট",
+
   },
   cartEdit: {
     title: "কার্ট আইটেম পরিবর্তন করুন",

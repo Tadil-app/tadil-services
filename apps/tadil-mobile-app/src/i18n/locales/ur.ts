@@ -212,6 +212,7 @@ export const ur = {
     itemsCount: "کل اشیاء",
     totalPrice: "کل قیمت",
     clearAll: "سب صاف کریں",
+    clearConfirmMessage: "کیا آپ واقعی اپنا کارٹ خالی کرنا چاہتے ہیں؟ اس عمل کو واپس نہیں لیا جا سکتا۔",
     checkout: "چیک آؤٹ",
   },
   cartEdit: {

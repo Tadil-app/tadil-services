@@ -213,6 +213,7 @@ export const ar = {
     itemsCount: "إجمالي القطع",
     totalPrice: "السعر الإجمالي",
     clearAll: "مسح الكل",
+    clearConfirmMessage: "هل أنت متأكد أنك تريد تفريغ عربة التسوق؟ لا يمكن التراجع عن هذا الإجراء.",
     checkout: "الدفع",
   },
   cartEdit: {

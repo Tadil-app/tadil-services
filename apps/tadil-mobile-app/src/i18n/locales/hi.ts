@@ -213,6 +213,7 @@ export const hi = {
     itemsCount: "कुल आइटम",
     totalPrice: "कुल कीमत",
     clearAll: "सभी हटाएँ",
+    clearConfirmMessage: "क्या आप वाकई अपना कार्ट खाली करना चाहते हैं? इस क्रिया को पूर्ववत नहीं किया जा सकता।",
     checkout: "चेकआउट",
   },
   cartEdit: {

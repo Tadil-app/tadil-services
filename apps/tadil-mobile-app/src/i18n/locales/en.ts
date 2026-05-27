@@ -212,6 +212,7 @@ export const en = {
     itemsCount: "Total Items",
     totalPrice: "Total Price",
     clearAll: "Clear All",
+    clearConfirmMessage: "Are you sure you want to clear your cart? This action cannot be undone.",
     checkout: "Checkout",
   },
   cartEdit: {

@@ -61,7 +61,7 @@
             fill="outline"
             color="secondary"
             shape="round"
-            @click="cartStore.clearCart"
+            @click="confirmClearCart"
           >
             {{ $t("cart.clearAll") }}
           </IonButton>
@@ -75,15 +75,40 @@
 </template>
 
 <script setup lang="ts">
-import { IonButton, IonContent, IonFooter, IonPage } from "@ionic/vue";
+import { IonButton, IonContent, IonFooter, IonPage, alertController } from "@ionic/vue";
 import { ShoppingBag } from "lucide-vue-next";
 import { useCartStore } from "@/stores";
 import CartItem from "./components/CartItem.vue";
 import { useRouter } from "vue-router";
 import { SecondaryHeader, EmptyState } from "@/components";
+import { useI18n } from "vue-i18n";
 
 const cartStore = useCartStore();
 const router = useRouter();
+const { t } = useI18n();
+
+async function confirmClearCart() {
+  const alert = await alertController.create({
+    header: t("cart.clearAll"),
+    message: t("cart.clearConfirmMessage"),
+    cssClass: "section-alert",
+    buttons: [
+      {
+        text: t("common.buttons.cancel"),
+        role: "cancel",
+        cssClass: "btn-cancel",
+      },
+      {
+        text: t("cart.clearAll"),
+        cssClass: "btn-remove",
+        handler: () => {
+          cartStore.clearCart();
+        },
+      },
+    ],
+  });
+  await alert.present();
+}
 </script>
 
 <style scoped>
