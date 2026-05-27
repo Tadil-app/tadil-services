@@ -61,6 +61,12 @@ export const ar = {
       },
       noAlterations: "يرجى إضافة تعديل واحد على الأقل.",
       itemAdded: "تم إضافة القطعة إلى السلة بنجاح.",
+      itemAddedOptions: {
+        header: "تمت الإضافة للسلة",
+        message: "تمت إضافة القطعة إلى سلة التسوق بنجاح. ماذا تريد أن تفعل بعد ذلك؟",
+        viewCart: "عرض السلة",
+        continueShopping: "مواصلة التسوق",
+      },
     },
     errors: {
       voiceRecorder: {

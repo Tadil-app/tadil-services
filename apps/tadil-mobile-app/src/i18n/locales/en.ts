@@ -61,6 +61,12 @@ export const en = {
       },
       noAlterations: "Please add at least one alteration.",
       itemAdded: "Item added to cart successfully.",
+      itemAddedOptions: {
+        header: "Item Added",
+        message: "Item added to cart successfully. What would you like to do next?",
+        viewCart: "View Cart",
+        continueShopping: "Continue Shopping",
+      },
     },
     errors: {
       voiceRecorder: {

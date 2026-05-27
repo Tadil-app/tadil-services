@@ -61,6 +61,12 @@ export const ur = {
       },
       noAlterations: "براہ کرم کم از کم ایک تبدیلی شامل کریں۔",
       itemAdded: "آئٹم کامیابی کے ساتھ کارٹ میں شامل کر دیا گیا۔",
+      itemAddedOptions: {
+        header: "آئٹم شامل ہو گیا",
+        message: "آئٹم کامیابی کے ساتھ کارٹ میں شامل کر دیا گیا ہے۔ آپ آگے کیا کرنا چاہیں گے؟",
+        viewCart: "کارٹ دیکھیں",
+        continueShopping: "خریداری جاری رکھیں",
+      },
     },
     errors: {
       voiceRecorder: {

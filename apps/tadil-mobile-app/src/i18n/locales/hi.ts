@@ -61,6 +61,12 @@ export const hi = {
       },
       noAlterations: "कृपया कम से कम एक बदलाव जोड़ें।",
       itemAdded: "आइटम सफलतापूर्वक कार्ट में जोड़ दिया गया।",
+      itemAddedOptions: {
+        header: "आइटम जोड़ा गया",
+        message: "आइटम सफलतापूर्वक कार्ट में जोड़ दिया गया है। आप आगे क्या करना चाहेंगे?",
+        viewCart: "कार्ट देखें",
+        continueShopping: "खरीदारी जारी रखें",
+      },
     },
     errors: {
       voiceRecorder: {

@@ -262,11 +262,30 @@ async function handleAddToCart() {
 
   await addItem(selectedModel.value, modelItems.value);
   resetSelection();
-  router.replace({ name: "customer-dashboard" });
-  showToast({
-    message: t("common.alerts.itemAdded"),
-    color: "success",
+
+  const alert = await alertController.create({
+    header: t("common.alerts.itemAddedOptions.header"),
+    message: t("common.alerts.itemAddedOptions.message"),
+    backdropDismiss: false,
+    cssClass: "section-alert",
+    buttons: [
+      {
+        text: t("common.alerts.itemAddedOptions.continueShopping"),
+        cssClass: "btn-cancel",
+        handler: () => {
+          router.replace({ name: "customer-new-order" });
+        },
+      },
+      {
+        text: t("common.alerts.itemAddedOptions.viewCart"),
+        cssClass: "btn-add",
+        handler: () => {
+          router.replace({ name: "customer-cart" });
+        },
+      },
+    ],
   });
+  await alert.present();
 }
 
 onBeforeRouteLeave(async () => {

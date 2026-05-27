@@ -351,7 +351,30 @@ async function handleAddToCart() {
 
     await cartStore.addItem(customModel, configuration);
     reset();
-    router.replace({ name: "customer-dashboard" });
+
+    const alert = await alertController.create({
+      header: t("common.alerts.itemAddedOptions.header"),
+      message: t("common.alerts.itemAddedOptions.message"),
+      backdropDismiss: false,
+      cssClass: "section-alert",
+      buttons: [
+        {
+          text: t("common.alerts.itemAddedOptions.continueShopping"),
+          cssClass: "btn-cancel",
+          handler: () => {
+            router.replace({ name: "customer-new-order" });
+          },
+        },
+        {
+          text: t("common.alerts.itemAddedOptions.viewCart"),
+          cssClass: "btn-add",
+          handler: () => {
+            router.replace({ name: "customer-cart" });
+          },
+        },
+      ],
+    });
+    await alert.present();
   } catch (error) {
     console.error("Add to cart failed", error);
     showToast({ message: t("common.errors.addToCartFailed"), color: "danger" });
