@@ -18,7 +18,16 @@
           <IonLabel class="text-xs">{{ $t("tailor.navBar.orders") }}</IonLabel>
         </IonTabButton>
         <IonTabButton tab="cart" href="/customer/cart">
-          <ShoppingBag />
+          <div class="relative">
+            <ShoppingBag />
+            <IonBadge
+              v-if="cartStore.itemsCount > 0"
+              color="tertiary"
+              class="absolute -top-1 -right-1.5 px-1 min-w-[18px] h-[18px] flex items-center justify-center text-[10px] rounded-full animate-pulse"
+            >
+              {{ cartStore.itemsCount }}
+            </IonBadge>
+          </div>
           <IonLabel class="text-xs">{{ $t("cart.title") }}</IonLabel>
         </IonTabButton>
       </IonTabBar>
@@ -34,11 +43,14 @@ import {
   IonTabs,
   IonLabel,
   IonPage,
+  IonBadge,
 } from "@ionic/vue";
 import { House, PackagePlus, ShoppingBag } from "lucide-vue-next";
 import { computed } from "vue";
 import { useRoute } from "vue-router";
+import { useCartStore } from "@/stores";
 
+const cartStore = useCartStore();
 const route = useRoute();
 const isTabsVisible = computed(() => {
   return (
