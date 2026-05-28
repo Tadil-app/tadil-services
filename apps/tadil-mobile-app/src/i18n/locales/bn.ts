@@ -278,6 +278,12 @@ export const bn = {
     sendingImage: "ছবি পাঠানো হচ্ছে...",
     sendingAudio: "অডিও পাঠানো হচ্ছে...",
     newMessage: "নতুন বার্তা",
+    messageDeleted: "এই বার্তাটি মুছে ফেলা হয়েছে",
+    edit: "সম্পাদনা করুন",
+    delete: "মুছে ফেলুন",
+    edited: "সম্পাদিত",
+    messageOptions: "বার্তার বিকল্পসমূহ",
+    editMessage: "বার্তা সম্পাদনা করুন",
     channels: {
       tailor: "দর্জির সাথে চ্যাট",
       courier: "কুরিয়ারের সাথে চ্যাট",

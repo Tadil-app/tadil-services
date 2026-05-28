@@ -58,4 +58,78 @@ export class PrismaChatRepository implements ChatRepository {
       });
     }
   }
+
+  async deleteMessage(
+    orderId: string,
+    channel: MessageChannel,
+    messageId: string,
+    senderId: string
+  ): Promise<void> {
+    const existingChat = await this._db.chat.findUnique({
+      where: {
+        orderId_channel: {
+          orderId,
+          channel,
+        },
+      },
+    });
+
+    if (!existingChat) return;
+
+    const messages = Array.isArray(existingChat.content) ? (existingChat.content as ChatMessage[]) : [];
+    const updatedMessages = messages.map((msg) => {
+      if (msg.id === messageId && msg.senderId === senderId) {
+        return {
+          ...msg,
+          deletedAt: new Date().toISOString(),
+        };
+      }
+      return msg;
+    });
+
+    await this._db.chat.update({
+      where: { id: existingChat.id },
+      data: {
+        content: updatedMessages as unknown as Prisma.JsonArray,
+      },
+    });
+  }
+
+  async editMessage(
+    orderId: string,
+    channel: MessageChannel,
+    messageId: string,
+    senderId: string,
+    newContent: string
+  ): Promise<void> {
+    const existingChat = await this._db.chat.findUnique({
+      where: {
+        orderId_channel: {
+          orderId,
+          channel,
+        },
+      },
+    });
+
+    if (!existingChat) return;
+
+    const messages = Array.isArray(existingChat.content) ? (existingChat.content as ChatMessage[]) : [];
+    const updatedMessages = messages.map((msg) => {
+      if (msg.id === messageId && msg.senderId === senderId && msg.type === 'TEXT') {
+        return {
+          ...msg,
+          content: newContent,
+          isEdited: true,
+        };
+      }
+      return msg;
+    });
+
+    await this._db.chat.update({
+      where: { id: existingChat.id },
+      data: {
+        content: updatedMessages as unknown as Prisma.JsonArray,
+      },
+    });
+  }
 }

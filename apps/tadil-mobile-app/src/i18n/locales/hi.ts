@@ -277,6 +277,12 @@ export const hi = {
     sendingImage: "छवि भेजी जा रही है...",
     sendingAudio: "ऑडियो भेजा जा रहा है...",
     newMessage: "नया संदेश",
+    messageDeleted: "यह संदेश हटा दिया गया था",
+    edit: "संपादित करें",
+    delete: "हटाएं",
+    edited: "संपादित",
+    messageOptions: "संदेश विकल्प",
+    editMessage: "संदेश संपादित करें",
     channels: {
       tailor: "दर्जी के साथ चैट",
       courier: "कूरियर के साथ चैट",

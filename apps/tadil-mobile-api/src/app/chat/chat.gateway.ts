@@ -6,10 +6,12 @@ import {
   ConnectedSocket,
 } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
-import { SendMessageUseCase } from '@tadil-chat';
+import { SendMessageUseCase, DeleteMessageUseCase, EditMessageUseCase } from '@tadil-chat';
 import { Inject, UseGuards, Logger } from '@nestjs/common';
 import { WsAuthGuard } from '../auth/ws-auth.guard';
 import { SendMessageDto } from './dtos/sendMessage.dto';
+import { DeleteMessageDto } from './dtos/deleteMessage.dto';
+import { EditMessageDto } from './dtos/editMessage.dto';
 import { environment } from '../../environments/environment';
 
 @WebSocketGateway({
@@ -25,7 +27,11 @@ export class ChatGateway {
 
   constructor(
     @Inject('SendMessageUseCase')
-    private readonly _sendMessageUseCase: SendMessageUseCase
+    private readonly _sendMessageUseCase: SendMessageUseCase,
+    @Inject('DeleteMessageUseCase')
+    private readonly _deleteMessageUseCase: DeleteMessageUseCase,
+    @Inject('EditMessageUseCase')
+    private readonly _editMessageUseCase: EditMessageUseCase
   ) {
     this.logger.log('ChatGateway initialized');
   }
@@ -71,5 +77,50 @@ export class ChatGateway {
     this.server.to(roomId).emit('newMessage', mappedMessage);
     
     return mappedMessage;
+  }
+
+  @UseGuards(WsAuthGuard)
+  @SubscribeMessage('deleteMessage')
+  async handleDelete(
+    @ConnectedSocket() client: Socket,
+    @MessageBody() dto: DeleteMessageDto
+  ) {
+    // @ts-ignore
+    const senderId = client.user.sub;
+
+    await this._deleteMessageUseCase.execute({
+      ...dto,
+      senderId,
+    });
+
+    const roomId = `order_${dto.orderId}_${dto.channel}`;
+    this.logger.log(`Broadcasting deletion to room ${roomId}: ${dto.messageId}`);
+    this.server.to(roomId).emit('messageDeleted', { messageId: dto.messageId });
+    
+    return { status: 'deleted' };
+  }
+
+  @UseGuards(WsAuthGuard)
+  @SubscribeMessage('editMessage')
+  async handleEdit(
+    @ConnectedSocket() client: Socket,
+    @MessageBody() dto: EditMessageDto
+  ) {
+    // @ts-ignore
+    const senderId = client.user.sub;
+
+    await this._editMessageUseCase.execute({
+      ...dto,
+      senderId,
+    });
+
+    const roomId = `order_${dto.orderId}_${dto.channel}`;
+    this.logger.log(`Broadcasting edit to room ${roomId}: ${dto.messageId}`);
+    this.server.to(roomId).emit('messageEdited', { 
+      messageId: dto.messageId, 
+      newContent: dto.newContent 
+    });
+    
+    return { status: 'edited' };
   }
 }

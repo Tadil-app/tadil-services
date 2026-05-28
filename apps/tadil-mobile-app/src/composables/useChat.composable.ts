@@ -10,6 +10,8 @@ export interface ChatMessage {
   content: string;
   timestamp: string;
   metadata?: any;
+  deletedAt?: string;
+  isEdited?: boolean;
 }
 
 export function useChat(orderId: string, channel: 'TAILOR' | 'COURIER') {
@@ -52,6 +54,31 @@ export function useChat(orderId: string, channel: 'TAILOR' | 'COURIER') {
       messages.value.push(message);
     });
 
+    socket.value.on('messageDeleted', ({ messageId }: { messageId: string }) => {
+      messages.value = messages.value.map((msg) => {
+        if (msg.id === messageId) {
+          return {
+            ...msg,
+            deletedAt: new Date().toISOString(),
+          };
+        }
+        return msg;
+      });
+    });
+
+    socket.value.on('messageEdited', ({ messageId, newContent }: { messageId: string; newContent: string }) => {
+      messages.value = messages.value.map((msg) => {
+        if (msg.id === messageId) {
+          return {
+            ...msg,
+            content: newContent,
+            isEdited: true,
+          };
+        }
+        return msg;
+      });
+    });
+
     socket.value.on('disconnect', () => {
       isConnected.value = false;
     });
@@ -65,6 +92,23 @@ export function useChat(orderId: string, channel: 'TAILOR' | 'COURIER') {
       channel,
       type: 'TEXT',
       content: text,
+    });
+  }
+
+  function deleteMessage(messageId: string) {
+    socket.value?.emit('deleteMessage', {
+      orderId,
+      channel,
+      messageId,
+    });
+  }
+
+  function editMessage(messageId: string, newContent: string) {
+    socket.value?.emit('editMessage', {
+      orderId,
+      channel,
+      messageId,
+      newContent,
     });
   }
 
@@ -105,6 +149,8 @@ export function useChat(orderId: string, channel: 'TAILOR' | 'COURIER') {
     fetchHistory,
     initSocket,
     sendMessage,
+    deleteMessage,
+    editMessage,
     sendMedia,
     disconnect,
   };

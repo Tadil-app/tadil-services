@@ -1,11 +1,32 @@
 import { Provider } from '@nestjs/common';
-import { ChatRepository, SendMessageUseCase } from '@tadil-chat';
+import {
+  ChatRepository,
+  SendMessageUseCase,
+  DeleteMessageUseCase,
+  EditMessageUseCase,
+} from '@tadil-chat';
 import { DbClient, PrismaChatRepository } from '@tadil-database';
 
 export const SendMessageUseCaseProvider: Provider = {
   provide: 'SendMessageUseCase',
   useFactory: (chatRepository: ChatRepository) => {
     return new SendMessageUseCase(chatRepository);
+  },
+  inject: ['ChatRepository'],
+};
+
+export const DeleteMessageUseCaseProvider: Provider = {
+  provide: 'DeleteMessageUseCase',
+  useFactory: (chatRepository: ChatRepository) => {
+    return new DeleteMessageUseCase(chatRepository);
+  },
+  inject: ['ChatRepository'],
+};
+
+export const EditMessageUseCaseProvider: Provider = {
+  provide: 'EditMessageUseCase',
+  useFactory: (chatRepository: ChatRepository) => {
+    return new EditMessageUseCase(chatRepository);
   },
   inject: ['ChatRepository'],
 };

@@ -276,6 +276,12 @@ export const ur = {
     sendingImage: "تصویر بھیجی جا رہی ہے...",
     sendingAudio: "آڈیو بھیجا جا رہا ہے...",
     newMessage: "نیا پیغام",
+    messageDeleted: "یہ پیغام حذف کر دیا گیا تھا",
+    edit: "ترمیم کریں",
+    delete: "حذف کریں",
+    edited: "ترمیم شدہ",
+    messageOptions: "پیغام کے اختیارات",
+    editMessage: "پیغام میں ترمیم کریں",
     channels: {
       tailor: "درزی کے ساتھ چیٹ",
       courier: "کوریئر کے ساتھ چیٹ",

@@ -277,6 +277,12 @@ export const ar = {
     sendingImage: "جاري إرسال الصورة...",
     sendingAudio: "جاري إرسال المقطع الصوتي...",
     newMessage: "رسالة جديدة",
+    messageDeleted: "تم حذف هذه الرسالة",
+    edit: "تعديل",
+    delete: "حذف",
+    edited: "معدلة",
+    messageOptions: "خيارات الرسالة",
+    editMessage: "تعديل الرسالة",
     channels: {
       tailor: "الدردشة مع الخياط",
       courier: "الدردشة مع المندوب",

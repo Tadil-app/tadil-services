@@ -4,6 +4,8 @@ import { ChatController } from './chat.controller';
 import { CommonModule } from '../common/common.module';
 import { 
   SendMessageUseCaseProvider,
+  DeleteMessageUseCaseProvider,
+  EditMessageUseCaseProvider,
   ChatRepositoryProvider
 } from './chat.providers';
 
@@ -13,6 +15,8 @@ import {
   providers: [
     ChatGateway,
     SendMessageUseCaseProvider,
+    DeleteMessageUseCaseProvider,
+    EditMessageUseCaseProvider,
     ChatRepositoryProvider,
   ],
 })

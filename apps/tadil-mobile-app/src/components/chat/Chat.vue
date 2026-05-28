@@ -11,40 +11,56 @@
         :key="msg.id"
         class="flex flex-col max-w-[80%]"
         :class="msg.senderId === authStore.userId ? 'ml-auto items-end' : 'mr-auto items-start'"
+        @touchstart="startPress(msg)"
+        @touchend="endPress"
+        @mousedown="startPress(msg)"
+        @mouseup="endPress"
       >
-        <!-- Text Message -->
+        <!-- Deleted Message Placeholder -->
         <div
-          v-if="msg.type === 'TEXT'"
-          class="p-3 rounded-2xl shadow-sm"
-          :class="msg.senderId === authStore.userId 
-            ? 'bg-primary text-primary-contrast rounded-tr-none' 
-            : 'bg-item text-main border border-main/10 rounded-tl-none'"
+          v-if="msg.deletedAt"
+          class="p-3 rounded-2xl border border-main/10 bg-step-50 text-muted-foreground italic flex items-center gap-2"
+          :class="msg.senderId === authStore.userId ? 'rounded-tr-none' : 'rounded-tl-none'"
         >
-          <p class="text-sm leading-relaxed">{{ msg.content }}</p>
+          <Trash2 class="w-3 h-3 opacity-50" />
+          <p class="text-xs">{{ $t("chat.messageDeleted") }}</p>
         </div>
 
-        <!-- Image Message -->
-        <div
-          v-else-if="msg.type === 'IMAGE'"
-          class="rounded-2xl overflow-hidden border border-main/10 shadow-sm bg-item"
-        >
-          <img :src="msg.content" class="w-full h-auto max-h-60 object-cover" />
-        </div>
+        <template v-else>
+          <!-- Text Message -->
+          <div
+            v-if="msg.type === 'TEXT'"
+            class="p-3 rounded-2xl shadow-sm relative"
+            :class="msg.senderId === authStore.userId 
+              ? 'bg-primary text-primary-contrast rounded-tr-none' 
+              : 'bg-item text-main border border-main/10 rounded-tl-none'"
+          >
+            <p class="text-sm leading-relaxed">{{ msg.content }}</p>
+          </div>
 
-        <!-- Audio Message -->
-        <div
-          v-else-if="msg.type === 'AUDIO'"
-          class="w-full"
-        >
-          <ChatVoicePlayer 
-            :src="msg.content" 
-            :is-own="msg.senderId === authStore.userId" 
-            :provided-duration="msg.metadata?.duration"
-          />
-        </div>
+          <!-- Image Message -->
+          <div
+            v-else-if="msg.type === 'IMAGE'"
+            class="rounded-2xl overflow-hidden border border-main/10 shadow-sm bg-item"
+          >
+            <img :src="msg.content" class="w-full h-auto max-h-60 object-cover" />
+          </div>
+
+          <!-- Audio Message -->
+          <div
+            v-else-if="msg.type === 'AUDIO'"
+            class="w-full"
+          >
+            <ChatVoicePlayer 
+              :src="msg.content" 
+              :is-own="msg.senderId === authStore.userId" 
+              :provided-duration="msg.metadata?.duration"
+            />
+          </div>
+        </template>
 
         <span class="text-[10px] text-muted-foreground mt-1 px-1">
-          {{ formatTime(msg.timestamp) }}
+          {{ formatTime(msg.timestamp) }}<span v-if="msg.isEdited"> - {{ $t("chat.edited") }}</span>
         </span>
       </div>
 
@@ -92,17 +108,20 @@
 
 <script setup lang="ts">
 import { ref, onMounted, watch, nextTick } from "vue";
-import { IonSpinner, IonButton } from "@ionic/vue";
-import { useChat } from "@/composables";
+import { IonSpinner, IonButton, alertController } from "@ionic/vue";
+import { useChat, ChatMessage } from "@/composables";
 import { useAuthStore } from "@/stores";
-import { ChevronDown } from "lucide-vue-next";
+import { ChevronDown, Trash2 } from "lucide-vue-next";
 import ChatVoicePlayer from "./ChatVoicePlayer.vue";
 import ChatInput from "./ChatInput.vue";
+import { useI18n } from "vue-i18n";
 
 const props = defineProps<{
   orderId: string;
   channel: 'TAILOR' | 'COURIER';
 }>();
+
+const { t } = useI18n();
 
 const authStore = useAuthStore();
 const messageContainer = ref<HTMLElement | null>(null);
@@ -115,8 +134,85 @@ const {
   fetchHistory,
   initSocket,
   sendMessage,
+  deleteMessage,
+  editMessage,
   sendMedia,
 } = useChat(props.orderId, props.channel);
+
+// Long Press Support
+let pressTimer: any = null;
+function startPress(msg: ChatMessage) {
+  if (msg.senderId !== authStore.userId || msg.deletedAt) return;
+
+  pressTimer = setTimeout(() => {
+    presentMessageActions(msg);
+  }, 600);
+}
+
+function endPress() {
+  clearTimeout(pressTimer);
+}
+
+async function presentMessageActions(msg: ChatMessage) {
+  const alert = await alertController.create({
+    header: t("chat.messageOptions"),
+    cssClass: "section-alert",
+    buttons: [
+      {
+        text: t("common.buttons.cancel"),
+        role: "cancel",
+        cssClass: "btn-cancel",
+      },
+      ...(msg.type === "TEXT"
+        ? [
+            {
+              text: t("chat.edit"),
+              cssClass: "btn-add",
+              handler: () => presentEditPrompt(msg),
+            },
+          ]
+        : []),
+      {
+        text: t("chat.delete"),
+        cssClass: "btn-remove",
+        handler: () => deleteMessage(msg.id),
+      },
+    ],
+  });
+  await alert.present();
+}
+
+async function presentEditPrompt(msg: ChatMessage) {
+  const alert = await alertController.create({
+    header: t("chat.editMessage"),
+    cssClass: "section-alert",
+    inputs: [
+      {
+        name: "content",
+        type: "textarea",
+        value: msg.content,
+        placeholder: t("chat.placeholder"),
+      },
+    ],
+    buttons: [
+      {
+        text: t("common.buttons.cancel"),
+        role: "cancel",
+        cssClass: "btn-cancel",
+      },
+      {
+        text: t("common.buttons.save"),
+        cssClass: "btn-add",
+        handler: (data) => {
+          if (data.content?.trim() && data.content !== msg.content) {
+            editMessage(msg.id, data.content);
+          }
+        },
+      },
+    ],
+  });
+  await alert.present();
+}
 
 function formatTime(timestamp: string) {
   return new Date(timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });

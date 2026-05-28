@@ -276,6 +276,12 @@ export const en = {
     sendingImage: "Sending image...",
     sendingAudio: "Sending audio...",
     newMessage: "New Message",
+    messageDeleted: "This message was deleted",
+    edit: "Edit",
+    delete: "Delete",
+    edited: "edited",
+    messageOptions: "Message Options",
+    editMessage: "Edit Message",
     channels: {
       tailor: "Chat with Tailor",
       courier: "Chat with Courier",
