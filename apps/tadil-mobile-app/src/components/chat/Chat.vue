@@ -36,7 +36,11 @@
           v-else-if="msg.type === 'AUDIO'"
           class="w-full"
         >
-          <ChatVoicePlayer :src="msg.content" :is-own="msg.senderId === authStore.userId" />
+          <ChatVoicePlayer 
+            :src="msg.content" 
+            :is-own="msg.senderId === authStore.userId" 
+            :provided-duration="msg.metadata?.duration"
+          />
         </div>
 
         <span class="text-[10px] text-muted-foreground mt-1 px-1">
@@ -133,8 +137,8 @@ function handleSendMessage(text: string) {
   sendMessage(text);
 }
 
-async function handleSendMedia(file: File, type: 'IMAGE' | 'AUDIO') {
-  await sendMedia(file, type);
+async function handleSendMedia(file: File, type: 'IMAGE' | 'AUDIO', metadata?: any) {
+  await sendMedia(file, type, metadata);
 }
 
 watch([() => messages.value.length, uploadingMediaType], ([newLen, uploading], [oldLen, oldUploading]) => {

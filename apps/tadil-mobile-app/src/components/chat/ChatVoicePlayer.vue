@@ -30,25 +30,33 @@
       </div>
     </div>
     
-    <audio ref="audioPlayer" :src="src" @timeupdate="onTimeUpdate" @loadedmetadata="onLoadedMetadata" @ended="onEnded" class="hidden"></audio>
+    <audio ref="audioPlayer" :src="src" preload="auto" @timeupdate="onTimeUpdate" @loadedmetadata="onLoadedMetadata" @ended="onEnded" class="hidden"></audio>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, onUnmounted } from 'vue';
+import { ref, onUnmounted, watch, onMounted } from 'vue';
 import { Play, Pause } from 'lucide-vue-next';
 import { IonButton } from '@ionic/vue';
 
 const props = defineProps<{
   src: string;
   isOwn?: boolean;
+  providedDuration?: number;
 }>();
 
 const audioPlayer = ref<HTMLAudioElement | null>(null);
 const isPlaying = ref(false);
 const progress = ref(0);
 const currentTime = ref(0);
-const duration = ref(0);
+const duration = ref(props.providedDuration || 0);
+
+watch(() => props.src, () => {
+  duration.value = props.providedDuration || 0;
+  currentTime.value = 0;
+  progress.value = 0;
+  isPlaying.value = false;
+});
 
 function togglePlay() {
   if (!audioPlayer.value) return;
@@ -63,13 +71,23 @@ function togglePlay() {
 
 function onTimeUpdate() {
   if (!audioPlayer.value) return;
+
   currentTime.value = audioPlayer.value.currentTime;
-  progress.value = (currentTime.value / duration.value) * 100;
+  
+  // Update duration if it's still 0 and browser resolved it
+  if (duration.value === 0 && isFinite(audioPlayer.value.duration)) {
+    duration.value = audioPlayer.value.duration;
+  }
+  
+  if (duration.value > 0) {
+    progress.value = (currentTime.value / duration.value) * 100;
+  }
 }
 
 function onLoadedMetadata() {
-  if (!audioPlayer.value) return;
-  duration.value = audioPlayer.value.duration;
+  if (isFinite(audioPlayer.value?.duration || NaN) && !duration.value) {
+    duration.value = audioPlayer.value!.duration;
+  }
 }
 
 function onEnded() {
@@ -79,10 +97,17 @@ function onEnded() {
 }
 
 function formatTime(seconds: number) {
+  if (!isFinite(seconds) || isNaN(seconds) || seconds <= 0) return "0:00";
   const mins = Math.floor(seconds / 60);
   const secs = Math.floor(seconds % 60);
   return `${mins}:${secs.toString().padStart(2, '0')}`;
 }
+
+onMounted(() => {
+  if (props.providedDuration) {
+    duration.value = props.providedDuration;
+  }
+});
 
 onUnmounted(() => {
   if (audioPlayer.value) {

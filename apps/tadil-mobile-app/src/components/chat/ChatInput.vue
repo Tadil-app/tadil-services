@@ -80,13 +80,14 @@ import { IonButton } from "@ionic/vue";
 
 const emit = defineEmits<{
   (e: 'send-text', text: string): void;
-  (e: 'send-file', file: File, type: 'IMAGE' | 'AUDIO'): void;
+  (e: 'send-file', file: File, type: 'IMAGE' | 'AUDIO', metadata?: any): void;
 }>();
 
 const newMessage = ref("");
 
 const {
   isRecording,
+  recordingDuration,
   startRecording,
   cancelRecording,
   stopAndGetBlob,
@@ -102,7 +103,7 @@ async function handleSendVoice() {
   const audioBlob = await stopAndGetBlob();
   if (audioBlob) {
     const file = new File([audioBlob], `voice_${Date.now()}.m4a`, { type: 'audio/m4a' });
-    emit('send-file', file, 'AUDIO');
+    emit('send-file', file, 'AUDIO', { duration: recordingDuration.value });
   }
 }
 
