@@ -13,7 +13,7 @@
             {{ $t("tailor.navBar.dashboard") }}
           </IonLabel>
         </IonTabButton>
-        <IonTabButton tab="new-order" href="/customer/new-order">
+        <IonTabButton tab="new-order" href="/customer/new-order/category-selection">
           <PackagePlus />
           <IonLabel class="text-xs">{{ $t("tailor.navBar.orders") }}</IonLabel>
         </IonTabButton>
