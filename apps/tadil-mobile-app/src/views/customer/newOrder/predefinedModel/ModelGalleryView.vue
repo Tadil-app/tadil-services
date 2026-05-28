@@ -249,19 +249,25 @@ function onCloseModal() {
   editingMeta.value = undefined;
 }
 
-async function handleAddToCart() {
-  if (!selectedModel.value || !modelItems.value) return;
+async function executeAddToCart() {
+  if (!selectedModel.value || !modelItems.value) return false;
 
   if (totalAlterationsCount.value === 0) {
     showToast({
       message: t("common.alerts.noAlterations"),
       color: "warning",
     });
-    return;
+    return false;
   }
 
   await addItem(selectedModel.value, modelItems.value);
   resetSelection();
+  return true;
+}
+
+async function handleAddToCart() {
+  const success = await executeAddToCart();
+  if (!success) return;
 
   const alert = await alertController.create({
     header: t("common.alerts.itemAddedOptions.header"),
@@ -293,14 +299,20 @@ onBeforeRouteLeave(async () => {
     const alert = await alertController.create({
       header: t("common.alerts.unsavedChanges.header"),
       message: t("common.alerts.unsavedChanges.message"),
+      cssClass: "section-alert",
       buttons: [
         {
           text: t("common.buttons.cancel"),
           role: "cancel",
+          cssClass: "btn-cancel",
         },
         {
-          text: t("common.buttons.leave"),
+          text: t("common.buttons.addToCart"),
           role: "confirm",
+          cssClass: "btn-add",
+          handler: () => {
+            return executeAddToCart();
+          },
         },
       ],
     });

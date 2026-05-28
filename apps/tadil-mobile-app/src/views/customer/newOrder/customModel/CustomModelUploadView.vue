@@ -294,8 +294,8 @@ async function changePhoto() {
   await alert.present();
 }
 
-async function handleAddToCart() {
-  if (!customImageUrl.value || pinpoints.value.length === 0) return;
+async function executeAddToCart() {
+  if (!customImageUrl.value || pinpoints.value.length === 0) return false;
 
   isLoading.value = true;
   try {
@@ -351,36 +351,43 @@ async function handleAddToCart() {
 
     await cartStore.addItem(customModel, configuration);
     reset();
-
-    const alert = await alertController.create({
-      header: t("common.alerts.itemAddedOptions.header"),
-      message: t("common.alerts.itemAddedOptions.message"),
-      backdropDismiss: false,
-      cssClass: "section-alert",
-      buttons: [
-        {
-          text: t("common.alerts.itemAddedOptions.continueShopping"),
-          cssClass: "btn-cancel",
-          handler: () => {
-            router.replace({ name: "customer-new-order" });
-          },
-        },
-        {
-          text: t("common.alerts.itemAddedOptions.viewCart"),
-          cssClass: "btn-add",
-          handler: () => {
-            router.replace({ name: "customer-cart" });
-          },
-        },
-      ],
-    });
-    await alert.present();
+    return true;
   } catch (error) {
     console.error("Add to cart failed", error);
     showToast({ message: t("common.errors.addToCartFailed"), color: "danger" });
+    return false;
   } finally {
     isLoading.value = false;
   }
+}
+
+async function handleAddToCart() {
+  const success = await executeAddToCart();
+  if (!success) return;
+
+  const alert = await alertController.create({
+    header: t("common.alerts.itemAddedOptions.header"),
+    message: t("common.alerts.itemAddedOptions.message"),
+    backdropDismiss: false,
+    cssClass: "section-alert",
+    buttons: [
+      {
+        text: t("common.alerts.itemAddedOptions.continueShopping"),
+        cssClass: "btn-cancel",
+        handler: () => {
+          router.replace({ name: "customer-new-order" });
+        },
+      },
+      {
+        text: t("common.alerts.itemAddedOptions.viewCart"),
+        cssClass: "btn-add",
+        handler: () => {
+          router.replace({ name: "customer-cart" });
+        },
+      },
+    ],
+  });
+  await alert.present();
 }
 
 onBeforeRouteLeave(async () => {
@@ -388,9 +395,21 @@ onBeforeRouteLeave(async () => {
     const alert = await alertController.create({
       header: t("common.alerts.unsavedChanges.header"),
       message: t("common.alerts.unsavedChanges.message"),
+      cssClass: "section-alert",
       buttons: [
-        { text: t("common.buttons.cancel"), role: "cancel" },
-        { text: t("common.buttons.leave"), role: "confirm" },
+        {
+          text: t("common.buttons.cancel"),
+          role: "cancel",
+          cssClass: "btn-cancel",
+        },
+        {
+          text: t("common.buttons.addToCart"),
+          role: "confirm",
+          cssClass: "btn-add",
+          handler: () => {
+            return executeAddToCart();
+          },
+        },
       ],
     });
     await alert.present();
