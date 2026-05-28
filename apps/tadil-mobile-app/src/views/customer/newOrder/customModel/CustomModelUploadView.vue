@@ -442,7 +442,7 @@ ion-toolbar {
   border-bottom-left-radius: 24px;
   border-bottom-right-radius: 24px;
   --min-height: 80px;
-  --padding-top: 20px;
+  --padding-top: calc(var(--ion-safe-area-top, 0px) + 20px);
   --padding-bottom: 20px;
 }
 </style>
