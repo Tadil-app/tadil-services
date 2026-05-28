@@ -273,6 +273,8 @@ export const ur = {
     title: "آرڈر چیٹ",
     placeholder: "پیغام لکھیں...",
     recording: "آڈیو ریکارڈ ہو رہی ہے...",
+    sendingImage: "تصویر بھیجی جا رہی ہے...",
+    sendingAudio: "آڈیو بھیجا جا رہا ہے...",
     newMessage: "نیا پیغام",
     channels: {
       tailor: "درزی کے ساتھ چیٹ",

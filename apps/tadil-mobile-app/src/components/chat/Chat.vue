@@ -46,12 +46,14 @@
 
       <!-- Media Uploading Placeholder -->
       <div
-        v-if="isUploadingMedia"
+        v-if="uploadingMediaType"
         class="flex flex-col max-w-[80%] ml-auto items-end animate-pulse"
       >
         <div class="p-4 rounded-2xl shadow-sm bg-primary/50 text-primary-contrast rounded-tr-none flex items-center gap-2">
           <IonSpinner name="dots" color="light" />
-          <p class="text-xs">{{ $t("chat.recording") }}</p>
+          <p class="text-xs">
+            {{ uploadingMediaType === 'IMAGE' ? $t("chat.sendingImage") : $t("chat.sendingAudio") }}
+          </p>
         </div>
       </div>
     </div>
@@ -105,7 +107,7 @@ const showNewMessageIndicator = ref(false);
 const {
   messages,
   isLoading,
-  isUploadingMedia,
+  uploadingMediaType,
   fetchHistory,
   initSocket,
   sendMessage,
@@ -135,7 +137,7 @@ async function handleSendMedia(file: File, type: 'IMAGE' | 'AUDIO') {
   await sendMedia(file, type);
 }
 
-watch([() => messages.value.length, isUploadingMedia], ([newLen, uploading], [oldLen, oldUploading]) => {
+watch([() => messages.value.length, uploadingMediaType], ([newLen, uploading], [oldLen, oldUploading]) => {
   // 1. If we just started uploading media, scroll to show the spinner
   if (uploading && !oldUploading) {
     scrollToBottom();

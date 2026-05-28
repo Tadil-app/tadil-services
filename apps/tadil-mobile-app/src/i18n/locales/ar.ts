@@ -274,6 +274,8 @@ export const ar = {
     title: "دردشة الطلب",
     placeholder: "اكتب رسالة...",
     recording: "جاري تسجيل الصوت...",
+    sendingImage: "جاري إرسال الصورة...",
+    sendingAudio: "جاري إرسال المقطع الصوتي...",
     newMessage: "رسالة جديدة",
     channels: {
       tailor: "الدردشة مع الخياط",

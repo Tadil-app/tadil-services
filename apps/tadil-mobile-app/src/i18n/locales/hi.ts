@@ -274,6 +274,8 @@ export const hi = {
     title: "ऑर्डर चैट",
     placeholder: "एक संदेश टाइप करें...",
     recording: "ऑडियो रिकॉर्ड हो रहा है...",
+    sendingImage: "छवि भेजी जा रही है...",
+    sendingAudio: "ऑडियो भेजा जा रहा है...",
     newMessage: "नया संदेश",
     channels: {
       tailor: "दर्जी के साथ चैट",

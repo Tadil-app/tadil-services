@@ -18,7 +18,7 @@ export function useChat(orderId: string, channel: 'TAILOR' | 'COURIER') {
   const messages = ref<ChatMessage[]>([]);
   const isConnected = ref(false);
   const isLoading = ref(false);
-  const isUploadingMedia = ref(false);
+  const uploadingMediaType = ref<'IMAGE' | 'AUDIO' | null>(null);
 
   async function fetchHistory() {
     isLoading.value = true;
@@ -69,7 +69,7 @@ export function useChat(orderId: string, channel: 'TAILOR' | 'COURIER') {
   }
 
   async function sendMedia(file: File, type: 'IMAGE' | 'AUDIO', metadata?: any) {
-    isUploadingMedia.value = true;
+    uploadingMediaType.value = type;
     // 1. Upload to REST endpoint first
     try {
       const response = await apiClient.chatControllerUploadFile({ file });
@@ -86,7 +86,7 @@ export function useChat(orderId: string, channel: 'TAILOR' | 'COURIER') {
     } catch (error) {
       console.error('Media upload failed', error);
     } finally {
-      isUploadingMedia.value = false;
+      uploadingMediaType.value = null;
     }
   }
 
@@ -101,7 +101,7 @@ export function useChat(orderId: string, channel: 'TAILOR' | 'COURIER') {
     messages,
     isConnected,
     isLoading,
-    isUploadingMedia,
+    uploadingMediaType,
     fetchHistory,
     initSocket,
     sendMessage,
