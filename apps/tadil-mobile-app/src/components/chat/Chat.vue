@@ -1,5 +1,5 @@
 <template>
-  <div class="flex flex-col h-full bg-background relative">
+  <div class="flex flex-col h-full bg-background relative" dir="ltr">
     <!-- Messages Area -->
     <div ref="messageContainer" class="flex-grow overflow-y-auto p-4 space-y-4">
       <div v-if="isLoading" class="flex justify-center py-4">
@@ -61,13 +61,19 @@
       v-if="showNewMessageIndicator"
       class="absolute bottom-24 left-1/2 -translate-x-1/2 z-50 animate-in fade-in slide-in-from-bottom-4 duration-300"
     >
-      <button 
-        class="flex items-center gap-2 px-4 py-2 bg-tertiary text-tertiary-contrast rounded-full shadow-lg active:scale-95 transition-transform"
+      <IonButton 
+        color="tertiary"
+        shape="round"
+        size="small"
+        class="shadow-lg active:scale-95 transition-transform"
+        style="--padding-start: 24px; --padding-end: 24px; height: 36px;"
         @click="scrollToBottom"
       >
-        <span class="text-xs font-bold">{{ $t("chat.newMessage") }}</span>
-        <ChevronDown class="w-4 h-4" />
-      </button>
+        <div class="flex items-center gap-2">
+          <span class="text-xs font-bold uppercase tracking-wider">{{ $t("chat.newMessage") }}</span>
+          <ChevronDown class="w-4 h-4 animate-bounce" />
+        </div>
+      </IonButton>
     </div>
 
     <!-- Reusable Input Area -->
@@ -80,7 +86,7 @@
 
 <script setup lang="ts">
 import { ref, onMounted, watch, nextTick } from "vue";
-import { IonSpinner } from "@ionic/vue";
+import { IonSpinner, IonButton } from "@ionic/vue";
 import { useChat } from "@/composables";
 import { useAuthStore } from "@/stores";
 import { ChevronDown } from "lucide-vue-next";

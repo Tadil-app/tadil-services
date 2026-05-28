@@ -2,19 +2,23 @@
   <div 
     class="flex items-center gap-3 p-3 rounded-2xl border border-main/10 shadow-sm"
     :class="isOwn ? 'bg-primary/5 ml-auto' : 'bg-item mr-auto'"
+    dir="ltr"
   >
-    <button 
-      class="w-10 h-10 rounded-full flex items-center justify-center transition-all active:scale-95"
-      :class="isPlaying ? 'bg-primary text-primary-contrast' : 'bg-tertiary text-tertiary-contrast'"
+    <IonButton 
+      shape="round"
+      size="small"
+      class="m-0 shadow-sm"
+      :color="isPlaying ? 'primary' : 'tertiary'"
+      style="--padding-start: 0; --padding-end: 0; width: 36px; height: 36px;"
       @click="togglePlay"
     >
-      <Pause v-if="isPlaying" class="w-5 h-5" />
-      <Play v-else class="w-5 h-5 fill-current ml-0.5" />
-    </button>
+      <Pause v-if="isPlaying" class="w-4 h-4 fill-current" />
+      <Play v-else class="w-4 h-4 fill-current ml-0.5" />
+    </IonButton>
 
     <div class="grow min-w-30">
       <!-- Progress Bar -->
-      <div class="h-1.5 w-full bg-muted rounded-full overflow-hidden">
+      <div class="h-1.5 w-full bg-main/10 rounded-full overflow-hidden">
         <div 
           class="h-full bg-primary transition-all duration-100"
           :style="{ width: progress + '%' }"
@@ -33,6 +37,7 @@
 <script setup lang="ts">
 import { ref, onUnmounted } from 'vue';
 import { Play, Pause } from 'lucide-vue-next';
+import { IonButton } from '@ionic/vue';
 
 const props = defineProps<{
   src: string;

@@ -1,5 +1,5 @@
 <template>
-  <div class="p-4 border-t border-main/10 bg-item rounded-t-3xl shadow-lg">
+  <div class="p-4 border-t border-main/10 bg-item rounded-t-3xl shadow-lg" dir="ltr">
     <!-- Recording State -->
     <div v-if="isRecording" class="flex items-center justify-between animate-in fade-in slide-in-from-bottom-2">
       <div class="flex items-center gap-2">
@@ -7,33 +7,41 @@
         <span class="text-sm font-semibold text-main">{{ $t("chat.recording") }}</span>
       </div>
 
-      <div class="flex items-center gap-4">
-        <button 
-          class="text-red-500 p-2 hover:bg-red-50 rounded-full transition-colors"
+      <div class="flex items-center gap-2">
+        <IonButton 
+          fill="clear"
+          color="danger"
+          shape="round"
+          class="m-0"
+          style="width: 36px; height: 36px;"
           @click="cancelRecording"
         >
-          <Trash2 class="h-6 w-6" />
-        </button>
-        <button 
-          class="rounded-full bg-primary p-3 text-primary-contrast shadow-md active:scale-95 transition-transform" 
+          <Trash2 class="h-5 w-5" slot="icon-only" />
+        </IonButton>
+        <IonButton 
+          color="primary"
+          shape="round"
+          size="small"
+          class="m-0 shadow-md"
+          style="--padding-start: 0; --padding-end: 0; width: 36px; height: 36px;"
           @click="handleSendVoice"
         >
-          <SendHorizonal class="h-6 w-6" />
-        </button>
+          <SendHorizonal class="h-5 w-5" />
+        </IonButton>
       </div>
     </div>
 
     <!-- Default State (Text, Image, Mic) -->
-    <div v-else class="flex items-end gap-2">
-      <div class="flex gap-1 mb-1">
+    <div v-else class="flex items-center gap-2">
+      <div class="flex gap-2">
         <button
-          class="p-2 text-primary hover:bg-primary/5 rounded-full transition-colors"
+          class="p-2 text-primary hover:bg-primary/5 rounded-xl transition-colors"
           @click="handlePickImage"
         >
           <ImageIcon class="h-6 w-6" />
         </button>
         <button
-          class="p-2 text-primary hover:bg-primary/5 rounded-full transition-colors"
+          class="p-2 text-primary hover:bg-primary/5 rounded-xl transition-colors"
           @click="startRecording"
         >
           <Mic class="h-6 w-6" />
@@ -48,13 +56,17 @@
         @keydown.enter.prevent="handleSendText"
       ></textarea>
 
-      <button
+      <IonButton
         :disabled="!newMessage.trim()"
-        class="mb-1 rounded-full bg-primary p-3 text-primary-contrast shadow-md active:scale-95 disabled:opacity-50 disabled:scale-100 transition-all"
+        color="primary"
+        shape="round"
+        size="small"
+        class="m-0 shadow-md active:scale-95 transition-all"
+        style="--padding-start: 0; --padding-end: 0; width: 36px; height: 36px;"
         @click="handleSendText"
       >
-        <SendHorizonal class="h-6 w-6" />
-      </button>
+        <SendHorizonal class="h-5 w-5" />
+      </IonButton>
     </div>
   </div>
 </template>
@@ -64,6 +76,7 @@ import { ref } from "vue";
 import { Mic, SendHorizonal, Trash2, Image as ImageIcon } from "lucide-vue-next";
 import { useVoiceRecorder } from "@/composables";
 import { Camera, CameraResultType, CameraSource } from "@capacitor/camera";
+import { IonButton } from "@ionic/vue";
 
 const emit = defineEmits<{
   (e: 'send-text', text: string): void;
