@@ -8,12 +8,6 @@
       {{ $t(`users.editUserModal.title`) }}
     </h1>      <div class="space-y-2">
         <div class="space-y-1.5">
-          <InputLabel for="userRole">
-            {{ $t("common.inputs.userRole.label") }}
-          </InputLabel>
-          <SelectMenu v-model="selectedUserRole" :options="userRoleOptions" />
-        </div>
-        <div class="space-y-1.5">
           <InputLabel for="phone">
             {{ $t("common.inputs.phone.label") }}
           </InputLabel>
@@ -64,7 +58,7 @@
             :placeholder="$t('common.inputs.email.placeholder')"
           />
         </div>
-        <div class="space-y-1.5" v-if="selectedUserRole !== ROLE.CUSTOMER">
+        <div class="space-y-1.5" v-if="selectedUserType !== ROLE.CUSTOMER">
           <InputLabel for="city">
             {{ $t("common.inputs.city.label") }}
           </InputLabel>
@@ -74,7 +68,7 @@
             :placeholder="$t('common.inputs.city.placeholder')"
           />
         </div>
-        <div class="space-y-1.5" v-if="selectedUserRole !== ROLE.CUSTOMER">
+        <div class="space-y-1.5" v-if="selectedUserType !== ROLE.CUSTOMER">
           <InputLabel for="commissionRate">
             {{ $t("common.inputs.commissionRate.label") }}
           </InputLabel>
@@ -104,7 +98,6 @@ import {
   useToast,
   TextInput,
   InputLabel,
-  SelectMenu,
 } from "@/components";
 import Button from "@/components/ui/Button.vue";
 import {
@@ -124,10 +117,7 @@ const { openToast } = useToast();
 const props = defineProps<{
   user: DisplayUserDTO;
   selectedUserType: RoleType;
-  userRoleOptions: { key: RoleType; label: string }[];
 }>();
-
-const selectedUserRole = ref<RoleType>(props.selectedUserType);
 
 const emit = defineEmits<{
   (e: "updated:user"): void;
@@ -204,7 +194,7 @@ async function updateUser() {
       validateUserFirstName() &&
       validateUserLastName()
     ) {
-      switch (selectedUserRole.value) {
+      switch (props.selectedUserType) {
         case ROLE.TAILOR: {
           await apiClient.tailorsControllerUpdateTailor(
             props.user.id,

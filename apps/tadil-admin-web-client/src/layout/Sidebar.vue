@@ -25,7 +25,8 @@ import {
   KeyRound,
   ScissorsLineDashed,
   Spool,
-  Users,
+  Truck,
+  Scissors
 } from "lucide-vue-next";
 import { computed } from "vue";
 import { useI18n } from "vue-i18n";
@@ -36,7 +37,8 @@ const navItems = computed(() => [
   { path: "/alterations", label: t("nav.alterations"), icon: HandCoins },
   { path: "/extras", label: t("nav.extras"), icon: GitBranchPlus },
   { path: "/models", label: t("nav.models"), icon: ScissorsLineDashed },
-  { path: "/users", label: t("nav.users"), icon: Users },
+  { path: "/tailors", label: t("nav.tailors"), icon: Scissors },
+  { path: "/couriers", label: t("nav.couriers"), icon: Truck },
   { path: "/login-requests", label: t("nav.loginRequests"), icon: KeyRound },
   { path: "/payout-requests", label: t("nav.payoutRequests"), icon: HandCoins },
   { path: "/orders", label: t("nav.orders"), icon: ClipboardList },
