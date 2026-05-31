@@ -12,4 +12,5 @@ export interface DisplayOrderDTO {
   tailorName?: string;
   courierName?: string;
   city?: string;
+  history?: { status: string; timestamp: string }[];
 }

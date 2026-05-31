@@ -1,5 +1,13 @@
 import { ApiProperty } from '@nestjs/swagger';
 
+export class OrderStatusHistoryDto {
+  @ApiProperty()
+  status!: string;
+
+  @ApiProperty()
+  timestamp!: string;
+}
+
 export class DisplayOrderDto {
   @ApiProperty()
   id!: string;
@@ -40,6 +48,6 @@ export class DisplayOrderDto {
   @ApiProperty({ required: false })
   city?: string;
 
-  @ApiProperty({ required: false })
-  history?: { status: string; timestamp: string }[];
+  @ApiProperty({ type: OrderStatusHistoryDto, isArray: true, required: false })
+  history?: OrderStatusHistoryDto[];
 }

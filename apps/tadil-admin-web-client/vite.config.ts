@@ -8,7 +8,8 @@ export default defineConfig(({ mode }) => {
   const VITE_TADIL_API_URL = env.VITE_TADIL_API_URL;
 
   return {
-    plugins: [vue(), tailwindcss()],
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    plugins: [vue(), tailwindcss() as any],
     server: {
       allowedHosts: [
         "localhost",
