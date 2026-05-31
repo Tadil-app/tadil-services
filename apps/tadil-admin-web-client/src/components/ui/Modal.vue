@@ -5,6 +5,7 @@
   >
     <div
       class="relative p-4 max-w-[80vw] max-h-[80vh] bg-background rounded-lg overflow-auto"
+      :class="$attrs.class"
     >
       <div
         class="absolute right-1 top-1 cursor-pointer rounded-sm p-1 text-sm flex items-center justify-center opacity-70 transition-opacity hover:opacity-100 bg-accent text-muted-foreground"
@@ -16,6 +17,12 @@
     </div>
   </div>
 </template>
+
+<script lang="ts">
+export default {
+  inheritAttrs: false,
+};
+</script>
 
 <script setup lang="ts">
 import { X } from "lucide-vue-next";

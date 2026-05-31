@@ -30,6 +30,7 @@ import type {
   UpdateUserDTO,
   UpdateSectionDTO,
   DisplayOrderDTO,
+  DisplayOrderDetailsDto,
 } from "../DTOs";
 
 import type {
@@ -896,6 +897,21 @@ export class Api<
         path: `/api/orders`,
         method: "GET",
         query: query,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Orders
+     * @name OrdersControllerGetOrderById
+     * @request GET:/api/orders/{id}
+     */
+    ordersControllerGetOrderById: (id: string, params: RequestParams = {}) =>
+      this.request<DisplayOrderDetailsDto, any>({
+        path: `/api/orders/${id}`,
+        method: "GET",
         format: "json",
         ...params,
       }),
