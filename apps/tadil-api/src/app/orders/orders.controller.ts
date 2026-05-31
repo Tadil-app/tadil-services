@@ -107,7 +107,7 @@ export class OrdersController {
       throw new NotFoundException(`Order with id ${id} not found`);
     }
 
-    const baseUrl = process.env.Tadil_API || `http://localhost:${environment.apiPort}`;
+    const baseUrl = process.env.TADIL_API || `http://localhost:${environment.apiPort}`;
 
     return {
       id: order.id,

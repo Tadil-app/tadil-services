@@ -119,7 +119,7 @@ export class CourierController {
       ...order,
       items: order.items.map((item: any) => ({
         ...item,
-        imageFileUrl: `${process.env.Tadil_MOBILE_API}/api/files/${item.imageFileId}`,
+        imageFileUrl: `${process.env.TADIL_MOBILE_API}/api/files/${item.imageFileId}`,
         sections: item.sections.map((section: any) => ({
           ...section,
           alterations: section.alterations.map((alt: any) => ({
@@ -134,7 +134,7 @@ export class CourierController {
       })),
       customItems: order.customItems.map((item: any) => ({
         ...item,
-        imageFileUrl: `${process.env.Tadil_MOBILE_API}/api/files/${item.imageFileId}`,
+        imageFileUrl: `${process.env.TADIL_MOBILE_API}/api/files/${item.imageFileId}`,
         alterations: item.alterations.map((alt: any) => ({
           ...alt,
           informations: alt.informations.map((info: any) => ({

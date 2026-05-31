@@ -138,7 +138,7 @@ export class CustomerController {
         bengaliName: model.bengaliName,
         category: model.category as ModelCategory,
         thumbnailImageUrl: thumbnailImage
-          ? `${process.env.Tadil_MOBILE_API}/api/files/${thumbnailImage.fileId}`
+          ? `${process.env.TADIL_MOBILE_API}/api/files/${thumbnailImage.fileId}`
           : undefined,
       };
     });
@@ -159,7 +159,7 @@ export class CustomerController {
     const images = modelImages.map((image) => {
       return {
         id: image.id,
-        imageUrl: `${process.env.Tadil_MOBILE_API}/api/files/${image.fileId}`,
+        imageUrl: `${process.env.TADIL_MOBILE_API}/api/files/${image.fileId}`,
         sections: image.sections.map((section) => ({
           id: section.id,
           englishName: section.englishName,
@@ -244,7 +244,7 @@ export class CustomerController {
 
     await this._fileStorageService.uploadFile(imageFileId, imageFile);
 
-    return `${process.env.Tadil_MOBILE_API}/api/files/${imageFileId}`;
+    return `${process.env.TADIL_MOBILE_API}/api/files/${imageFileId}`;
   }
 
   private _mapOrder(order: any): DisplayOrderDTO {
@@ -252,7 +252,7 @@ export class CustomerController {
       ...order,
       items: order.items.map((item: any) => ({
         ...item,
-        imageFileUrl: `${process.env.Tadil_MOBILE_API}/api/files/${item.imageFileId}`,
+        imageFileUrl: `${process.env.TADIL_MOBILE_API}/api/files/${item.imageFileId}`,
         sections: item.sections.map((section: any) => ({
           ...section,
           alterations: section.alterations.map((alt: any) => ({
@@ -267,7 +267,7 @@ export class CustomerController {
       })),
       customItems: order.customItems.map((item: any) => ({
         ...item,
-        imageFileUrl: `${process.env.Tadil_MOBILE_API}/api/files/${item.imageFileId}`,
+        imageFileUrl: `${process.env.TADIL_MOBILE_API}/api/files/${item.imageFileId}`,
         alterations: item.alterations.map((alt: any) => ({
           ...alt,
           informations: alt.informations.map((info: any) => ({

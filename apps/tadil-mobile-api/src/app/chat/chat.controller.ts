@@ -20,7 +20,7 @@ import { MessageChannel } from '@prisma/client';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { chatFileUploadOptions } from '../utils';
 import { ReadableFile, type FileStorageService } from '@tadil-common';
-import { ChatRepository } from '@tadil-chat';
+import { type ChatRepository } from '@tadil-chat';
 import { v4 as uuidv4 } from 'uuid';
 import { extname } from 'path';
 import { environment } from '../../environments/environment';
@@ -55,7 +55,7 @@ export class ChatController {
 
     this.logger.log(`Found ${chat.messages.length} messages for order ${orderId}`);
 
-    const baseUrl = process.env.Tadil_MOBILE_API || `http://localhost:${environment.apiPort}`;
+    const baseUrl = process.env.TADIL_MOBILE_API || `http://localhost:${environment.apiPort}`;
 
     return chat.messages.map((msg) => ({
       ...msg,

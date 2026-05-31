@@ -54,7 +54,7 @@ export class ChatGateway {
     @ConnectedSocket() client: Socket,
     @MessageBody() dto: SendMessageDto
   ) {
-    // @ts-ignore - sub is added by WsAuthGuard
+    // @ts-expect-error - sub is added by WsAuthGuard
     const senderId = client.user.sub;
 
     const message = await this._sendMessageUseCase.execute({
@@ -65,7 +65,7 @@ export class ChatGateway {
     const roomId = `order_${dto.orderId}_${dto.channel}`;
     
     // Map the message for the recipient (prepend URL if needed)
-    const baseUrl = process.env.Tadil_MOBILE_API || `http://localhost:${environment.apiPort}`;
+    const baseUrl = process.env.TADIL_MOBILE_API || `http://localhost:${environment.apiPort}`;
     const mappedMessage = {
       ...message,
       content: message.type !== 'TEXT' 
@@ -85,7 +85,7 @@ export class ChatGateway {
     @ConnectedSocket() client: Socket,
     @MessageBody() dto: DeleteMessageDto
   ) {
-    // @ts-ignore
+    // @ts-expect-error - sub is added by WsAuthGuard
     const senderId = client.user.sub;
 
     await this._deleteMessageUseCase.execute({
@@ -106,7 +106,7 @@ export class ChatGateway {
     @ConnectedSocket() client: Socket,
     @MessageBody() dto: EditMessageDto
   ) {
-    // @ts-ignore
+    // @ts-expect-error - sub is added by WsAuthGuard
     const senderId = client.user.sub;
 
     await this._editMessageUseCase.execute({
