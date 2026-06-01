@@ -1,5 +1,15 @@
 import { Api } from "./tadil-api-client";
+import keycloak from "../keycloak";
 
-export const apiClient = new Api({
+const apiInstance = new Api({
   baseURL: import.meta.env.VITE_TADIL_API_URL || "",
-}).api;
+});
+
+apiInstance.instance.interceptors.request.use(async (config) => {
+  if (keycloak.token) {
+    config.headers.Authorization = `Bearer ${keycloak.token}`;
+  }
+  return config;
+});
+
+export const apiClient = apiInstance.api;

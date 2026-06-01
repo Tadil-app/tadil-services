@@ -17,3 +17,7 @@ Welcome to the documentation for the Tadil platform. This `docs` folder contains
 - [Orders Core Library](./libs-core-orders.md)
 - [Wallet & Payouts Core Library](./libs-core-wallet.md)
 - [Infrastructure Libraries](./libs-infra.md)
+
+## Guides & Architecture
+
+- [Admin Authentication & RBAC (Keycloak)](./keycloak-admin-auth.md)

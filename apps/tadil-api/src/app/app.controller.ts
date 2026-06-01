@@ -1,6 +1,7 @@
 import { Controller, Get, Inject, Param, Res } from '@nestjs/common';
 import { type FileStorageService } from '@tadil-common';
 import { type Response } from 'express';
+import { Public } from './auth/decorators/public.decorator';
 
 @Controller('')
 export class AppController {
@@ -9,6 +10,7 @@ export class AppController {
     private readonly _fileStorageService: FileStorageService
   ) {}
 
+  @Public()
   @Get('files/:id')
   async getFileStream(@Param('id') fileId: string, @Res() res: Response) {
     try {
