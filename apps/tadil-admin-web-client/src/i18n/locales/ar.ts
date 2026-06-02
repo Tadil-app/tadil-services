@@ -9,6 +9,7 @@ export const ar = {
     loginRequests: "طلبات الدخول",
     payoutRequests: "طلبات السحب",
     orders: "الطلبات",
+    logout: "تسجيل الخروج",
   },
   orders: {
     title: "مراقبة الطلبات",

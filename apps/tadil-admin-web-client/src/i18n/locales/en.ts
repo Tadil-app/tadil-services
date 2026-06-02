@@ -9,6 +9,7 @@ export const en = {
     loginRequests: "Login Requests",
     payoutRequests: "Payout Requests",
     orders: "Orders",
+    logout: "Logout",
   },
   orders: {
     title: "Order Monitoring",

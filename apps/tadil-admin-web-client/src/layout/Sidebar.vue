@@ -1,6 +1,6 @@
 <template>
   <div
-    class="w-60 bg-sidebar border-r border-sidebar-border transition-[width] ease-linear duration-200"
+    class="w-60 bg-sidebar border-r border-sidebar-border transition-[width] ease-linear duration-200 flex flex-col justify-between"
   >
     <div class="space-y-2 p-2">
       <RouterLink
@@ -14,6 +14,16 @@
         <p>{{ navItem.label }}</p>
       </RouterLink>
     </div>
+
+    <div class="p-2 border-t border-sidebar-border">
+      <button
+        @click="handleLogout"
+        class="flex w-full items-center gap-2 rounded-md p-2 text-left text-sm cursor-pointer overflow-hidden whitespace-nowrap hover:bg-red-100 hover:text-red-600 text-sidebar-foreground transition-colors"
+      >
+        <LogOut class="h-5 w-5" />
+        <p>{{ t('nav.logout') }}</p>
+      </button>
+    </div>
   </div>
 </template>
 
@@ -26,10 +36,12 @@ import {
   ScissorsLineDashed,
   Spool,
   Truck,
-  Scissors
+  Scissors,
+  LogOut
 } from "lucide-vue-next";
 import { computed } from "vue";
 import { useI18n } from "vue-i18n";
+import keycloak from "../integration/keycloak";
 
 const { t } = useI18n();
 const navItems = computed(() => [
@@ -43,4 +55,8 @@ const navItems = computed(() => [
   { path: "/payout-requests", label: t("nav.payoutRequests"), icon: HandCoins },
   { path: "/orders", label: t("nav.orders"), icon: ClipboardList },
 ]);
+
+const handleLogout = () => {
+  keycloak.logout();
+};
 </script>
