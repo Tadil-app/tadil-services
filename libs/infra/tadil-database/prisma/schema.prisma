@@ -158,6 +158,8 @@ model OrderItemAlterationInformation {
     type        InformationType
     unit        String?
     value       String
+    /// !{ id: string; englishName: string; arabicName: string; urduName: string; hindiName: string; bengaliName: string; price: number; }
+    extraDetails Json?
 
     orderItemAlterationId String
     orderItemAlteration   OrderItemAlteration @relation(fields: [orderItemAlterationId], references: [id], onDelete: Cascade)

@@ -94,6 +94,9 @@
                 information.value = x.detail.checked
                   ? information.extras[0].id
                   : undefined;
+                information.extraDetails = x.detail.checked
+                  ? information.extras[0]
+                  : undefined;
                 validationErrors[information.id] = false;
               }
             "
@@ -144,6 +147,7 @@
             @ion-change="
               (value) => {
                 information.value = value.detail.value.id;
+                information.extraDetails = value.detail.value;
                 validationErrors[information.id] = false;
               }
             "
@@ -342,6 +346,8 @@ function confirm() {
       bengaliName: info.bengaliName,
       unit: info.unit,
       value: info.value,
+      type: info.type,
+      extraDetails: info.extraDetails,
     })),
   });
 }

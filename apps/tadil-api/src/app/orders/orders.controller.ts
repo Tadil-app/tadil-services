@@ -3,8 +3,9 @@ import { ApiOkResponse, ApiTags, ApiOperation, ApiQuery } from '@nestjs/swagger'
 import { DataReader } from '@tadil-database';
 import { AssignTailorManuallyUseCase } from '@tadil-orders';
 import { DisplayOrderDto } from './dtos/displayOrder.dto';
-import { DisplayOrderDetailsDto } from './dtos/displayOrderDetails.dto';
+import { DisplayOrderDetailsDto, DisplayExtraSnapshotDTO } from './dtos/displayOrderDetails.dto';
 import { environment } from '../../environments/environment';
+import { ChatMessage } from 'tadil-chat';
 
 @Controller('orders')
 @ApiTags('Orders')
@@ -141,7 +142,7 @@ export class OrdersController {
           urduName: section.urduName,
           hindiName: section.hindiName,
           bengaliName: section.bengaliName,
-          coordinates: section.coordinates as any[],
+          coordinates: section.coordinates,
           alterations: section.alterations.map(alt => ({
             id: alt.id,
             englishName: alt.englishName,
@@ -150,7 +151,7 @@ export class OrdersController {
             hindiName: alt.hindiName,
             bengaliName: alt.bengaliName,
             price: alt.price,
-            customCoordinates: alt.customCoordinates as any[],
+            customCoordinates: alt.customCoordinates,
             informations: alt.informations.map(info => ({
               id: info.id,
               englishName: info.englishName,
@@ -161,6 +162,7 @@ export class OrdersController {
               type: info.type,
               unit: info.unit ?? undefined,
               value: info.value,
+              extraDetails: info.extraDetails as DisplayExtraSnapshotDTO,
             }))
           }))
         }))
@@ -177,7 +179,7 @@ export class OrdersController {
           hindiName: alt.hindiName,
           bengaliName: alt.bengaliName,
           price: alt.price,
-          customCoordinates: alt.customCoordinates as any[],
+          customCoordinates: alt.customCoordinates,
           informations: alt.informations.map(info => ({
             id: info.id,
             englishName: info.englishName,
@@ -188,6 +190,7 @@ export class OrdersController {
             type: info.type,
             unit: info.unit ?? undefined,
             value: info.value,
+            extraDetails: info.extraDetails as DisplayExtraSnapshotDTO,
           }))
         }))
       })),
@@ -195,7 +198,7 @@ export class OrdersController {
         id: chat.id,
         channel: chat.channel,
         updatedAt: chat.updatedAt.toISOString(),
-        messages: (chat.content as any[] || []).map(msg => ({
+        messages: (chat.content as ChatMessage[]).map(msg => ({
           id: msg.id,
           senderId: msg.senderId,
           type: msg.type,

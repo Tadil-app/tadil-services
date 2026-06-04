@@ -9,6 +9,23 @@ export class OrderPoint {
   y!: number;
 }
 
+export class DisplayExtraSnapshotDTO {
+  @ApiProperty()
+  id!: string;
+  @ApiProperty()
+  englishName!: string;
+  @ApiProperty()
+  arabicName!: string;
+  @ApiProperty()
+  urduName!: string;
+  @ApiProperty()
+  hindiName!: string;
+  @ApiProperty()
+  bengaliName!: string;
+  @ApiProperty()
+  price!: number;
+}
+
 export class DisplayItemInformationDTO {
   @ApiProperty()
   id!: string;
@@ -28,6 +45,8 @@ export class DisplayItemInformationDTO {
   unit?: string;
   @ApiProperty()
   value!: string;
+  @ApiProperty({ type: DisplayExtraSnapshotDTO, required: false })
+  extraDetails?: DisplayExtraSnapshotDTO;
 }
 
 export class DisplayItemAlterationDTO {

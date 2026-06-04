@@ -149,7 +149,8 @@ export const useCartStore = defineStore("cart", () => {
                 bengaliName: info.bengaliName,
                 value: info.value || "",
                 unit: info.unit || "",
-                type: "text", // Fallback
+                type: info.type || "text",
+                extraDetails: info.extraDetails,
               })),
             })),
           })),
@@ -179,7 +180,8 @@ export const useCartStore = defineStore("cart", () => {
                 bengaliName: info.bengaliName,
                 value: info.value || "",
                 unit: info.unit || "",
-                type: "text", // Fallback
+                type: info.type || "text",
+                extraDetails: info.extraDetails,
               })),
             })),
           ),

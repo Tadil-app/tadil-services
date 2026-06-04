@@ -1,4 +1,4 @@
-import type { DisplayModelDTO, Point } from "@/integration/dtos";
+import type { DisplayModelDTO, Point, DisplayExtraDTO } from "@/integration/dtos";
 
 export interface TranslatedNameObject {
   englishName: string;
@@ -25,6 +25,8 @@ export interface SelectedAlteration {
     bengaliName: string;
     value?: string;
     unit?: string;
+    type?: string;
+    extraDetails?: DisplayExtraDTO;
   }[];
 }
 

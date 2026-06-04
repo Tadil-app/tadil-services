@@ -79,6 +79,7 @@ export interface DisplayInformationDTO {
   extras: DisplayExtraDTO[];
   unit?: string;
   value?: string;
+  extraDetails?: DisplayExtraDTO;
 }
 
 export interface DisplayAlterationDTO {
@@ -107,6 +108,7 @@ export interface DisplayItemInformationDTO {
   type: object;
   unit: string;
   value: string;
+  extraDetails?: DisplayExtraDTO;
 }
 
 export interface DisplayItemAlterationDTO {

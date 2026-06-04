@@ -45,7 +45,8 @@
                   <div class="grid grid-cols-2 gap-4">
                     <div v-for="information in alteration.informations" :key="information.id" class="col-span-1 px-4 py-2 bg-gray-100 rounded-lg">
                       <TranslatedName :names="information" />
-                      <p>{{ information.value }} {{ information.unit ? $t("common.units." + information.unit) : "" }}</p>
+                      <TranslatedName v-if="information.extraDetails" :names="information.extraDetails" />
+                      <p v-else>{{ information.value }} {{ information.unit ? $t("common.units." + information.unit) : "" }}</p>
                     </div>
                   </div>
                 </div>
