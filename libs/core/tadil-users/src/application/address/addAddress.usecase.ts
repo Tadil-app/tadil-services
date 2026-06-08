@@ -11,16 +11,22 @@ export class AddAddressUseCase {
 
   async execute(command: {
     userId: string;
-    city: string;
+    cityId?: number;
+    cityNameAr: string;
+    cityNameEn: string;
+    districtId?: string;
+    districtNameAr?: string;
+    districtNameEn?: string;
     street?: string;
-    district?: string;
+    latitude?: number;
+    longitude?: number;
   }): Promise<void> {
     const user = await this._usersRepository.getUserById(command.userId);
     if (!user) {
       throw new InvalidCommandException('User not found');
     }
 
-    if (!command.city) {
+    if (!command.cityNameAr || !command.cityNameEn) {
       throw new InvalidCommandException('City is required');
     }
 
@@ -35,9 +41,15 @@ export class AddAddressUseCase {
       const address: Address = {
         id: uuid(),
         userId: command.userId,
-        city: command.city,
+        cityId: command.cityId,
+        cityNameAr: command.cityNameAr,
+        cityNameEn: command.cityNameEn,
+        districtId: command.districtId,
+        districtNameAr: command.districtNameAr,
+        districtNameEn: command.districtNameEn,
         street: command.street,
-        district: command.district,
+        latitude: command.latitude,
+        longitude: command.longitude,
       };
       await this._usersRepository.addAddress(address);
     } catch (error) {

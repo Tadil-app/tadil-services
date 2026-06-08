@@ -17,5 +17,7 @@ export class DisplayUserDTO {
   @ApiProperty({ required: false })
   commissionRate?: number;
   @ApiProperty({ required: false })
-  city?: string;
+  cityNameAr?: string;
+  @ApiProperty({ required: false })
+  cityNameEn?: string;
 }

@@ -18,7 +18,7 @@
       <IonItem button :detail="true" @click="openCityPicker">
         <IonLabel>
           <p class="picker-label">{{ $t("profileSettings.profile.city") }}</p>
-          <span v-if="form.city">{{ form.city }}</span>
+          <span v-if="cityLabel">{{ cityLabel }}</span>
           <span v-else class="placeholder">{{ $t("profileSettings.profile.selectCity") }}</span>
         </IonLabel>
       </IonItem>
@@ -31,17 +31,47 @@
       >
         <IonLabel>
           <p class="picker-label">{{ $t("profileSettings.profile.district") }}</p>
-          <span v-if="form.district">{{ form.district }}</span>
+          <span v-if="districtLabel">{{ districtLabel }}</span>
           <span v-else class="placeholder">{{ $t("profileSettings.profile.selectDistrict") }}</span>
         </IonLabel>
       </IonItem>
 
+      <IonItem button :detail="true" :disabled="!canPickOnMap || loadingBoundary" @click="openMapPicker">
+        <IonLabel>
+          <p class="picker-label">{{ $t("profileSettings.profile.location") }}</p>
+          <span v-if="hasLocation">{{ $t("profileSettings.profile.locationSet") }}</span>
+          <span v-else class="placeholder">{{ $t("profileSettings.profile.pickOnMap") }}</span>
+        </IonLabel>
+        <IonSpinner v-if="loadingBoundary" slot="end" name="crescent" />
+      </IonItem>
+
+      <!-- Read-only label: the name of the point chosen on the map. -->
+      <IonItem>
+        <IonLabel>
+          <p class="picker-label">{{ $t("profileSettings.profile.selectedLocation") }}</p>
+          <span v-if="isGeocoding" class="placeholder">{{ $t("profileSettings.profile.locating") }}</span>
+          <span v-else-if="form.street">{{ form.street }}</span>
+          <span v-else class="placeholder">{{ $t("profileSettings.profile.pickOnMapFirst") }}</span>
+        </IonLabel>
+      </IonItem>
+
+      <!-- Read-only coordinates of the picked point. -->
       <IonItem>
         <IonInput
-          v-model="form.street"
-          :label="$t('profileSettings.profile.street')"
+          :label="$t('profileSettings.profile.latitude')"
           label-placement="stacked"
-          type="text"
+          :readonly="true"
+          placeholder="—"
+          :value="form.latitude != null ? form.latitude.toFixed(6) : ''"
+        />
+      </IonItem>
+      <IonItem>
+        <IonInput
+          :label="$t('profileSettings.profile.longitude')"
+          label-placement="stacked"
+          :readonly="true"
+          placeholder="—"
+          :value="form.longitude != null ? form.longitude.toFixed(6) : ''"
         />
       </IonItem>
     </div>
@@ -118,12 +148,25 @@
         </IonList>
       </IonContent>
     </IonModal>
+
+    <IonModal :is-open="isMapPickerOpen" @did-dismiss="isMapPickerOpen = false">
+      <StreetMapPicker
+        v-if="isMapPickerOpen && mapCenter"
+        :center="mapCenter"
+        :initial="mapInitial"
+        :boundary="activeBoundary"
+        :zoom="selectedDistrictId ? 14 : 12"
+        @confirm="onMapConfirm"
+        @cancel="isMapPickerOpen = false"
+      />
+    </IonModal>
   </IonContent>
 </template>
 
 <script setup lang="ts">
 import { useAuthStore, useLanguageStore, useLocationsStore } from "@/stores";
-import { DisplayCityDTO, DisplayDistrictDTO } from "@/integration/dtos";
+import { DisplayBoundaryDTO, DisplayCityDTO, DisplayDistrictDTO } from "@/integration/dtos";
+import StreetMapPicker from "./StreetMapPicker.vue";
 import {
   IonHeader,
   IonToolbar,
@@ -152,19 +195,50 @@ const locationsStore = useLocationsStore();
 const isLoading = ref(false);
 
 const form = reactive({
-  city: "",
-  district: "",
+  cityNameAr: "",
+  cityNameEn: "",
+  districtNameAr: "",
+  districtNameEn: "",
   street: "",
+  latitude: null as number | null,
+  longitude: null as number | null,
 });
 
 const selectedCityId = ref<number | null>(null);
+const selectedDistrictId = ref<string | null>(null);
 const isCityPickerOpen = ref(false);
 const citySearch = ref("");
 const isDistrictPickerOpen = ref(false);
 const districtSearch = ref("");
+const isMapPickerOpen = ref(false);
+// Boundary the picked point must stay within (district if chosen, else city).
+const activeBoundary = ref<DisplayBoundaryDTO | null>(null);
+const loadingBoundary = ref(false);
+const isGeocoding = ref(false);
+// Falls back to central Riyadh if a city somehow has no coordinates.
+const RIYADH = { lat: 24.7136, lng: 46.6753 };
+const cityCoords = ref<{ lat: number; lng: number } | null>(null);
 
+const canPickOnMap = computed(() => !!cityCoords.value || form.latitude != null);
+const hasLocation = computed(() => form.latitude != null && form.longitude != null);
+const mapCenter = computed(() => cityCoords.value ?? RIYADH);
+const mapInitial = computed(() =>
+  form.latitude != null && form.longitude != null
+    ? { lat: form.latitude, lng: form.longitude }
+    : null
+);
+
+const isAr = computed(() => languageStore.currentLocale.key === "ar");
 const localizedName = (item: DisplayCityDTO | DisplayDistrictDTO) =>
-  languageStore.currentLocale.key === "ar" ? item.arabicName : item.englishName;
+  isAr.value ? item.arabicName : item.englishName;
+
+// Labels shown for the chosen city/district in the viewer's current language.
+const cityLabel = computed(() =>
+  isAr.value ? form.cityNameAr : form.cityNameEn
+);
+const districtLabel = computed(() =>
+  isAr.value ? form.districtNameAr : form.districtNameEn
+);
 
 const districts = computed<DisplayDistrictDTO[]>(() =>
   selectedCityId.value
@@ -186,18 +260,24 @@ onMounted(async () => {
   if (props.addressId) {
     const addr = authStore.userAddresses.find((a) => a.id === props.addressId);
     if (addr) {
-      form.city = addr.city;
-      form.district = addr.district || "";
+      form.cityNameAr = addr.cityNameAr;
+      form.cityNameEn = addr.cityNameEn;
+      form.districtNameAr = addr.districtNameAr || "";
+      form.districtNameEn = addr.districtNameEn || "";
       form.street = addr.street || "";
+      form.latitude = addr.latitude ?? null;
+      form.longitude = addr.longitude ?? null;
+      selectedCityId.value = addr.cityId ?? null;
+      selectedDistrictId.value = addr.districtId ?? null;
 
-      // Resolve the stored city name to an id so its districts can load.
-      await locationsStore.searchCities(addr.city);
-      const match = locationsStore.cities.find(
-        (c) => c.arabicName === addr.city || c.englishName === addr.city
-      );
-      if (match) {
-        selectedCityId.value = match.id;
-        await locationsStore.fetchDistricts(match.id);
+      // Resolve the city centre (map fallback centre) and load its districts.
+      if (addr.cityId != null) {
+        await locationsStore.searchCities(addr.cityNameEn);
+        const match = locationsStore.cities.find((c) => c.id === addr.cityId);
+        if (match && match.lat != null && match.lng != null) {
+          cityCoords.value = { lat: match.lat, lng: match.lng };
+        }
+        await locationsStore.fetchDistricts(addr.cityId);
       }
     }
   }
@@ -214,12 +294,22 @@ function onCitySearch() {
 }
 
 async function selectCity(city: DisplayCityDTO) {
-  const name = localizedName(city);
   if (selectedCityId.value !== city.id) {
-    form.district = "";
+    // Different city: stored district and pinned location no longer apply.
+    form.districtNameAr = "";
+    form.districtNameEn = "";
+    form.street = "";
+    form.latitude = null;
+    form.longitude = null;
+    selectedDistrictId.value = null;
   }
-  form.city = name;
+  form.cityNameAr = city.arabicName;
+  form.cityNameEn = city.englishName;
   selectedCityId.value = city.id;
+  cityCoords.value =
+    city.lat != null && city.lng != null
+      ? { lat: city.lat, lng: city.lng }
+      : null;
   isCityPickerOpen.value = false;
   await locationsStore.fetchDistricts(city.id);
 }
@@ -230,29 +320,69 @@ function openDistrictPicker() {
 }
 
 function selectDistrict(district: DisplayDistrictDTO) {
-  form.district = localizedName(district);
+  if (selectedDistrictId.value !== district.id) {
+    // Different district: a previously pinned point may now be out of bounds.
+    form.street = "";
+    form.latitude = null;
+    form.longitude = null;
+  }
+  form.districtNameAr = district.arabicName;
+  form.districtNameEn = district.englishName;
+  selectedDistrictId.value = district.id;
   isDistrictPickerOpen.value = false;
+}
+
+async function openMapPicker() {
+  // Constrain to the district if one is chosen, otherwise the whole city.
+  loadingBoundary.value = true;
+  try {
+    activeBoundary.value = selectedDistrictId.value
+      ? await locationsStore.fetchDistrictBoundary(selectedDistrictId.value)
+      : selectedCityId.value
+        ? await locationsStore.fetchCityBoundary(selectedCityId.value)
+        : null;
+  } finally {
+    loadingBoundary.value = false;
+  }
+  isMapPickerOpen.value = true;
+}
+
+async function onMapConfirm(coords: { lat: number; lng: number }) {
+  form.latitude = coords.lat;
+  form.longitude = coords.lng;
+  isMapPickerOpen.value = false;
+  // Reverse-geocode the chosen point into a readable label.
+  isGeocoding.value = true;
+  try {
+    const label = await locationsStore.reverseGeocode(coords.lat, coords.lng);
+    if (label) form.street = label;
+  } finally {
+    isGeocoding.value = false;
+  }
 }
 
 const closeModal = () => modalController.dismiss();
 
 async function handleSubmit() {
-  if (!form.city) return;
+  if (!form.cityNameEn && !form.cityNameAr) return;
 
   isLoading.value = true;
   try {
+    const payload = {
+      cityId: selectedCityId.value ?? undefined,
+      cityNameAr: form.cityNameAr,
+      cityNameEn: form.cityNameEn,
+      districtId: selectedDistrictId.value ?? undefined,
+      districtNameAr: form.districtNameAr || undefined,
+      districtNameEn: form.districtNameEn || undefined,
+      street: form.street || undefined,
+      latitude: form.latitude ?? undefined,
+      longitude: form.longitude ?? undefined,
+    };
     if (props.addressId) {
-      await authStore.updateAddress(props.addressId, {
-        city: form.city,
-        district: form.district,
-        street: form.street,
-      });
+      await authStore.updateAddress(props.addressId, payload);
     } else {
-      await authStore.addAddress({
-        city: form.city,
-        district: form.district,
-        street: form.street,
-      });
+      await authStore.addAddress(payload);
     }
     closeModal();
   } catch (error) {

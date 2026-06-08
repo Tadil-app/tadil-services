@@ -54,8 +54,8 @@
             >
               <MapPin slot="start" class="me-2 w-5 h-5 text-primary" />
               <IonLabel>
-                <h2>{{ address.city }}</h2>
-                <p>{{ address.district }} {{ address.street }}</p>
+                <h2>{{ cityName(address) }}</h2>
+                <p>{{ districtName(address) }} {{ address.street }}</p>
               </IonLabel>
               <Settings2 slot="end" class="w-4 h-4 text-muted-foreground" />
             </IonItem>
@@ -140,11 +140,17 @@ import {
 import { SecondaryHeader } from "@/components";
 import { onMounted, ref, computed } from "vue";
 import UpdateProfileModal from "./auth/components/UpdateProfileModal.vue";
-import AddressModal from "./auth/components/AddressModal.vue";
+import AddressModal from "./profile/components/AddressModal.vue";
 
 const languageStore = useLanguageStore();
 const themeStore = useThemeStore();
 const authStore = useAuthStore();
+
+// Show the stored bilingual city/district in the viewer's current language.
+const cityName = (a: { cityNameAr: string; cityNameEn: string }) =>
+  languageStore.currentLocale.key === "ar" ? a.cityNameAr : a.cityNameEn;
+const districtName = (a: { districtNameAr?: string; districtNameEn?: string }) =>
+  (languageStore.currentLocale.key === "ar" ? a.districtNameAr : a.districtNameEn) ?? "";
 
 const isReady = ref(false);
 

@@ -35,7 +35,7 @@
               <div>
                 <p class="text-xs text-muted-foreground">{{ $t("orders.details.customer") }}</p>
                 <p class="font-medium">{{ selectedOrderDetails.customerName }}</p>
-                <p class="text-sm text-muted-foreground">{{ selectedOrderDetails.city || $t("orders.details.noCity") }}</p>
+                <p class="text-sm text-muted-foreground">{{ cityLabel(selectedOrderDetails) || $t("orders.details.noCity") }}</p>
               </div>
               <div>
                 <p class="text-xs text-muted-foreground">{{ $t("orders.details.assignedTailor") }}</p>
@@ -159,6 +159,9 @@ import { ref, watch } from "vue";
 import { Modal } from "@/components";
 import { Loader2 } from "lucide-vue-next";
 import { apiClient, type DisplayOrderDetailsDto } from "@/integration";
+import { useLocalizedCityComposable } from "@/composables";
+
+const { cityLabel } = useLocalizedCityComposable();
 
 const isOpen = defineModel<boolean>();
 

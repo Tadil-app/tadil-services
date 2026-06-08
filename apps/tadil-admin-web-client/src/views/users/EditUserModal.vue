@@ -130,7 +130,7 @@ const newUser = ref<UpdateUserDTO>({
   lastName: props.user.lastName,
   email: props.user.email,
   commissionRate: props.user.commissionRate ?? 10,
-  city: props.user.city || "",
+  city: props.user.cityNameEn || props.user.cityNameAr || "",
 });
 const newUserValidationErrors = ref({
   phone: "",
@@ -232,7 +232,7 @@ function closeModal() {
     lastName: props.user.lastName,
     email: props.user.email,
     commissionRate: props.user.commissionRate ?? 10,
-    city: props.user.city || "",
+    city: props.user.cityNameEn || props.user.cityNameAr || "",
   };
   isOpen.value = false;
 }

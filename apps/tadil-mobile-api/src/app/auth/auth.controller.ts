@@ -101,9 +101,17 @@ export class AuthController {
   async getAddresses(@Req() req: any): Promise<DisplayAddressDto[]> {
     const addresses = await this._getMyAddressesUseCase.execute(req.user.sub);
     return addresses.map((a) => ({
-      ...a,
+      id: a.id,
+      cityId: a.cityId ?? undefined,
+      cityNameAr: a.cityNameAr,
+      cityNameEn: a.cityNameEn,
+      districtId: a.districtId ?? undefined,
+      districtNameAr: a.districtNameAr,
+      districtNameEn: a.districtNameEn,
       street: a.street ?? undefined,
-      district: a.district ?? undefined,
+      latitude: a.latitude ?? undefined,
+      longitude: a.longitude ?? undefined,
+      userId: a.userId,
     }));
   }
 

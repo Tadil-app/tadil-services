@@ -1,13 +1,20 @@
 import { apiClient } from "@/integration/api";
-import { DisplayCityDTO, DisplayDistrictDTO } from "@/integration/dtos";
+import { DisplayBoundaryDTO, DisplayCityDTO, DisplayDistrictDTO } from "@/integration/dtos";
 import { defineStore } from "pinia";
 import { ref } from "vue";
+
+const GEOCODE_URL =
+  (import.meta.env.VITE_MAP_GEOCODE_URL as string | undefined) ||
+  "https://nominatim.openstreetmap.org/reverse";
 
 export const useLocationsStore = defineStore("locations", () => {
   const cities = ref<DisplayCityDTO[]>([]);
   const districtsByCity = ref<Record<number, DisplayDistrictDTO[]>>({});
   const loadingCities = ref(false);
   const loadingDistricts = ref(false);
+  // Boundary geometries are large-ish, so cache them once fetched.
+  const districtBoundaries = ref<Record<string, DisplayBoundaryDTO | null>>({});
+  const cityBoundaries = ref<Record<number, DisplayBoundaryDTO | null>>({});
 
   async function searchCities(term: string) {
     loadingCities.value = true;
@@ -38,6 +45,56 @@ export const useLocationsStore = defineStore("locations", () => {
     }
   }
 
+  async function fetchDistrictBoundary(districtId: string) {
+    if (districtId in districtBoundaries.value)
+      return districtBoundaries.value[districtId];
+    try {
+      const { data } =
+        await apiClient.locationsControllerGetDistrictBoundary(districtId);
+      districtBoundaries.value[districtId] = data ?? null;
+      return data ?? null;
+    } catch (error) {
+      console.error("Failed to fetch district boundary", error);
+      return null;
+    }
+  }
+
+  async function fetchCityBoundary(cityId: number) {
+    if (cityId in cityBoundaries.value) return cityBoundaries.value[cityId];
+    try {
+      const { data } =
+        await apiClient.locationsControllerGetCityBoundary(cityId);
+      cityBoundaries.value[cityId] = data ?? null;
+      return data ?? null;
+    } catch (error) {
+      console.error("Failed to fetch city boundary", error);
+      return null;
+    }
+  }
+
+  /** Reverse-geocodes a point to a human-readable place/street label. */
+  async function reverseGeocode(lat: number, lng: number): Promise<string> {
+    try {
+      const url = `${GEOCODE_URL}?format=jsonv2&lat=${lat}&lon=${lng}&zoom=18&addressdetails=1`;
+      const res = await fetch(url, {
+        headers: { Accept: "application/json" },
+      });
+      if (!res.ok) return "";
+      const data = await res.json();
+      const a = data.address ?? {};
+      // Prefer the most specific street-level parts, falling back to the
+      // display name. Different areas populate different fields.
+      const street = [a.road, a.neighbourhood, a.suburb, a.quarter]
+        .filter(Boolean)
+        .slice(0, 2)
+        .join(", ");
+      return street || data.name || data.display_name || "";
+    } catch (error) {
+      console.error("Reverse geocode failed", error);
+      return "";
+    }
+  }
+
   return {
     cities,
     districtsByCity,
@@ -45,5 +102,8 @@ export const useLocationsStore = defineStore("locations", () => {
     loadingDistricts,
     searchCities,
     fetchDistricts,
+    fetchDistrictBoundary,
+    fetchCityBoundary,
+    reverseGeocode,
   };
 });

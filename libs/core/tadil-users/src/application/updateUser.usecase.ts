@@ -56,12 +56,14 @@ export class UpdateUserUseCase {
           await this._usersRepository.addAddress({
             id: uuid(),
             userId: user.id,
-            city: command.city
+            cityNameAr: command.city,
+            cityNameEn: command.city,
           });
         } else {
           await this._usersRepository.updateAddress({
             ...currentAddresses[0],
-            city: command.city
+            cityNameAr: command.city,
+            cityNameEn: command.city,
           });
         }
       }

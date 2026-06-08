@@ -26,6 +26,7 @@ import {
   DisplayAddressDto,
   DisplayCityDTO,
   DisplayDistrictDTO,
+  DisplayBoundaryDTO,
   User,
 } from "../dtos";
 export interface UploadFileDto {
@@ -801,6 +802,42 @@ export class Api<
     locationsControllerGetDistricts: (cityId: number, params: RequestParams = {}) =>
       this.request<DisplayDistrictDTO[], any>({
         path: `/api/locations/cities/${cityId}/districts`,
+        method: "GET",
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Locations
+     * @name LocationsControllerGetDistrictBoundary
+     * @request GET:/api/locations/districts/{districtId}/boundary
+     */
+    locationsControllerGetDistrictBoundary: (
+      districtId: string,
+      params: RequestParams = {},
+    ) =>
+      this.request<DisplayBoundaryDTO, any>({
+        path: `/api/locations/districts/${districtId}/boundary`,
+        method: "GET",
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Locations
+     * @name LocationsControllerGetCityBoundary
+     * @request GET:/api/locations/cities/{cityId}/boundary
+     */
+    locationsControllerGetCityBoundary: (
+      cityId: number,
+      params: RequestParams = {},
+    ) =>
+      this.request<DisplayBoundaryDTO, any>({
+        path: `/api/locations/cities/${cityId}/boundary`,
         method: "GET",
         format: "json",
         ...params,

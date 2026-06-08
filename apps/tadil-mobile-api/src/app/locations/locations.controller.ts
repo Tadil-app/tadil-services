@@ -1,7 +1,29 @@
 import { Controller, Get, Param, Query } from '@nestjs/common';
 import { ApiOkResponse, ApiParam, ApiQuery, ApiTags } from '@nestjs/swagger';
 import { DataReader } from '@tadil-database';
-import { DisplayCityDTO, DisplayDistrictDTO } from './dtos';
+import { DisplayBoundaryDTO, DisplayCityDTO, DisplayDistrictDTO } from './dtos';
+
+type Geometry = { type: string; coordinates: number[][][] };
+
+// Most cities in the dataset have no districts (only ~150 of 4500+ do), so they
+// have no polygon to union. For those we fence a circle around the city centre.
+const CITY_FALLBACK_RADIUS_KM = 20;
+
+function circlePolygon(
+  lat: number,
+  lng: number,
+  radiusKm: number,
+  steps = 48
+): number[][][] {
+  const coords: number[][] = [];
+  const latDeg = radiusKm / 110.574;
+  const lngDeg = radiusKm / (111.32 * Math.cos((lat * Math.PI) / 180));
+  for (let i = 0; i <= steps; i++) {
+    const theta = (i / steps) * 2 * Math.PI;
+    coords.push([lng + lngDeg * Math.cos(theta), lat + latDeg * Math.sin(theta)]);
+  }
+  return [coords];
+}
 
 @Controller('locations')
 @ApiTags('Locations')
@@ -36,6 +58,8 @@ export class LocationsController {
       regionId: city.regionId,
       arabicName: city.nameAr,
       englishName: city.nameEn,
+      lat: city.lat,
+      lng: city.lng,
     }));
   }
 
@@ -56,5 +80,55 @@ export class LocationsController {
       arabicName: district.nameAr,
       englishName: district.nameEn,
     }));
+  }
+
+  @Get('districts/:districtId/boundary')
+  @ApiParam({ name: 'districtId', type: 'string' })
+  @ApiOkResponse({ type: DisplayBoundaryDTO })
+  async getDistrictBoundary(
+    @Param('districtId') districtId: string
+  ): Promise<DisplayBoundaryDTO | null> {
+    const district = await this._dataReader.queries.district.findUnique({
+      where: { id: districtId },
+      select: { boundaries: true },
+    });
+    const geometry = district?.boundaries as Geometry | null;
+    return geometry ? (geometry as DisplayBoundaryDTO) : null;
+  }
+
+  @Get('cities/:cityId/boundary')
+  @ApiParam({ name: 'cityId', type: 'number' })
+  @ApiOkResponse({ type: DisplayBoundaryDTO })
+  async getCityBoundary(
+    @Param('cityId') cityId: string
+  ): Promise<DisplayBoundaryDTO | null> {
+    // A city has no shape of its own, so its boundary is the union of its
+    // districts' polygons expressed as a single GeoJSON MultiPolygon.
+    const districts = await this._dataReader.queries.district.findMany({
+      where: { cityId: Number(cityId) },
+      select: { boundaries: true },
+    });
+
+    const polygons = districts
+      .map((d) => d.boundaries as Geometry | null)
+      .filter((b): b is Geometry => !!b && b.type === 'Polygon')
+      .map((b) => b.coordinates);
+
+    if (polygons.length > 0) {
+      return { type: 'MultiPolygon', coordinates: polygons };
+    }
+
+    // No districts (and therefore no polygons) for this city: fall back to a
+    // circle around the city centre so the map still draws a fence.
+    const city = await this._dataReader.queries.city.findUnique({
+      where: { id: Number(cityId) },
+      select: { lat: true, lng: true },
+    });
+    if (!city || city.lat == null || city.lng == null) return null;
+
+    return {
+      type: 'Polygon',
+      coordinates: circlePolygon(city.lat, city.lng, CITY_FALLBACK_RADIUS_KM),
+    };
   }
 }

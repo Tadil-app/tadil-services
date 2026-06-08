@@ -205,22 +205,40 @@ export interface UpdateProfileDto {
 }
 
 export interface CreateAddressDto {
-  city: string;
+  cityId?: number;
+  cityNameAr: string;
+  cityNameEn: string;
+  districtId?: string;
+  districtNameAr?: string;
+  districtNameEn?: string;
   street?: string;
-  district?: string;
+  latitude?: number;
+  longitude?: number;
 }
 
 export interface UpdateAddressDto {
-  city?: string;
+  cityId?: number;
+  cityNameAr?: string;
+  cityNameEn?: string;
+  districtId?: string;
+  districtNameAr?: string;
+  districtNameEn?: string;
   street?: string;
-  district?: string;
+  latitude?: number;
+  longitude?: number;
 }
 
 export interface DisplayAddressDto {
   id: string;
-  city: string;
+  cityId?: number | null;
+  cityNameAr: string;
+  cityNameEn: string;
+  districtId?: string | null;
+  districtNameAr?: string;
+  districtNameEn?: string;
   street?: string;
-  district?: string;
+  latitude?: number | null;
+  longitude?: number | null;
   userId: string;
 }
 
@@ -246,6 +264,8 @@ export interface DisplayCityDTO {
   regionId: number;
   arabicName: string;
   englishName: string;
+  lat: number | null;
+  lng: number | null;
 }
 
 export interface DisplayDistrictDTO {
@@ -253,4 +273,9 @@ export interface DisplayDistrictDTO {
   cityId: number;
   arabicName: string;
   englishName: string;
+}
+
+export interface DisplayBoundaryDTO {
+  type: "Polygon" | "MultiPolygon";
+  coordinates: number[][][] | number[][][][];
 }

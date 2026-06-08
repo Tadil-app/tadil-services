@@ -301,6 +301,8 @@ model City {
     regionId Int
     nameAr   String
     nameEn   String
+    lat      Float?
+    lng      Float?
 
     districts District[]
 
@@ -315,6 +317,10 @@ model District {
     nameAr   String
     nameEn   String
 
+    // GeoJSON Polygon geometry ({ type, coordinates }) of the district's area,
+    // used to constrain a picked map point to within the district/city.
+    boundaries Json?
+
     city City @relation(fields: [cityId], references: [id], onDelete: Cascade)
 
     @@index([cityId])
@@ -322,12 +328,21 @@ model District {
 }
 
 model Address {
-    id       String  @id @default(uuid())
-    city     String
-    street   String?
-    district String?
-    userId   String
-    user     User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+    id        String  @id @default(uuid())
+    // City and district are denormalized in both languages so any viewer can
+    // render them in their own language. Ids are loose (no FK) so addresses
+    // survive the seed wiping and reinserting city/district rows.
+    cityId         Int?
+    cityNameAr     String
+    cityNameEn     String
+    districtId     String?
+    districtNameAr String?
+    districtNameEn String?
+    street    String?
+    latitude  Float?
+    longitude Float?
+    userId    String
+    user      User    @relation(fields: [userId], references: [id], onDelete: Cascade)
 
     orders Order[]
 

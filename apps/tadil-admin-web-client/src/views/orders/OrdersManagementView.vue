@@ -28,10 +28,12 @@
 import { ref, onMounted, watch, computed } from "vue";
 import { apiClient, type DisplayOrderDTO, type DisplayUserDTO } from "@/integration";
 import { useI18n } from "vue-i18n";
+import { useLocalizedCityComposable } from "@/composables";
 import OrdersFilters from "./components/OrdersFilters.vue";
 import OrdersTable from "./components/OrdersTable.vue";
 
 const { t } = useI18n();
+const { cityLabel } = useLocalizedCityComposable();
 
 const orders = ref<DisplayOrderDTO[]>([]);
 const isLoading = ref(true);
@@ -67,7 +69,7 @@ const courierOptions = computed(() => [
 ]);
 
 const availableTailors = computed(() => 
-  tailors.value.map((user: DisplayUserDTO) => ({ key: user.id, label: `${user.firstName} ${user.lastName} (${user.city || 'No City'})` }))
+  tailors.value.map((user: DisplayUserDTO) => ({ key: user.id, label: `${user.firstName} ${user.lastName} (${cityLabel(user) || 'No City'})` }))
 );
 
 const fetchOrders = async () => {

@@ -60,9 +60,9 @@
                 />
               </div>
               <div>
-                <p class="font-bold">{{ address.city }}</p>
+                <p class="font-bold">{{ cityName(address) }}</p>
                 <p class="text-sm text-muted-foreground">
-                  {{ address.district }} {{ address.street }}
+                  {{ districtName(address) }} {{ address.street }}
                 </p>
               </div>
             </div>
@@ -123,7 +123,7 @@ import {
 } from '@ionic/vue';
 import { SecondaryHeader, EmptyState } from '@/components';
 import { ref, computed, onMounted } from 'vue';
-import { useAuthStore, useCartStore } from '@/stores';
+import { useAuthStore, useCartStore, useLanguageStore } from '@/stores';
 import { useRouter } from 'vue-router';
 import { MapPin, ShoppingBag } from 'lucide-vue-next';
 import { DisplayOrderDTO } from '@/integration/dtos';
@@ -133,9 +133,16 @@ import { Preferences } from '@capacitor/preferences';
 const { t } = useI18n();
 const authStore = useAuthStore();
 const cartStore = useCartStore();
+const languageStore = useLanguageStore();
 const router = useRouter();
 
-const step = ref<'address' | 'payment'>('address');
+// Show the stored bilingual city/district in the viewer's current language.
+const cityName = (a: { cityNameAr: string; cityNameEn: string }) =>
+  languageStore.currentLocale.key === 'ar' ? a.cityNameAr : a.cityNameEn;
+const districtName = (a: { districtNameAr?: string; districtNameEn?: string }) =>
+  (languageStore.currentLocale.key === 'ar' ? a.districtNameAr : a.districtNameEn) ?? '';
+
+const step = ref<'address' | 'payment' | 'success'>('address');
 const selectedAddressId = ref<string>('');
 const isProcessing = ref(false);
 const createdOrder = ref<DisplayOrderDTO | null>(null);

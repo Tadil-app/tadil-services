@@ -9,9 +9,15 @@ export class UpdateAddressUseCase {
 
   async execute(command: {
     id: string;
-    city?: string;
+    cityId?: number;
+    cityNameAr?: string;
+    cityNameEn?: string;
+    districtId?: string;
+    districtNameAr?: string;
+    districtNameEn?: string;
     street?: string;
-    district?: string;
+    latitude?: number;
+    longitude?: number;
   }): Promise<void> {
     const existingAddress = await this._usersRepository.getAddressById(command.id);
     if (!existingAddress) {
@@ -21,9 +27,15 @@ export class UpdateAddressUseCase {
     try {
       await this._usersRepository.updateAddress({
         ...existingAddress,
-        city: command.city ?? existingAddress.city,
+        cityId: command.cityId ?? existingAddress.cityId,
+        cityNameAr: command.cityNameAr ?? existingAddress.cityNameAr,
+        cityNameEn: command.cityNameEn ?? existingAddress.cityNameEn,
+        districtId: command.districtId ?? existingAddress.districtId,
+        districtNameAr: command.districtNameAr ?? existingAddress.districtNameAr,
+        districtNameEn: command.districtNameEn ?? existingAddress.districtNameEn,
         street: command.street ?? existingAddress.street,
-        district: command.district ?? existingAddress.district,
+        latitude: command.latitude ?? existingAddress.latitude,
+        longitude: command.longitude ?? existingAddress.longitude,
       });
     } catch (error) {
       if (error instanceof Error)

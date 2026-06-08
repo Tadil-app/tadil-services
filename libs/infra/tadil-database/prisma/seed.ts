@@ -12,6 +12,8 @@ interface RawCity {
   region_id: number;
   name_ar: string;
   name_en: string;
+  lat: number | null;
+  lng: number | null;
 }
 
 interface RawDistrict {
@@ -22,8 +24,15 @@ interface RawDistrict {
   name_en: string;
 }
 
+type Boundary = { type: 'Polygon'; coordinates: number[][][] };
+type BoundaryMap = Record<string, Boundary>;
+
 function load<T>(file: string): T[] {
   return JSON.parse(readFileSync(join(dataDir, file), 'utf-8')) as T[];
+}
+
+function loadObject<T>(file: string): T {
+  return JSON.parse(readFileSync(join(dataDir, file), 'utf-8')) as T;
 }
 
 async function main() {
@@ -31,6 +40,9 @@ async function main() {
 
   const cities = load<RawCity>('cities_lite.json');
   const districts = load<RawDistrict>('districts_lite.json');
+  // GeoJSON Polygon per district, keyed by stringified district id.
+  // Generated from the upstream geojson by build-boundaries.mjs.
+  const boundaries = loadObject<BoundaryMap>('district_boundaries.json');
 
   // Address stores names as strings (no FK to these tables), so a clean
   // wipe + reinsert keeps the seed idempotent without touching addresses.
@@ -43,20 +55,31 @@ async function main() {
       regionId: c.region_id,
       nameAr: c.name_ar,
       nameEn: c.name_en,
+      lat: c.lat,
+      lng: c.lng,
     })),
   });
   console.log(`Inserted ${cities.length} cities.`);
 
+  let withBoundary = 0;
   await prisma.district.createMany({
-    data: districts.map((d) => ({
-      id: String(d.district_id),
-      cityId: d.city_id,
-      regionId: d.region_id,
-      nameAr: d.name_ar,
-      nameEn: d.name_en,
-    })),
+    data: districts.map((d) => {
+      const id = String(d.district_id);
+      const boundary = boundaries[id] ?? null;
+      if (boundary) withBoundary++;
+      return {
+        id,
+        cityId: d.city_id,
+        regionId: d.region_id,
+        nameAr: d.name_ar,
+        nameEn: d.name_en,
+        boundaries: boundary ?? undefined,
+      };
+    }),
   });
-  console.log(`Inserted ${districts.length} districts.`);
+  console.log(
+    `Inserted ${districts.length} districts (${withBoundary} with boundaries).`
+  );
 
   console.log('Seeding finished.');
 }

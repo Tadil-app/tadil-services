@@ -9,4 +9,8 @@ export class DisplayCityDTO {
   arabicName!: string;
   @ApiProperty()
   englishName!: string;
+  @ApiProperty({ nullable: true, type: Number })
+  lat!: number | null;
+  @ApiProperty({ nullable: true, type: Number })
+  lng!: number | null;
 }

@@ -1,6 +1,36 @@
 import { User, UsersRepository, LoginRequestStatusType, Address } from '@tadil-users';
 import { DbClient } from '../../dbClient';
 
+type AddressRow = {
+  id: string;
+  cityId: number | null;
+  cityNameAr: string;
+  cityNameEn: string;
+  districtId: string | null;
+  districtNameAr: string | null;
+  districtNameEn: string | null;
+  street: string | null;
+  latitude: number | null;
+  longitude: number | null;
+  userId: string;
+};
+
+function toAddress(a: AddressRow): Address {
+  return {
+    id: a.id,
+    cityId: a.cityId ?? undefined,
+    cityNameAr: a.cityNameAr,
+    cityNameEn: a.cityNameEn,
+    districtId: a.districtId ?? undefined,
+    districtNameAr: a.districtNameAr ?? undefined,
+    districtNameEn: a.districtNameEn ?? undefined,
+    street: a.street ?? undefined,
+    latitude: a.latitude,
+    longitude: a.longitude,
+    userId: a.userId,
+  };
+}
+
 export class PrismaUsersRepository implements UsersRepository {
   constructor(private readonly _db: DbClient) {}
 
@@ -16,11 +46,7 @@ export class PrismaUsersRepository implements UsersRepository {
       email: user.email ?? undefined,
       loginRequestStatus: (user.loginRequestStatus as LoginRequestStatusType) ?? undefined,
       loginToken: user.loginToken ?? undefined,
-      addresses: user.addresses.map((a) => ({
-        ...a,
-        street: a.street ?? undefined,
-        district: a.district ?? undefined,
-      })),
+      addresses: user.addresses.map(toAddress),
     };
   }
 
@@ -35,11 +61,7 @@ export class PrismaUsersRepository implements UsersRepository {
       email: user.email ?? undefined,
       loginRequestStatus: (user.loginRequestStatus as LoginRequestStatusType) ?? undefined,
       loginToken: user.loginToken ?? undefined,
-      addresses: user.addresses.map((a) => ({
-        ...a,
-        street: a.street ?? undefined,
-        district: a.district ?? undefined,
-      })),
+      addresses: user.addresses.map(toAddress),
     };
   }
 
@@ -55,11 +77,7 @@ export class PrismaUsersRepository implements UsersRepository {
       email: user.email ?? undefined,
       loginRequestStatus: (user.loginRequestStatus as LoginRequestStatusType) ?? undefined,
       loginToken: user.loginToken ?? undefined,
-      addresses: user.addresses.map((a) => ({
-        ...a,
-        street: a.street ?? undefined,
-        district: a.district ?? undefined,
-      })),
+      addresses: user.addresses.map(toAddress),
     }));
   }
 
@@ -108,11 +126,7 @@ export class PrismaUsersRepository implements UsersRepository {
     const addresses = await this._db.address.findMany({
       where: { userId },
     });
-    return addresses.map((a) => ({
-      ...a,
-      street: a.street ?? undefined,
-      district: a.district ?? undefined,
-    }));
+    return addresses.map(toAddress);
   }
 
   async getAddressById(id: string): Promise<Address | undefined> {
@@ -120,20 +134,22 @@ export class PrismaUsersRepository implements UsersRepository {
       where: { id },
     });
     if (!address) return undefined;
-    return {
-      ...address,
-      street: address.street ?? undefined,
-      district: address.district ?? undefined,
-    };
+    return toAddress(address);
   }
 
   async addAddress(address: Address): Promise<void> {
     await this._db.address.create({
       data: {
         id: address.id,
-        city: address.city,
+        cityId: address.cityId,
+        cityNameAr: address.cityNameAr,
+        cityNameEn: address.cityNameEn,
+        districtId: address.districtId,
+        districtNameAr: address.districtNameAr,
+        districtNameEn: address.districtNameEn,
         street: address.street,
-        district: address.district,
+        latitude: address.latitude,
+        longitude: address.longitude,
         userId: address.userId,
       },
     });
@@ -143,9 +159,15 @@ export class PrismaUsersRepository implements UsersRepository {
     await this._db.address.update({
       where: { id: address.id },
       data: {
-        city: address.city,
+        cityId: address.cityId,
+        cityNameAr: address.cityNameAr,
+        cityNameEn: address.cityNameEn,
+        districtId: address.districtId,
+        districtNameAr: address.districtNameAr,
+        districtNameEn: address.districtNameEn,
         street: address.street,
-        district: address.district,
+        latitude: address.latitude,
+        longitude: address.longitude,
       },
     });
   }

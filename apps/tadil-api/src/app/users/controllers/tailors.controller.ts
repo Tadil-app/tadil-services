@@ -38,7 +38,8 @@ export class TailorsController {
     return users.map((user) => ({
       ...user,
       email: user.email ?? undefined,
-      city: user.addresses.length > 0 ? user.addresses[0].city : undefined,
+      cityNameAr: user.addresses.length > 0 ? user.addresses[0].cityNameAr : undefined,
+      cityNameEn: user.addresses.length > 0 ? user.addresses[0].cityNameEn : undefined,
     }));
   }
 

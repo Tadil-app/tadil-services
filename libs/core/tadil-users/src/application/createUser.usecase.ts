@@ -49,12 +49,14 @@ export class CreateUserUseCase {
              await this._usersRepository.addAddress({
                 id: uuid(),
                 userId: userByPhone.id,
-                city: command.city
+                cityNameAr: command.city,
+                cityNameEn: command.city,
              });
           } else {
              await this._usersRepository.updateAddress({
                 ...currentAddresses[0],
-                city: command.city
+                cityNameAr: command.city,
+                cityNameEn: command.city,
              });
           }
         }
@@ -76,7 +78,8 @@ export class CreateUserUseCase {
         await this._usersRepository.addAddress({
           id: uuid(),
           userId: newUserId,
-          city: command.city,
+          cityNameAr: command.city,
+          cityNameEn: command.city,
         });
       }
     } catch (error) {

@@ -28,14 +28,18 @@ export class CourierController {
     // 1. Fetch courier's city
     const courierAddress = await this._dataReader.queries.address.findFirst({
       where: { userId: courierId },
-      select: { city: true },
+      select: { cityId: true, cityNameEn: true },
     });
 
     if (!courierAddress) {
       return []; // No address, no orders
     }
 
-    const courierCity = courierAddress.city;
+    // Match orders in the same city by id when available, else by name.
+    const courierCityFilter =
+      courierAddress.cityId != null
+        ? { cityId: courierAddress.cityId }
+        : { cityNameEn: courierAddress.cityNameEn };
 
     // 2. Fetch orders within that city
     const orders = await this._dataReader.queries.order.findMany({
@@ -45,7 +49,7 @@ export class CourierController {
           {
             AND: [
               { status: 'waitingForCourierAssignement' },
-              { address: { city: courierCity } },
+              { address: courierCityFilter },
               { NOT: { rejectedCouriers: { some: { id: courierId } } } }
             ]
           },
@@ -55,7 +59,7 @@ export class CourierController {
           {
             AND: [
               { status: 'waitingForReturnCourierAssignement' },
-              { address: { city: courierCity } },
+              { address: courierCityFilter },
               { NOT: { rejectedReturnCouriers: { some: { id: courierId } } } }
             ]
           },

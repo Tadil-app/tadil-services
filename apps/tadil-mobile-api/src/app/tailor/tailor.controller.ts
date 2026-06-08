@@ -27,14 +27,18 @@ export class TailorController {
     // 1. Fetch tailor's city
     const tailorAddress = await this._dataReader.queries.address.findFirst({
       where: { userId: tailorId },
-      select: { city: true },
+      select: { cityId: true, cityNameEn: true },
     });
 
     if (!tailorAddress) {
       return []; // No address, no orders
     }
 
-    const tailorCity = tailorAddress.city;
+    // Match orders in the same city by id when available, else by name.
+    const tailorCityFilter =
+      tailorAddress.cityId != null
+        ? { cityId: tailorAddress.cityId }
+        : { cityNameEn: tailorAddress.cityNameEn };
 
     // 2. Fetch orders within that city
     const orders = await this._dataReader.queries.order.findMany({
@@ -43,7 +47,7 @@ export class TailorController {
           {
             AND: [
               { status: 'waitingForTailorAssignement' },
-              { address: { city: tailorCity } },
+              { address: tailorCityFilter },
               { NOT: { rejectedTailors: { some: { id: tailorId } } } }
             ],
           },
