@@ -2,8 +2,26 @@
   <IonPage>
     <SecondaryHeader :title="stepTitle" default-href="/customer/cart" />
     <IonContent class="ion-padding">
-      <!-- Step 1: Address Selection -->
-      <div v-if="step === 'address'" class="space-y-6">
+      <EmptyState
+        v-if="cartStore.itemsCount === 0 && step !== 'success'"
+        :icon="ShoppingBag"
+        :title="$t('cart.emptyTitle')"
+        :description="$t('cart.emptyDescription')"
+      >
+        <IonButton
+          fill="solid"
+          color="primary"
+          shape="round"
+          class="px-8"
+          router-link="/customer/new-order"
+        >
+          {{ $t("cart.shopNow") }}
+        </IonButton>
+      </EmptyState>
+
+      <template v-else>
+        <!-- Step 1: Address Selection -->
+        <div v-if="step === 'address'" class="space-y-6">
         <h2 class="text-xl font-bold">{{ $t('checkout.address.title') }}</h2>
         <div
           v-if="authStore.userAddresses.length === 0"
@@ -123,6 +141,7 @@
           {{ $t('customer.ordersHistory.title') }}
         </IonButton>
       </div>
+      </template>
     </IonContent>
   </IonPage>
 </template>
@@ -135,14 +154,16 @@ import {
   IonCard,
   IonSpinner,
   toastController,
+  onIonViewWillEnter,
 } from '@ionic/vue';
-import { SecondaryHeader } from '@/components';
+import { SecondaryHeader, EmptyState } from '@/components';
 import { ref, computed, onMounted } from 'vue';
 import { useAuthStore, useCartStore } from '@/stores';
 import { useRouter } from 'vue-router';
-import { MapPin, Check } from 'lucide-vue-next';
+import { MapPin, Check, ShoppingBag } from 'lucide-vue-next';
 import { DisplayOrderDTO } from '@/integration/dtos';
 import { useI18n } from 'vue-i18n';
+import { Preferences } from '@capacitor/preferences';
 
 const { t } = useI18n();
 const authStore = useAuthStore();
@@ -154,6 +175,14 @@ const selectedAddressId = ref<string>('');
 const isProcessing = ref(false);
 const createdOrder = ref<DisplayOrderDTO | null>(null);
 const paymentError = ref('');
+
+onIonViewWillEnter(async () => {
+  const { value: shouldRedirect } = await Preferences.get({ key: 'redirectToOrders' });
+  if (shouldRedirect === 'true') {
+    await Preferences.remove({ key: 'redirectToOrders' });
+    router.push('/customer/orders');
+  }
+});
 
 const stepTitle = computed(() => {
   if (step.value === 'address') return t('checkout.address.title');
@@ -176,6 +205,8 @@ async function proceedToPayment() {
   try {
     const order = await cartStore.createOrder(selectedAddressId.value);
     createdOrder.value = order;
+    await Preferences.set({ key: 'pendingOrderId', value: order.id });
+    await Preferences.set({ key: 'checkoutHistoryLength', value: window.history.length.toString() });
     step.value = 'payment';
     initMoyasar();
   } catch (error) {
@@ -200,6 +231,7 @@ async function bypassPayment() {
       createdOrder.value.id,
       'fake-payment-id-' + Date.now()
     );
+    await cartStore.clearCart();
     step.value = 'success';
   } catch (err) {
     console.error('Bypass failed', err);
@@ -214,13 +246,13 @@ function initMoyasar() {
   const link = document.createElement('link');
   link.rel = 'stylesheet';
   link.href =
-    'https://cdn.jsdelivr.net/npm/moyasar-payment-form@2.2.7/dist/moyasar.css';
+    'https://cdn.jsdelivr.net/npm/moyasar-payment-form@2.2.9/dist/moyasar.css';
   document.head.appendChild(link);
 
   // 2. Inject Script
   const script = document.createElement('script');
   script.src =
-    'https://cdn.jsdelivr.net/npm/moyasar-payment-form@2.2.7/dist/moyasar.umd.min.js';
+    'https://cdn.jsdelivr.net/npm/moyasar-payment-form@2.2.9/dist/moyasar.umd.min.js';
   script.async = true;
   script.onload = () => {
     // @ts-ignore
@@ -230,23 +262,9 @@ function initMoyasar() {
       currency: 'SAR',
       description: `Order #${createdOrder.value?.reference} for Tadil`,
       publishable_api_key: import.meta.env.VITE_MOYASAR_PUBLISHABLE_KEY,
-      callback_url: window.location.origin + '/customer/checkout', // Moyasar will redirect back here if not handled by on_completed
+      callback_url: window.location.origin + '/customer/checkout/verify',
       supported_networks: ['visa', 'mastercard', 'mada'],
       methods: ['creditcard'],
-      on_completed: async (payment: any) => {
-        if (payment.status === 'paid') {
-          try {
-            await cartStore.confirmPayment(createdOrder.value!.id, payment.id);
-            step.value = 'success';
-          } catch (err) {
-            console.error('Payment confirmation failed', err);
-            paymentError.value =
-              'Payment was successful, but we failed to update your order. Please contact support.';
-          }
-        } else {
-          paymentError.value = `Payment failed with status: ${payment.status}`;
-        }
-      },
     });
   };
   document.body.appendChild(script);

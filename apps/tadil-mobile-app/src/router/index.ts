@@ -58,6 +58,11 @@ const routes: Array<RouteRecordRaw> = [
         component: () => import("../views/customer/checkout/CheckoutView.vue"),
       },
       {
+        path: "checkout/verify",
+        name: "customer-checkout-verify",
+        component: () => import("../views/customer/checkout/CheckoutVerifyView.vue"),
+      },
+      {
         path: "new-order",
         name: "customer-new-order",
         component: () => import("../views/customer/newOrder/NewOrderView.vue"),
