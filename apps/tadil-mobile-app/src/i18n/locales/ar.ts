@@ -129,6 +129,12 @@ export const ar = {
       city: "المدينة",
       district: "الحي",
       street: "الشارع",
+      selectCity: "اختر المدينة",
+      selectDistrict: "اختر الحي",
+      searchCity: "ابحث عن مدينة",
+      noCitiesFound: "لا توجد مدن",
+      searchDistrict: "ابحث عن حي",
+      noDistrictsFound: "لا توجد أحياء",
       updateError: "فشل تحديث الملف الشخصي",
     },
     preferences: {

@@ -240,3 +240,17 @@ export interface AuthResponseDto {
   user?: User;
   message?: string;
 }
+
+export interface DisplayCityDTO {
+  id: number;
+  regionId: number;
+  arabicName: string;
+  englishName: string;
+}
+
+export interface DisplayDistrictDTO {
+  id: string;
+  cityId: number;
+  arabicName: string;
+  englishName: string;
+}

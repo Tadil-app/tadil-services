@@ -129,6 +129,12 @@ export const hi = {
       city: "शहर",
       district: "ज़िला",
       street: "सड़क",
+      selectCity: "शहर चुनें",
+      selectDistrict: "ज़िला चुनें",
+      searchCity: "शहर खोजें",
+      noCitiesFound: "कोई शहर नहीं मिला",
+      searchDistrict: "ज़िला खोजें",
+      noDistrictsFound: "कोई ज़िला नहीं मिला",
       updateError: "प्रोफ़ाइल अपडेट करने में विफल",
     },
     preferences: {

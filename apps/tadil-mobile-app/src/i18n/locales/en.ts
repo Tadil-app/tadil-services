@@ -129,6 +129,12 @@ export const en = {
       city: "City",
       district: "District",
       street: "Street",
+      selectCity: "Select a city",
+      selectDistrict: "Select a district",
+      searchCity: "Search city",
+      noCitiesFound: "No cities found",
+      searchDistrict: "Search district",
+      noDistrictsFound: "No districts found",
       updateError: "Failed to update profile",
     },
     preferences: {

@@ -5,3 +5,4 @@ export * from "./useTheme.store";
 export * from "./useCustomerOrders.store";
 export * from "./useTailorOrders.store";
 export * from "./useCourierOrders.store";
+export * from "./useLocations.store";

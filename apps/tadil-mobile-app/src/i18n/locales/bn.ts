@@ -130,6 +130,12 @@ export const bn = {
       city: "শহর",
       district: "জেলা",
       street: "রাস্তা",
+      selectCity: "শহর নির্বাচন করুন",
+      selectDistrict: "এলাকা নির্বাচন করুন",
+      searchCity: "শহর খুঁজুন",
+      noCitiesFound: "কোনো শহর পাওয়া যায়নি",
+      searchDistrict: "এলাকা খুঁজুন",
+      noDistrictsFound: "কোনো এলাকা পাওয়া যায়নি",
       updateError: "প্রোফাইল আপডেট করতে ব্যর্থ হয়েছে",
     },
     preferences: {

@@ -129,6 +129,12 @@ export const ur = {
       city: "شہر",
       district: "ضلع",
       street: "سڑک",
+      selectCity: "شہر منتخب کریں",
+      selectDistrict: "علاقہ منتخب کریں",
+      searchCity: "شہر تلاش کریں",
+      noCitiesFound: "کوئی شہر نہیں ملا",
+      searchDistrict: "علاقہ تلاش کریں",
+      noDistrictsFound: "کوئی علاقہ نہیں ملا",
       updateError: "پروفائل اپ ڈیٹ کرنے میں ناکام",
     },
     preferences: {

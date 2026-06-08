@@ -24,6 +24,8 @@ import {
   CreateAddressDto,
   UpdateAddressDto,
   DisplayAddressDto,
+  DisplayCityDTO,
+  DisplayDistrictDTO,
   User,
 } from "../dtos";
 export interface UploadFileDto {
@@ -763,6 +765,43 @@ export class Api<
         method: "PUT",
         body: data,
         type: ContentType.Json,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Locations
+     * @name LocationsControllerGetCities
+     * @request GET:/api/locations/cities
+     */
+    locationsControllerGetCities: (
+      query?: {
+        search?: string;
+        regionId?: number;
+      },
+      params: RequestParams = {},
+    ) =>
+      this.request<DisplayCityDTO[], any>({
+        path: `/api/locations/cities`,
+        method: "GET",
+        query: query,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Locations
+     * @name LocationsControllerGetDistricts
+     * @request GET:/api/locations/cities/{cityId}/districts
+     */
+    locationsControllerGetDistricts: (cityId: number, params: RequestParams = {}) =>
+      this.request<DisplayDistrictDTO[], any>({
+        path: `/api/locations/cities/${cityId}/districts`,
+        method: "GET",
         format: "json",
         ...params,
       }),

@@ -296,6 +296,31 @@ model OrderStatusHistory {
     @@map("order-status-histories")
 }
 
+model City {
+    id       Int        @id
+    regionId Int
+    nameAr   String
+    nameEn   String
+
+    districts District[]
+
+    @@index([regionId])
+    @@map("cities")
+}
+
+model District {
+    id       String @id
+    cityId   Int
+    regionId Int
+    nameAr   String
+    nameEn   String
+
+    city City @relation(fields: [cityId], references: [id], onDelete: Cascade)
+
+    @@index([cityId])
+    @@map("districts")
+}
+
 model Address {
     id       String  @id @default(uuid())
     city     String
