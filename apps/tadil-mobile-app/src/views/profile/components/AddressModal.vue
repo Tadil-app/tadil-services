@@ -6,7 +6,7 @@
       </IonButtons>
       <IonTitle>{{ addressId ? $t("profileSettings.profile.editAddress") : $t("profileSettings.profile.addAddress") }}</IonTitle>
       <IonButtons slot="end">
-        <IonButton :disabled="isLoading" @click="handleSubmit">
+        <IonButton :disabled="isLoading || !canSave" @click="handleSubmit">
           <IonSpinner v-if="isLoading" name="crescent" />
           <span v-else>{{ $t("common.buttons.save") }}</span>
         </IonButton>
@@ -53,26 +53,6 @@
           <span v-else-if="form.street">{{ form.street }}</span>
           <span v-else class="placeholder">{{ $t("profileSettings.profile.pickOnMapFirst") }}</span>
         </IonLabel>
-      </IonItem>
-
-      <!-- Read-only coordinates of the picked point. -->
-      <IonItem>
-        <IonInput
-          :label="$t('profileSettings.profile.latitude')"
-          label-placement="stacked"
-          :readonly="true"
-          placeholder="—"
-          :value="form.latitude != null ? form.latitude.toFixed(6) : ''"
-        />
-      </IonItem>
-      <IonItem>
-        <IonInput
-          :label="$t('profileSettings.profile.longitude')"
-          label-placement="stacked"
-          :readonly="true"
-          placeholder="—"
-          :value="form.longitude != null ? form.longitude.toFixed(6) : ''"
-        />
       </IonItem>
     </div>
 
@@ -173,7 +153,6 @@ import {
   IonTitle,
   IonContent,
   IonItem,
-  IonInput,
   IonLabel,
   IonList,
   IonModal,
@@ -221,6 +200,9 @@ const cityCoords = ref<{ lat: number; lng: number } | null>(null);
 
 const canPickOnMap = computed(() => !!cityCoords.value || form.latitude != null);
 const hasLocation = computed(() => form.latitude != null && form.longitude != null);
+const hasCity = computed(() => !!(form.cityNameEn || form.cityNameAr));
+// A valid address needs a city and a pinned location. District stays optional.
+const canSave = computed(() => hasCity.value && hasLocation.value);
 const mapCenter = computed(() => cityCoords.value ?? RIYADH);
 const mapInitial = computed(() =>
   form.latitude != null && form.longitude != null
@@ -364,7 +346,8 @@ async function onMapConfirm(coords: { lat: number; lng: number }) {
 const closeModal = () => modalController.dismiss();
 
 async function handleSubmit() {
-  if (!form.cityNameEn && !form.cityNameAr) return;
+  // City and a pinned location are required; district is optional.
+  if (!canSave.value) return;
 
   isLoading.value = true;
   try {

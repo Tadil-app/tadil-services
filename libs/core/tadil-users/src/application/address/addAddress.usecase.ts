@@ -30,6 +30,10 @@ export class AddAddressUseCase {
       throw new InvalidCommandException('City is required');
     }
 
+    if (command.latitude == null || command.longitude == null) {
+      throw new InvalidCommandException('Location is required');
+    }
+
     const currentAddresses = await this._usersRepository.getAddressesByUserId(command.userId);
 
     // Enforce single address for tailors and couriers

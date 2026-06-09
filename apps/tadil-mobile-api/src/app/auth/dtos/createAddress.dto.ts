@@ -37,13 +37,13 @@ export class CreateAddressDto {
   @IsString()
   street?: string;
 
-  @ApiProperty({ example: 24.7136, required: false })
-  @IsOptional()
+  @ApiProperty({ example: 24.7136 })
+  @IsNotEmpty()
   @IsNumber()
-  latitude?: number;
+  latitude!: number;
 
-  @ApiProperty({ example: 46.6753, required: false })
-  @IsOptional()
+  @ApiProperty({ example: 46.6753 })
+  @IsNotEmpty()
   @IsNumber()
-  longitude?: number;
+  longitude!: number;
 }
