@@ -3,6 +3,7 @@ export * from "./informations";
 export * from "./alterations";
 export * from "./extras";
 export * from "./users";
+export * from "./locations";
 export * from "./orders/displayOrder.dto";
 export * from "./orders/displayOrderDetails.dto";
 

@@ -10,4 +10,11 @@ export interface DisplayUserDTO {
   commissionRate?: number;
   cityNameAr?: string;
   cityNameEn?: string;
+  cityId?: number;
+  districtId?: string;
+  districtNameAr?: string;
+  districtNameEn?: string;
+  street?: string;
+  latitude?: number;
+  longitude?: number;
 }

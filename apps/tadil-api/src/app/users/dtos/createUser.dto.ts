@@ -18,8 +18,48 @@ export class CreateUserDTO {
   @IsOptional()
   @IsNumber()
   commissionRate?: number;
+  // Legacy free-text city, kept for backward compatibility. Prefer the
+  // structured address fields below.
   @ApiProperty({ required: false })
   @IsOptional()
   @IsString()
   city?: string;
+
+  // --- Structured address (same shape as the customer address flow) ---
+  @ApiProperty({ required: false })
+  @IsOptional()
+  @IsNumber()
+  cityId?: number;
+  @ApiProperty({ required: false })
+  @IsOptional()
+  @IsString()
+  cityNameAr?: string;
+  @ApiProperty({ required: false })
+  @IsOptional()
+  @IsString()
+  cityNameEn?: string;
+  @ApiProperty({ required: false })
+  @IsOptional()
+  @IsString()
+  districtId?: string;
+  @ApiProperty({ required: false })
+  @IsOptional()
+  @IsString()
+  districtNameAr?: string;
+  @ApiProperty({ required: false })
+  @IsOptional()
+  @IsString()
+  districtNameEn?: string;
+  @ApiProperty({ required: false })
+  @IsOptional()
+  @IsString()
+  street?: string;
+  @ApiProperty({ required: false })
+  @IsOptional()
+  @IsNumber()
+  latitude?: number;
+  @ApiProperty({ required: false })
+  @IsOptional()
+  @IsNumber()
+  longitude?: number;
 }

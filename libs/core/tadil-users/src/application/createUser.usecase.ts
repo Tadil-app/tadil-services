@@ -26,6 +26,36 @@ export class CreateUserUseCase {
       throw new InvalidCommandException('Role is required');
     }
 
+    // Tailors and couriers are created with a full address (same flow as the
+    // customer app): a city and a pinned location are required, district is
+    // optional. Other roles (e.g. customers) keep the address optional.
+    const requiresAddress =
+      command.role === ROLE.TAILOR || command.role === ROLE.COURIER;
+    const cityNameAr = command.cityNameAr ?? command.city;
+    const cityNameEn = command.cityNameEn ?? command.city;
+
+    if (requiresAddress) {
+      if (!cityNameAr || !cityNameEn) {
+        throw new InvalidCommandException('City is required');
+      }
+      if (command.latitude == null || command.longitude == null) {
+        throw new InvalidCommandException('Location is required');
+      }
+    }
+
+    // The address payload shared by the create and update branches below.
+    const addressData = {
+      cityId: command.cityId,
+      cityNameAr: cityNameAr ?? '',
+      cityNameEn: cityNameEn ?? '',
+      districtId: command.districtId,
+      districtNameAr: command.districtNameAr,
+      districtNameEn: command.districtNameEn,
+      street: command.street,
+      latitude: command.latitude,
+      longitude: command.longitude,
+    };
+
     const userByPhone = await this._usersRepository.getUserByPhone(
       command.phone
     );
@@ -43,20 +73,18 @@ export class CreateUserUseCase {
         };
         await this._usersRepository.updateUser(updatedUser);
 
-        if (command.city) {
+        if (cityNameAr) {
           const currentAddresses = await this._usersRepository.getAddressesByUserId(userByPhone.id);
           if (currentAddresses.length === 0) {
              await this._usersRepository.addAddress({
                 id: uuid(),
                 userId: userByPhone.id,
-                cityNameAr: command.city,
-                cityNameEn: command.city,
+                ...addressData,
              });
           } else {
              await this._usersRepository.updateAddress({
                 ...currentAddresses[0],
-                cityNameAr: command.city,
-                cityNameEn: command.city,
+                ...addressData,
              });
           }
         }
@@ -74,12 +102,11 @@ export class CreateUserUseCase {
         commissionRate: command.commissionRate ?? 10,
       });
 
-      if (command.city) {
+      if (cityNameAr) {
         await this._usersRepository.addAddress({
           id: uuid(),
           userId: newUserId,
-          cityNameAr: command.city,
-          cityNameEn: command.city,
+          ...addressData,
         });
       }
     } catch (error) {
@@ -98,6 +125,15 @@ export class CreateUserCommand {
   readonly email?: string;
   readonly commissionRate?: number;
   readonly city?: string;
+  readonly cityId?: number;
+  readonly cityNameAr?: string;
+  readonly cityNameEn?: string;
+  readonly districtId?: string;
+  readonly districtNameAr?: string;
+  readonly districtNameEn?: string;
+  readonly street?: string;
+  readonly latitude?: number;
+  readonly longitude?: number;
 
   constructor(
     firstName: string,
@@ -106,7 +142,18 @@ export class CreateUserCommand {
     role: RoleType,
     email?: string,
     commissionRate?: number,
-    city?: string
+    city?: string,
+    address?: {
+      cityId?: number;
+      cityNameAr?: string;
+      cityNameEn?: string;
+      districtId?: string;
+      districtNameAr?: string;
+      districtNameEn?: string;
+      street?: string;
+      latitude?: number;
+      longitude?: number;
+    }
   ) {
     this.firstName = firstName;
     this.lastName = lastName;
@@ -115,5 +162,14 @@ export class CreateUserCommand {
     this.email = email;
     this.commissionRate = commissionRate;
     this.city = city;
+    this.cityId = address?.cityId;
+    this.cityNameAr = address?.cityNameAr;
+    this.cityNameEn = address?.cityNameEn;
+    this.districtId = address?.districtId;
+    this.districtNameAr = address?.districtNameAr;
+    this.districtNameEn = address?.districtNameEn;
+    this.street = address?.street;
+    this.latitude = address?.latitude;
+    this.longitude = address?.longitude;
   }
 }

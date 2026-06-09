@@ -40,6 +40,13 @@ export class CouriersController {
       email: user.email ?? undefined,
       cityNameAr: user.addresses.length > 0 ? user.addresses[0].cityNameAr : undefined,
       cityNameEn: user.addresses.length > 0 ? user.addresses[0].cityNameEn : undefined,
+      cityId: user.addresses.length > 0 ? user.addresses[0].cityId ?? undefined : undefined,
+      districtId: user.addresses.length > 0 ? user.addresses[0].districtId ?? undefined : undefined,
+      districtNameAr: user.addresses.length > 0 ? user.addresses[0].districtNameAr ?? undefined : undefined,
+      districtNameEn: user.addresses.length > 0 ? user.addresses[0].districtNameEn ?? undefined : undefined,
+      street: user.addresses.length > 0 ? user.addresses[0].street ?? undefined : undefined,
+      latitude: user.addresses.length > 0 ? user.addresses[0].latitude ?? undefined : undefined,
+      longitude: user.addresses.length > 0 ? user.addresses[0].longitude ?? undefined : undefined,
     }));
   }
 

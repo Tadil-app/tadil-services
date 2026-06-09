@@ -20,4 +20,18 @@ export class DisplayUserDTO {
   cityNameAr?: string;
   @ApiProperty({ required: false })
   cityNameEn?: string;
+  @ApiProperty({ required: false })
+  cityId?: number;
+  @ApiProperty({ required: false })
+  districtId?: string;
+  @ApiProperty({ required: false })
+  districtNameAr?: string;
+  @ApiProperty({ required: false })
+  districtNameEn?: string;
+  @ApiProperty({ required: false })
+  street?: string;
+  @ApiProperty({ required: false })
+  latitude?: number;
+  @ApiProperty({ required: false })
+  longitude?: number;
 }

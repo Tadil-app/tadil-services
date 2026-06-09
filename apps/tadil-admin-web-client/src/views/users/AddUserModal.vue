@@ -59,16 +59,12 @@
             :placeholder="$t('common.inputs.email.placeholder')"
           />
         </div>
-        <div class="space-y-1.5" v-if="selectedUserType !== ROLE.CUSTOMER">
-          <InputLabel for="city">
-            {{ $t("common.inputs.city.label") }}
-          </InputLabel>
-          <TextInput
-            id="city"
-            v-model="newUser.city"
-            :placeholder="$t('common.inputs.city.placeholder')"
-          />
-        </div>
+        <AddressFields
+          v-if="selectedUserType !== ROLE.CUSTOMER"
+          v-model="address"
+          :show-validation="showAddressValidation"
+          @valid-change="(v) => (addressValid = v)"
+        />
         <div class="space-y-1.5" v-if="selectedUserType !== ROLE.CUSTOMER">
           <InputLabel for="commissionRate">
             {{ $t("common.inputs.commissionRate.label") }}
@@ -109,6 +105,8 @@ import {
 } from "@/integration";
 import { ref } from "vue";
 import { useI18n } from "vue-i18n";
+import AddressFields from "./components/AddressFields.vue";
+import type { AddressFormValue } from "./components/address.types";
 
 const { t } = useI18n();
 const { openToast } = useToast();
@@ -128,8 +126,10 @@ const newUser = ref<CreateUserDTO>({
   lastName: "",
   email: undefined,
   commissionRate: 10,
-  city: "",
 });
+const address = ref<AddressFormValue>({});
+const addressValid = ref(false);
+const showAddressValidation = ref(false);
 const newUserValidationErrors = ref({
   phone: "",
   firstName: "",
@@ -192,13 +192,19 @@ async function createUser() {
       validateUserFirstName() &&
       validateUserLastName()
     ) {
+      // Tailors and couriers must have a city and a pinned location.
+      if (!addressValid.value) {
+        showAddressValidation.value = true;
+        return;
+      }
+      const payload: CreateUserDTO = { ...newUser.value, ...address.value };
       switch (props.selectedUserType) {
         case ROLE.TAILOR: {
-          await apiClient.tailorsControllerCreateTailor(newUser.value);
+          await apiClient.tailorsControllerCreateTailor(payload);
           break;
         }
         case ROLE.COURIER: {
-          await apiClient.couriersControllerCreateCourier(newUser.value);
+          await apiClient.couriersControllerCreateCourier(payload);
           break;
         }
       }
@@ -224,8 +230,10 @@ function closeModal() {
     lastName: "",
     email: undefined,
     commissionRate: 10,
-    city: "",
   };
+  address.value = {};
+  addressValid.value = false;
+  showAddressValidation.value = false;
   isOpen.value = false;
 }
 </script>

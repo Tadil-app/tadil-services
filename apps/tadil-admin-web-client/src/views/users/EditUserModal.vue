@@ -58,16 +58,12 @@
             :placeholder="$t('common.inputs.email.placeholder')"
           />
         </div>
-        <div class="space-y-1.5" v-if="selectedUserType !== ROLE.CUSTOMER">
-          <InputLabel for="city">
-            {{ $t("common.inputs.city.label") }}
-          </InputLabel>
-          <TextInput
-            id="city"
-            v-model="newUser.city"
-            :placeholder="$t('common.inputs.city.placeholder')"
-          />
-        </div>
+        <AddressFields
+          v-if="selectedUserType !== ROLE.CUSTOMER"
+          v-model="address"
+          :show-validation="showAddressValidation"
+          @valid-change="(v) => (addressValid = v)"
+        />
         <div class="space-y-1.5" v-if="selectedUserType !== ROLE.CUSTOMER">
           <InputLabel for="commissionRate">
             {{ $t("common.inputs.commissionRate.label") }}
@@ -110,6 +106,22 @@ import {
 import { Edit } from "lucide-vue-next";
 import { ref } from "vue";
 import { useI18n } from "vue-i18n";
+import AddressFields from "./components/AddressFields.vue";
+import type { AddressFormValue } from "./components/address.types";
+
+function addressFromUser(user: DisplayUserDTO): AddressFormValue {
+  return {
+    cityId: user.cityId,
+    cityNameAr: user.cityNameAr,
+    cityNameEn: user.cityNameEn,
+    districtId: user.districtId,
+    districtNameAr: user.districtNameAr,
+    districtNameEn: user.districtNameEn,
+    street: user.street,
+    latitude: user.latitude,
+    longitude: user.longitude,
+  };
+}
 
 const { t } = useI18n();
 const { openToast } = useToast();
@@ -130,8 +142,10 @@ const newUser = ref<UpdateUserDTO>({
   lastName: props.user.lastName,
   email: props.user.email,
   commissionRate: props.user.commissionRate ?? 10,
-  city: props.user.cityNameEn || props.user.cityNameAr || "",
 });
+const address = ref<AddressFormValue>(addressFromUser(props.user));
+const addressValid = ref(false);
+const showAddressValidation = ref(false);
 const newUserValidationErrors = ref({
   phone: "",
   firstName: "",
@@ -194,18 +208,24 @@ async function updateUser() {
       validateUserFirstName() &&
       validateUserLastName()
     ) {
+      // Tailors and couriers must have a city and a pinned location.
+      if (!addressValid.value) {
+        showAddressValidation.value = true;
+        return;
+      }
+      const payload: UpdateUserDTO = { ...newUser.value, ...address.value };
       switch (props.selectedUserType) {
         case ROLE.TAILOR: {
           await apiClient.tailorsControllerUpdateTailor(
             props.user.id,
-            newUser.value,
+            payload,
           );
           break;
         }
         case ROLE.COURIER: {
           await apiClient.couriersControllerUpdateCourier(
             props.user.id,
-            newUser.value,
+            payload,
           );
           break;
         }
@@ -232,8 +252,10 @@ function closeModal() {
     lastName: props.user.lastName,
     email: props.user.email,
     commissionRate: props.user.commissionRate ?? 10,
-    city: props.user.cityNameEn || props.user.cityNameAr || "",
   };
+  address.value = addressFromUser(props.user);
+  addressValid.value = false;
+  showAddressValidation.value = false;
   isOpen.value = false;
 }
 </script>
