@@ -141,6 +141,21 @@
       />
     </IonModal>
   </IonContent>
+
+  <!-- Delete is only possible for an address that already exists. -->
+  <IonFooter v-if="addressId">
+    <IonToolbar>
+      <IonButton
+        expand="block"
+        color="danger"
+        fill="clear"
+        :disabled="isLoading"
+        @click="confirmDelete"
+      >
+        {{ $t("profileSettings.profile.deleteAddress") }}
+      </IonButton>
+    </IonToolbar>
+  </IonFooter>
 </template>
 
 <script setup lang="ts">
@@ -152,6 +167,7 @@ import {
   IonToolbar,
   IonTitle,
   IonContent,
+  IonFooter,
   IonItem,
   IonLabel,
   IonList,
@@ -160,9 +176,11 @@ import {
   IonButtons,
   IonButton,
   IonSpinner,
+  alertController,
   modalController,
 } from "@ionic/vue";
 import { computed, reactive, ref, onMounted } from "vue";
+import { useI18n } from "vue-i18n";
 
 const props = defineProps<{
   addressId?: string;
@@ -171,6 +189,7 @@ const props = defineProps<{
 const authStore = useAuthStore();
 const languageStore = useLanguageStore();
 const locationsStore = useLocationsStore();
+const { t } = useI18n();
 const isLoading = ref(false);
 
 const form = reactive({
@@ -344,6 +363,38 @@ async function onMapConfirm(coords: { lat: number; lng: number }) {
 }
 
 const closeModal = () => modalController.dismiss();
+
+async function confirmDelete() {
+  if (!props.addressId) return;
+  const alert = await alertController.create({
+    header: t("profileSettings.profile.deleteConfirmTitle"),
+    message: t("profileSettings.profile.deleteConfirmMessage"),
+    buttons: [
+      { text: t("common.buttons.cancel"), role: "cancel" },
+      {
+        text: t("profileSettings.profile.deleteAddress"),
+        role: "destructive",
+        handler: () => {
+          void performDelete();
+        },
+      },
+    ],
+  });
+  await alert.present();
+}
+
+async function performDelete() {
+  if (!props.addressId) return;
+  isLoading.value = true;
+  try {
+    await authStore.deleteAddress(props.addressId);
+    closeModal();
+  } catch (error) {
+    console.error("Failed to delete address", error);
+  } finally {
+    isLoading.value = false;
+  }
+}
 
 async function handleSubmit() {
   // City and a pinned location are required; district is optional.

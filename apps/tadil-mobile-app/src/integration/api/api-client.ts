@@ -697,6 +697,22 @@ export class Api<
     /**
      * No description
      *
+     * @tags Auth
+     * @name AuthControllerDeleteAddress
+     * @request DELETE:/api/auth/me/addresses/{id}
+     * @secure
+     */
+    authControllerDeleteAddress: (id: string, params: RequestParams = {}) =>
+      this.request<void, any>({
+        path: `/api/auth/me/addresses/${id}`,
+        method: "DELETE",
+        secure: true,
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
      * @tags Wallet
      * @name WalletControllerGetDetails
      * @request GET:/api/wallet/{userId}

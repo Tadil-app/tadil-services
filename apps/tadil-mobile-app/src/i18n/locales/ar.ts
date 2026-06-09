@@ -145,6 +145,9 @@ export const ar = {
       latitude: "خط العرض",
       longitude: "خط الطول",
       updateError: "فشل تحديث الملف الشخصي",
+      deleteAddress: "حذف العنوان",
+      deleteConfirmTitle: "حذف العنوان؟",
+      deleteConfirmMessage: "سيتم حذف هذا العنوان نهائيًا.",
     },
     preferences: {
       title: "التفضيلات",

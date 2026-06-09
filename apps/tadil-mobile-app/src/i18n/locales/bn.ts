@@ -146,6 +146,9 @@ export const bn = {
       latitude: "অক্ষাংশ",
       longitude: "দ্রাঘিমাংশ",
       updateError: "প্রোফাইল আপডেট করতে ব্যর্থ হয়েছে",
+      deleteAddress: "ঠিকানা মুছুন",
+      deleteConfirmTitle: "ঠিকানা মুছবেন?",
+      deleteConfirmMessage: "এই ঠিকানাটি স্থায়ীভাবে মুছে ফেলা হবে।",
     },
     preferences: {
       title: "পছন্দসমূহ",

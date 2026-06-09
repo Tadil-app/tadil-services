@@ -145,6 +145,9 @@ export const ur = {
       latitude: "عرض البلد",
       longitude: "طول البلد",
       updateError: "پروفائل اپ ڈیٹ کرنے میں ناکام",
+      deleteAddress: "پتہ حذف کریں",
+      deleteConfirmTitle: "پتہ حذف کریں؟",
+      deleteConfirmMessage: "یہ پتہ مستقل طور پر حذف کر دیا جائے گا۔",
     },
     preferences: {
       title: "ترجیحات",

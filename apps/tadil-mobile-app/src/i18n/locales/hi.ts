@@ -145,6 +145,9 @@ export const hi = {
       latitude: "अक्षांश",
       longitude: "देशांतर",
       updateError: "प्रोफ़ाइल अपडेट करने में विफल",
+      deleteAddress: "पता हटाएं",
+      deleteConfirmTitle: "पता हटाएं?",
+      deleteConfirmMessage: "यह पता स्थायी रूप से हटा दिया जाएगा।",
     },
     preferences: {
       title: "पसंद",

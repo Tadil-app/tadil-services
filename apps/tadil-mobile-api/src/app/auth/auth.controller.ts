@@ -6,6 +6,7 @@ import {
   Post,
   Put,
   Get,
+  Delete,
   Inject,
   Req,
   UseGuards,
@@ -27,6 +28,7 @@ import { AuthGuard } from './auth.guard';
 import {
   AddAddressUseCase,
   UpdateAddressUseCase,
+  DeleteAddressUseCase,
   GetMyAddressesUseCase,
   type UsersRepository,
 } from '@tadil-users';
@@ -41,6 +43,7 @@ export class AuthController {
     private readonly _usersRepository: UsersRepository,
     private readonly _addAddressUseCase: AddAddressUseCase,
     private readonly _updateAddressUseCase: UpdateAddressUseCase,
+    private readonly _deleteAddressUseCase: DeleteAddressUseCase,
     private readonly _getMyAddressesUseCase: GetMyAddressesUseCase
   ) {}
 
@@ -140,6 +143,17 @@ export class AuthController {
     await this._updateAddressUseCase.execute({
       id,
       ...dto,
+    });
+  }
+
+  @Delete('/me/addresses/:id')
+  @UseGuards(AuthGuard)
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Delete an address' })
+  async deleteAddress(@Req() req: any, @Param('id') id: string) {
+    await this._deleteAddressUseCase.execute({
+      id,
+      userId: req.user.sub,
     });
   }
 

@@ -145,6 +145,9 @@ export const en = {
       latitude: "Latitude",
       longitude: "Longitude",
       updateError: "Failed to update profile",
+      deleteAddress: "Delete Address",
+      deleteConfirmTitle: "Delete address?",
+      deleteConfirmMessage: "This address will be permanently removed.",
     },
     preferences: {
       title: "Preferences",
