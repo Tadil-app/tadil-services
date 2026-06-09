@@ -116,6 +116,7 @@ import {
   IonPage,
   IonSpinner,
   IonIcon,
+  onIonViewWillEnter,
 } from "@ionic/vue";
 import { timeOutline, closeCircleOutline } from "ionicons/icons";
 import { ref } from "vue";
@@ -135,6 +136,17 @@ const phoneNumberErrorMessage = ref<string>("");
 
 const firstName = ref("");
 const lastName = ref("");
+
+// Ionic keeps this page cached in the router outlet stack, so its local state
+// survives a logout that navigates back here. Reset to the phone step on each
+// entry, otherwise a user who just signed up would re-enter on the signup form.
+onIonViewWillEnter(() => {
+  loginStep.value = "phone";
+  statusMessage.value = "";
+  firstName.value = "";
+  lastName.value = "";
+  phoneNumberErrorMessage.value = "";
+});
 
 function validatePhoneNumber() {
   if (!phoneNumber.value) {
