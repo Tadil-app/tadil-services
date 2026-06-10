@@ -138,10 +138,9 @@ export class AuthController {
     @Param('id') id: string,
     @Body() dto: UpdateAddressDto
   ) {
-    // We should probably check if the address belongs to the user, but for now
-    // the UpdateAddressUseCase only takes the ID.
     await this._updateAddressUseCase.execute({
       id,
+      role: req.user.role,
       ...dto,
     });
   }
@@ -154,6 +153,7 @@ export class AuthController {
     await this._deleteAddressUseCase.execute({
       id,
       userId: req.user.sub,
+      role: req.user.role,
     });
   }
 

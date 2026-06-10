@@ -127,6 +127,7 @@ export const bn = {
       noAddresses: "কোন ঠিকানা পাওয়া যায়নি",
       addAddress: "ঠিকানা যোগ করুন",
       editAddress: "ঠিকানা পরিবর্তন করুন",
+      viewAddress: "ঠিকানা",
       city: "শহর",
       district: "জেলা",
       street: "রাস্তা",

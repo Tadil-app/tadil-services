@@ -26,19 +26,18 @@ export class AddAddressUseCase {
       throw new InvalidCommandException('User not found');
     }
 
+    // Only customers may add addresses from the app; couriers/tailors are
+    // view-only and get their single address provisioned by an admin.
+    if (user.role !== ROLE.CUSTOMER) {
+      throw new InvalidCommandException('Only customers can add addresses');
+    }
+
     if (!command.cityNameAr || !command.cityNameEn) {
       throw new InvalidCommandException('City is required');
     }
 
     if (command.latitude == null || command.longitude == null) {
       throw new InvalidCommandException('Location is required');
-    }
-
-    const currentAddresses = await this._usersRepository.getAddressesByUserId(command.userId);
-
-    // Enforce single address for tailors and couriers
-    if ((user.role === ROLE.TAILOR || user.role === ROLE.COURIER) && currentAddresses.length > 0) {
-      throw new InvalidCommandException('Tailors and Couriers can only have one address');
     }
 
     try {

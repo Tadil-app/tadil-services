@@ -24,10 +24,15 @@ export class TailorController {
   @Get('/orders')
   @ApiOkResponse({ type: DisplayOrderDTO, isArray: true })
   async getOrders(@Param('id') tailorId: string): Promise<DisplayOrderDTO[]> {
-    // 1. Fetch tailor's city
+    // 1. Fetch tailor's city and district
     const tailorAddress = await this._dataReader.queries.address.findFirst({
       where: { userId: tailorId },
-      select: { cityId: true, cityNameEn: true },
+      select: {
+        cityId: true,
+        cityNameEn: true,
+        districtId: true,
+        districtNameEn: true,
+      },
     });
 
     if (!tailorAddress) {
@@ -40,6 +45,27 @@ export class TailorController {
         ? { cityId: tailorAddress.cityId }
         : { cityNameEn: tailorAddress.cityNameEn };
 
+    // District narrows the city only when BOTH sides have one: a tailor with
+    // just a city serves the whole city, and an order with just a city is open
+    // to any same-city tailor. When the tailor and the order both have a
+    // district, they must match (by id, falling back to name).
+    const tailorAreaFilter =
+      tailorAddress.districtId != null || tailorAddress.districtNameEn != null
+        ? {
+            AND: [
+              tailorCityFilter,
+              {
+                OR: [
+                  { districtId: null, districtNameEn: null },
+                  tailorAddress.districtId != null
+                    ? { districtId: tailorAddress.districtId }
+                    : { districtNameEn: tailorAddress.districtNameEn },
+                ],
+              },
+            ],
+          }
+        : tailorCityFilter;
+
     // 2. Fetch orders within that city
     const orders = await this._dataReader.queries.order.findMany({
       where: {
@@ -47,7 +73,7 @@ export class TailorController {
           {
             AND: [
               { status: 'waitingForTailorAssignement' },
-              { address: tailorCityFilter },
+              { address: tailorAreaFilter },
               { NOT: { rejectedTailors: { some: { id: tailorId } } } }
             ],
           },

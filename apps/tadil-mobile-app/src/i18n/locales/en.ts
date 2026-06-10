@@ -126,6 +126,7 @@ export const en = {
       noAddresses: "No addresses found",
       addAddress: "Add Address",
       editAddress: "Edit Address",
+      viewAddress: "Address",
       city: "City",
       district: "District",
       street: "Street",

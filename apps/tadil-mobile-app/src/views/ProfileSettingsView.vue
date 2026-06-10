@@ -154,11 +154,9 @@ const districtName = (a: { districtNameAr?: string; districtNameEn?: string }) =
 
 const isReady = ref(false);
 
-const canAddAddress = computed(() => {
-  if (authStore.userRole === 'customer') return true;
-  // Tailors and Couriers only allowed one address
-  return authStore.userAddresses.length === 0;
-});
+// Only customers manage addresses in the app. Couriers/tailors get their
+// single address from an admin and can only view it here.
+const canAddAddress = computed(() => authStore.userRole === 'customer');
 
 async function openUpdateProfileModal() {
   const modal = await modalController.create({

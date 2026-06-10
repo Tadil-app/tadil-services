@@ -4,8 +4,8 @@
       <IonButtons slot="start">
         <IonButton @click="closeModal">{{ $t("common.buttons.cancel") }}</IonButton>
       </IonButtons>
-      <IonTitle>{{ addressId ? $t("profileSettings.profile.editAddress") : $t("profileSettings.profile.addAddress") }}</IonTitle>
-      <IonButtons slot="end">
+      <IonTitle>{{ !canEdit ? $t("profileSettings.profile.viewAddress") : addressId ? $t("profileSettings.profile.editAddress") : $t("profileSettings.profile.addAddress") }}</IonTitle>
+      <IonButtons v-if="canEdit" slot="end">
         <IonButton :disabled="isLoading || !canSave" @click="handleSubmit">
           <IonSpinner v-if="isLoading" name="crescent" />
           <span v-else>{{ $t("common.buttons.save") }}</span>
@@ -15,7 +15,7 @@
   </IonHeader>
   <IonContent class="ion-padding">
     <div class="space-y-4">
-      <IonItem button :detail="true" @click="openCityPicker">
+      <IonItem :button="canEdit" :detail="canEdit" :disabled="!canEdit" @click="openCityPicker">
         <IonLabel>
           <p class="picker-label">{{ $t("profileSettings.profile.city") }}</p>
           <span v-if="cityLabel">{{ cityLabel }}</span>
@@ -24,9 +24,9 @@
       </IonItem>
 
       <IonItem
-        button
-        :detail="true"
-        :disabled="!selectedCityId || locationsStore.loadingDistricts"
+        :button="canEdit"
+        :detail="canEdit"
+        :disabled="!canEdit || !selectedCityId || locationsStore.loadingDistricts"
         @click="openDistrictPicker"
       >
         <IonLabel>
@@ -36,7 +36,7 @@
         </IonLabel>
       </IonItem>
 
-      <IonItem button :detail="true" :disabled="!canPickOnMap || loadingBoundary" @click="openMapPicker">
+      <IonItem :button="canEdit" :detail="canEdit" :disabled="!canEdit || !canPickOnMap || loadingBoundary" @click="openMapPicker">
         <IonLabel>
           <p class="picker-label">{{ $t("profileSettings.profile.location") }}</p>
           <span v-if="hasLocation">{{ $t("profileSettings.profile.locationSet") }}</span>
@@ -142,8 +142,8 @@
     </IonModal>
   </IonContent>
 
-  <!-- Delete is only possible for an address that already exists. -->
-  <IonFooter v-if="addressId">
+  <!-- Delete is only possible for an existing address, and only for customers. -->
+  <IonFooter v-if="canDelete">
     <IonToolbar>
       <IonButton
         expand="block"
@@ -221,7 +221,11 @@ const canPickOnMap = computed(() => !!cityCoords.value || form.latitude != null)
 const hasLocation = computed(() => form.latitude != null && form.longitude != null);
 const hasCity = computed(() => !!(form.cityNameEn || form.cityNameAr));
 // A valid address needs a city and a pinned location. District stays optional.
-const canSave = computed(() => hasCity.value && hasLocation.value);
+// Only customers may add/edit/delete; couriers/tailors view their address read-only.
+const isCustomer = computed(() => authStore.userRole === "customer");
+const canSave = computed(() => isCustomer.value && hasCity.value && hasLocation.value);
+const canEdit = computed(() => isCustomer.value);
+const canDelete = computed(() => !!props.addressId && isCustomer.value);
 const mapCenter = computed(() => cityCoords.value ?? RIYADH);
 const mapInitial = computed(() =>
   form.latitude != null && form.longitude != null

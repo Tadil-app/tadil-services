@@ -126,6 +126,7 @@ export const ur = {
       noAddresses: "کوئی پتہ نہیں ملا",
       addAddress: "پتہ شامل کریں",
       editAddress: "پتہ تبدیل کریں",
+      viewAddress: "پتہ",
       city: "شہر",
       district: "ضلع",
       street: "سڑک",

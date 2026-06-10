@@ -2,6 +2,7 @@ import {
   InfrastructureException,
   InvalidCommandException,
 } from '@tadil-common';
+import { ROLE, RoleType } from '../user.model';
 import { UsersRepository } from '../users.repository';
 
 export class UpdateAddressUseCase {
@@ -9,6 +10,7 @@ export class UpdateAddressUseCase {
 
   async execute(command: {
     id: string;
+    role: RoleType;
     cityId?: number;
     cityNameAr?: string;
     cityNameEn?: string;
@@ -19,6 +21,11 @@ export class UpdateAddressUseCase {
     latitude?: number;
     longitude?: number;
   }): Promise<void> {
+    // Only customers may modify addresses; couriers/tailors are view-only.
+    if (command.role !== ROLE.CUSTOMER) {
+      throw new InvalidCommandException('Only customers can modify addresses');
+    }
+
     const existingAddress = await this._usersRepository.getAddressById(command.id);
     if (!existingAddress) {
       throw new InvalidCommandException('Address not found');

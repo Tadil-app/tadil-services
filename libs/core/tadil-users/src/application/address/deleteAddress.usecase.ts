@@ -2,12 +2,22 @@ import {
   InfrastructureException,
   InvalidCommandException,
 } from '@tadil-common';
+import { ROLE, RoleType } from '../user.model';
 import { UsersRepository } from '../users.repository';
 
 export class DeleteAddressUseCase {
   constructor(private readonly _usersRepository: UsersRepository) {}
 
-  async execute(command: { id: string; userId: string }): Promise<void> {
+  async execute(command: {
+    id: string;
+    userId: string;
+    role: RoleType;
+  }): Promise<void> {
+    // Only customers may delete addresses; couriers/tailors keep their single address.
+    if (command.role !== ROLE.CUSTOMER) {
+      throw new InvalidCommandException('Only customers can delete addresses');
+    }
+
     const existingAddress = await this._usersRepository.getAddressById(command.id);
     if (!existingAddress) {
       throw new InvalidCommandException('Address not found');

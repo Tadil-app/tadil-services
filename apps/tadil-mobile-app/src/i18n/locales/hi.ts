@@ -126,6 +126,7 @@ export const hi = {
       noAddresses: "कोई पता नहीं मिला",
       addAddress: "पता जोड़ें",
       editAddress: "पता संपादित करें",
+      viewAddress: "पता",
       city: "शहर",
       district: "ज़िला",
       street: "सड़क",

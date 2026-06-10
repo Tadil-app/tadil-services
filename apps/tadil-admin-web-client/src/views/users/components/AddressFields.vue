@@ -208,7 +208,13 @@ const hasLocation = computed(
   () => props.modelValue.latitude != null && props.modelValue.longitude != null,
 );
 const isValid = computed(() => hasCity.value && hasLocation.value);
-const canPickOnMap = computed(() => !!cityCoords.value || hasLocation.value);
+// A selected city is enough to open the map: openMapPicker fetches the
+// city/district boundary and MapPicker fits to it. Gating on cityCoords broke
+// editing — changing the district clears the saved location, and cityCoords is
+// only set when the city is actively re-picked, so the button wrongly disabled.
+const canPickOnMap = computed(
+  () => !!props.modelValue.cityId || !!cityCoords.value || hasLocation.value,
+);
 const mapCenter = computed(() => cityCoords.value ?? RIYADH);
 const mapInitial = computed(() =>
   hasLocation.value

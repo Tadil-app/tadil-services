@@ -25,10 +25,15 @@ export class CourierController {
   @ApiOperation({ summary: 'Get available assignments and my active orders' })
   @ApiOkResponse({ type: DisplayOrderDTO, isArray: true })
   async getOrders(@Param('id') courierId: string): Promise<DisplayOrderDTO[]> {
-    // 1. Fetch courier's city
+    // 1. Fetch courier's city and district
     const courierAddress = await this._dataReader.queries.address.findFirst({
       where: { userId: courierId },
-      select: { cityId: true, cityNameEn: true },
+      select: {
+        cityId: true,
+        cityNameEn: true,
+        districtId: true,
+        districtNameEn: true,
+      },
     });
 
     if (!courierAddress) {
@@ -41,6 +46,27 @@ export class CourierController {
         ? { cityId: courierAddress.cityId }
         : { cityNameEn: courierAddress.cityNameEn };
 
+    // District narrows the city only when BOTH sides have one: a courier with
+    // just a city serves the whole city, and an order with just a city is open
+    // to any same-city courier. When the courier and the order both have a
+    // district, they must match (by id, falling back to name).
+    const courierAreaFilter =
+      courierAddress.districtId != null || courierAddress.districtNameEn != null
+        ? {
+            AND: [
+              courierCityFilter,
+              {
+                OR: [
+                  { districtId: null, districtNameEn: null },
+                  courierAddress.districtId != null
+                    ? { districtId: courierAddress.districtId }
+                    : { districtNameEn: courierAddress.districtNameEn },
+                ],
+              },
+            ],
+          }
+        : courierCityFilter;
+
     // 2. Fetch orders within that city
     const orders = await this._dataReader.queries.order.findMany({
       where: {
@@ -49,7 +75,7 @@ export class CourierController {
           {
             AND: [
               { status: 'waitingForCourierAssignement' },
-              { address: courierCityFilter },
+              { address: courierAreaFilter },
               { NOT: { rejectedCouriers: { some: { id: courierId } } } }
             ]
           },
@@ -59,7 +85,7 @@ export class CourierController {
           {
             AND: [
               { status: 'waitingForReturnCourierAssignement' },
-              { address: courierCityFilter },
+              { address: courierAreaFilter },
               { NOT: { rejectedReturnCouriers: { some: { id: courierId } } } }
             ]
           },

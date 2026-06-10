@@ -126,6 +126,7 @@ export const ar = {
       noAddresses: "لا يوجد عناوين",
       addAddress: "إضافة عنوان",
       editAddress: "تعديل العنوان",
+      viewAddress: "العنوان",
       city: "المدينة",
       district: "الحي",
       street: "الشارع",
