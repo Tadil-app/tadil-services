@@ -36,6 +36,7 @@ export const ur = {
       title: "درزی مقرر کریں",
       subtitle: "آرڈر {ref} کے لیے دستی طور پر درزی مقرر کریں",
       selectLabel: "درزی منتخب کریں",
+      selectPlaceholder: "درزی منتخب کریں",
       submit: "ابھی مقرر کریں",
     },
   },
@@ -92,6 +93,9 @@ export const ur = {
       actions: "کارروائیاں",
     },
     inputs: {
+      selectMenu: {
+        placeholder: "ایک آپشن منتخب کریں",
+      },
       englishName: {
         label: "انگریزی نام",
         placeholder: "انگریزی نام درج کریں",

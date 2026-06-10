@@ -36,6 +36,7 @@ export const bn = {
       title: "দর্জি নিযুক্ত করুন",
       subtitle: "{ref} অর্ডারের জন্য ম্যানুয়ালি একজন দর্জি নিযুক্ত করুন",
       selectLabel: "একজন দর্জি চয়ন করুন",
+      selectPlaceholder: "একজন দর্জি নির্বাচন করুন",
       submit: "এখনই নিযুক্ত করুন",
     },
   },
@@ -92,6 +93,9 @@ export const bn = {
       actions: "ক্রিয়াকলাপ",
     },
     inputs: {
+      selectMenu: {
+        placeholder: "একটি বিকল্প নির্বাচন করুন",
+      },
       englishName: {
         label: "ইংরেজি নাম",
         placeholder: "ইংরেজি নাম লিখুন",

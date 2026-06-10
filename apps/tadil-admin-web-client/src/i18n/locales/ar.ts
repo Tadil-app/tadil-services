@@ -41,6 +41,7 @@ export const ar = {
       title: "تعيين خياط",
       subtitle: "تعيين خياط يدوياً للطلب {ref}",
       selectLabel: "اختر خياطاً",
+      selectPlaceholder: "اختر خياطاً",
       submit: "تعيين الآن",
     },
     details: {
@@ -131,6 +132,9 @@ export const ar = {
       actions: "الإجراءات",
     },
     inputs: {
+      selectMenu: {
+        placeholder: "اختر خياراً",
+      },
       englishName: {
         label: "الاسم الإنجليزي",
         placeholder: "أدخل الاسم الإنجليزي",

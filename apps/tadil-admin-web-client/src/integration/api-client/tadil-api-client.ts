@@ -1010,7 +1010,7 @@ export class Api<
       this.request<void, any>({
         path: `/api/orders/${id}/assign-tailor`,
         method: "POST",
-        body: tailorId,
+        body: { tailorId },
         type: ContentType.Json,
         ...params,
       }),

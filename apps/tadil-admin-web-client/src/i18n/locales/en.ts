@@ -41,6 +41,7 @@ export const en = {
       title: "Assign Tailor",
       subtitle: "Manually assign a tailor to order {ref}",
       selectLabel: "Choose a Tailor",
+      selectPlaceholder: "Select a tailor",
       submit: "Assign Now",
     },
     details: {
@@ -130,6 +131,9 @@ export const en = {
       actions: "Actions",
     },
     inputs: {
+      selectMenu: {
+        placeholder: "Select an option",
+      },
       englishName: {
         label: "English Name",
         placeholder: "Enter English Name",

@@ -36,6 +36,7 @@ export const hi = {
       title: "दर्जी नियुक्त करें",
       subtitle: "ऑर्डर {ref} के लिए मैन्युअल रूप से दर्जी नियुक्त करें",
       selectLabel: "एक दर्जी चुनें",
+      selectPlaceholder: "एक दर्जी चुनें",
       submit: "अभी नियुक्त करें",
     },
   },
@@ -92,6 +93,9 @@ export const hi = {
       actions: "कार्यवाई",
     },
     inputs: {
+      selectMenu: {
+        placeholder: "एक विकल्प चुनें",
+      },
       englishName: {
         label: "अंग्रेजी नाम",
         placeholder: "अंग्रेजी नाम दर्ज करें",
