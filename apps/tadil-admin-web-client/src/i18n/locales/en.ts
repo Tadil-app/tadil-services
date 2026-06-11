@@ -131,6 +131,9 @@ export const en = {
       actions: "Actions",
     },
     inputs: {
+      autoTranslate: {
+        label: "Auto-translate",
+      },
       selectMenu: {
         placeholder: "Select an option",
       },

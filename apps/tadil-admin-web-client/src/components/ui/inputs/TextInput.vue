@@ -8,6 +8,7 @@
       }"
       v-model="text"
       v-bind="props"
+      @blur="emit('blur')"
     />
     <p v-if="validationErrorMessage" class="text-red-500 text-xs">
       {{ validationErrorMessage }}
@@ -17,6 +18,9 @@
 
 <script setup lang="ts">
 const text = defineModel<string | number | Date>({ required: false });
+const emit = defineEmits<{
+  (e: "blur"): void;
+}>();
 const props = withDefaults(
   defineProps<{
     type?: string;

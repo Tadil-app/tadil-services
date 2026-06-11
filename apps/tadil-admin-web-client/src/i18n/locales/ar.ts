@@ -132,6 +132,9 @@ export const ar = {
       actions: "الإجراءات",
     },
     inputs: {
+      autoTranslate: {
+        label: "الترجمة التلقائية",
+      },
       selectMenu: {
         placeholder: "اختر خياراً",
       },
