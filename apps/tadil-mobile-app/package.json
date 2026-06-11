@@ -6,10 +6,10 @@
   "scripts": {
     "dev": "vite",
     "build": "vue-tsc && vite build",
-    "build-mobile": "ionic build  && npx cap sync",
+    "build-mobile": "ionic build --prod  && npx cap sync",
     "android-studio": "npm run build-mobile && npx cap open android",
     "android-device": "npm run build-mobile && npx cap run android",
-    "xtool": "npm run build-mobile && npx cap open ios",
+    "ios-xtool": "npm run build-mobile && npx cap open ios",
     "ios-device": "npm run build-mobile && npx cap run ios",
     "preview": "vite preview",
     "test:unit": "vitest",
@@ -19,6 +19,7 @@
   "dependencies": {
     "@capacitor-mlkit/barcode-scanning": "^8.0.0",
     "@capacitor/android": "8.0.0",
+    "@capacitor/ios": "8.0.0",
     "@capacitor/app": "^8.0.0",
     "@capacitor/camera": "^8.0.0",
     "@capacitor/core": "8.0.0",
