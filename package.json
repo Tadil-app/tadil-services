@@ -85,7 +85,7 @@
     "libs/core/tadil-tailor",
     "libs/core/tadil-users",
     "libs/core/tadil-auth",
-    "libs/infra/sms-provider",
+    "libs/infra/tadil-payment",
     "apps/tadil-admin-web-client",
     "apps/tadil-mobile-app",
     "libs/core/*"

@@ -48,7 +48,7 @@
       "path": "../../libs/infra/file-storage/tsconfig.lib.json"
     },
     {
-      "path": "../../libs/infra/sms-provider/tsconfig.lib.json"
+      "path": "../../libs/infra/tadil-payment/tsconfig.lib.json"
     }
   ]
 }

@@ -49,7 +49,7 @@
       "path": "../../libs/infra/file-storage"
     },
     {
-      "path": "../../libs/infra/sms-provider"
+      "path": "../../libs/infra/tadil-payment"
     }
   ]
 }
