@@ -3,7 +3,7 @@
     <SecondaryHeader :title="stepTitle" default-href="/customer/cart" />
     <IonContent class="ion-padding">
       <EmptyState
-        v-if="cartStore.itemsCount === 0 && step !== 'success'"
+        v-if="cartStore.itemsCount === 0"
         :icon="ShoppingBag"
         :title="$t('cart.emptyTitle')"
         :description="$t('cart.emptyDescription')"
@@ -105,41 +105,6 @@
         >
           {{ paymentError }}
         </div>
-
-        <!-- Temporary bypass for testing -->
-        <IonButton
-          expand="block"
-          color="secondary"
-          @click="bypassPayment"
-          class="mt-4"
-        >
-          {{ $t('checkout.buttons.bypassPayment') }}
-        </IonButton>
-      </div>
-
-      <!-- Step 3: Success -->
-      <div
-        v-if="step === 'success'"
-        class="flex flex-col items-center justify-center py-20 text-center space-y-6"
-      >
-        <div
-          class="w-24 h-24 bg-success/20 rounded-full flex items-center justify-center"
-        >
-          <Check class="w-12 h-12 text-success" />
-        </div>
-        <div>
-          <h2 class="text-2xl font-bold">{{ $t('checkout.success.title') }}</h2>
-          <p class="text-muted-foreground mt-2">
-            {{
-              $t('checkout.success.message', {
-                reference: createdOrder?.reference,
-              })
-            }}
-          </p>
-        </div>
-        <IonButton expand="block" class="w-full" @click="goToOrders">
-          {{ $t('customer.ordersHistory.title') }}
-        </IonButton>
       </div>
       </template>
     </IonContent>
@@ -160,7 +125,7 @@ import { SecondaryHeader, EmptyState } from '@/components';
 import { ref, computed, onMounted } from 'vue';
 import { useAuthStore, useCartStore } from '@/stores';
 import { useRouter } from 'vue-router';
-import { MapPin, Check, ShoppingBag } from 'lucide-vue-next';
+import { MapPin, ShoppingBag } from 'lucide-vue-next';
 import { DisplayOrderDTO } from '@/integration/dtos';
 import { useI18n } from 'vue-i18n';
 import { Preferences } from '@capacitor/preferences';
@@ -170,7 +135,7 @@ const authStore = useAuthStore();
 const cartStore = useCartStore();
 const router = useRouter();
 
-const step = ref<'address' | 'payment' | 'success'>('address');
+const step = ref<'address' | 'payment'>('address');
 const selectedAddressId = ref<string>('');
 const isProcessing = ref(false);
 const createdOrder = ref<DisplayOrderDTO | null>(null);
@@ -187,7 +152,7 @@ onIonViewWillEnter(async () => {
 const stepTitle = computed(() => {
   if (step.value === 'address') return t('checkout.address.title');
   if (step.value === 'payment') return t('tailor.orderDetails.title');
-  return t('checkout.success.title');
+  return '';
 });
 
 function goToProfile() {
@@ -206,7 +171,7 @@ async function proceedToPayment() {
     const order = await cartStore.createOrder(selectedAddressId.value);
     createdOrder.value = order;
     await Preferences.set({ key: 'pendingOrderId', value: order.id });
-    await Preferences.set({ key: 'checkoutHistoryLength', value: window.history.length.toString() });
+    await Preferences.set({ key: 'pendingOrderReference', value: order.reference });
     step.value = 'payment';
     initMoyasar();
   } catch (error) {
@@ -222,37 +187,14 @@ async function proceedToPayment() {
   }
 }
 
-async function bypassPayment() {
-  if (!createdOrder.value) return;
-
-  isProcessing.value = true;
-  try {
-    await cartStore.confirmPayment(
-      createdOrder.value.id,
-      'fake-payment-id-' + Date.now()
-    );
-    await cartStore.clearCart();
-    step.value = 'success';
-  } catch (err) {
-    console.error('Bypass failed', err);
-    paymentError.value = 'Failed to bypass payment.';
-  } finally {
-    isProcessing.value = false;
-  }
-}
-
 function initMoyasar() {
-  // 1. Inject Styles
   const link = document.createElement('link');
   link.rel = 'stylesheet';
-  link.href =
-    'https://cdn.jsdelivr.net/npm/moyasar-payment-form@2.2.9/dist/moyasar.css';
+  link.href = 'https://cdn.jsdelivr.net/npm/moyasar-payment-form@2.2.9/dist/moyasar.css';
   document.head.appendChild(link);
 
-  // 2. Inject Script
   const script = document.createElement('script');
-  script.src =
-    'https://cdn.jsdelivr.net/npm/moyasar-payment-form@2.2.9/dist/moyasar.umd.min.js';
+  script.src = 'https://cdn.jsdelivr.net/npm/moyasar-payment-form@2.2.9/dist/moyasar.umd.min.js';
   script.async = true;
   script.onload = () => {
     // @ts-ignore
@@ -264,7 +206,7 @@ function initMoyasar() {
       publishable_api_key: import.meta.env.VITE_MOYASAR_PUBLISHABLE_KEY,
       callback_url: window.location.origin + '/customer/checkout/verify',
       supported_networks: ['visa', 'mastercard', 'mada'],
-      methods: ['creditcard'],
+      methods: ['creditcard']
     });
   };
   document.body.appendChild(script);

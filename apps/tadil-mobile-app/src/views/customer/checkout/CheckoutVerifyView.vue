@@ -14,7 +14,7 @@
         <div>
           <h2 class="text-2xl font-bold">{{ $t('checkout.success.title') }}</h2>
           <p class="text-muted-foreground mt-2">
-             {{ $t('checkout.success.message', 'Your order has been successfully placed.') }}
+             {{ $t('checkout.success.message', { reference: orderReference }) }}
           </p>
         </div>
         <IonButton expand="block" class="w-full" @click="goToOrders">
@@ -61,6 +61,7 @@ useBackButton(10, async () => {
   await goBack();
 });
 
+const orderReference = ref('');
 onMounted(async () => {
   const paymentId = route.query.id as string;
   const status = route.query.status as string;
@@ -86,10 +87,13 @@ onMounted(async () => {
     return;
   }
 
+  orderReference.value = (await Preferences.get({ key: 'pendingOrderReference' })).value || '';
+
   try {
     await cartStore.confirmPayment(pendingOrderId, paymentId);
     isSuccess.value = true;
     await Preferences.remove({ key: 'pendingOrderId' });
+    await Preferences.remove({ key: 'pendingOrderReference' });
     await cartStore.clearCart();
   } catch (error) {
     console.error('Payment confirmation failed:', error);
@@ -100,23 +104,10 @@ onMounted(async () => {
 });
 
 async function goToOrders() {
-  const { value: lenStr } = await Preferences.get({ key: 'checkoutHistoryLength' });
-  if (lenStr) {
-    const delta = window.history.length - parseInt(lenStr, 10);
-    await Preferences.set({ key: 'redirectToOrders', value: 'true' });
-    window.history.go(-delta);
-  } else {
-    router.push('/customer/orders');
-  }
+    router.replace('/customer/orders');
 }
 
 async function goBack() {
-  const { value: lenStr } = await Preferences.get({ key: 'checkoutHistoryLength' });
-  if (lenStr) {
-    const delta = window.history.length - parseInt(lenStr, 10);
-    window.history.go(-delta);
-  } else {
     router.replace('/customer/checkout');
-  }
 }
 </script>
