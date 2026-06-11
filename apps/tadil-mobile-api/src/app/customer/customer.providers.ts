@@ -26,6 +26,7 @@ import {
   WalletRepository,
   CreditOrderEarningUseCase,
 } from '@tadil-wallet';
+import { MoyasarPaymentGateway } from '@tadil-payment';
 
 const CustomerRepositoryProvider: Provider<CustomerRepository> = {
   provide: 'CustomerRepository',
@@ -104,7 +105,10 @@ const CreateOrderUseCaseProvider: Provider<CreateOrderUseCase> = {
 
 const ConfirmPaymentUseCaseProvider: Provider<ConfirmPaymentUseCase> = {
   provide: ConfirmPaymentUseCase,
-  useFactory: (repository: OrdersRepository) => new ConfirmPaymentUseCase(repository),
+  useFactory: (repository: OrdersRepository) => {
+    const paymentGateway = new MoyasarPaymentGateway(process.env.MOYASAR_SECRET_KEY || '');
+    return new ConfirmPaymentUseCase(repository, paymentGateway);
+  },
   inject: ['OrdersRepository'],
   scope: Scope.REQUEST,
 };

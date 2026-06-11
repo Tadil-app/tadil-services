@@ -40,7 +40,7 @@
       "path": "./libs/core/tadil-auth"
     },
     {
-      "path": "./libs/infra/sms-provider"
+      "path": "./libs/infra/tadil-payment"
     },
     {
       "path": "./libs/core/tadil-courier"
