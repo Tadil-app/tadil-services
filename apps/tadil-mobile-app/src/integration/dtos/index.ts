@@ -165,6 +165,9 @@ export interface DisplayOrderDTO {
   date: string;
   totalPrice: number;
   status: OrderStatusType;
+  assignedTailorId?: string;
+  assignedCourierId?: string;
+  assignedReturnCourierId?: string;
   items: DisplayOrderItemDTO[];
   customItems: DisplayCustomOrderItemDTO[];
   address?: DisplayAddressDto;

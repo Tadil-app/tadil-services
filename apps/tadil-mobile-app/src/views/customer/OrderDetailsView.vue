@@ -74,10 +74,14 @@
         </IonCard>
 
         <!-- Chat Section -->
-        <div v-if="order" class="px-4 pb-10">
+        <div v-if="hasAnyChat" class="px-4 pb-10">
           <h3 class="text-lg font-bold mb-3 px-2 text-main">{{ $t('chat.title') }}</h3>
-          
-          <IonSegment v-model="selectedChatChannel" class="mb-4 bg-item rounded-2xl p-1 border border-main/5">
+
+          <IonSegment
+            v-if="showChatSegment"
+            v-model="selectedChatChannel"
+            class="mb-4 bg-item rounded-2xl p-1 border border-main/5"
+          >
             <IonSegmentButton value="TAILOR" class="rounded-xl">
               <IonLabel>{{ $t('chat.channels.tailor') }}</IonLabel>
             </IonSegmentButton>
@@ -86,8 +90,8 @@
             </IonSegmentButton>
           </IonSegment>
 
-          <div v-if="order" class="h-125 border border-main/5 rounded-3xl overflow-hidden shadow-sm bg-item">
-            <Chat :key="order.id + selectedChatChannel" :order-id="order.id" :channel="selectedChatChannel" />
+          <div v-if="activeChatChannel" class="h-125 border border-main/5 rounded-3xl overflow-hidden shadow-sm bg-item">
+            <Chat :key="order.id + activeChatChannel" :order-id="order.id" :channel="activeChatChannel" />
           </div>
         </div>
 
@@ -104,7 +108,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
+import { computed, ref, watch } from "vue";
 import { useRouter } from "vue-router";
 import { DisplayOrderDTO, ORDER_STATUS } from "@/integration/dtos";
 import { useCustomerOrdersStore } from "@/stores";
@@ -132,6 +136,27 @@ const isActionLoading = ref(false);
 const ordersStore = useCustomerOrdersStore();
 const { orders, isLoading } = storeToRefs(ordersStore);
 const { fetchOrders } = ordersStore;
+
+const hasTailorChat = computed(() => !!order.value?.assignedTailorId);
+const hasCourierChat = computed(
+  () => !!(order.value?.assignedCourierId || order.value?.assignedReturnCourierId),
+);
+const hasAnyChat = computed(() => hasTailorChat.value || hasCourierChat.value);
+const showChatSegment = computed(() => hasTailorChat.value && hasCourierChat.value);
+const activeChatChannel = computed<'TAILOR' | 'COURIER' | null>(() => {
+  if (hasTailorChat.value && hasCourierChat.value) return selectedChatChannel.value;
+  if (hasTailorChat.value) return 'TAILOR';
+  if (hasCourierChat.value) return 'COURIER';
+  return null;
+});
+
+watch(order, () => {
+  if (hasTailorChat.value && !hasCourierChat.value) {
+    selectedChatChannel.value = 'TAILOR';
+  } else if (hasCourierChat.value && !hasTailorChat.value) {
+    selectedChatChannel.value = 'COURIER';
+  }
+});
 
 async function findOrderById() {
   if (!props.orderId) {
