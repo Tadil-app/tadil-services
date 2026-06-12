@@ -62,7 +62,7 @@
               <div>
                 <p class="font-bold">{{ cityName(address) }}</p>
                 <p class="text-sm text-muted-foreground">
-                  {{ districtName(address) }} {{ address.street }}
+                  {{ districtName(address) }} {{ streetName(address) }}
                 </p>
               </div>
             </div>
@@ -123,7 +123,8 @@ import {
 } from '@ionic/vue';
 import { SecondaryHeader, EmptyState } from '@/components';
 import { ref, computed, onMounted } from 'vue';
-import { useAuthStore, useCartStore, useLanguageStore } from '@/stores';
+import { useAuthStore, useCartStore } from '@/stores';
+import { useLocalizedAddress } from '@/composables';
 import { useRouter } from 'vue-router';
 import { MapPin, ShoppingBag } from 'lucide-vue-next';
 import { DisplayOrderDTO } from '@/integration/dtos';
@@ -133,14 +134,10 @@ import { Preferences } from '@capacitor/preferences';
 const { t } = useI18n();
 const authStore = useAuthStore();
 const cartStore = useCartStore();
-const languageStore = useLanguageStore();
 const router = useRouter();
 
-// Show the stored bilingual city/district in the viewer's current language.
-const cityName = (a: { cityNameAr: string; cityNameEn: string }) =>
-  languageStore.currentLocale.key === 'ar' ? a.cityNameAr : a.cityNameEn;
-const districtName = (a: { districtNameAr?: string; districtNameEn?: string }) =>
-  (languageStore.currentLocale.key === 'ar' ? a.districtNameAr : a.districtNameEn) ?? '';
+// Show the stored city/district in the viewer's current language.
+const { cityName, districtName, streetName } = useLocalizedAddress();
 
 const step = ref<'address' | 'payment' | 'success'>('address');
 const selectedAddressId = ref<string>('');

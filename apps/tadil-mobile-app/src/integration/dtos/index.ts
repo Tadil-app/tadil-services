@@ -208,10 +208,21 @@ export interface CreateAddressDto {
   cityId?: number;
   cityNameAr: string;
   cityNameEn: string;
+  cityNameBn: string;
+  cityNameHi: string;
+  cityNameUr: string;
   districtId?: string;
   districtNameAr?: string;
   districtNameEn?: string;
+  districtNameBn?: string;
+  districtNameHi?: string;
+  districtNameUr?: string;
   street?: string;
+  streetAr?: string;
+  streetEn?: string;
+  streetBn?: string;
+  streetHi?: string;
+  streetUr?: string;
   latitude?: number;
   longitude?: number;
 }
@@ -220,10 +231,21 @@ export interface UpdateAddressDto {
   cityId?: number;
   cityNameAr?: string;
   cityNameEn?: string;
+  cityNameBn?: string;
+  cityNameHi?: string;
+  cityNameUr?: string;
   districtId?: string;
   districtNameAr?: string;
   districtNameEn?: string;
+  districtNameBn?: string;
+  districtNameHi?: string;
+  districtNameUr?: string;
   street?: string;
+  streetAr?: string;
+  streetEn?: string;
+  streetBn?: string;
+  streetHi?: string;
+  streetUr?: string;
   latitude?: number;
   longitude?: number;
 }
@@ -233,10 +255,21 @@ export interface DisplayAddressDto {
   cityId?: number | null;
   cityNameAr: string;
   cityNameEn: string;
+  cityNameBn: string;
+  cityNameHi: string;
+  cityNameUr: string;
   districtId?: string | null;
   districtNameAr?: string;
   districtNameEn?: string;
+  districtNameBn?: string;
+  districtNameHi?: string;
+  districtNameUr?: string;
   street?: string;
+  streetAr?: string;
+  streetEn?: string;
+  streetBn?: string;
+  streetHi?: string;
+  streetUr?: string;
   latitude?: number | null;
   longitude?: number | null;
   userId: string;
@@ -264,6 +297,9 @@ export interface DisplayCityDTO {
   regionId: number;
   arabicName: string;
   englishName: string;
+  bengaliName: string;
+  hindiName: string;
+  urduName: string;
   lat: number | null;
   lng: number | null;
 }
@@ -273,6 +309,9 @@ export interface DisplayDistrictDTO {
   cityId: number;
   arabicName: string;
   englishName: string;
+  bengaliName: string;
+  hindiName: string;
+  urduName: string;
 }
 
 export interface DisplayBoundaryDTO {

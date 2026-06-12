@@ -58,6 +58,9 @@ export class LocationsController {
       regionId: city.regionId,
       arabicName: city.nameAr,
       englishName: city.nameEn,
+      bengaliName: city.nameBn,
+      hindiName: city.nameHi,
+      urduName: city.nameUr,
       lat: city.lat,
       lng: city.lng,
     }));
@@ -79,6 +82,9 @@ export class LocationsController {
       cityId: district.cityId,
       arabicName: district.nameAr,
       englishName: district.nameEn,
+      bengaliName: district.nameBn,
+      hindiName: district.nameHi,
+      urduName: district.nameUr,
     }));
   }
 

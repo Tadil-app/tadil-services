@@ -17,6 +17,21 @@ export class CreateAddressDto {
   @IsString()
   cityNameEn!: string;
 
+  @ApiProperty({ example: 'রিয়ধ' })
+  @IsNotEmpty()
+  @IsString()
+  cityNameBn!: string;
+
+  @ApiProperty({ example: 'रियध' })
+  @IsNotEmpty()
+  @IsString()
+  cityNameHi!: string;
+
+  @ApiProperty({ example: 'الریاض' })
+  @IsNotEmpty()
+  @IsString()
+  cityNameUr!: string;
+
   @ApiProperty({ example: '10100003001', required: false })
   @IsOptional()
   @IsString()
@@ -32,10 +47,50 @@ export class CreateAddressDto {
   @IsString()
   districtNameEn?: string;
 
+  @ApiProperty({ example: 'অল অলয়', required: false })
+  @IsOptional()
+  @IsString()
+  districtNameBn?: string;
+
+  @ApiProperty({ example: 'अल अलय', required: false })
+  @IsOptional()
+  @IsString()
+  districtNameHi?: string;
+
+  @ApiProperty({ example: 'العلیا', required: false })
+  @IsOptional()
+  @IsString()
+  districtNameUr?: string;
+
   @ApiProperty({ example: 'Olaya St', required: false })
   @IsOptional()
   @IsString()
   street?: string;
+
+  @ApiProperty({ example: 'شارع العليا', required: false })
+  @IsOptional()
+  @IsString()
+  streetAr?: string;
+
+  @ApiProperty({ example: 'Olaya St', required: false })
+  @IsOptional()
+  @IsString()
+  streetEn?: string;
+
+  @ApiProperty({ example: 'ওলায়া রোড', required: false })
+  @IsOptional()
+  @IsString()
+  streetBn?: string;
+
+  @ApiProperty({ example: 'ओलाया रोड', required: false })
+  @IsOptional()
+  @IsString()
+  streetHi?: string;
+
+  @ApiProperty({ example: 'العلیا اسٹریٹ', required: false })
+  @IsOptional()
+  @IsString()
+  streetUr?: string;
 
   @ApiProperty({ example: 24.7136 })
   @IsNotEmpty()

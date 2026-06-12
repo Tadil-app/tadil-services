@@ -13,7 +13,13 @@ export interface DisplayOrderDTO {
   courierName?: string;
   cityNameAr?: string;
   cityNameEn?: string;
+  cityNameBn?: string;
+  cityNameHi?: string;
+  cityNameUr?: string;
   districtNameAr?: string;
   districtNameEn?: string;
+  districtNameBn?: string;
+  districtNameHi?: string;
+  districtNameUr?: string;
   history?: { status: string; timestamp: string }[];
 }

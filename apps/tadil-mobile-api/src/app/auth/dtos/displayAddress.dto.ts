@@ -13,6 +13,15 @@ export class DisplayAddressDto {
   @ApiProperty()
   cityNameEn!: string;
 
+  @ApiProperty()
+  cityNameBn!: string;
+
+  @ApiProperty()
+  cityNameHi!: string;
+
+  @ApiProperty()
+  cityNameUr!: string;
+
   @ApiProperty({ required: false, nullable: true })
   districtId?: string | null;
 
@@ -23,7 +32,31 @@ export class DisplayAddressDto {
   districtNameEn?: string;
 
   @ApiProperty({ required: false })
+  districtNameBn?: string;
+
+  @ApiProperty({ required: false })
+  districtNameHi?: string;
+
+  @ApiProperty({ required: false })
+  districtNameUr?: string;
+
+  @ApiProperty({ required: false })
   street?: string;
+
+  @ApiProperty({ required: false })
+  streetAr?: string;
+
+  @ApiProperty({ required: false })
+  streetEn?: string;
+
+  @ApiProperty({ required: false })
+  streetBn?: string;
+
+  @ApiProperty({ required: false })
+  streetHi?: string;
+
+  @ApiProperty({ required: false })
+  streetUr?: string;
 
   @ApiProperty({ required: false, nullable: true, type: Number })
   latitude?: number | null;

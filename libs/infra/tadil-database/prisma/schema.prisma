@@ -301,6 +301,9 @@ model City {
     regionId Int
     nameAr   String
     nameEn   String
+    nameBn   String
+    nameHi   String
+    nameUr   String
     lat      Float?
     lng      Float?
 
@@ -316,6 +319,9 @@ model District {
     regionId Int
     nameAr   String
     nameEn   String
+    nameBn   String
+    nameHi   String
+    nameUr   String
 
     // GeoJSON Polygon geometry ({ type, coordinates }) of the district's area,
     // used to constrain a picked map point to within the district/city.
@@ -335,10 +341,24 @@ model Address {
     cityId         Int?
     cityNameAr     String
     cityNameEn     String
+    cityNameBn     String
+    cityNameHi     String
+    cityNameUr     String
     districtId     String?
     districtNameAr String?
     districtNameEn String?
+    districtNameBn String?
+    districtNameHi String?
+    districtNameUr String?
+    // Street is reverse-geocoded from the map pin once per language, so it can
+    // render in the viewer's language too. The legacy `street` keeps the label
+    // shown at pick time as a fallback.
     street    String?
+    streetAr  String?
+    streetEn  String?
+    streetBn  String?
+    streetHi  String?
+    streetUr  String?
     latitude  Float?
     longitude Float?
     userId    String

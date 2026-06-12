@@ -195,9 +195,20 @@ const isLoading = ref(false);
 const form = reactive({
   cityNameAr: "",
   cityNameEn: "",
+  cityNameBn: "",
+  cityNameHi: "",
+  cityNameUr: "",
   districtNameAr: "",
   districtNameEn: "",
+  districtNameBn: "",
+  districtNameHi: "",
+  districtNameUr: "",
   street: "",
+  streetAr: "",
+  streetEn: "",
+  streetBn: "",
+  streetHi: "",
+  streetUr: "",
   latitude: null as number | null,
   longitude: null as number | null,
 });
@@ -233,16 +244,40 @@ const mapInitial = computed(() =>
     : null
 );
 
-const isAr = computed(() => languageStore.currentLocale.key === "ar");
-const localizedName = (item: DisplayCityDTO | DisplayDistrictDTO) =>
-  isAr.value ? item.arabicName : item.englishName;
+// Pick the name for the current locale, falling back to English then Arabic
+// for locales whose value is missing.
+const localeKey = computed(() => languageStore.currentLocale.key);
+const localizedName = (item: DisplayCityDTO | DisplayDistrictDTO) => {
+  const byLocale: Record<string, string | undefined> = {
+    ar: item.arabicName,
+    en: item.englishName,
+    bn: item.bengaliName,
+    hi: item.hindiName,
+    ur: item.urduName,
+  };
+  return byLocale[localeKey.value] || item.englishName || item.arabicName;
+};
 
 // Labels shown for the chosen city/district in the viewer's current language.
+const pickName = (names: Record<string, string>) =>
+  names[localeKey.value] || names.en || names.ar || "";
 const cityLabel = computed(() =>
-  isAr.value ? form.cityNameAr : form.cityNameEn
+  pickName({
+    ar: form.cityNameAr,
+    en: form.cityNameEn,
+    bn: form.cityNameBn,
+    hi: form.cityNameHi,
+    ur: form.cityNameUr,
+  })
 );
 const districtLabel = computed(() =>
-  isAr.value ? form.districtNameAr : form.districtNameEn
+  pickName({
+    ar: form.districtNameAr,
+    en: form.districtNameEn,
+    bn: form.districtNameBn,
+    hi: form.districtNameHi,
+    ur: form.districtNameUr,
+  })
 );
 
 const districts = computed<DisplayDistrictDTO[]>(() =>
@@ -267,9 +302,20 @@ onMounted(async () => {
     if (addr) {
       form.cityNameAr = addr.cityNameAr;
       form.cityNameEn = addr.cityNameEn;
+      form.cityNameBn = addr.cityNameBn;
+      form.cityNameHi = addr.cityNameHi;
+      form.cityNameUr = addr.cityNameUr;
       form.districtNameAr = addr.districtNameAr || "";
       form.districtNameEn = addr.districtNameEn || "";
+      form.districtNameBn = addr.districtNameBn || "";
+      form.districtNameHi = addr.districtNameHi || "";
+      form.districtNameUr = addr.districtNameUr || "";
       form.street = addr.street || "";
+      form.streetAr = addr.streetAr || "";
+      form.streetEn = addr.streetEn || "";
+      form.streetBn = addr.streetBn || "";
+      form.streetHi = addr.streetHi || "";
+      form.streetUr = addr.streetUr || "";
       form.latitude = addr.latitude ?? null;
       form.longitude = addr.longitude ?? null;
       selectedCityId.value = addr.cityId ?? null;
@@ -303,13 +349,24 @@ async function selectCity(city: DisplayCityDTO) {
     // Different city: stored district and pinned location no longer apply.
     form.districtNameAr = "";
     form.districtNameEn = "";
+    form.districtNameBn = "";
+    form.districtNameHi = "";
+    form.districtNameUr = "";
     form.street = "";
+    form.streetAr = "";
+    form.streetEn = "";
+    form.streetBn = "";
+    form.streetHi = "";
+    form.streetUr = "";
     form.latitude = null;
     form.longitude = null;
     selectedDistrictId.value = null;
   }
   form.cityNameAr = city.arabicName;
   form.cityNameEn = city.englishName;
+  form.cityNameBn = city.bengaliName;
+  form.cityNameHi = city.hindiName;
+  form.cityNameUr = city.urduName;
   selectedCityId.value = city.id;
   cityCoords.value =
     city.lat != null && city.lng != null
@@ -328,11 +385,19 @@ function selectDistrict(district: DisplayDistrictDTO) {
   if (selectedDistrictId.value !== district.id) {
     // Different district: a previously pinned point may now be out of bounds.
     form.street = "";
+    form.streetAr = "";
+    form.streetEn = "";
+    form.streetBn = "";
+    form.streetHi = "";
+    form.streetUr = "";
     form.latitude = null;
     form.longitude = null;
   }
   form.districtNameAr = district.arabicName;
   form.districtNameEn = district.englishName;
+  form.districtNameBn = district.bengaliName;
+  form.districtNameHi = district.hindiName;
+  form.districtNameUr = district.urduName;
   selectedDistrictId.value = district.id;
   isDistrictPickerOpen.value = false;
 }
@@ -356,11 +421,16 @@ async function onMapConfirm(coords: { lat: number; lng: number }) {
   form.latitude = coords.lat;
   form.longitude = coords.lng;
   isMapPickerOpen.value = false;
-  // Reverse-geocode the chosen point into a readable label.
+  // Reverse-geocode the chosen point into a label per supported language.
   isGeocoding.value = true;
   try {
-    const label = await locationsStore.reverseGeocode(coords.lat, coords.lng);
-    if (label) form.street = label;
+    const geo = await locationsStore.reverseGeocode(coords.lat, coords.lng);
+    form.street = geo.street;
+    form.streetAr = geo.streetAr;
+    form.streetEn = geo.streetEn;
+    form.streetBn = geo.streetBn;
+    form.streetHi = geo.streetHi;
+    form.streetUr = geo.streetUr;
   } finally {
     isGeocoding.value = false;
   }
@@ -410,10 +480,21 @@ async function handleSubmit() {
       cityId: selectedCityId.value ?? undefined,
       cityNameAr: form.cityNameAr,
       cityNameEn: form.cityNameEn,
+      cityNameBn: form.cityNameBn,
+      cityNameHi: form.cityNameHi,
+      cityNameUr: form.cityNameUr,
       districtId: selectedDistrictId.value ?? undefined,
       districtNameAr: form.districtNameAr || undefined,
       districtNameEn: form.districtNameEn || undefined,
+      districtNameBn: form.districtNameBn || undefined,
+      districtNameHi: form.districtNameHi || undefined,
+      districtNameUr: form.districtNameUr || undefined,
       street: form.street || undefined,
+      streetAr: form.streetAr || undefined,
+      streetEn: form.streetEn || undefined,
+      streetBn: form.streetBn || undefined,
+      streetHi: form.streetHi || undefined,
+      streetUr: form.streetUr || undefined,
       latitude: form.latitude ?? undefined,
       longitude: form.longitude ?? undefined,
     };

@@ -3,4 +3,7 @@ export interface DisplayDistrictDTO {
   cityId: number;
   arabicName: string;
   englishName: string;
+  bengaliName: string;
+  hindiName: string;
+  urduName: string;
 }

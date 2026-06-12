@@ -10,6 +10,24 @@ const GEOCODE_URL =
   (import.meta.env.VITE_MAP_GEOCODE_URL as string | undefined) ||
   "https://nominatim.openstreetmap.org/reverse";
 
+export interface GeocodedStreet {
+  street: string;
+  streetAr: string;
+  streetEn: string;
+  streetBn: string;
+  streetHi: string;
+  streetUr: string;
+}
+
+// Nominatim accept-language codes mapped to the address street fields.
+const GEOCODE_LANGS: { lang: string; key: keyof GeocodedStreet }[] = [
+  { lang: "ar", key: "streetAr" },
+  { lang: "en", key: "streetEn" },
+  { lang: "bn", key: "streetBn" },
+  { lang: "hi", key: "streetHi" },
+  { lang: "ur", key: "streetUr" },
+];
+
 const cities = ref<DisplayCityDTO[]>([]);
 const districtsByCity = ref<Record<number, DisplayDistrictDTO[]>>({});
 const loadingCities = ref(false);
@@ -75,27 +93,52 @@ export function useLocationsComposable() {
     }
   }
 
-  /** Reverse-geocodes a point to a human-readable place/street label. */
-  async function reverseGeocode(lat: number, lng: number): Promise<string> {
+  /** Reverse-geocodes a point in one language to a street-level label. */
+  async function reverseGeocodeOne(
+    lat: number,
+    lng: number,
+    lang: string,
+  ): Promise<string> {
+    const url = `${GEOCODE_URL}?format=jsonv2&lat=${lat}&lon=${lng}&zoom=18&addressdetails=1&accept-language=${lang}`;
+    const res = await fetch(url, { headers: { Accept: "application/json" } });
+    if (!res.ok) return "";
+    const data = await res.json();
+    const a = data.address ?? {};
+    // Prefer the most specific street-level parts, falling back to the
+    // display name. Different areas populate different fields.
+    const street = [a.road, a.neighbourhood, a.suburb, a.quarter]
+      .filter(Boolean)
+      .slice(0, 2)
+      .join(", ");
+    return street || data.name || data.display_name || "";
+  }
+
+  /**
+   * Reverse-geocodes a point into all supported languages. Nominatim is queried
+   * once per language sequentially to stay within the public ~1 req/sec limit.
+   */
+  async function reverseGeocode(
+    lat: number,
+    lng: number,
+  ): Promise<GeocodedStreet> {
+    const result: GeocodedStreet = {
+      street: "",
+      streetAr: "",
+      streetEn: "",
+      streetBn: "",
+      streetHi: "",
+      streetUr: "",
+    };
     try {
-      const url = `${GEOCODE_URL}?format=jsonv2&lat=${lat}&lon=${lng}&zoom=18&addressdetails=1`;
-      const res = await fetch(url, {
-        headers: { Accept: "application/json" },
-      });
-      if (!res.ok) return "";
-      const data = await res.json();
-      const a = data.address ?? {};
-      // Prefer the most specific street-level parts, falling back to the
-      // display name. Different areas populate different fields.
-      const street = [a.road, a.neighbourhood, a.suburb, a.quarter]
-        .filter(Boolean)
-        .slice(0, 2)
-        .join(", ");
-      return street || data.name || data.display_name || "";
+      for (const { lang, key } of GEOCODE_LANGS) {
+        result[key] = await reverseGeocodeOne(lat, lng, lang);
+      }
+      // The legacy `street` mirrors English as the default label.
+      result.street = result.streetEn || result.streetAr || "";
     } catch (error) {
       console.error("Reverse geocode failed", error);
-      return "";
     }
+    return result;
   }
 
   return {

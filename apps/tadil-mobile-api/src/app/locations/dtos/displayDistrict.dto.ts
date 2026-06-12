@@ -9,4 +9,10 @@ export class DisplayDistrictDTO {
   arabicName!: string;
   @ApiProperty()
   englishName!: string;
+  @ApiProperty()
+  bengaliName!: string;
+  @ApiProperty()
+  hindiName!: string;
+  @ApiProperty()
+  urduName!: string;
 }

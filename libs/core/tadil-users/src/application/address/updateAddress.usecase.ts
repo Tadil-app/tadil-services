@@ -14,10 +14,21 @@ export class UpdateAddressUseCase {
     cityId?: number;
     cityNameAr?: string;
     cityNameEn?: string;
+    cityNameBn?: string;
+    cityNameHi?: string;
+    cityNameUr?: string;
     districtId?: string;
     districtNameAr?: string;
     districtNameEn?: string;
+    districtNameBn?: string;
+    districtNameHi?: string;
+    districtNameUr?: string;
     street?: string;
+    streetAr?: string;
+    streetEn?: string;
+    streetBn?: string;
+    streetHi?: string;
+    streetUr?: string;
     latitude?: number;
     longitude?: number;
   }): Promise<void> {
@@ -37,10 +48,21 @@ export class UpdateAddressUseCase {
       cityId: command.cityId ?? existingAddress.cityId,
       cityNameAr: command.cityNameAr ?? existingAddress.cityNameAr,
       cityNameEn: command.cityNameEn ?? existingAddress.cityNameEn,
+      cityNameBn: command.cityNameBn ?? existingAddress.cityNameBn,
+      cityNameHi: command.cityNameHi ?? existingAddress.cityNameHi,
+      cityNameUr: command.cityNameUr ?? existingAddress.cityNameUr,
       districtId: command.districtId ?? existingAddress.districtId,
       districtNameAr: command.districtNameAr ?? existingAddress.districtNameAr,
       districtNameEn: command.districtNameEn ?? existingAddress.districtNameEn,
+      districtNameBn: command.districtNameBn ?? existingAddress.districtNameBn,
+      districtNameHi: command.districtNameHi ?? existingAddress.districtNameHi,
+      districtNameUr: command.districtNameUr ?? existingAddress.districtNameUr,
       street: command.street ?? existingAddress.street,
+      streetAr: command.streetAr ?? existingAddress.streetAr,
+      streetEn: command.streetEn ?? existingAddress.streetEn,
+      streetBn: command.streetBn ?? existingAddress.streetBn,
+      streetHi: command.streetHi ?? existingAddress.streetHi,
+      streetUr: command.streetUr ?? existingAddress.streetUr,
       latitude: command.latitude ?? existingAddress.latitude,
       longitude: command.longitude ?? existingAddress.longitude,
     };

@@ -46,6 +46,11 @@ export class UpdateUserUseCase {
       user.role === ROLE.TAILOR || user.role === ROLE.COURIER;
     const cityNameAr = command.cityNameAr ?? command.city;
     const cityNameEn = command.cityNameEn ?? command.city;
+    // bn/hi/ur are NOT NULL on the address; fall back to en (then the legacy
+    // free-text city) when the admin form didn't supply a translated name.
+    const cityNameBn = command.cityNameBn ?? cityNameEn;
+    const cityNameHi = command.cityNameHi ?? cityNameEn;
+    const cityNameUr = command.cityNameUr ?? cityNameAr;
 
     if (requiresAddress) {
       if (!cityNameAr || !cityNameEn) {
@@ -60,10 +65,21 @@ export class UpdateUserUseCase {
       cityId: command.cityId,
       cityNameAr: cityNameAr ?? '',
       cityNameEn: cityNameEn ?? '',
+      cityNameBn: cityNameBn ?? '',
+      cityNameHi: cityNameHi ?? '',
+      cityNameUr: cityNameUr ?? '',
       districtId: command.districtId,
       districtNameAr: command.districtNameAr,
       districtNameEn: command.districtNameEn,
+      districtNameBn: command.districtNameBn,
+      districtNameHi: command.districtNameHi,
+      districtNameUr: command.districtNameUr,
       street: command.street,
+      streetAr: command.streetAr,
+      streetEn: command.streetEn,
+      streetBn: command.streetBn,
+      streetHi: command.streetHi,
+      streetUr: command.streetUr,
       latitude: command.latitude,
       longitude: command.longitude,
     };
@@ -113,10 +129,21 @@ export class UpdateUserCommand {
   readonly cityId?: number;
   readonly cityNameAr?: string;
   readonly cityNameEn?: string;
+  readonly cityNameBn?: string;
+  readonly cityNameHi?: string;
+  readonly cityNameUr?: string;
   readonly districtId?: string;
   readonly districtNameAr?: string;
   readonly districtNameEn?: string;
+  readonly districtNameBn?: string;
+  readonly districtNameHi?: string;
+  readonly districtNameUr?: string;
   readonly street?: string;
+  readonly streetAr?: string;
+  readonly streetEn?: string;
+  readonly streetBn?: string;
+  readonly streetHi?: string;
+  readonly streetUr?: string;
   readonly latitude?: number;
   readonly longitude?: number;
 
@@ -132,10 +159,21 @@ export class UpdateUserCommand {
       cityId?: number;
       cityNameAr?: string;
       cityNameEn?: string;
+      cityNameBn?: string;
+      cityNameHi?: string;
+      cityNameUr?: string;
       districtId?: string;
       districtNameAr?: string;
       districtNameEn?: string;
+      districtNameBn?: string;
+      districtNameHi?: string;
+      districtNameUr?: string;
       street?: string;
+      streetAr?: string;
+      streetEn?: string;
+      streetBn?: string;
+      streetHi?: string;
+      streetUr?: string;
       latitude?: number;
       longitude?: number;
     }
@@ -150,10 +188,21 @@ export class UpdateUserCommand {
     this.cityId = address?.cityId;
     this.cityNameAr = address?.cityNameAr;
     this.cityNameEn = address?.cityNameEn;
+    this.cityNameBn = address?.cityNameBn;
+    this.cityNameHi = address?.cityNameHi;
+    this.cityNameUr = address?.cityNameUr;
     this.districtId = address?.districtId;
     this.districtNameAr = address?.districtNameAr;
     this.districtNameEn = address?.districtNameEn;
+    this.districtNameBn = address?.districtNameBn;
+    this.districtNameHi = address?.districtNameHi;
+    this.districtNameUr = address?.districtNameUr;
     this.street = address?.street;
+    this.streetAr = address?.streetAr;
+    this.streetEn = address?.streetEn;
+    this.streetBn = address?.streetBn;
+    this.streetHi = address?.streetHi;
+    this.streetUr = address?.streetUr;
     this.latitude = address?.latitude;
     this.longitude = address?.longitude;
   }

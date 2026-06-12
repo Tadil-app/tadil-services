@@ -269,7 +269,14 @@ function updateAddress(patch: Partial<AddressFormValue>) {
 }
 
 function localizedName(item: DisplayCityDTO | DisplayDistrictDTO) {
-  return locale.value === "ar" ? item.arabicName : item.englishName;
+  const byLocale: Record<string, string | undefined> = {
+    ar: item.arabicName,
+    en: item.englishName,
+    bn: item.bengaliName,
+    hi: item.hindiName,
+    ur: item.urduName,
+  };
+  return byLocale[locale.value] || item.englishName || item.arabicName;
 }
 
 async function openCityResults() {
@@ -311,10 +318,21 @@ async function selectCity(city: DisplayCityDTO) {
     cityId: city.id,
     cityNameAr: city.arabicName,
     cityNameEn: city.englishName,
+    cityNameBn: city.bengaliName,
+    cityNameHi: city.hindiName,
+    cityNameUr: city.urduName,
     districtId: undefined,
     districtNameAr: undefined,
     districtNameEn: undefined,
+    districtNameBn: undefined,
+    districtNameHi: undefined,
+    districtNameUr: undefined,
     street: undefined,
+    streetAr: undefined,
+    streetEn: undefined,
+    streetBn: undefined,
+    streetHi: undefined,
+    streetUr: undefined,
     latitude: undefined,
     longitude: undefined,
   });
@@ -336,7 +354,15 @@ function selectDistrict(district: DisplayDistrictDTO) {
     districtId: district.id,
     districtNameAr: district.arabicName,
     districtNameEn: district.englishName,
+    districtNameBn: district.bengaliName,
+    districtNameHi: district.hindiName,
+    districtNameUr: district.urduName,
     street: undefined,
+    streetAr: undefined,
+    streetEn: undefined,
+    streetBn: undefined,
+    streetHi: undefined,
+    streetUr: undefined,
     latitude: undefined,
     longitude: undefined,
   });
@@ -366,8 +392,15 @@ async function onMapConfirm(coords: { lat: number; lng: number }) {
 
   isGeocoding.value = true;
   try {
-    const label = await locations.reverseGeocode(coords.lat, coords.lng);
-    if (label) updateAddress({ street: label });
+    const geo = await locations.reverseGeocode(coords.lat, coords.lng);
+    updateAddress({
+      street: geo.street,
+      streetAr: geo.streetAr,
+      streetEn: geo.streetEn,
+      streetBn: geo.streetBn,
+      streetHi: geo.streetHi,
+      streetUr: geo.streetUr,
+    });
   } finally {
     isGeocoding.value = false;
   }

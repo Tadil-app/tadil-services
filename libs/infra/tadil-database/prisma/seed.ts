@@ -12,6 +12,9 @@ interface RawCity {
   region_id: number;
   name_ar: string;
   name_en: string;
+  name_bn: string;
+  name_hi: string;
+  name_ur: string;
   lat: number | null;
   lng: number | null;
 }
@@ -22,6 +25,9 @@ interface RawDistrict {
   region_id: number;
   name_ar: string;
   name_en: string;
+  name_bn: string;
+  name_hi: string;
+  name_ur: string;
 }
 
 type Boundary = { type: 'Polygon'; coordinates: number[][][] };
@@ -55,6 +61,9 @@ async function main() {
       regionId: c.region_id,
       nameAr: c.name_ar,
       nameEn: c.name_en,
+      nameBn: c.name_bn,
+      nameHi: c.name_hi,
+      nameUr: c.name_ur,
       lat: c.lat,
       lng: c.lng,
     })),
@@ -73,6 +82,9 @@ async function main() {
         regionId: d.region_id,
         nameAr: d.name_ar,
         nameEn: d.name_en,
+        nameBn: d.name_bn,
+        nameHi: d.name_hi,
+        nameUr: d.name_ur,
         boundaries: boundary ?? undefined,
       };
     }),

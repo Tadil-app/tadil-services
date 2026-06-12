@@ -14,10 +14,21 @@ export class AddAddressUseCase {
     cityId?: number;
     cityNameAr: string;
     cityNameEn: string;
+    cityNameBn: string;
+    cityNameHi: string;
+    cityNameUr: string;
     districtId?: string;
     districtNameAr?: string;
     districtNameEn?: string;
+    districtNameBn?: string;
+    districtNameHi?: string;
+    districtNameUr?: string;
     street?: string;
+    streetAr?: string;
+    streetEn?: string;
+    streetBn?: string;
+    streetHi?: string;
+    streetUr?: string;
     latitude?: number;
     longitude?: number;
   }): Promise<void> {
@@ -47,10 +58,21 @@ export class AddAddressUseCase {
         cityId: command.cityId,
         cityNameAr: command.cityNameAr,
         cityNameEn: command.cityNameEn,
+        cityNameBn: command.cityNameBn,
+        cityNameHi: command.cityNameHi,
+        cityNameUr: command.cityNameUr,
         districtId: command.districtId,
         districtNameAr: command.districtNameAr,
         districtNameEn: command.districtNameEn,
+        districtNameBn: command.districtNameBn,
+        districtNameHi: command.districtNameHi,
+        districtNameUr: command.districtNameUr,
         street: command.street,
+        streetAr: command.streetAr,
+        streetEn: command.streetEn,
+        streetBn: command.streetBn,
+        streetHi: command.streetHi,
+        streetUr: command.streetUr,
         latitude: command.latitude,
         longitude: command.longitude,
       };

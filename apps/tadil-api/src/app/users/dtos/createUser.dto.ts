@@ -41,6 +41,18 @@ export class CreateUserDTO {
   @ApiProperty({ required: false })
   @IsOptional()
   @IsString()
+  cityNameBn?: string;
+  @ApiProperty({ required: false })
+  @IsOptional()
+  @IsString()
+  cityNameHi?: string;
+  @ApiProperty({ required: false })
+  @IsOptional()
+  @IsString()
+  cityNameUr?: string;
+  @ApiProperty({ required: false })
+  @IsOptional()
+  @IsString()
   districtId?: string;
   @ApiProperty({ required: false })
   @IsOptional()
@@ -53,7 +65,39 @@ export class CreateUserDTO {
   @ApiProperty({ required: false })
   @IsOptional()
   @IsString()
+  districtNameBn?: string;
+  @ApiProperty({ required: false })
+  @IsOptional()
+  @IsString()
+  districtNameHi?: string;
+  @ApiProperty({ required: false })
+  @IsOptional()
+  @IsString()
+  districtNameUr?: string;
+  @ApiProperty({ required: false })
+  @IsOptional()
+  @IsString()
   street?: string;
+  @ApiProperty({ required: false })
+  @IsOptional()
+  @IsString()
+  streetAr?: string;
+  @ApiProperty({ required: false })
+  @IsOptional()
+  @IsString()
+  streetEn?: string;
+  @ApiProperty({ required: false })
+  @IsOptional()
+  @IsString()
+  streetBn?: string;
+  @ApiProperty({ required: false })
+  @IsOptional()
+  @IsString()
+  streetHi?: string;
+  @ApiProperty({ required: false })
+  @IsOptional()
+  @IsString()
+  streetUr?: string;
   @ApiProperty({ required: false })
   @IsOptional()
   @IsNumber()

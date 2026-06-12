@@ -6,10 +6,21 @@ type AddressRow = {
   cityId: number | null;
   cityNameAr: string;
   cityNameEn: string;
+  cityNameBn: string;
+  cityNameHi: string;
+  cityNameUr: string;
   districtId: string | null;
   districtNameAr: string | null;
   districtNameEn: string | null;
+  districtNameBn: string | null;
+  districtNameHi: string | null;
+  districtNameUr: string | null;
   street: string | null;
+  streetAr: string | null;
+  streetEn: string | null;
+  streetBn: string | null;
+  streetHi: string | null;
+  streetUr: string | null;
   latitude: number | null;
   longitude: number | null;
   userId: string;
@@ -21,10 +32,21 @@ function toAddress(a: AddressRow): Address {
     cityId: a.cityId ?? undefined,
     cityNameAr: a.cityNameAr,
     cityNameEn: a.cityNameEn,
+    cityNameBn: a.cityNameBn,
+    cityNameHi: a.cityNameHi,
+    cityNameUr: a.cityNameUr,
     districtId: a.districtId ?? undefined,
     districtNameAr: a.districtNameAr ?? undefined,
     districtNameEn: a.districtNameEn ?? undefined,
+    districtNameBn: a.districtNameBn ?? undefined,
+    districtNameHi: a.districtNameHi ?? undefined,
+    districtNameUr: a.districtNameUr ?? undefined,
     street: a.street ?? undefined,
+    streetAr: a.streetAr ?? undefined,
+    streetEn: a.streetEn ?? undefined,
+    streetBn: a.streetBn ?? undefined,
+    streetHi: a.streetHi ?? undefined,
+    streetUr: a.streetUr ?? undefined,
     latitude: a.latitude,
     longitude: a.longitude,
     userId: a.userId,
@@ -144,10 +166,21 @@ export class PrismaUsersRepository implements UsersRepository {
         cityId: address.cityId,
         cityNameAr: address.cityNameAr,
         cityNameEn: address.cityNameEn,
+        cityNameBn: address.cityNameBn,
+        cityNameHi: address.cityNameHi,
+        cityNameUr: address.cityNameUr,
         districtId: address.districtId,
         districtNameAr: address.districtNameAr,
         districtNameEn: address.districtNameEn,
+        districtNameBn: address.districtNameBn,
+        districtNameHi: address.districtNameHi,
+        districtNameUr: address.districtNameUr,
         street: address.street,
+        streetAr: address.streetAr,
+        streetEn: address.streetEn,
+        streetBn: address.streetBn,
+        streetHi: address.streetHi,
+        streetUr: address.streetUr,
         latitude: address.latitude,
         longitude: address.longitude,
         userId: address.userId,
@@ -162,10 +195,21 @@ export class PrismaUsersRepository implements UsersRepository {
         cityId: address.cityId,
         cityNameAr: address.cityNameAr,
         cityNameEn: address.cityNameEn,
+        cityNameBn: address.cityNameBn,
+        cityNameHi: address.cityNameHi,
+        cityNameUr: address.cityNameUr,
         districtId: address.districtId,
         districtNameAr: address.districtNameAr,
         districtNameEn: address.districtNameEn,
+        districtNameBn: address.districtNameBn,
+        districtNameHi: address.districtNameHi,
+        districtNameUr: address.districtNameUr,
         street: address.street,
+        streetAr: address.streetAr,
+        streetEn: address.streetEn,
+        streetBn: address.streetBn,
+        streetHi: address.streetHi,
+        streetUr: address.streetUr,
         latitude: address.latitude,
         longitude: address.longitude,
       },
