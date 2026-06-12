@@ -86,7 +86,7 @@
         </IonHeader>
         <IonContent class="ion-padding">
           <AlterationForm
-            :alterations="availableAlterations"
+            :alterations="filteredAlterations"
             :initial-alteration="editingAlteration"
             @confirm="handleConfirmAlteration"
             @close="closeModal"
@@ -136,12 +136,13 @@ import {
   IonTitle,
   IonSpinner,
   alertController,
+  onIonViewWillEnter,
 } from "@ionic/vue";
-import { onBeforeMount, onBeforeUnmount, ref } from "vue";
+import { computed, onBeforeUnmount, ref } from "vue";
 import { ModelCategory, Point } from "@/integration/dtos";
 import { ImageContainer, ImageInput, SecondaryHeader } from "@/components";
 import { useCustomModel, CustomPinpoint } from "./useCustomModel.composable";
-import { useRouter, onBeforeRouteLeave } from "vue-router";
+import { useRouter, useRoute, onBeforeRouteLeave } from "vue-router";
 import { useI18n } from "vue-i18n";
 import { useCartStore } from "@/stores";
 import { useToast } from "@/composables";
@@ -166,6 +167,7 @@ const {
   totalPrice,
   hasUnsavedChanges,
   getAlterations,
+  ensureAlterationsLoaded,
   uploadImage,
   addAlterationToPinpoint,
   createPinpointWithAlteration,
@@ -173,11 +175,13 @@ const {
   removePinpoint,
   getPinpointNames,
   reset,
+  resetSession,
 } = useCustomModel();
 
 const cartStore = useCartStore();
 const { showToast } = useToast();
 const router = useRouter();
+const route = useRoute();
 const { t } = useI18n();
 
 const isModalOpen = ref(false);
@@ -186,6 +190,31 @@ const targetPinpointId = ref<string | undefined>(undefined);
 const editingAlterationId = ref<string | undefined>(undefined);
 const editingAlteration = ref<SelectedAlteration | undefined>(undefined);
 
+const filteredAlterations = computed(() => {
+  if (!targetPinpointId.value) {
+    return availableAlterations.value;
+  }
+
+  const pin = pinpoints.value.find((p) => p.id === targetPinpointId.value);
+  if (!pin) {
+    return availableAlterations.value;
+  }
+
+  const existingIds = pin.alterations
+    .map((a) => a.alterationId)
+    .filter((id) => id !== editingAlterationId.value);
+
+  return availableAlterations.value.filter(
+    (alteration) => !existingIds.includes(alteration.id),
+  );
+});
+
+async function openAlterationModal() {
+  const loaded = await ensureAlterationsLoaded();
+  if (!loaded) return;
+  isModalOpen.value = true;
+}
+
 async function onImageClick(event: MouseEvent) {
   const container = event.currentTarget as HTMLElement;
   const img = container.querySelector("img");
@@ -193,15 +222,16 @@ async function onImageClick(event: MouseEvent) {
 
   const rect = img.getBoundingClientRect();
 
-  // Calculate relative to the image itself, not the whole container
   const x = ((event.clientX - rect.left) / rect.width) * 100;
   const y = ((event.clientY - rect.top) / rect.height) * 100;
 
-  // Guard: Ensure click was actually on the image (in case of gaps in contain mode)
   if (x < 0 || x > 100 || y < 0 || y > 100) return;
 
   clickPosition.value = { x, y };
-  isModalOpen.value = true;
+  targetPinpointId.value = undefined;
+  editingAlterationId.value = undefined;
+  editingAlteration.value = undefined;
+  await openAlterationModal();
 }
 
 async function handlePinpointClick(pin: CustomPinpoint) {
@@ -213,10 +243,12 @@ async function handlePinpointClick(pin: CustomPinpoint) {
       {
         text: t("common.alerts.zoneOptions.addNew"),
         cssClass: "btn-add",
-        handler: () => {
+        handler: async () => {
           targetPinpointId.value = pin.id;
           clickPosition.value = pin.coordinates;
-          isModalOpen.value = true;
+          editingAlterationId.value = undefined;
+          editingAlteration.value = undefined;
+          await openAlterationModal();
         },
       },
       {
@@ -240,10 +272,10 @@ function handleEditAlteration(
   editingAlterationId.value = alteration.alterationId;
   editingAlteration.value = alteration;
   clickPosition.value = pin.coordinates;
-  isModalOpen.value = true;
+  void openAlterationModal();
 }
 
-function handleConfirmAlteration(alteration: SelectedAlteration) {
+async function handleConfirmAlteration(alteration: SelectedAlteration) {
   if (targetPinpointId.value) {
     if (editingAlterationId.value) {
       // It was an edit of an existing alteration
@@ -419,7 +451,12 @@ onBeforeRouteLeave(async () => {
   return true;
 });
 
-onBeforeMount(() => {
+onIonViewWillEnter(() => {
+  const customCategoryFromQuery = route.query.customCategory;
+  if (typeof customCategoryFromQuery === "string") {
+    selectedCategory.value = customCategoryFromQuery;
+  }
+
   if (!selectedCategory.value) {
     router.replace({
       name: "customer-new-order-custom-category-selection",
@@ -431,7 +468,7 @@ onBeforeMount(() => {
 });
 
 onBeforeUnmount(() => {
-  reset();
+  resetSession();
 });
 </script>
 

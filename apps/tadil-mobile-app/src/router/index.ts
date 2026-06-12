@@ -4,7 +4,7 @@ import { RouteRecordRaw } from "vue-router";
 const routes: Array<RouteRecordRaw> = [
   {
     path: "/",
-    redirect: { name: "customer-dashboard" },
+    redirect: { name: "customer-new-order-category-selection" },
   },
   {
     path: "/login",
@@ -22,45 +22,51 @@ const routes: Array<RouteRecordRaw> = [
     path: "/customer",
     name: "customer",
     component: () => import("../views/customer/CustomerLayout.vue"),
-    redirect: { name: "customer-dashboard" },
-    meta: { requiresAuth: true, role: "customer" },
+    redirect: { name: "customer-new-order-category-selection" },
     children: [
       {
         path: "dashboard",
         name: "customer-dashboard",
         component: () => import("../views/customer/DashboardView.vue"),
+        meta: { requiresAuth: true, role: "customer" },
       },
       {
         path: "orders",
         name: "customer-orders-history",
         component: () => import("../views/customer/OrdersHistoryView.vue"),
+        meta: { requiresAuth: true, role: "customer" },
       },
       {
         path: "orders/:orderId",
         name: "customer-order-details",
         props: true,
         component: () => import("../views/customer/OrderDetailsView.vue"),
+        meta: { requiresAuth: true, role: "customer" },
       },
       {
         path: "cart",
         name: "customer-cart",
         component: () => import("../views/customer/cart/CartView.vue"),
+        meta: { requiresAuth: true, role: "customer" },
       },
       {
         path: "cart/:itemId",
         name: "customer-cart-item-details",
         props: true,
         component: () => import("../views/customer/cart/CartItemDetailsView.vue"),
+        meta: { requiresAuth: true, role: "customer" },
       },
       {
         path: "checkout",
         name: "customer-checkout",
         component: () => import("../views/customer/checkout/CheckoutView.vue"),
+        meta: { requiresAuth: true, role: "customer" },
       },
       {
         path: "checkout/verify",
         name: "customer-checkout-verify",
         component: () => import("../views/customer/checkout/CheckoutVerifyView.vue"),
+        meta: { requiresAuth: true, role: "customer" },
       },
       {
         path: "new-order",
@@ -214,45 +220,49 @@ const router = createRouter({
   routes,
 });
 
+function getDashboardRoute(role?: string) {
+  if (role === "tailor") return { name: "tailor-dashboard" };
+  if (role === "courier") return { name: "courier-dashboard" };
+  return { name: "customer-dashboard" };
+}
+
+const guestEntryRouteNames = new Set([
+  "customer-new-order-category-selection",
+  "login",
+]);
+
 router.beforeEach(async (to, from, next) => {
   const authStore = useAuthStore();
-  
-  // 1. Ensure auth is initialized from storage
+
   if (!authStore.userId && !from.name) {
     await authStore.initAuth();
   }
 
   const isAuthenticated = !!authStore.token;
   const userRole = authStore.userRole;
+  const isInitialNavigation = !from.name;
 
-  // 2. Handle guest-only routes (like /login)
+  if (isInitialNavigation && isAuthenticated && guestEntryRouteNames.has(to.name as string)) {
+    return next(getDashboardRoute(userRole));
+  }
+
   if (to.meta.guestOnly && isAuthenticated) {
-    if (userRole === "tailor") return next({ name: "tailor-dashboard" });
-    if (userRole === "courier") return next({ name: "courier-dashboard" });
-    return next({ name: "customer-dashboard" });
-  }
-
-  // 3. Handle routes that require authentication
-  if (to.meta.requiresAuth && !isAuthenticated) {
-    return next({ name: "login" });
-  }
-
-  // 4. Handle role-based access
-  if (to.meta.role && to.meta.role !== userRole) {
-    if (userRole === "tailor") return next({ name: "tailor-dashboard" });
-    if (userRole === "courier") return next({ name: "courier-dashboard" });
-    if (userRole === "customer") return next({ name: "customer-dashboard" });
-  }
-
-  // 5. Handle root path specifically
-  if (to.path === "/") {
-    if (isAuthenticated) {
-      if (userRole === "tailor") return next({ name: "tailor-dashboard" });
-      if (userRole === "courier") return next({ name: "courier-dashboard" });
-      return next({ name: "customer-dashboard" });
-    } else {
-      return next({ name: "login" });
+    const redirect = to.query.redirect as string | undefined;
+    if (redirect?.startsWith("/")) {
+      return next(redirect);
     }
+    return next(getDashboardRoute(userRole));
+  }
+
+  if (to.meta.requiresAuth && !isAuthenticated) {
+    return next({
+      name: "login",
+      query: { redirect: to.fullPath },
+    });
+  }
+
+  if (to.meta.role && isAuthenticated && to.meta.role !== userRole) {
+    return next(getDashboardRoute(userRole));
   }
 
   next();

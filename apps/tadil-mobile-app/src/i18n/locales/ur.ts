@@ -43,6 +43,7 @@ export const ur = {
           camera: "کیمرہ",
           gallery: "گیلری",
         },
+        fileTooLarge: "تصویر 10MB یا اس سے چھوٹی ہونی چاہیے۔",
       },
     },
     alerts: {
@@ -66,6 +67,10 @@ export const ur = {
         message: "آئٹم کامیابی کے ساتھ کارٹ میں شامل کر دیا گیا ہے۔ آپ آگے کیا کرنا چاہیں گے؟",
         viewCart: "کارٹ دیکھیں",
         continueShopping: "خریداری جاری رکھیں",
+      },
+      loginRequired: {
+        header: "لاگ ان ضروری ہے",
+        message: "اپنا آرڈر جاری رکھنے کے لیے براہ کرم لاگ ان کریں۔",
       },
     },
     errors: {

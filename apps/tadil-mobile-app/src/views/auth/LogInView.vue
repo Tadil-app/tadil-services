@@ -120,11 +120,12 @@ import {
 import { timeOutline, closeCircleOutline } from "ionicons/icons";
 import { ref } from "vue";
 import { useI18n } from "vue-i18n";
-import { useRouter } from "vue-router";
+import { useRouter, useRoute } from "vue-router";
 
 const { t } = useI18n();
 const authStore = useAuthStore();
 const router = useRouter();
+const route = useRoute();
 
 const loginStep = ref<"phone" | "signup" | "pending" | "rejected">("phone");
 const isLoading = ref(false);
@@ -199,7 +200,22 @@ async function onCompleteProfile() {
   }
 }
 
+function isRedirectAllowed(redirect: string, role?: string) {
+  if (role === "tailor") return redirect.startsWith("/tailor");
+  if (role === "courier") return redirect.startsWith("/courier");
+  if (role === "customer") {
+    return redirect.startsWith("/customer") || redirect.startsWith("/profile");
+  }
+  return false;
+}
+
 function handleNavigation(role?: string) {
+  const redirect = route.query.redirect as string | undefined;
+  if (redirect && isRedirectAllowed(redirect, role)) {
+    router.push(redirect);
+    return;
+  }
+
   if (role === "tailor") {
     router.push({ name: "tailor-dashboard" });
   } else if (role === "courier") {

@@ -43,6 +43,7 @@ export const hi = {
           camera: "कैमरा",
           gallery: "गैलरी",
         },
+        fileTooLarge: "छवि 10MB या उससे छोटी होनी चाहिए।",
       },
     },
     alerts: {
@@ -66,6 +67,10 @@ export const hi = {
         message: "आइटम सफलतापूर्वक कार्ट में जोड़ दिया गया है। आप आगे क्या करना चाहेंगे?",
         viewCart: "कार्ट देखें",
         continueShopping: "खरीदारी जारी रखें",
+      },
+      loginRequired: {
+        header: "लॉगिन आवश्यक",
+        message: "अपना ऑर्डर जारी रखने के लिए कृपया लॉग इन करें।",
       },
     },
     errors: {

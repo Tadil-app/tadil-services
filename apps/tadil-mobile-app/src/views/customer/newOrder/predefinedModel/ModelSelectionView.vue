@@ -16,11 +16,7 @@
           v-for="model in models"
           :key="model.id"
           :button="true"
-          :router-link="{
-            name: 'customer-new-order-predefined-model-gallery',
-            params: { category, modelId: model.id },
-          }"
-          @click="selectedModel = model"
+          @click="selectModel(model)"
         >
           <div class="h-60 grid grid-rows-[1fr_auto]">
             <ImageContainer
@@ -39,8 +35,8 @@
 </template>
 
 <script setup lang="ts">
-import { useToast } from "@/composables";
-import { ModelCategory } from "@/integration/dtos";
+import { useToast, useRequireAuth } from "@/composables";
+import { ModelCategory, DisplayModelDTO } from "@/integration/dtos";
 import {
   IonPage,
   RefresherCustomEvent,
@@ -52,6 +48,7 @@ import {
 } from "@ionic/vue";
 import { usePredefinedModel } from "./usePredefinedModel.composable";
 import { onBeforeMount, onBeforeUnmount } from "vue";
+import { useRouter } from "vue-router";
 import { ImageContainer, TranslatedName, SecondaryHeader } from "@/components";
 
 const { dismissToast } = useToast();
@@ -61,6 +58,18 @@ const props = defineProps<{
 }>();
 const { isLoadingModels, models, selectedModel, getModels, resetSelection } =
   usePredefinedModel();
+const router = useRouter();
+const { promptAuth } = useRequireAuth();
+
+async function selectModel(model: DisplayModelDTO) {
+  if (!(await promptAuth())) return;
+
+  selectedModel.value = model;
+  router.push({
+    name: "customer-new-order-predefined-model-gallery",
+    params: { category: props.category, modelId: model.id },
+  });
+}
 
 async function onRefresh(event: RefresherCustomEvent) {
   await getModels(props.category);

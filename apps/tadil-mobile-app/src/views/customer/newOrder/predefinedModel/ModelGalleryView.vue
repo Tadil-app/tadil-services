@@ -230,7 +230,7 @@ function handleEditAlteration(
   }
 }
 
-function handleConfirmAlteration(data: SelectedAlteration) {
+async function handleConfirmAlteration(data: SelectedAlteration) {
   if (editingMeta.value && editingAlterationId.value) {
     removeAlteration(
       editingMeta.value.imageId,

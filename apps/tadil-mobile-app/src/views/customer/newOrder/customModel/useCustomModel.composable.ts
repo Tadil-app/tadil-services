@@ -17,6 +17,7 @@ const uploadedImageUrl = ref<string>();
 const selectedCategory = ref<string>();
 const pinpoints = ref<CustomPinpoint[]>([]);
 const availableAlterations = ref<DisplayAlterationDTO[]>([]);
+const isLoadingAlterations = ref(false);
 
 export function useCustomModel() {
   const { showToast } = useToast();
@@ -50,16 +51,29 @@ export function useCustomModel() {
   });
 
   const hasUnsavedChanges = computed(
-    () => pinpoints.value.length > 0 || !!customImageUrl.value,
+    () => pinpoints.value.length > 0,
   );
 
   async function getAlterations() {
+    isLoadingAlterations.value = true;
     try {
       const { data } = await apiClient.customerControllerGetAlterations();
       availableAlterations.value = data;
+      return data;
     } catch (error) {
       showToast({ message: t("common.errors.loadAlterations"), color: "danger" });
+      return [];
+    } finally {
+      isLoadingAlterations.value = false;
     }
+  }
+
+  async function ensureAlterationsLoaded() {
+    if (availableAlterations.value.length > 0) {
+      return true;
+    }
+    const data = await getAlterations();
+    return data.length > 0;
   }
 
   async function uploadImage(file: File) {
@@ -124,12 +138,15 @@ export function useCustomModel() {
     };
   }
 
-  function reset() {
+  function resetSession() {
     customImageUrl.value = undefined;
     uploadedImageUrl.value = undefined;
-    selectedCategory.value = undefined;
     pinpoints.value = [];
-    availableAlterations.value = [];
+  }
+
+  function reset() {
+    resetSession();
+    selectedCategory.value = undefined;
   }
 
   return {
@@ -143,6 +160,7 @@ export function useCustomModel() {
     totalPrice,
     hasUnsavedChanges,
     getAlterations,
+    ensureAlterationsLoaded,
     uploadImage,
     addAlterationToPinpoint,
     createPinpointWithAlteration,
@@ -150,5 +168,6 @@ export function useCustomModel() {
     removePinpoint,
     getPinpointNames,
     reset,
+    resetSession,
   };
 }

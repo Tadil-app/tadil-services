@@ -129,6 +129,7 @@ export const useAuthStore = defineStore("auth", () => {
   }
 
   async function logout() {
+    const role = userRole.value;
     token.value = "";
     userId.value = "";
     userRole.value = "";
@@ -139,7 +140,12 @@ export const useAuthStore = defineStore("auth", () => {
     await Preferences.remove({ key: "token" });
     await Preferences.remove({ key: "userId" });
     await Preferences.remove({ key: "userRole" });
-    router.push({ name: "login" });
+
+    if (role === "tailor" || role === "courier") {
+      router.push({ name: "login" });
+    } else {
+      router.push({ name: "customer-new-order-category-selection" });
+    }
   }
 
   return { 

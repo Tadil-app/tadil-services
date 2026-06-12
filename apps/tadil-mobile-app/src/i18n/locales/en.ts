@@ -41,9 +41,10 @@ export const en = {
         sourceModal: {
           title: "Choose a Source",
           camera: "Camera",
-          gallery: "Gallery",
-        },
+        gallery: "Gallery",
       },
+      fileTooLarge: "Image must be 10MB or smaller.",
+    },
     },
     alerts: {
       unsavedChanges: {
@@ -66,6 +67,10 @@ export const en = {
         message: "Item added to cart successfully. What would you like to do next?",
         viewCart: "View Cart",
         continueShopping: "Continue Shopping",
+      },
+      loginRequired: {
+        header: "Login Required",
+        message: "Please log in to continue your order.",
       },
     },
     errors: {

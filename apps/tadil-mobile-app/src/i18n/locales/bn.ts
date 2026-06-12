@@ -43,6 +43,7 @@ export const bn = {
           camera: "ক্যামেরা",
           gallery: "গ্যালারি",
         },
+        fileTooLarge: "ছবির আকার 10MB বা তার চেয়ে ছোট হতে হবে।",
       },
     },
     alerts: {
@@ -67,8 +68,11 @@ export const bn = {
         viewCart: "কার্ট দেখুন",
         continueShopping: "কেনাকাটা চালিয়ে যান",
       },
+      loginRequired: {
+        header: "লগইন প্রয়োজন",
+        message: "আপনার অর্ডার চালিয়ে যেতে দয়া করে লগইন করুন।",
       },
-
+    },
     errors: {
       voiceRecorder: {
         permissionDenied: "ভয়েস মেসেজ রেকর্ড করার জন্য মাইক্রোফোন অনুমতি প্রয়োজন।",

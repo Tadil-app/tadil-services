@@ -44,6 +44,7 @@ import { useRouter } from "vue-router";
 import { useCustomModel } from "./useCustomModel.composable";
 import { ModelCategory } from "@/integration/dtos";
 import { SecondaryHeader } from "@/components";
+import { useRequireAuth } from "@/composables";
 
 const props = defineProps<{
   category: ModelCategory;
@@ -51,6 +52,7 @@ const props = defineProps<{
 
 const { selectedCategory } = useCustomModel();
 const router = useRouter();
+const { promptAuth } = useRequireAuth();
 
 const customCategories = computed(() => [
   { value: "shirt", icon: Shirt },
@@ -61,9 +63,15 @@ const customCategories = computed(() => [
   { value: "suit", icon: Suit },
 ]);
 
-function selectAndNext(value: string) {
+async function selectAndNext(value: string) {
+  if (!(await promptAuth())) return;
+
   selectedCategory.value = value;
-  router.push({ name: "customer-new-order-custom-upload", params: { category: props.category } });
+  router.push({
+    name: "customer-new-order-custom-upload",
+    params: { category: props.category },
+    query: { customCategory: value },
+  });
 }
 </script>
 

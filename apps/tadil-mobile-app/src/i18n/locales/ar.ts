@@ -43,6 +43,7 @@ export const ar = {
           camera: "الكاميرا",
           gallery: "المعرض",
         },
+        fileTooLarge: "يجب أن تكون الصورة 10 ميجابايت أو أقل.",
       },
     },
     alerts: {
@@ -66,6 +67,10 @@ export const ar = {
         message: "تمت إضافة القطعة إلى سلة التسوق بنجاح. ماذا تريد أن تفعل بعد ذلك؟",
         viewCart: "عرض السلة",
         continueShopping: "مواصلة التسوق",
+      },
+      loginRequired: {
+        header: "تسجيل الدخول مطلوب",
+        message: "يرجى تسجيل الدخول لمتابعة طلبك.",
       },
     },
     errors: {
