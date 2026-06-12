@@ -141,6 +141,12 @@ export class DisplayOrderDTO {
   totalPrice!: number;
   @ApiProperty()
   status!: OrderStatusType;
+  @ApiProperty({ required: false })
+  assignedTailorId?: string;
+  @ApiProperty({ required: false })
+  assignedCourierId?: string;
+  @ApiProperty({ required: false })
+  assignedReturnCourierId?: string;
   @ApiProperty({ type: DisplayOrderItemDTO, isArray: true })
   items!: DisplayOrderItemDTO[];
   @ApiProperty({ type: DisplayCustomOrderItemDTO, isArray: true })
