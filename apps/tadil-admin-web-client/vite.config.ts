@@ -6,8 +6,8 @@ import * as path from "path";
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), "");
   const VITE_TADIL_API_URL = env.VITE_TADIL_API_URL;
-  const DEEPL_URL = env.DEEPL_URL;
-  const DEEPL_API_KEY = env.DEEPL_API_KEY;
+  const DEEPL_URL = env.VITE_DEEPL_URL;
+  const DEEPL_API_KEY = env.VITE_DEEPL_API_KEY;
 
   return {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
