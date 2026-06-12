@@ -36,15 +36,9 @@ export const en = {
     },
     inputs: {
       imageInput: {
-        placeholder: "Click to upload",
-        info: "PNG, JPG up to 10MB",
-        sourceModal: {
-          title: "Choose a Source",
-          camera: "Camera",
-        gallery: "Gallery",
+        placeholder: "Tap to add a photo",
+        info: "Camera or photo library",
       },
-      fileTooLarge: "Image must be 10MB or smaller.",
-    },
     },
     alerts: {
       unsavedChanges: {

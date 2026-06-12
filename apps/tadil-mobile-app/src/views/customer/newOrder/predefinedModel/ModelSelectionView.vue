@@ -45,9 +45,10 @@ import {
   IonRefresherContent,
   IonCard,
   IonSkeletonText,
+  onIonViewWillEnter,
 } from "@ionic/vue";
 import { usePredefinedModel } from "./usePredefinedModel.composable";
-import { onBeforeMount, onBeforeUnmount } from "vue";
+import { onBeforeUnmount } from "vue";
 import { useRouter } from "vue-router";
 import { ImageContainer, TranslatedName, SecondaryHeader } from "@/components";
 
@@ -56,15 +57,14 @@ const { dismissToast } = useToast();
 const props = defineProps<{
   category: ModelCategory;
 }>();
-const { isLoadingModels, models, selectedModel, getModels, resetSelection } =
+const { isLoadingModels, models, getModels, resetSelection } =
   usePredefinedModel();
 const router = useRouter();
-const { promptAuth } = useRequireAuth();
+const { confirmLogin } = useRequireAuth();
 
 async function selectModel(model: DisplayModelDTO) {
-  if (!(await promptAuth())) return;
+  if (!(await confirmLogin())) return;
 
-  selectedModel.value = model;
   router.push({
     name: "customer-new-order-predefined-model-gallery",
     params: { category: props.category, modelId: model.id },
@@ -76,7 +76,7 @@ async function onRefresh(event: RefresherCustomEvent) {
   event.target.complete();
 }
 
-onBeforeMount(() => {
+onIonViewWillEnter(() => {
   resetSelection();
   getModels(props.category);
 });

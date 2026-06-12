@@ -36,14 +36,8 @@ export const ur = {
     },
     inputs: {
       imageInput: {
-        placeholder: "اپ لوڈ کرنے کے لیے کلک کریں",
-        info: "PNG, JPG زیادہ سے زیادہ 10MB",
-        sourceModal: {
-          title: "ذریعہ منتخب کریں",
-          camera: "کیمرہ",
-          gallery: "گیلری",
-        },
-        fileTooLarge: "تصویر 10MB یا اس سے چھوٹی ہونی چاہیے۔",
+        placeholder: "تصویر شامل کرنے کے لیے ٹیپ کریں",
+        info: "کیمرہ یا فوٹو لائبریری",
       },
     },
     alerts: {

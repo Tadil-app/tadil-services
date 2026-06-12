@@ -138,8 +138,9 @@ import {
   IonHeader,
   IonModal,
   IonPage,
+  onIonViewWillEnter,
 } from "@ionic/vue";
-import { onBeforeMount, ref } from "vue";
+import { ref } from "vue";
 import { ModelCategory } from "@/integration/dtos";
 import {
   TranslatedName,
@@ -186,11 +187,13 @@ const {
   totalAlterationsCount,
   totalPrice,
   hasUnsavedChanges,
+  getModels,
   getModelImages,
   addAlteration,
   removeAlteration,
   findSectionAtPoint,
   resetSelection,
+  setSelectedModelById,
   editingAlterationId,
 } = usePredefinedModel();
 
@@ -230,7 +233,7 @@ function handleEditAlteration(
   }
 }
 
-async function handleConfirmAlteration(data: SelectedAlteration) {
+function handleConfirmAlteration(data: SelectedAlteration) {
   if (editingMeta.value && editingAlterationId.value) {
     removeAlteration(
       editingMeta.value.imageId,
@@ -324,14 +327,18 @@ onBeforeRouteLeave(async () => {
   return true;
 });
 
-onBeforeMount(async () => {
-  if (!selectedModel.value) {
-    router.replace({
-      name: "customer-new-order-predefined-model-selection",
-      params: { category: props.category },
-    });
-    return;
+onIonViewWillEnter(async () => {
+  if (!setSelectedModelById(props.modelId)) {
+    await getModels(props.category);
+    if (!setSelectedModelById(props.modelId)) {
+      router.replace({
+        name: "customer-new-order-predefined-model-selection",
+        params: { category: props.category },
+      });
+      return;
+    }
   }
+
   await getModelImages(props.modelId);
 });
 </script>

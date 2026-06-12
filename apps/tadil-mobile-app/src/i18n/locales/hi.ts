@@ -36,14 +36,8 @@ export const hi = {
     },
     inputs: {
       imageInput: {
-        placeholder: "अपलोड करने के लिए क्लिक करें",
-        info: "PNG, JPG 10MB तक",
-        sourceModal: {
-          title: "स्रोत चुनें",
-          camera: "कैमरा",
-          gallery: "गैलरी",
-        },
-        fileTooLarge: "छवि 10MB या उससे छोटी होनी चाहिए।",
+        placeholder: "फोटो जोड़ने के लिए टैप करें",
+        info: "कैमरा या फोटो लाइब्रेरी",
       },
     },
     alerts: {

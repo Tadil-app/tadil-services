@@ -286,6 +286,14 @@ export function usePredefinedModel() {
     editingAlterationId.value = undefined;
   }
 
+  function setSelectedModelById(modelId: string) {
+    const model = models.value.find((entry) => entry.id === modelId);
+    if (!model) return false;
+
+    selectedModel.value = model;
+    return true;
+  }
+
   return {
     isLoadingModels,
     models,
@@ -307,6 +315,7 @@ export function usePredefinedModel() {
     addAlteration,
     removeAlteration,
     resetSelection,
+    setSelectedModelById,
     editingAlterationId,
   };
 }

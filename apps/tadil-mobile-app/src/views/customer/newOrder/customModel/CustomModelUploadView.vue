@@ -2,7 +2,7 @@
   <IonPage>
     <SecondaryHeader
       :title="$t('customModel.upload')"
-      :subtitle="selectedCategory ? $t(`customModel.categories.${selectedCategory}`) : undefined"
+      :subtitle="$t(`customModel.categories.${customCategory}`)"
       :default-href="`/customer/new-order/${category}/custom-model/custom-category-selection`"
     />
 
@@ -142,7 +142,7 @@ import { computed, onBeforeUnmount, ref } from "vue";
 import { ModelCategory, Point } from "@/integration/dtos";
 import { ImageContainer, ImageInput, SecondaryHeader } from "@/components";
 import { useCustomModel, CustomPinpoint } from "./useCustomModel.composable";
-import { useRouter, useRoute, onBeforeRouteLeave } from "vue-router";
+import { useRouter, onBeforeRouteLeave } from "vue-router";
 import { useI18n } from "vue-i18n";
 import { useCartStore } from "@/stores";
 import { useToast } from "@/composables";
@@ -155,6 +155,7 @@ import { Filesystem, Directory } from "@capacitor/filesystem";
 
 const props = defineProps<{
   category: ModelCategory;
+  customCategory: string;
 }>();
 
 const {
@@ -181,7 +182,6 @@ const {
 const cartStore = useCartStore();
 const { showToast } = useToast();
 const router = useRouter();
-const route = useRoute();
 const { t } = useI18n();
 
 const isModalOpen = ref(false);
@@ -452,18 +452,7 @@ onBeforeRouteLeave(async () => {
 });
 
 onIonViewWillEnter(() => {
-  const customCategoryFromQuery = route.query.customCategory;
-  if (typeof customCategoryFromQuery === "string") {
-    selectedCategory.value = customCategoryFromQuery;
-  }
-
-  if (!selectedCategory.value) {
-    router.replace({
-      name: "customer-new-order-custom-category-selection",
-      params: { category: props.category },
-    });
-    return;
-  }
+  selectedCategory.value = props.customCategory;
   getAlterations();
 });
 

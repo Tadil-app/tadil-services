@@ -36,14 +36,8 @@ export const bn = {
     },
     inputs: {
       imageInput: {
-        placeholder: "আপলোড করতে ক্লিক করুন",
-        info: "PNG, JPG সর্বোচ্চ ১০ মেগাবাইট",
-        sourceModal: {
-          title: "উৎস নির্বাচন করুন",
-          camera: "ক্যামেরা",
-          gallery: "গ্যালারি",
-        },
-        fileTooLarge: "ছবির আকার 10MB বা তার চেয়ে ছোট হতে হবে।",
+        placeholder: "ছবি যোগ করতে ট্যাপ করুন",
+        info: "ক্যামেরা বা ফটো লাইব্রেরি",
       },
     },
     alerts: {

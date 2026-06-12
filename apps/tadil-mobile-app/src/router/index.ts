@@ -110,6 +110,7 @@ const routes: Array<RouteRecordRaw> = [
                 path: ":modelId/model-gallery",
                 name: "customer-new-order-predefined-model-gallery",
                 props: true,
+                meta: { requiresAuth: true, role: "customer" },
                 component: () =>
                   import(
                     "../views/customer/newOrder/predefinedModel/ModelGalleryView.vue"
@@ -137,9 +138,10 @@ const routes: Array<RouteRecordRaw> = [
                   ),
               },
               {
-                path: "upload",
+                path: "upload/:customCategory",
                 name: "customer-new-order-custom-upload",
                 props: true,
+                meta: { requiresAuth: true, role: "customer" },
                 component: () =>
                   import(
                     "../views/customer/newOrder/customModel/CustomModelUploadView.vue"

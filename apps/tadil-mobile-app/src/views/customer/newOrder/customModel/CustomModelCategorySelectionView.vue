@@ -41,7 +41,6 @@ import {
 } from "lucide-vue-next";
 import { computed } from "vue";
 import { useRouter } from "vue-router";
-import { useCustomModel } from "./useCustomModel.composable";
 import { ModelCategory } from "@/integration/dtos";
 import { SecondaryHeader } from "@/components";
 import { useRequireAuth } from "@/composables";
@@ -50,9 +49,8 @@ const props = defineProps<{
   category: ModelCategory;
 }>();
 
-const { selectedCategory } = useCustomModel();
 const router = useRouter();
-const { promptAuth } = useRequireAuth();
+const { confirmLogin } = useRequireAuth();
 
 const customCategories = computed(() => [
   { value: "shirt", icon: Shirt },
@@ -64,13 +62,11 @@ const customCategories = computed(() => [
 ]);
 
 async function selectAndNext(value: string) {
-  if (!(await promptAuth())) return;
+  if (!(await confirmLogin())) return;
 
-  selectedCategory.value = value;
   router.push({
     name: "customer-new-order-custom-upload",
-    params: { category: props.category },
-    query: { customCategory: value },
+    params: { category: props.category, customCategory: value },
   });
 }
 </script>

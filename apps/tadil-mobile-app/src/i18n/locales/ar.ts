@@ -36,14 +36,8 @@ export const ar = {
     },
     inputs: {
       imageInput: {
-        placeholder: "اضغط للرفع",
-        info: "PNG, JPG حتى 10 ميجابايت",
-        sourceModal: {
-          title: "اختر المصدر",
-          camera: "الكاميرا",
-          gallery: "المعرض",
-        },
-        fileTooLarge: "يجب أن تكون الصورة 10 ميجابايت أو أقل.",
+        placeholder: "اضغط لإضافة صورة",
+        info: "الكاميرا أو معرض الصور",
       },
     },
     alerts: {
