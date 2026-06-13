@@ -3,6 +3,7 @@ name: Build iOS for BrowserStack
 on:
   push:
     branches: [ ios ] # Triggers whenever you push code to your ios branch
+  workflow_dispatch: # Allows you to manually trigger it via GitHub UI
 
 jobs:
   build-and-upload:
