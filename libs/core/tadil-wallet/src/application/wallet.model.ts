@@ -31,6 +31,17 @@ export interface PayoutRequest {
   userId: string;
 }
 
+export interface PayoutRequestUser {
+  id: string;
+  firstName: string;
+  lastName: string;
+  phone: string;
+}
+
+export interface PendingPayoutRequest extends PayoutRequest {
+  user: PayoutRequestUser;
+}
+
 export interface WalletDetails {
   balance: number;
   transactions: Transaction[];

@@ -115,8 +115,35 @@ export const en = {
       reject: "Reject",
     },
     confirmations: {
+      fulfillTitle: "Confirm payout",
       fulfill: "Have you completed the bank transfer? This will deduct the user's balance.",
+      rejectTitle: "Reject payout request",
       reject: "Are you sure you want to reject this request?",
+    },
+    wallet: {
+      title: "Wallet Details",
+      error: "Failed to load wallet details",
+      balance: "Current Balance",
+      transactions: "Transactions",
+      payouts: "Payout History",
+      noTransactions: "No transactions",
+      noPayouts: "No payout requests",
+      cols: {
+        type: "Type",
+        reference: "Reference",
+        amount: "Amount",
+        date: "Date",
+        status: "Status",
+      },
+      types: {
+        EARNING: "Earning",
+        PAYOUT: "Payout",
+      },
+      statuses: {
+        PENDING: "Pending",
+        FULFILLED: "Fulfilled",
+        REJECTED: "Rejected",
+      },
     },
   },
   common: {

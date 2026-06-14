@@ -79,8 +79,35 @@ export const hi = {
       reject: "अस्वीकार करें",
     },
     confirmations: {
+      fulfillTitle: "भुगतान की पुष्टि करें",
       fulfill: "क्या आपने बैंक ट्रांसफर पूरा कर लिया है? इससे उपयोगकर्ता का बैलेंस कम हो जाएगा।",
+      rejectTitle: "भुगतान अनुरोध अस्वीकार करें",
       reject: "क्या आप वाकई इस अनुरोध को अस्वीकार करना चाहते हैं?",
+    },
+    wallet: {
+      title: "वॉलेट विवरण",
+      error: "वॉलेट विवरण लोड करने में विफल",
+      balance: "वर्तमान शेष",
+      transactions: "लेनदेन",
+      payouts: "भुगतान इतिहास",
+      noTransactions: "कोई लेनदेन नहीं",
+      noPayouts: "कोई भुगतान अनुरोध नहीं",
+      cols: {
+        type: "प्रकार",
+        reference: "संदर्भ",
+        amount: "राशि",
+        date: "तारीख",
+        status: "स्थिति",
+      },
+      types: {
+        EARNING: "कमाई",
+        PAYOUT: "भुगतान",
+      },
+      statuses: {
+        PENDING: "लंबित",
+        FULFILLED: "पूर्ण",
+        REJECTED: "अस्वीकृत",
+      },
     },
   },
   common: {
