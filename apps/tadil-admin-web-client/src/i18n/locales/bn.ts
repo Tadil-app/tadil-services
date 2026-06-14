@@ -79,8 +79,35 @@ export const bn = {
       reject: "প্রত্যাখ্যান করুন",
     },
     confirmations: {
+      fulfillTitle: "পেআউট নিশ্চিত করুন",
       fulfill: "আপনি কি ব্যাংক ট্রান্সফার সম্পন্ন করেছেন? এটি ব্যবহারকারীর ব্যালেন্স থেকে বিয়োগ করা হবে।",
+      rejectTitle: "পেআউট অনুরোধ প্রত্যাখ্যান করুন",
       reject: "আপনি কি নিশ্চিত যে আপনি এই অনুরোধটি প্রত্যাখ্যান করতে চান?",
+    },
+    wallet: {
+      title: "ওয়ালেট বিবরণ",
+      error: "ওয়ালেট বিবরণ লোড করতে ব্যর্থ",
+      balance: "বর্তমান ব্যালেন্স",
+      transactions: "লেনদেন",
+      payouts: "পেআউট ইতিহাস",
+      noTransactions: "কোনো লেনদেন নেই",
+      noPayouts: "কোনো পেআউট অনুরোধ নেই",
+      cols: {
+        type: "ধরন",
+        reference: "রেফারেন্স",
+        amount: "পরিমাণ",
+        date: "তারিখ",
+        status: "অবস্থা",
+      },
+      types: {
+        EARNING: "আয়",
+        PAYOUT: "পেআউট",
+      },
+      statuses: {
+        PENDING: "মুলতুবি",
+        FULFILLED: "সম্পন্ন",
+        REJECTED: "প্রত্যাখ্যাত",
+      },
     },
   },
   common: {

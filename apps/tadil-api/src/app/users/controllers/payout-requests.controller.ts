@@ -22,6 +22,12 @@ export class PayoutRequestsController {
     return this._walletRepository.getPendingPayoutRequests();
   }
 
+  @Get('/wallet/:userId')
+  @ApiOperation({ summary: 'Get wallet details (balance, transactions, payouts) for a user' })
+  async getWallet(@Param('userId') userId: string) {
+    return this._walletRepository.getWalletDetails(userId);
+  }
+
   @Post('/:id/fulfill')
   @ApiOperation({ summary: 'Mark a payout request as fulfilled' })
   async fulfill(@Param('id') id: string) {

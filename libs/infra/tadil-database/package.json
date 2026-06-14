@@ -21,6 +21,8 @@
     "prisma-migrate-deploy": "npx prisma migrate deploy",
     "prisma-studio": "npx prisma studio",
     "prisma-seed": "npx prisma db seed",
+    "prisma-seed-payouts-test": "node --loader ts-node/esm prisma/seed-payouts-test.ts",
+    "prisma-clean-payouts-test": "node --loader ts-node/esm prisma/seed-payouts-test.ts --clean",
     "prisma-reset": "npx prisma migrate reset"
   },
   "prisma": {

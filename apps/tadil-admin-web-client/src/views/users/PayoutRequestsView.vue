@@ -30,38 +30,79 @@
             </tr>
             <tr v-for="req in requests" :key="req.id" class="hover:bg-muted/30 transition-colors">
               <td class="px-6 py-4 font-medium">
-                {{ req.user?.firstName }} {{ req.user?.lastName }}
+                <button
+                  type="button"
+                  class="text-left text-primary hover:underline focus-visible:outline-none focus-visible:underline"
+                  @click="openWallet(req)"
+                >
+                  {{ req.user?.firstName }} {{ req.user?.lastName }}
+                </button>
                 <span class="text-xs text-muted-foreground block">{{ req.user?.phone }}</span>
               </td>
               <td class="px-6 py-4">{{ req.amount }} {{ $t("common.currencies.ras") }}</td>
               <td class="px-6 py-4 text-xs">{{ formatDate(req.date) }}</td>
-              <td class="px-6 py-4 text-right space-x-2">
-                <Button variant="outline" size="sm" @click="handleFulfill(req.id)" :disabled="isProcessing === req.id">
-                  {{ $t("payoutRequests.buttons.fulfill") }}
-                </Button>
-                <Button variant="destructive" size="sm" @click="handleReject(req.id)" :disabled="isProcessing === req.id">
-                  {{ $t("payoutRequests.buttons.reject") }}
-                </Button>
+              <td class="px-6 py-4">
+                <div class="flex justify-end gap-2">
+                  <DestructiveActionAlert
+                    :title="$t('payoutRequests.confirmations.fulfillTitle')"
+                    :description="$t('payoutRequests.confirmations.fulfill')"
+                    :confirm-text="$t('payoutRequests.buttons.fulfill')"
+                    :on-confirm="() => handleFulfill(req.id)"
+                  >
+                    <template #trigger="{ openAlert }">
+                      <Button variant="outline" size="sm" @click="openAlert" :disabled="isProcessing === req.id">
+                        {{ $t("payoutRequests.buttons.fulfill") }}
+                      </Button>
+                    </template>
+                  </DestructiveActionAlert>
+                  <DestructiveActionAlert
+                    :title="$t('payoutRequests.confirmations.rejectTitle')"
+                    :description="$t('payoutRequests.confirmations.reject')"
+                    :confirm-text="$t('payoutRequests.buttons.reject')"
+                    :on-confirm="() => handleReject(req.id)"
+                  >
+                    <template #trigger="{ openAlert }">
+                      <Button variant="destructive" size="sm" @click="openAlert" :disabled="isProcessing === req.id">
+                        {{ $t("payoutRequests.buttons.reject") }}
+                      </Button>
+                    </template>
+                  </DestructiveActionAlert>
+                </div>
               </td>
             </tr>
           </tbody>
         </table>
       </div>
     </div>
+
+    <WalletDetailsModal
+      v-model="isWalletOpen"
+      :user-id="selectedUserId"
+      :beneficiary-name="selectedUserName"
+    />
   </div>
 </template>
 
 <script setup lang="ts">
 import { ref, onMounted } from "vue";
 import { apiClient } from "@/integration";
-import Button from "@/components/ui/Button.vue";
+import { Button, DestructiveActionAlert } from "@/components";
+import WalletDetailsModal from "./WalletDetailsModal.vue";
 import { Loader2 } from "lucide-vue-next";
-import { useI18n } from "vue-i18n";
 
-const { t } = useI18n();
 const requests = ref<any[]>([]);
 const isLoading = ref(true);
 const isProcessing = ref<string | null>(null);
+
+const isWalletOpen = ref(false);
+const selectedUserId = ref<string | null>(null);
+const selectedUserName = ref<string>("");
+
+const openWallet = (req: any) => {
+  selectedUserId.value = req.userId ?? req.user?.id ?? null;
+  selectedUserName.value = `${req.user?.firstName ?? ""} ${req.user?.lastName ?? ""}`.trim();
+  isWalletOpen.value = true;
+};
 
 const fetchRequests = async () => {
   isLoading.value = true;
@@ -76,7 +117,6 @@ const fetchRequests = async () => {
 };
 
 const handleFulfill = async (id: string) => {
-  if (!confirm(t("payoutRequests.confirmations.fulfill"))) return;
   isProcessing.value = id;
   try {
     await apiClient.payoutRequestsControllerFulfill(id);
@@ -89,7 +129,6 @@ const handleFulfill = async (id: string) => {
 };
 
 const handleReject = async (id: string) => {
-  if (!confirm(t("payoutRequests.confirmations.reject"))) return;
   isProcessing.value = id;
   try {
     await apiClient.payoutRequestsControllerReject(id);
