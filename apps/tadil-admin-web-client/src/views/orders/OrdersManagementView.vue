@@ -110,8 +110,8 @@ const availableTailors = computed(() =>
 const searchTailors = async (search: string) => {
   lookupLoading.tailor = true;
   try {
-    const res = await apiClient.tailorsControllerGetTailors({ search, take: LOOKUP_LIMIT });
-    tailors.value = res.data;
+    const res = await apiClient.tailorsControllerGetTailors({ search, pageSize: LOOKUP_LIMIT });
+    tailors.value = res.data.data;
   } catch (error) {
     console.error("Failed to search tailors", error);
   } finally {
@@ -122,8 +122,8 @@ const searchTailors = async (search: string) => {
 const searchCouriers = async (search: string) => {
   lookupLoading.courier = true;
   try {
-    const res = await apiClient.couriersControllerGetCouriers({ search, take: LOOKUP_LIMIT });
-    couriers.value = res.data;
+    const res = await apiClient.couriersControllerGetCouriers({ search, pageSize: LOOKUP_LIMIT });
+    couriers.value = res.data.data;
   } catch (error) {
     console.error("Failed to search couriers", error);
   } finally {
