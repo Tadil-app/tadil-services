@@ -46,7 +46,7 @@ export class OrdersController {
     if (dateTo) {
       const parsed = new Date(dateTo);
       if (!isNaN(parsed.getTime())) {
-        parsed.setHours(23, 59, 59, 999);
+        parsed.setUTCHours(23, 59, 59, 999);
         dateToBound = parsed;
       }
     }

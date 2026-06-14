@@ -6,7 +6,7 @@ export const ar = {
     extras: "إضافات",
     models: "النماذج",
     tailors: "الخياطين",
-    couriers: "المناديب",
+    couriers: "السائقين",
     customers: "العملاء",
     loginRequests: "طلبات الدخول",
     payoutRequests: "طلبات السحب",
@@ -19,13 +19,13 @@ export const ar = {
     filters: {
       status: "الحالة",
       tailor: "الخياط",
-      courier: "المندوب",
+      courier: "السائق",
       customer: "العميل",
       dateFrom: "من تاريخ",
       dateTo: "إلى تاريخ",
       allStatuses: "جميع الحالات",
       allTailors: "جميع الخياطين",
-      allCouriers: "جميع المناديب",
+      allCouriers: "جميع السائقين",
       allCustomers: "جميع العملاء",
     },
     table: {
@@ -33,7 +33,7 @@ export const ar = {
       date: "التاريخ",
       customer: "العميل",
       tailor: "الخياط",
-      courier: "المندوب",
+      courier: "السائق",
       status: "الحالة",
       total: "المجموع",
       actions: "الإجراءات",
@@ -57,7 +57,7 @@ export const ar = {
       participants: "المشاركون",
       customer: "العميل",
       assignedTailor: "الخياط المعين",
-      assignedCourier: "المندوب المعين",
+      assignedCourier: "السائق المعين",
       statusHistory: "سجل الحالات",
       orderItems: "عناصر الطلب",
       customRequest: "طلب مخصص",
@@ -75,8 +75,8 @@ export const ar = {
     all: "الكل",
     pending: "قيد الانتظار",
     waitingForTailorAssignement: "في انتظار تعيين الخياط",
-    waitingForCourierAssignement: "في انتظار تعيين المندوب",
-    waitingForReturnCourierAssignement: "في انتظار مندوب الإرجاع",
+    waitingForCourierAssignement: "في انتظار تعيين السائق",
+    waitingForReturnCourierAssignement: "في انتظار سائق الإرجاع",
     waitingForPickupFromCustomer: "في انتظار الاستلام (العميل)",
     waitingForDropoffToTailor: "في انتظار التوصيل (الخياط)",
     waitingForPickupFromTailor: "في انتظار الاستلام (الخياط)",
@@ -87,7 +87,7 @@ export const ar = {
   },
   loginRequests: {
     title: "طلبات تسجيل الدخول",
-    subtitle: "إدارة طلبات الموافقة على تسجيل الدخول للخياطين والمندوبين",
+    subtitle: "إدارة طلبات الموافقة على تسجيل الدخول للخياطين والسائقين",
     table: {
       name: "الاسم",
       phone: "الهاتف",
@@ -102,7 +102,7 @@ export const ar = {
   },
   payoutRequests: {
     title: "طلبات السحب",
-    subtitle: "إدارة طلبات سحب الرصيد من الخياطين والمندوبين",
+    subtitle: "إدارة طلبات سحب الرصيد من الخياطين والسائقين",
     table: {
       user: "المستخدم",
       amount: "المبلغ",
@@ -475,7 +475,7 @@ export const ar = {
     roles: {
       tailor: "مصمم",
       customer: "عميل",
-      courier: "موزع",
+      courier: "سائق",
     },
     tableHeaders: {
       firstName: "الاسم الاول",
