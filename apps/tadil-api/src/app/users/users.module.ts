@@ -3,6 +3,7 @@ import { CommonModule } from '../common/common.module';
 import {
   TailorsController,
   CouriersController,
+  CustomersController,
   LoginRequestsController,
   PayoutRequestsController,
 } from './controllers';
@@ -24,6 +25,7 @@ import {
   controllers: [
     TailorsController,
     CouriersController,
+    CustomersController,
     LoginRequestsController,
     PayoutRequestsController,
   ],

@@ -7,6 +7,7 @@ export const ar = {
     models: "النماذج",
     tailors: "الخياطين",
     couriers: "المناديب",
+    customers: "العملاء",
     loginRequests: "طلبات الدخول",
     payoutRequests: "طلبات السحب",
     orders: "الطلبات",
@@ -19,9 +20,13 @@ export const ar = {
       status: "الحالة",
       tailor: "الخياط",
       courier: "المندوب",
+      customer: "العميل",
+      dateFrom: "من تاريخ",
+      dateTo: "إلى تاريخ",
       allStatuses: "جميع الحالات",
       allTailors: "جميع الخياطين",
       allCouriers: "جميع المناديب",
+      allCustomers: "جميع العملاء",
     },
     table: {
       reference: "المرجع",
@@ -116,6 +121,10 @@ export const ar = {
   },
   common: {
     loading: "جاري التحميل...",
+    pagination: {
+      showing: "عرض {from}–{to} من {total}",
+      pageOf: "صفحة {page} من {pages}",
+    },
     currencies: {
       ras: "ر.س",
       usd: "$",
@@ -135,6 +144,12 @@ export const ar = {
     inputs: {
       autoTranslate: {
         label: "الترجمة التلقائية",
+      },
+      searchableSelect: {
+        placeholder: "اختر خياراً",
+        searchPlaceholder: "بحث…",
+        empty: "لا توجد نتائج",
+        all: "الكل",
       },
       selectMenu: {
         placeholder: "اختر خياراً",
@@ -455,6 +470,18 @@ export const ar = {
       confirmMessage: "هل انت متاكد من حذف هذا المستخدم؟",
       success: "تم حذف المستخدم بنجاح",
       error: "حدث خطاء في حذف المستخدم",
+    },
+  },
+  customers: {
+    searchPlaceholder: "ابحث بالاسم أو رقم الهاتف",
+    tableHeaders: {
+      city: "المدينة",
+    },
+    table: {
+      empty: "لا يوجد عملاء",
+    },
+    buttons: {
+      viewOrders: "عرض الطلبات",
     },
   },
   toast: {

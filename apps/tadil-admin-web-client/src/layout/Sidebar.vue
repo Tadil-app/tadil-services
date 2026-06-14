@@ -45,6 +45,7 @@ import {
   Spool,
   Truck,
   Scissors,
+  Users,
   LogOut
 } from "lucide-vue-next";
 import { computed } from "vue";
@@ -59,6 +60,7 @@ const navItems = computed(() => [
   { path: "/models", label: t("nav.models"), icon: ScissorsLineDashed },
   { path: "/tailors", label: t("nav.tailors"), icon: Scissors },
   { path: "/couriers", label: t("nav.couriers"), icon: Truck },
+  { path: "/customers", label: t("nav.customers"), icon: Users },
   { path: "/login-requests", label: t("nav.loginRequests"), icon: KeyRound },
   { path: "/payout-requests", label: t("nav.payoutRequests"), icon: HandCoins },
   { path: "/orders", label: t("nav.orders"), icon: ClipboardList },

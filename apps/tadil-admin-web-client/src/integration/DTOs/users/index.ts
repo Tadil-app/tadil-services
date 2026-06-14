@@ -1,6 +1,7 @@
 export * from "./displayUser.dto";
 export * from "./createUser.dto";
 export * from "./updateUser.dto";
+export * from "./paginatedUsers.dto";
 
 export const ROLE = {
   TAILOR: "tailor",
