@@ -6,6 +6,7 @@ export const hi = {
     extras: "अतिरिक्त",
     models: "प्रारूप",
     users: "उपयोगकर्ता",
+    customers: "ग्राहक",
     loginRequests: "लॉगइन अनुरोध",
     payoutRequests: "भुगतान अनुरोध",
     orders: "ऑर्डर",
@@ -17,6 +18,13 @@ export const hi = {
       status: "स्थिति",
       tailor: "दर्जी",
       courier: "कूरियर",
+      customer: "ग्राहक",
+      dateFrom: "से तारीख",
+      dateTo: "तक तारीख",
+      allStatuses: "सभी स्थितियाँ",
+      allTailors: "सभी दर्जी",
+      allCouriers: "सभी कूरियर",
+      allCustomers: "सभी ग्राहक",
     },
     table: {
       reference: "संदर्भ",
@@ -77,6 +85,10 @@ export const hi = {
   },
   common: {
     loading: "लोड हो रहा है...",
+    pagination: {
+      showing: "{total} में से {from}–{to} दिखा रहे हैं",
+      pageOf: "पृष्ठ {page} / {pages}",
+    },
     currencies: {
       ras: "RAS",
       usd: "$",
@@ -94,6 +106,12 @@ export const hi = {
       actions: "कार्यवाई",
     },
     inputs: {
+      searchableSelect: {
+        placeholder: "एक विकल्प चुनें",
+        searchPlaceholder: "खोजें…",
+        empty: "कोई परिणाम नहीं मिला",
+        all: "सभी",
+      },
       selectMenu: {
         placeholder: "एक विकल्प चुनें",
       },
@@ -398,6 +416,18 @@ export const hi = {
       confirmMessage: "क्या आप वाकई इस उपयोगकर्ता को हटाना चाहते हैं?",
       success: "उपयोगकर्ता सफलतापूर्वक हटा दिया गया",
       error: "उपयोगकर्ता हटाते समय त्रुटि हुई",
+    },
+  },
+  customers: {
+    searchPlaceholder: "नाम या फ़ोन से खोजें",
+    tableHeaders: {
+      city: "शहर",
+    },
+    table: {
+      empty: "कोई ग्राहक नहीं मिला",
+    },
+    buttons: {
+      viewOrders: "ऑर्डर देखें",
     },
   },
   toast: {

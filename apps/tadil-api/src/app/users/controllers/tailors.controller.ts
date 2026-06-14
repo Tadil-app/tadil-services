@@ -6,8 +6,9 @@ import {
   Param,
   Post,
   Put,
+  Query,
 } from '@nestjs/common';
-import { ApiOkResponse, ApiTags } from '@nestjs/swagger';
+import { ApiOkResponse, ApiQuery, ApiTags } from '@nestjs/swagger';
 import { DataReader } from '@tadil-database';
 import { CreateUserDTO, DisplayUserDTO, UpdateUserDTO } from '../dtos';
 import {
@@ -29,10 +30,30 @@ export class TailorsController {
 
   @Get('/')
   @ApiOkResponse({ type: DisplayUserDTO, isArray: true })
-  async getTailors(): Promise<DisplayUserDTO[]> {
+  @ApiQuery({ name: 'search', required: false, description: 'Matches first name, last name or phone' })
+  @ApiQuery({ name: 'take', required: false, description: 'Max results to return' })
+  async getTailors(
+    @Query('search') search?: string,
+    @Query('take') take?: string
+  ): Promise<DisplayUserDTO[]> {
+    const term = search?.trim();
+    const limit = take ? Math.min(100, Math.max(1, parseInt(take, 10) || 20)) : undefined;
     const users = await this._dataReader.queries.user.findMany({
-      where: { role: ROLE.TAILOR },
+      where: {
+        role: ROLE.TAILOR,
+        ...(term
+          ? {
+              OR: [
+                { firstName: { contains: term, mode: 'insensitive' as const } },
+                { lastName: { contains: term, mode: 'insensitive' as const } },
+                { phone: { contains: term, mode: 'insensitive' as const } },
+              ],
+            }
+          : {}),
+      },
       include: { addresses: true },
+      orderBy: { firstName: 'asc' },
+      ...(limit ? { take: limit } : {}),
     });
 
     return users.map((user) => ({

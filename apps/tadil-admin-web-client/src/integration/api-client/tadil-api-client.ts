@@ -32,8 +32,9 @@ import type {
   DisplayDistrictDTO,
   DisplayBoundaryDTO,
   UpdateSectionDTO,
-  DisplayOrderDTO,
   DisplayOrderDetailsDto,
+  PaginatedOrdersDto,
+  PaginatedUsersDTO,
 } from "../DTOs";
 
 import type {
@@ -759,10 +760,17 @@ export class Api<
      * @name TailorsControllerGetTailors
      * @request GET:/api/tailors
      */
-    tailorsControllerGetTailors: (params: RequestParams = {}) =>
+    tailorsControllerGetTailors: (
+      query?: {
+        search?: string;
+        take?: number;
+      },
+      params: RequestParams = {},
+    ) =>
       this.request<DisplayUserDTO[], any>({
         path: `/api/tailors`,
         method: "GET",
+        query: query,
         format: "json",
         ...params,
       }),
@@ -860,10 +868,17 @@ export class Api<
      * @name CouriersControllerGetCouriers
      * @request GET:/api/couriers
      */
-    couriersControllerGetCouriers: (params: RequestParams = {}) =>
+    couriersControllerGetCouriers: (
+      query?: {
+        search?: string;
+        take?: number;
+      },
+      params: RequestParams = {},
+    ) =>
       this.request<DisplayUserDTO[], any>({
         path: `/api/couriers`,
         method: "GET",
+        query: query,
         format: "json",
         ...params,
       }),
@@ -960,6 +975,47 @@ export class Api<
     /**
      * No description
      *
+     * @tags Customers
+     * @name CustomersControllerGetCustomers
+     * @request GET:/api/customers
+     */
+    customersControllerGetCustomers: (
+      query?: {
+        search?: string;
+        page?: number;
+        pageSize?: number;
+      },
+      params: RequestParams = {},
+    ) =>
+      this.request<PaginatedUsersDTO, any>({
+        path: `/api/customers`,
+        method: "GET",
+        query: query,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Customers
+     * @name CustomersControllerGetCustomerById
+     * @request GET:/api/customers/{id}
+     */
+    customersControllerGetCustomerById: (
+      id: string,
+      params: RequestParams = {},
+    ) =>
+      this.request<DisplayUserDTO, any>({
+        path: `/api/customers/${id}`,
+        method: "GET",
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
      * @tags Orders
      * @name OrdersControllerGetOrders
      * @request GET:/api/orders
@@ -969,10 +1025,15 @@ export class Api<
         status?: string;
         tailorId?: string;
         courierId?: string;
+        customerId?: string;
+        dateFrom?: string;
+        dateTo?: string;
+        page?: number;
+        pageSize?: number;
       },
       params: RequestParams = {},
     ) =>
-      this.request<DisplayOrderDTO[], any>({
+      this.request<PaginatedOrdersDto, any>({
         path: `/api/orders`,
         method: "GET",
         query: query,

@@ -1,62 +1,53 @@
-import {
-  Body,
-  Controller,
-  Delete,
-  Get,
-  Param,
-  Post,
-  Put,
-  Query,
-} from '@nestjs/common';
+import { Controller, Get, Param, Query } from '@nestjs/common';
 import { ApiOkResponse, ApiQuery, ApiTags } from '@nestjs/swagger';
 import { DataReader } from '@tadil-database';
-import { CreateUserDTO, DisplayUserDTO, UpdateUserDTO } from '../dtos';
-import {
-  ROLE,
-  CreateUserUseCase,
-  UpdateUserUseCase,
-  DeleteUserUseCase,
-} from '@tadil-users';
+import { DisplayUserDTO, PaginatedUsersDTO } from '../dtos';
+import { ROLE } from '@tadil-users';
 
-@Controller('couriers')
-@ApiTags('Couriers')
-export class CouriersController {
-  constructor(
-    private readonly _dataReader: DataReader,
-    private readonly _createUserUseCase: CreateUserUseCase,
-    private readonly _updateUserUseCase: UpdateUserUseCase,
-    private readonly _deleteUserUseCase: DeleteUserUseCase
-  ) {}
+@Controller('customers')
+@ApiTags('Customers')
+export class CustomersController {
+  constructor(private readonly _dataReader: DataReader) {}
 
   @Get('/')
-  @ApiOkResponse({ type: DisplayUserDTO, isArray: true })
+  @ApiOkResponse({ type: PaginatedUsersDTO })
   @ApiQuery({ name: 'search', required: false, description: 'Matches first name, last name or phone' })
-  @ApiQuery({ name: 'take', required: false, description: 'Max results to return' })
-  async getCouriers(
+  @ApiQuery({ name: 'page', required: false, description: '1-based page number' })
+  @ApiQuery({ name: 'pageSize', required: false })
+  async getCustomers(
     @Query('search') search?: string,
-    @Query('take') take?: string
-  ): Promise<DisplayUserDTO[]> {
-    const term = search?.trim();
-    const limit = take ? Math.min(100, Math.max(1, parseInt(take, 10) || 20)) : undefined;
-    const users = await this._dataReader.queries.user.findMany({
-      where: {
-        role: ROLE.COURIER,
-        ...(term
-          ? {
-              OR: [
-                { firstName: { contains: term, mode: 'insensitive' as const } },
-                { lastName: { contains: term, mode: 'insensitive' as const } },
-                { phone: { contains: term, mode: 'insensitive' as const } },
-              ],
-            }
-          : {}),
-      },
-      include: { addresses: true },
-      orderBy: { firstName: 'asc' },
-      ...(limit ? { take: limit } : {}),
-    });
+    @Query('page') page?: string,
+    @Query('pageSize') pageSize?: string
+  ): Promise<PaginatedUsersDTO> {
+    const pageNumber = Math.max(1, parseInt(page ?? '1', 10) || 1);
+    const size = Math.min(100, Math.max(1, parseInt(pageSize ?? '20', 10) || 20));
 
-    return users.map((user) => ({
+    const term = search?.trim();
+    const where = {
+      role: ROLE.CUSTOMER,
+      ...(term
+        ? {
+            OR: [
+              { firstName: { contains: term, mode: 'insensitive' as const } },
+              { lastName: { contains: term, mode: 'insensitive' as const } },
+              { phone: { contains: term, mode: 'insensitive' as const } },
+            ],
+          }
+        : {}),
+    };
+
+    const [total, users] = await Promise.all([
+      this._dataReader.queries.user.count({ where }),
+      this._dataReader.queries.user.findMany({
+        where,
+        include: { addresses: true },
+        orderBy: { firstName: 'asc' },
+        skip: (pageNumber - 1) * size,
+        take: size,
+      }),
+    ]);
+
+    const data = users.map((user) => ({
       ...user,
       email: user.email ?? undefined,
       cityNameAr: user.addresses.length > 0 ? user.addresses[0].cityNameAr : undefined,
@@ -80,37 +71,13 @@ export class CouriersController {
       latitude: user.addresses.length > 0 ? user.addresses[0].latitude ?? undefined : undefined,
       longitude: user.addresses.length > 0 ? user.addresses[0].longitude ?? undefined : undefined,
     }));
-  }
 
-
-  @Get('/phone/:phone')
-  @ApiOkResponse({ type: DisplayUserDTO })
-  async getCourierByPhone(
-    @Param('phone') phone: string
-  ): Promise<DisplayUserDTO | undefined> {
-    const user = await this._dataReader.queries.user.findUnique({
-      where: { phone },
-    });
-
-    if (!user) return undefined;
-    return {
-      ...user,
-      email: user.email ?? undefined,
-    };
-  }
-
-  @Post('/create')
-  async createCourier(@Body() courier: CreateUserDTO): Promise<void> {
-    console.log(courier);
-    await this._createUserUseCase.execute({
-      ...courier,
-      role: ROLE.COURIER,
-    });
+    return { data, total, page: pageNumber, pageSize: size };
   }
 
   @Get('/:id')
   @ApiOkResponse({ type: DisplayUserDTO })
-  async getCourierById(
+  async getCustomerById(
     @Param('id') id: string
   ): Promise<DisplayUserDTO | undefined> {
     const user = await this._dataReader.queries.user.findUnique({
@@ -122,21 +89,5 @@ export class CouriersController {
       ...user,
       email: user.email ?? undefined,
     };
-  }
-
-  @Put('/:id/update')
-  async updateCourier(
-    @Param('id') id: string,
-    @Body() courier: UpdateUserDTO
-  ): Promise<void> {
-    await this._updateUserUseCase.execute({
-      ...courier,
-      id: id,
-    });
-  }
-
-  @Delete('/:id/delete')
-  async deleteCourier(@Param('id') id: string): Promise<void> {
-    await this._deleteUserUseCase.execute({ id });
   }
 }
