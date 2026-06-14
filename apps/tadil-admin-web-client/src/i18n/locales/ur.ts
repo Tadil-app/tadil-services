@@ -1,5 +1,6 @@
 export const ur = {
   nav: {
+    menu: "مینو",
     informations: "مطلوبہ معلومات",
     alterations: "تبدیلیاں",
     extras: "اضافہ",
@@ -139,6 +140,7 @@ export const ur = {
       },
       infoType: {
         label: "قسم",
+        requirement: "ضرورت",
         placeholder: "قسم منتخب کریں",
         errorMessage: "قسم درکار ہے",
         options: {
@@ -227,6 +229,11 @@ export const ur = {
       save: "محفوظ کریں",
       delete: "حذف کریں",
       confirm: "تصدیق کریں",
+      close: "بند کریں",
+    },
+    theme: {
+      light: "لائٹ موڈ",
+      dark: "ڈارک موڈ",
     },
   },
   informations: {

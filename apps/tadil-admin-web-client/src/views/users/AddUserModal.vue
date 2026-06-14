@@ -2,12 +2,28 @@
   <Button @click="isOpen = true">
     {{ $t(`users.addNewUserModal.title`) }}
   </Button>
-  <Modal v-model="isOpen" @close-modal="closeModal">
-    <div class="space-y-4">
-      <h1 class="text-xl font-bold">
-        {{ $t(`users.addNewUserModal.title`) }}
-      </h1>
-      <div class="space-y-2">
+  <Modal
+    v-model="isOpen"
+    @close-modal="closeModal"
+    class="w-[480px] max-w-[95vw]"
+  >
+    <div class="space-y-5">
+      <div class="flex items-center gap-3 border-b border-border pb-4 pe-8">
+        <div
+          class="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary"
+        >
+          <component :is="headerIcon" class="h-5 w-5" />
+        </div>
+        <div class="min-w-0">
+          <h1 class="text-lg font-bold leading-tight">
+            {{ $t(`users.addNewUserModal.title`) }}
+          </h1>
+          <p class="truncate text-sm text-muted-foreground">
+            {{ $t("users.address.requiredHint") }}
+          </p>
+        </div>
+      </div>
+      <div class="space-y-4">
         <div class="space-y-1.5">
           <InputLabel for="phone">
             {{ $t("common.inputs.phone.label") }}
@@ -77,7 +93,7 @@
           />
         </div>
       </div>
-      <div class="flex justify-evenly">
+      <div class="mt-2 flex justify-end gap-3 border-t border-border pt-4">
         <Button variant="outline" @click="closeModal">
           {{ $t("common.buttons.cancel") }}
         </Button>
@@ -103,8 +119,9 @@ import {
   type CreateUserDTO,
   type RoleType,
 } from "@/integration";
-import { ref } from "vue";
+import { computed, ref } from "vue";
 import { useI18n } from "vue-i18n";
+import { Scissors, Truck, UserPlus } from "lucide-vue-next";
 import AddressFields from "./components/AddressFields.vue";
 import type { AddressFormValue } from "./components/address.types";
 
@@ -114,6 +131,17 @@ const { openToast } = useToast();
 const props = defineProps<{
   selectedUserType: RoleType;
 }>();
+
+const headerIcon = computed(() => {
+  switch (props.selectedUserType) {
+    case ROLE.TAILOR:
+      return Scissors;
+    case ROLE.COURIER:
+      return Truck;
+    default:
+      return UserPlus;
+  }
+});
 
 const emit = defineEmits<{
   (e: "created:user"): void;

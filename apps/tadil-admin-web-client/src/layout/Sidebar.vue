@@ -1,30 +1,38 @@
 <template>
-  <div
-    class="w-60 bg-sidebar border-r border-sidebar-border transition-[width] ease-linear duration-200 flex flex-col justify-between"
+  <nav
+    class="w-60 bg-sidebar text-sidebar-foreground border-e border-sidebar-border flex flex-col justify-between overflow-y-auto"
   >
-    <div class="space-y-2 p-2">
+    <div class="space-y-1 p-3">
+      <p
+        class="px-2 pb-1 pt-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground"
+      >
+        {{ t("nav.menu") }}
+      </p>
       <RouterLink
         v-for="navItem in navItems"
         :key="navItem.path"
         :to="navItem.path"
-        class="flex items-center gap-2 rounded-md p-2 text-left text-sm cursor-pointer overflow-hidden whitespace-nowrap hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
-        exact-active-class="bg-sidebar-accent text-sidebar-accent-foreground"
+        class="group relative flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium cursor-pointer overflow-hidden whitespace-nowrap text-sidebar-foreground/80 transition-colors hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
+        active-class="is-active bg-sidebar-accent text-sidebar-accent-foreground font-semibold"
       >
-        <component :is="navItem.icon" class="h-5 w-5" />
-        <p>{{ navItem.label }}</p>
+        <span
+          class="absolute inset-y-1.5 start-0 w-1 rounded-full bg-sidebar-primary opacity-0 transition-opacity group-[.is-active]:opacity-100"
+        />
+        <component :is="navItem.icon" class="h-5 w-5 shrink-0" />
+        <span class="truncate">{{ navItem.label }}</span>
       </RouterLink>
     </div>
 
-    <div class="p-2 border-t border-sidebar-border">
+    <div class="p-3 border-t border-sidebar-border">
       <button
         @click="handleLogout"
-        class="flex w-full items-center gap-2 rounded-md p-2 text-left text-sm cursor-pointer overflow-hidden whitespace-nowrap hover:bg-red-100 hover:text-red-600 text-sidebar-foreground transition-colors"
+        class="flex w-full items-center gap-3 rounded-lg px-3 py-2 text-left text-sm font-medium cursor-pointer overflow-hidden whitespace-nowrap text-sidebar-foreground/80 transition-colors hover:bg-destructive/10 hover:text-destructive"
       >
-        <LogOut class="h-5 w-5" />
-        <p>{{ t('nav.logout') }}</p>
+        <LogOut class="h-5 w-5 shrink-0" />
+        <span class="truncate">{{ t('nav.logout') }}</span>
       </button>
     </div>
-  </div>
+  </nav>
 </template>
 
 <script setup lang="ts">

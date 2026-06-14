@@ -3,13 +3,13 @@
     <Edit />
   </Button>
   <Modal v-model="isOpen" @close-modal="closeModal">
-    <div class="space-y-4">
+    <div class="w-[560px] max-w-full space-y-5">
       <h1 class="text-xl font-bold">
         {{ $t("extras.editExtraModal.title") }}
       </h1>
-      <div class="flex gap-4">
-        <MultiLanguageNameForm ref="namesForm" v-model="localExtra" />
-        <div class="space-y-2">
+      <MultiLanguageNameForm ref="namesForm" v-model="localExtra" is-inline />
+      <div class="border-t border-border pt-4">
+        <div class="space-y-1.5 sm:w-1/2">
           <InputLabel for="price">
             {{ $t("common.inputs.price.label") }}
           </InputLabel>
@@ -21,11 +21,13 @@
               :validation-error-message="$t(priceValidationError)"
               @update:model-value="validatePrice"
             />
-            <p>{{ $t("common.currencies.ras") }}</p>
+            <p class="text-sm text-muted-foreground">
+              {{ $t("common.currencies.ras") }}
+            </p>
           </div>
         </div>
       </div>
-      <div class="flex justify-evenly">
+      <div class="flex justify-end gap-3 border-t border-border pt-4">
         <Button variant="outline" @click="closeModal">
           {{ $t("common.buttons.cancel") }}
         </Button>

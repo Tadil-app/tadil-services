@@ -1,5 +1,6 @@
 export const hi = {
   nav: {
+    menu: "मेनू",
     informations: "आवश्यक जानकारी",
     alterations: "बदलाव",
     extras: "अतिरिक्त",
@@ -139,6 +140,7 @@ export const hi = {
       },
       infoType: {
         label: "प्रकार",
+        requirement: "आवश्यकता",
         placeholder: "प्रकार चुनें",
         errorMessage: "प्रकार आवश्यक है",
         options: {
@@ -227,6 +229,11 @@ export const hi = {
       save: "सहेजें",
       delete: "मिटाएँ",
       confirm: "पुष्टि करें",
+      close: "बंद करें",
+    },
+    theme: {
+      light: "लाइट मोड",
+      dark: "डार्क मोड",
     },
   },
   informations: {

@@ -1,12 +1,16 @@
 <template>
-  <div class="space-y-2">
-    <div class="flex items-center gap-2">
-      <ToggleInput v-model="autoTranslateEnabled" />
-      <p class="text-sm">
+  <div class="space-y-3">
+    <div class="flex items-center justify-end gap-2">
+      <Languages class="h-3.5 w-3.5 text-muted-foreground" />
+      <span class="text-xs font-medium text-muted-foreground">
         {{ $t("common.inputs.autoTranslate.label") }}
-      </p>
+      </span>
+      <ToggleInput v-model="autoTranslateEnabled" />
     </div>
-    <div class="space-y-2" :class="{ 'flex flex-wrap gap-2': isInline }">
+    <div
+      class="grid gap-x-4 gap-y-3"
+      :class="isInline ? 'grid-cols-1 sm:grid-cols-2' : 'grid-cols-1'"
+    >
       <div class="space-y-1.5">
         <InputLabel for="englishName">
           {{ $t("common.inputs.englishName.label") }}
@@ -77,6 +81,7 @@
 </template>
 <script setup lang="ts">
 import { InputLabel, TextInput, ToggleInput } from ".";
+import { Languages } from "lucide-vue-next";
 import { ref } from "vue";
 import {
   useTranslateNameComposable,

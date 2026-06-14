@@ -1,5 +1,6 @@
 export const bn = {
   nav: {
+    menu: "মেনু",
     informations: "প্রয়োজনীয় তথ্য",
     alterations: "পরিবর্তনসমূহ",
     extras: "অতিরিক্ত",
@@ -139,6 +140,7 @@ export const bn = {
       },
       infoType: {
         label: "ধরন",
+        requirement: "আবশ্যকতা",
         placeholder: "ধরন নির্বাচন করুন",
         errorMessage: "ধরন আবশ্যক",
         options: {
@@ -227,6 +229,11 @@ export const bn = {
       save: "সংরক্ষণ করুন",
       delete: "মুছে ফেলুন",
       confirm: "নিশ্চিত করুন",
+      close: "বন্ধ করুন",
+    },
+    theme: {
+      light: "লাইট মোড",
+      dark: "ডার্ক মোড",
     },
   },
   informations: {

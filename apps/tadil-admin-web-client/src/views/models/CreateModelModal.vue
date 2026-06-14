@@ -34,7 +34,7 @@
           />
         </div>
       </div>
-      <div class="flex justify-evenly">
+      <div class="mt-2 flex justify-end gap-3 border-t border-border pt-4">
         <Button variant="outline" @click="closeModal">
           {{ $t("common.buttons.cancel") }}
         </Button>

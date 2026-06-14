@@ -1,5 +1,6 @@
 export const en = {
   nav: {
+    menu: "Menu",
     informations: "Required informations",
     alterations: "Alterations",
     extras: "Extras",
@@ -187,6 +188,7 @@ export const en = {
       },
       infoType: {
         label: "Type",
+        requirement: "Requirement",
         placeholder: "Select Type",
         errorMessage: "Type is required",
         options: {
@@ -275,6 +277,11 @@ export const en = {
       save: "Save",
       delete: "Delete",
       confirm: "Confirm",
+      close: "Close",
+    },
+    theme: {
+      light: "Light mode",
+      dark: "Dark mode",
     },
   },
   informations: {

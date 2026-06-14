@@ -1,5 +1,6 @@
 export const ar = {
   nav: {
+    menu: "القائمة",
     informations: "البيانات المطلوبة",
     alterations: "التعديلات",
     extras: "إضافات",
@@ -188,6 +189,7 @@ export const ar = {
       },
       infoType: {
         label: "نوع البيانات",
+        requirement: "الإلزامية",
         placeholder: "اختر نوع البيانات",
         errorMessage: "نوع البيانات مطلوب",
         options: {
@@ -276,6 +278,11 @@ export const ar = {
       save: "حفظ",
       delete: "حذف",
       confirm: "تاكيد",
+      close: "إغلاق",
+    },
+    theme: {
+      light: "الوضع الفاتح",
+      dark: "الوضع الداكن",
     },
   },
   informations: {

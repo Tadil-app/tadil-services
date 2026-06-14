@@ -3,13 +3,13 @@
     <Edit />
   </Button>
   <Modal v-model="isOpen" @close-modal="closeModal">
-    <div class="space-y-4">
+    <div class="w-[620px] max-w-full space-y-5">
       <h1 class="text-xl font-bold">
         {{ $t("alterations.editAlterationModal.title") }}
       </h1>
-      <div class="flex gap-4">
-        <MultiLanguageNameForm ref="namesForm" v-model="localAlteration" />
-        <div class="space-y-2">
+      <MultiLanguageNameForm ref="namesForm" v-model="localAlteration" is-inline />
+      <div class="grid grid-cols-2 gap-4 border-t border-border pt-4">
+        <div class="space-y-1.5">
           <InputLabel for="price">
             {{ $t("common.inputs.price.label") }}
           </InputLabel>
@@ -21,8 +21,12 @@
               :validation-error-message="$t(priceValidationError)"
               @update:model-value="validatePrice"
             />
-            <p>{{ $t("common.currencies.ras") }}</p>
+            <p class="text-sm text-muted-foreground">
+              {{ $t("common.currencies.ras") }}
+            </p>
           </div>
+        </div>
+        <div class="space-y-1.5">
           <InputLabel for="sections">
             {{ $t("common.inputs.sections.label") }}
           </InputLabel>
@@ -32,6 +36,8 @@
             :placeholder="$t('common.inputs.sections.placeholder')"
             multiple
           />
+        </div>
+        <div class="col-span-2 space-y-1.5">
           <InputLabel for="informations">
             {{ $t("common.inputs.informations.label") }}
           </InputLabel>
@@ -43,7 +49,7 @@
           />
         </div>
       </div>
-      <div class="flex justify-evenly">
+      <div class="flex justify-end gap-3 border-t border-border pt-4">
         <Button variant="outline" @click="closeModal">
           {{ $t("common.buttons.cancel") }}
         </Button>
