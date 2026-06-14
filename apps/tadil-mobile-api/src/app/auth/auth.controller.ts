@@ -6,6 +6,7 @@ import {
   Post,
   Put,
   Get,
+  Delete,
   Inject,
   Req,
   UseGuards,
@@ -27,6 +28,7 @@ import { AuthGuard } from './auth.guard';
 import {
   AddAddressUseCase,
   UpdateAddressUseCase,
+  DeleteAddressUseCase,
   GetMyAddressesUseCase,
   type UsersRepository,
 } from '@tadil-users';
@@ -41,6 +43,7 @@ export class AuthController {
     private readonly _usersRepository: UsersRepository,
     private readonly _addAddressUseCase: AddAddressUseCase,
     private readonly _updateAddressUseCase: UpdateAddressUseCase,
+    private readonly _deleteAddressUseCase: DeleteAddressUseCase,
     private readonly _getMyAddressesUseCase: GetMyAddressesUseCase
   ) {}
 
@@ -101,9 +104,28 @@ export class AuthController {
   async getAddresses(@Req() req: any): Promise<DisplayAddressDto[]> {
     const addresses = await this._getMyAddressesUseCase.execute(req.user.sub);
     return addresses.map((a) => ({
-      ...a,
+      id: a.id,
+      cityId: a.cityId ?? undefined,
+      cityNameAr: a.cityNameAr,
+      cityNameEn: a.cityNameEn,
+      cityNameBn: a.cityNameBn,
+      cityNameHi: a.cityNameHi,
+      cityNameUr: a.cityNameUr,
+      districtId: a.districtId ?? undefined,
+      districtNameAr: a.districtNameAr,
+      districtNameEn: a.districtNameEn,
+      districtNameBn: a.districtNameBn,
+      districtNameHi: a.districtNameHi,
+      districtNameUr: a.districtNameUr,
       street: a.street ?? undefined,
-      district: a.district ?? undefined,
+      streetAr: a.streetAr ?? undefined,
+      streetEn: a.streetEn ?? undefined,
+      streetBn: a.streetBn ?? undefined,
+      streetHi: a.streetHi ?? undefined,
+      streetUr: a.streetUr ?? undefined,
+      latitude: a.latitude ?? undefined,
+      longitude: a.longitude ?? undefined,
+      userId: a.userId,
     }));
   }
 
@@ -127,11 +149,22 @@ export class AuthController {
     @Param('id') id: string,
     @Body() dto: UpdateAddressDto
   ) {
-    // We should probably check if the address belongs to the user, but for now
-    // the UpdateAddressUseCase only takes the ID.
     await this._updateAddressUseCase.execute({
       id,
+      role: req.user.role,
       ...dto,
+    });
+  }
+
+  @Delete('/me/addresses/:id')
+  @UseGuards(AuthGuard)
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Delete an address' })
+  async deleteAddress(@Req() req: any, @Param('id') id: string) {
+    await this._deleteAddressUseCase.execute({
+      id,
+      userId: req.user.sub,
+      role: req.user.role,
     });
   }
 

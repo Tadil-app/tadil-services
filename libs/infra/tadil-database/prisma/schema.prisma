@@ -296,13 +296,73 @@ model OrderStatusHistory {
     @@map("order-status-histories")
 }
 
+model City {
+    id       Int        @id
+    regionId Int
+    nameAr   String
+    nameEn   String
+    nameBn   String
+    nameHi   String
+    nameUr   String
+    lat      Float?
+    lng      Float?
+
+    districts District[]
+
+    @@index([regionId])
+    @@map("cities")
+}
+
+model District {
+    id       String @id
+    cityId   Int
+    regionId Int
+    nameAr   String
+    nameEn   String
+    nameBn   String
+    nameHi   String
+    nameUr   String
+
+    // GeoJSON Polygon geometry ({ type, coordinates }) of the district's area,
+    // used to constrain a picked map point to within the district/city.
+    boundaries Json?
+
+    city City @relation(fields: [cityId], references: [id], onDelete: Cascade)
+
+    @@index([cityId])
+    @@map("districts")
+}
+
 model Address {
-    id       String  @id @default(uuid())
-    city     String
-    street   String?
-    district String?
-    userId   String
-    user     User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+    id        String  @id @default(uuid())
+    // City and district are denormalized in both languages so any viewer can
+    // render them in their own language. Ids are loose (no FK) so addresses
+    // survive the seed wiping and reinserting city/district rows.
+    cityId         Int?
+    cityNameAr     String
+    cityNameEn     String
+    cityNameBn     String
+    cityNameHi     String
+    cityNameUr     String
+    districtId     String?
+    districtNameAr String?
+    districtNameEn String?
+    districtNameBn String?
+    districtNameHi String?
+    districtNameUr String?
+    // Street is reverse-geocoded from the map pin once per language, so it can
+    // render in the viewer's language too. The legacy `street` keeps the label
+    // shown at pick time as a fallback.
+    street    String?
+    streetAr  String?
+    streetEn  String?
+    streetBn  String?
+    streetHi  String?
+    streetUr  String?
+    latitude  Float?
+    longitude Float?
+    userId    String
+    user      User    @relation(fields: [userId], references: [id], onDelete: Cascade)
 
     orders Order[]
 

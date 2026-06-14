@@ -1,5 +1,6 @@
 export const ar = {
   nav: {
+    menu: "القائمة",
     informations: "البيانات المطلوبة",
     alterations: "التعديلات",
     extras: "إضافات",
@@ -41,6 +42,7 @@ export const ar = {
       title: "تعيين خياط",
       subtitle: "تعيين خياط يدوياً للطلب {ref}",
       selectLabel: "اختر خياطاً",
+      selectPlaceholder: "اختر خياطاً",
       submit: "تعيين الآن",
     },
     details: {
@@ -131,6 +133,12 @@ export const ar = {
       actions: "الإجراءات",
     },
     inputs: {
+      autoTranslate: {
+        label: "الترجمة التلقائية",
+      },
+      selectMenu: {
+        placeholder: "اختر خياراً",
+      },
       englishName: {
         label: "الاسم الإنجليزي",
         placeholder: "أدخل الاسم الإنجليزي",
@@ -181,6 +189,7 @@ export const ar = {
       },
       infoType: {
         label: "نوع البيانات",
+        requirement: "الإلزامية",
         placeholder: "اختر نوع البيانات",
         errorMessage: "نوع البيانات مطلوب",
         options: {
@@ -269,6 +278,11 @@ export const ar = {
       save: "حفظ",
       delete: "حذف",
       confirm: "تاكيد",
+      close: "إغلاق",
+    },
+    theme: {
+      light: "الوضع الفاتح",
+      dark: "الوضع الداكن",
     },
   },
   informations: {
@@ -396,6 +410,26 @@ export const ar = {
     },
   },
   users: {
+    address: {
+      title: "العنوان",
+      requiredHint: "المدينة والموقع مطلوبان. الحي اختياري.",
+      city: "المدينة",
+      cityRequired: "المدينة مطلوبة",
+      searchCity: "ابحث عن مدينة",
+      noCitiesFound: "لا توجد مدن",
+      district: "الحي",
+      optional: "(اختياري)",
+      searchDistrict: "ابحث عن حي",
+      noDistrictsFound: "لا توجد أحياء",
+      location: "الموقع",
+      pickOnMap: "اختر على الخريطة",
+      mapHint: "اضغط أو اسحب الخريطة لتحديد العنوان",
+      locating: "جارٍ التحديد…",
+      locationSet: "تم تحديد الموقع",
+      pickOnMapFirst: "اختر نقطة على الخريطة",
+      locationRequired: "الموقع مطلوب",
+      loading: "جارٍ التحميل…",
+    },
     roles: {
       tailor: "مصمم",
       customer: "عميل",

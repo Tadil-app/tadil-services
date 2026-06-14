@@ -60,9 +60,9 @@
                 />
               </div>
               <div>
-                <p class="font-bold">{{ address.city }}</p>
+                <p class="font-bold">{{ cityName(address) }}</p>
                 <p class="text-sm text-muted-foreground">
-                  {{ address.district }} {{ address.street }}
+                  {{ districtName(address) }} {{ streetName(address) }}
                 </p>
               </div>
             </div>
@@ -124,6 +124,7 @@ import {
 import { SecondaryHeader, EmptyState } from '@/components';
 import { ref, computed, onMounted } from 'vue';
 import { useAuthStore, useCartStore } from '@/stores';
+import { useLocalizedAddress } from '@/composables';
 import { useRouter } from 'vue-router';
 import { MapPin, ShoppingBag } from 'lucide-vue-next';
 import { DisplayOrderDTO } from '@/integration/dtos';
@@ -135,7 +136,10 @@ const authStore = useAuthStore();
 const cartStore = useCartStore();
 const router = useRouter();
 
-const step = ref<'address' | 'payment'>('address');
+// Show the stored city/district in the viewer's current language.
+const { cityName, districtName, streetName } = useLocalizedAddress();
+
+const step = ref<'address' | 'payment' | 'success'>('address');
 const selectedAddressId = ref<string>('');
 const isProcessing = ref(false);
 const createdOrder = ref<DisplayOrderDTO | null>(null);

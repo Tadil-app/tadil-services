@@ -24,6 +24,9 @@ import {
   CreateAddressDto,
   UpdateAddressDto,
   DisplayAddressDto,
+  DisplayCityDTO,
+  DisplayDistrictDTO,
+  DisplayBoundaryDTO,
   User,
 } from "../dtos";
 export interface UploadFileDto {
@@ -694,6 +697,22 @@ export class Api<
     /**
      * No description
      *
+     * @tags Auth
+     * @name AuthControllerDeleteAddress
+     * @request DELETE:/api/auth/me/addresses/{id}
+     * @secure
+     */
+    authControllerDeleteAddress: (id: string, params: RequestParams = {}) =>
+      this.request<void, any>({
+        path: `/api/auth/me/addresses/${id}`,
+        method: "DELETE",
+        secure: true,
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
      * @tags Wallet
      * @name WalletControllerGetDetails
      * @request GET:/api/wallet/{userId}
@@ -763,6 +782,79 @@ export class Api<
         method: "PUT",
         body: data,
         type: ContentType.Json,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Locations
+     * @name LocationsControllerGetCities
+     * @request GET:/api/locations/cities
+     */
+    locationsControllerGetCities: (
+      query?: {
+        search?: string;
+        regionId?: number;
+      },
+      params: RequestParams = {},
+    ) =>
+      this.request<DisplayCityDTO[], any>({
+        path: `/api/locations/cities`,
+        method: "GET",
+        query: query,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Locations
+     * @name LocationsControllerGetDistricts
+     * @request GET:/api/locations/cities/{cityId}/districts
+     */
+    locationsControllerGetDistricts: (cityId: number, params: RequestParams = {}) =>
+      this.request<DisplayDistrictDTO[], any>({
+        path: `/api/locations/cities/${cityId}/districts`,
+        method: "GET",
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Locations
+     * @name LocationsControllerGetDistrictBoundary
+     * @request GET:/api/locations/districts/{districtId}/boundary
+     */
+    locationsControllerGetDistrictBoundary: (
+      districtId: string,
+      params: RequestParams = {},
+    ) =>
+      this.request<DisplayBoundaryDTO, any>({
+        path: `/api/locations/districts/${districtId}/boundary`,
+        method: "GET",
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Locations
+     * @name LocationsControllerGetCityBoundary
+     * @request GET:/api/locations/cities/{cityId}/boundary
+     */
+    locationsControllerGetCityBoundary: (
+      cityId: number,
+      params: RequestParams = {},
+    ) =>
+      this.request<DisplayBoundaryDTO, any>({
+        path: `/api/locations/cities/${cityId}/boundary`,
+        method: "GET",
         format: "json",
         ...params,
       }),

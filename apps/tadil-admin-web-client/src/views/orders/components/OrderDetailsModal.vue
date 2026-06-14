@@ -1,86 +1,187 @@
 <template>
-  <Modal v-model="isOpen" @close-modal="closeModal" class="max-w-4xl max-h-[90vh] overflow-y-auto">
+  <Modal
+    v-model="isOpen"
+    @close-modal="closeModal"
+    class="w-[920px] max-w-full max-h-[90vh] overflow-y-auto"
+  >
     <div v-if="isLoadingDetails" class="py-20 text-center text-muted-foreground">
-      <Loader2 class="h-8 w-8 animate-spin mx-auto mb-4" />
+      <Loader2 class="mx-auto mb-4 h-8 w-8 animate-spin" />
       {{ $t("orders.details.loading") }}
     </div>
-    <div v-else-if="selectedOrderDetails" class="space-y-8">
+    <div v-else-if="selectedOrderDetails" class="space-y-6">
       <!-- Header -->
-      <div class="flex justify-between items-start border-b pb-4">
-        <div>
-          <h1 class="text-2xl font-bold flex items-center gap-2">
-            {{ $t("orders.details.title", { ref: selectedOrderDetails.reference }) }}
-            <span 
-              class="px-2 py-0.5 rounded-full text-xs font-bold uppercase tracking-wider border"
+      <div
+        class="relative overflow-hidden rounded-2xl border border-border bg-gradient-to-br from-primary/10 via-card to-card p-5"
+      >
+        <div class="flex flex-wrap items-start justify-between gap-4">
+          <div class="space-y-2">
+            <span
+              class="inline-flex items-center gap-1.5 rounded-full px-2.5 py-0.5 text-xs font-semibold uppercase tracking-wide"
               :class="statusClasses(selectedOrderDetails.status)"
             >
-              {{ $t('orderStatus.' + selectedOrderDetails.status) }}
+              <span class="h-1.5 w-1.5 rounded-full bg-current"></span>
+              {{ $t("orderStatus." + selectedOrderDetails.status) }}
             </span>
-          </h1>
-          <p class="text-sm text-muted-foreground mt-1">{{ $t("orders.details.placedOn") }} {{ formatDate(selectedOrderDetails.date) }}</p>
-        </div>
-        <div class="text-right">
-          <p class="text-sm text-muted-foreground">{{ $t("orders.details.totalPrice") }}</p>
-          <p class="text-2xl font-bold text-primary">{{ selectedOrderDetails.totalPrice }} {{ $t("common.currencies.ras") }}</p>
+            <h1 class="text-2xl font-bold leading-tight">
+              {{ $t("orders.details.title", { ref: selectedOrderDetails.reference }) }}
+            </h1>
+            <p class="flex items-center gap-1.5 text-sm text-muted-foreground">
+              <Calendar class="h-3.5 w-3.5" />
+              {{ $t("orders.details.placedOn") }}
+              {{ formatDate(selectedOrderDetails.date) }}
+            </p>
+          </div>
+          <div
+            class="rounded-xl border border-border bg-card/80 px-4 py-3 text-end shadow-sm backdrop-blur"
+          >
+            <p class="text-xs uppercase tracking-wide text-muted-foreground">
+              {{ $t("orders.details.totalPrice") }}
+            </p>
+            <p class="text-2xl font-bold text-primary">
+              {{ selectedOrderDetails.totalPrice }}
+              {{ $t("common.currencies.ras") }}
+            </p>
+          </div>
         </div>
       </div>
 
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+      <div class="grid grid-cols-1 gap-6 lg:grid-cols-3">
         <!-- Left Column: Info & History -->
-        <div class="md:col-span-1 space-y-8">
+        <div class="space-y-6 lg:col-span-1">
           <!-- Participants -->
-          <div class="bg-muted/30 p-4 rounded-xl border space-y-4">
-            <h3 class="font-semibold text-sm uppercase tracking-wider text-muted-foreground">{{ $t("orders.details.participants") }}</h3>
-            <div class="space-y-3">
-              <div>
-                <p class="text-xs text-muted-foreground">{{ $t("orders.details.customer") }}</p>
-                <p class="font-medium">{{ selectedOrderDetails.customerName }}</p>
-                <p class="text-sm text-muted-foreground">{{ selectedOrderDetails.city || $t("orders.details.noCity") }}</p>
+          <section class="rounded-xl border border-border bg-muted/30 p-4">
+            <h3
+              class="mb-3 text-xs font-semibold uppercase tracking-wide text-muted-foreground"
+            >
+              {{ $t("orders.details.participants") }}
+            </h3>
+            <div class="space-y-2.5">
+              <div
+                class="flex items-start gap-3 rounded-lg bg-card p-2.5"
+              >
+                <div
+                  class="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-blue-500/10 text-blue-600 dark:text-blue-400"
+                >
+                  <User class="h-4 w-4" />
+                </div>
+                <div class="min-w-0">
+                  <p class="text-xs text-muted-foreground">
+                    {{ $t("orders.details.customer") }}
+                  </p>
+                  <p class="truncate font-medium">
+                    {{ selectedOrderDetails.customerName }}
+                  </p>
+                  <p class="truncate text-sm text-muted-foreground">
+                    {{ cityLabel(selectedOrderDetails) || $t("orders.details.noCity") }}
+                  </p>
+                </div>
               </div>
-              <div>
-                <p class="text-xs text-muted-foreground">{{ $t("orders.details.assignedTailor") }}</p>
-                <p class="font-medium">{{ selectedOrderDetails.tailorName || $t("orders.details.pending") }}</p>
+              <div
+                class="flex items-start gap-3 rounded-lg bg-card p-2.5"
+              >
+                <div
+                  class="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-purple-500/10 text-purple-600 dark:text-purple-400"
+                >
+                  <Scissors class="h-4 w-4" />
+                </div>
+                <div class="min-w-0">
+                  <p class="text-xs text-muted-foreground">
+                    {{ $t("orders.details.assignedTailor") }}
+                  </p>
+                  <p class="truncate font-medium">
+                    {{ selectedOrderDetails.tailorName || $t("orders.details.pending") }}
+                  </p>
+                </div>
               </div>
-              <div>
-                <p class="text-xs text-muted-foreground">{{ $t("orders.details.assignedCourier") }}</p>
-                <p class="font-medium">{{ selectedOrderDetails.courierName || $t("orders.details.pending") }}</p>
+              <div
+                class="flex items-start gap-3 rounded-lg bg-card p-2.5"
+              >
+                <div
+                  class="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-amber-500/10 text-amber-600 dark:text-amber-400"
+                >
+                  <Truck class="h-4 w-4" />
+                </div>
+                <div class="min-w-0">
+                  <p class="text-xs text-muted-foreground">
+                    {{ $t("orders.details.assignedCourier") }}
+                  </p>
+                  <p class="truncate font-medium">
+                    {{ selectedOrderDetails.courierName || $t("orders.details.pending") }}
+                  </p>
+                </div>
               </div>
             </div>
-          </div>
+          </section>
 
           <!-- History Timeline -->
-          <div>
-            <h3 class="font-semibold text-sm uppercase tracking-wider text-muted-foreground mb-4">{{ $t("orders.details.statusHistory") }}</h3>
-            <div class="space-y-4 border-l-2 border-primary/20 ml-2 pl-4">
-              <div v-for="(hist, idx) in selectedOrderDetails.history" :key="idx" class="relative">
-                <div class="absolute -left-[21px] top-1 w-2.5 h-2.5 rounded-full bg-primary ring-4 ring-background"></div>
-                <p class="font-medium text-sm">{{ $t('orderStatus.' + hist.status) }}</p>
-                <p class="text-xs text-muted-foreground">{{ formatDate(hist.timestamp) }}</p>
+          <section
+            v-if="selectedOrderDetails.history?.length"
+            class="rounded-xl border border-border p-4"
+          >
+            <h3
+              class="mb-4 text-xs font-semibold uppercase tracking-wide text-muted-foreground"
+            >
+              {{ $t("orders.details.statusHistory") }}
+            </h3>
+            <div class="ms-1 space-y-4 border-s-2 border-border ps-4">
+              <div
+                v-for="(hist, idx) in selectedOrderDetails.history"
+                :key="idx"
+                class="relative"
+              >
+                <div
+                  class="absolute top-1 h-2.5 w-2.5 rounded-full bg-primary ring-4 ring-card"
+                  style="inset-inline-start: -21px"
+                ></div>
+                <p class="text-sm font-medium">
+                  {{ $t("orderStatus." + hist.status) }}
+                </p>
+                <p class="text-xs text-muted-foreground">
+                  {{ formatDate(hist.timestamp) }}
+                </p>
               </div>
             </div>
-          </div>
+          </section>
         </div>
 
         <!-- Right Column: Items & Chat -->
-        <div class="md:col-span-2 space-y-8">
+        <div class="space-y-6 lg:col-span-2">
           <!-- Items -->
-          <div>
-            <h3 class="font-semibold text-sm uppercase tracking-wider text-muted-foreground mb-4">{{ $t("orders.details.orderItems") }}</h3>
+          <section>
+            <h3
+              class="mb-3 text-xs font-semibold uppercase tracking-wide text-muted-foreground"
+            >
+              {{ $t("orders.details.orderItems") }}
+            </h3>
             <div class="space-y-3">
               <!-- Predefined Items -->
-              <div v-for="item in selectedOrderDetails.items" :key="item.id" class="flex gap-4 p-3 border rounded-xl bg-card">
-                <img :src="item.imageFileUrl" class="w-20 h-20 object-cover rounded-lg bg-muted/50" />
-                <div class="flex-grow">
-                  <div class="flex justify-between">
-                    <p class="font-bold">{{ item.englishName }}</p>
-                    <p class="font-semibold text-primary">{{ item.price }} {{ $t("common.currencies.ras") }}</p>
+              <div
+                v-for="item in selectedOrderDetails.items"
+                :key="item.id"
+                class="flex gap-4 rounded-xl border border-border bg-card p-3"
+              >
+                <img
+                  :src="item.imageFileUrl"
+                  class="h-20 w-20 shrink-0 rounded-lg bg-muted/50 object-cover"
+                />
+                <div class="min-w-0 flex-grow">
+                  <div class="flex items-start justify-between gap-3">
+                    <p class="font-semibold">{{ item.englishName }}</p>
+                    <p class="shrink-0 font-semibold text-primary">
+                      {{ item.price }} {{ $t("common.currencies.ras") }}
+                    </p>
                   </div>
-                  <div class="mt-2 space-y-1">
+                  <div class="mt-2 space-y-2">
                     <div v-for="section in item.sections" :key="section.id">
-                      <span class="text-xs font-medium bg-secondary/10 text-secondary px-2 py-0.5 rounded-md">{{ section.englishName }}</span>
-                      <div class="text-xs text-muted-foreground mt-1 pl-2 border-l border-medium/20">
+                      <span
+                        class="inline-block rounded-md bg-muted px-2 py-0.5 text-xs font-medium text-muted-foreground"
+                      >
+                        {{ section.englishName }}
+                      </span>
+                      <div class="mt-1 space-y-0.5 ps-2 text-xs text-muted-foreground">
                         <p v-for="alt in section.alterations" :key="alt.id">
-                          • {{ alt.englishName }} (+{{ alt.price }} {{ $t("common.currencies.ras") }})
+                          • {{ alt.englishName }} (+{{ alt.price }}
+                          {{ $t("common.currencies.ras") }})
                         </p>
                       </div>
                     </div>
@@ -89,65 +190,119 @@
               </div>
 
               <!-- Custom Items -->
-              <div v-for="item in selectedOrderDetails.customItems" :key="item.id" class="flex gap-4 p-3 border rounded-xl bg-card">
-                <img :src="item.imageFileUrl" class="w-20 h-20 object-cover rounded-lg bg-muted/50" />
-                <div class="flex-grow">
-                  <div class="flex justify-between">
-                    <p class="font-bold">{{ $t("orders.details.customRequest") }}</p>
-                    <p class="font-semibold text-primary">{{ item.price }} {{ $t("common.currencies.ras") }}</p>
+              <div
+                v-for="item in selectedOrderDetails.customItems"
+                :key="item.id"
+                class="flex gap-4 rounded-xl border border-border bg-card p-3"
+              >
+                <img
+                  :src="item.imageFileUrl"
+                  class="h-20 w-20 shrink-0 rounded-lg bg-muted/50 object-cover"
+                />
+                <div class="min-w-0 flex-grow">
+                  <div class="flex items-start justify-between gap-3">
+                    <p class="font-semibold">
+                      {{ $t("orders.details.customRequest") }}
+                    </p>
+                    <p class="shrink-0 font-semibold text-primary">
+                      {{ item.price }} {{ $t("common.currencies.ras") }}
+                    </p>
                   </div>
-                  <div class="mt-2 space-y-1">
-                    <div class="text-xs text-muted-foreground pl-2 border-l border-medium/20">
-                      <p v-for="alt in item.alterations" :key="alt.id">
-                        • {{ alt.englishName }} (+{{ alt.price }} {{ $t("common.currencies.ras") }})
-                      </p>
-                    </div>
+                  <div class="mt-2 space-y-0.5 ps-2 text-xs text-muted-foreground">
+                    <p v-for="alt in item.alterations" :key="alt.id">
+                      • {{ alt.englishName }} (+{{ alt.price }}
+                      {{ $t("common.currencies.ras") }})
+                    </p>
                   </div>
                 </div>
               </div>
             </div>
-          </div>
+          </section>
 
           <!-- Chat Logs -->
-          <div v-if="selectedOrderDetails.chats?.length">
-            <h3 class="font-semibold text-sm uppercase tracking-wider text-muted-foreground mb-4">{{ $t("orders.details.chatLogs") }}</h3>
-            <div class="space-y-6">
-              <div v-for="chat in selectedOrderDetails.chats" :key="chat.id" class="border rounded-xl bg-card overflow-hidden">
-                <div class="bg-muted/50 px-4 py-2 border-b">
-                  <p class="font-semibold text-sm">{{ chat.channel }} {{ $t("orders.details.channel") }}</p>
+          <section v-if="selectedOrderDetails.chats?.length">
+            <h3
+              class="mb-3 text-xs font-semibold uppercase tracking-wide text-muted-foreground"
+            >
+              {{ $t("orders.details.chatLogs") }}
+            </h3>
+            <div class="space-y-4">
+              <div
+                v-for="chat in selectedOrderDetails.chats"
+                :key="chat.id"
+                class="overflow-hidden rounded-xl border border-border bg-card"
+              >
+                <div class="border-b border-border bg-muted/40 px-4 py-2">
+                  <p class="text-sm font-semibold">
+                    {{ chat.channel }} {{ $t("orders.details.channel") }}
+                  </p>
                 </div>
-                <div class="p-4 space-y-3 max-h-80 overflow-y-auto">
-                  <div v-if="!chat.messages.length" class="text-xs text-muted-foreground text-center">{{ $t("orders.details.noMessages") }}</div>
-                  <div 
-                    v-for="msg in chat.messages" 
-                    :key="msg.id"
-                    class="flex flex-col max-w-[85%]"
-                    :class="msg.senderId === selectedOrderDetails.customerId ? 'ml-auto items-end' : 'mr-auto items-start'"
+                <div class="max-h-80 space-y-3 overflow-y-auto p-4">
+                  <div
+                    v-if="!chat.messages.length"
+                    class="text-center text-xs text-muted-foreground"
                   >
-                    <div v-if="msg.deletedAt" class="text-xs italic text-muted-foreground bg-muted/30 px-3 py-1.5 rounded-lg border">
+                    {{ $t("orders.details.noMessages") }}
+                  </div>
+                  <div
+                    v-for="msg in chat.messages"
+                    :key="msg.id"
+                    class="flex max-w-[85%] flex-col"
+                    :class="
+                      msg.senderId === selectedOrderDetails.customerId
+                        ? 'ms-auto items-end'
+                        : 'me-auto items-start'
+                    "
+                  >
+                    <div
+                      v-if="msg.deletedAt"
+                      class="rounded-lg border border-border bg-muted/30 px-3 py-1.5 text-xs italic text-muted-foreground"
+                    >
                       {{ $t("orders.details.messageDeleted") }}
                     </div>
                     <template v-else>
-                      <div v-if="msg.type === 'TEXT'" class="px-3 py-2 rounded-2xl text-sm" :class="msg.senderId === selectedOrderDetails.customerId ? 'bg-primary text-primary-contrast rounded-tr-none' : 'bg-muted rounded-tl-none'">
+                      <div
+                        v-if="msg.type === 'TEXT'"
+                        class="px-3 py-2 text-sm"
+                        :class="
+                          msg.senderId === selectedOrderDetails.customerId
+                            ? 'rounded-2xl rounded-ee-sm bg-primary text-primary-foreground'
+                            : 'rounded-2xl rounded-es-sm bg-muted text-foreground'
+                        "
+                      >
                         {{ msg.content }}
                       </div>
-                      <div v-else-if="msg.type === 'IMAGE'" class="rounded-xl overflow-hidden border max-w-xs">
-                        <img :src="msg.content" class="w-full h-auto" />
+                      <div
+                        v-else-if="msg.type === 'IMAGE'"
+                        class="max-w-xs overflow-hidden rounded-xl border border-border"
+                      >
+                        <img :src="msg.content" class="h-auto w-full" />
                       </div>
-                      <div v-else-if="msg.type === 'AUDIO'" class="px-3 py-2 rounded-2xl bg-muted text-sm flex items-center gap-2">
-                        🎤 Voice Message <span class="text-xs text-muted-foreground" v-if="msg.metadata?.duration">({{ Math.round(msg.metadata.duration) }}s)</span>
-                        <audio :src="msg.content" controls class="h-8 w-40 ml-2"></audio>
+                      <div
+                        v-else-if="msg.type === 'AUDIO'"
+                        class="flex items-center gap-2 rounded-2xl bg-muted px-3 py-2 text-sm"
+                      >
+                        <Mic class="h-4 w-4 text-muted-foreground" />
+                        <span
+                          v-if="msg.metadata?.duration"
+                          class="text-xs text-muted-foreground"
+                        >
+                          ({{ Math.round(msg.metadata.duration) }}s)
+                        </span>
+                        <audio :src="msg.content" controls class="ms-1 h-8 w-40"></audio>
                       </div>
                     </template>
-                    <span class="text-[10px] text-muted-foreground mt-0.5 px-1">
-                      {{ formatDate(msg.timestamp) }}<span v-if="msg.isEdited"> - ({{ $t("orders.details.edited") }})</span>
+                    <span class="mt-0.5 px-1 text-[10px] text-muted-foreground">
+                      {{ formatDate(msg.timestamp)
+                      }}<span v-if="msg.isEdited">
+                        - ({{ $t("orders.details.edited") }})</span
+                      >
                     </span>
                   </div>
                 </div>
               </div>
             </div>
-          </div>
-
+          </section>
         </div>
       </div>
     </div>
@@ -157,8 +312,11 @@
 <script setup lang="ts">
 import { ref, watch } from "vue";
 import { Modal } from "@/components";
-import { Loader2 } from "lucide-vue-next";
+import { Loader2, User, Scissors, Truck, Mic, Calendar } from "lucide-vue-next";
 import { apiClient, type DisplayOrderDetailsDto } from "@/integration";
+import { useLocalizedCityComposable } from "@/composables";
+
+const { cityLabel } = useLocalizedCityComposable();
 
 const isOpen = defineModel<boolean>();
 
@@ -201,11 +359,16 @@ const closeModal = () => {
 
 const statusClasses = (status: string) => {
   switch (status) {
-    case "done": return "text-green-700 bg-green-500/20 border-green-500/30";
-    case "pending": return "text-amber-700 bg-amber-500/20 border-amber-500/30";
-    case "inProgress": return "text-blue-700 bg-blue-500/20 border-blue-500/30";
-    case "canceled": return "text-red-700 bg-red-500/20 border-red-500/30";
-    default: return "text-purple-700 bg-purple-500/20 border-purple-500/30";
+    case "done":
+      return "bg-green-500/15 text-green-600 dark:text-green-400";
+    case "pending":
+      return "bg-amber-500/15 text-amber-600 dark:text-amber-400";
+    case "inProgress":
+      return "bg-blue-500/15 text-blue-600 dark:text-blue-400";
+    case "canceled":
+      return "bg-red-500/15 text-red-600 dark:text-red-400";
+    default:
+      return "bg-purple-500/15 text-purple-600 dark:text-purple-400";
   }
 };
 

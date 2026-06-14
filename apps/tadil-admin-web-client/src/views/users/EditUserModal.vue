@@ -2,11 +2,28 @@
   <Button variant="outline" size="sm" @click="isOpen = true">
     <Edit />
   </Button>
-  <Modal v-model="isOpen" @close-modal="closeModal">
-  <div class="space-y-4">
-    <h1 class="text-xl font-bold">
-      {{ $t(`users.editUserModal.title`) }}
-    </h1>      <div class="space-y-2">
+  <Modal
+    v-model="isOpen"
+    @close-modal="closeModal"
+    class="w-[480px] max-w-[95vw]"
+  >
+    <div class="space-y-5">
+      <div class="flex items-center gap-3 border-b border-border pb-4 pe-8">
+        <div
+          class="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary"
+        >
+          <component :is="headerIcon" class="h-5 w-5" />
+        </div>
+        <div class="min-w-0">
+          <h1 class="text-lg font-bold leading-tight">
+            {{ $t(`users.editUserModal.title`) }}
+          </h1>
+          <p class="truncate text-sm text-muted-foreground">
+            {{ newUser.firstName }} {{ newUser.lastName }}
+          </p>
+        </div>
+      </div>
+      <div class="space-y-4">
         <div class="space-y-1.5">
           <InputLabel for="phone">
             {{ $t("common.inputs.phone.label") }}
@@ -58,16 +75,12 @@
             :placeholder="$t('common.inputs.email.placeholder')"
           />
         </div>
-        <div class="space-y-1.5" v-if="selectedUserType !== ROLE.CUSTOMER">
-          <InputLabel for="city">
-            {{ $t("common.inputs.city.label") }}
-          </InputLabel>
-          <TextInput
-            id="city"
-            v-model="newUser.city"
-            :placeholder="$t('common.inputs.city.placeholder')"
-          />
-        </div>
+        <AddressFields
+          v-if="selectedUserType !== ROLE.CUSTOMER"
+          v-model="address"
+          :show-validation="showAddressValidation"
+          @valid-change="(v) => (addressValid = v)"
+        />
         <div class="space-y-1.5" v-if="selectedUserType !== ROLE.CUSTOMER">
           <InputLabel for="commissionRate">
             {{ $t("common.inputs.commissionRate.label") }}
@@ -80,7 +93,7 @@
           />
         </div>
       </div>
-      <div class="flex justify-evenly">
+      <div class="mt-2 flex justify-end gap-3 border-t border-border pt-4">
         <Button variant="outline" @click="closeModal">
           {{ $t("common.buttons.cancel") }}
         </Button>
@@ -107,9 +120,36 @@ import {
   type RoleType,
   type UpdateUserDTO,
 } from "@/integration";
-import { Edit } from "lucide-vue-next";
-import { ref } from "vue";
+import { Edit, Scissors, Truck, User } from "lucide-vue-next";
+import { computed, ref } from "vue";
 import { useI18n } from "vue-i18n";
+import AddressFields from "./components/AddressFields.vue";
+import type { AddressFormValue } from "./components/address.types";
+
+function addressFromUser(user: DisplayUserDTO): AddressFormValue {
+  return {
+    cityId: user.cityId,
+    cityNameAr: user.cityNameAr,
+    cityNameEn: user.cityNameEn,
+    cityNameBn: user.cityNameBn,
+    cityNameHi: user.cityNameHi,
+    cityNameUr: user.cityNameUr,
+    districtId: user.districtId,
+    districtNameAr: user.districtNameAr,
+    districtNameEn: user.districtNameEn,
+    districtNameBn: user.districtNameBn,
+    districtNameHi: user.districtNameHi,
+    districtNameUr: user.districtNameUr,
+    street: user.street,
+    streetAr: user.streetAr,
+    streetEn: user.streetEn,
+    streetBn: user.streetBn,
+    streetHi: user.streetHi,
+    streetUr: user.streetUr,
+    latitude: user.latitude,
+    longitude: user.longitude,
+  };
+}
 
 const { t } = useI18n();
 const { openToast } = useToast();
@@ -123,6 +163,17 @@ const emit = defineEmits<{
   (e: "updated:user"): void;
 }>();
 
+const headerIcon = computed(() => {
+  switch (props.selectedUserType) {
+    case ROLE.TAILOR:
+      return Scissors;
+    case ROLE.COURIER:
+      return Truck;
+    default:
+      return User;
+  }
+});
+
 const isOpen = ref<boolean>(false);
 const newUser = ref<UpdateUserDTO>({
   phone: props.user.phone,
@@ -130,8 +181,10 @@ const newUser = ref<UpdateUserDTO>({
   lastName: props.user.lastName,
   email: props.user.email,
   commissionRate: props.user.commissionRate ?? 10,
-  city: props.user.city || "",
 });
+const address = ref<AddressFormValue>(addressFromUser(props.user));
+const addressValid = ref(false);
+const showAddressValidation = ref(false);
 const newUserValidationErrors = ref({
   phone: "",
   firstName: "",
@@ -194,18 +247,24 @@ async function updateUser() {
       validateUserFirstName() &&
       validateUserLastName()
     ) {
+      // Tailors and couriers must have a city and a pinned location.
+      if (!addressValid.value) {
+        showAddressValidation.value = true;
+        return;
+      }
+      const payload: UpdateUserDTO = { ...newUser.value, ...address.value };
       switch (props.selectedUserType) {
         case ROLE.TAILOR: {
           await apiClient.tailorsControllerUpdateTailor(
             props.user.id,
-            newUser.value,
+            payload,
           );
           break;
         }
         case ROLE.COURIER: {
           await apiClient.couriersControllerUpdateCourier(
             props.user.id,
-            newUser.value,
+            payload,
           );
           break;
         }
@@ -232,8 +291,10 @@ function closeModal() {
     lastName: props.user.lastName,
     email: props.user.email,
     commissionRate: props.user.commissionRate ?? 10,
-    city: props.user.city || "",
   };
+  address.value = addressFromUser(props.user);
+  addressValid.value = false;
+  showAddressValidation.value = false;
   isOpen.value = false;
 }
 </script>

@@ -54,8 +54,8 @@
             >
               <MapPin slot="start" class="me-2 w-5 h-5 text-primary" />
               <IonLabel>
-                <h2>{{ address.city }}</h2>
-                <p>{{ address.district }} {{ address.street }}</p>
+                <h2>{{ cityName(address) }}</h2>
+                <p>{{ districtName(address) }} {{ streetName(address) }}</p>
               </IonLabel>
               <Settings2 slot="end" class="w-4 h-4 text-muted-foreground" />
             </IonItem>
@@ -113,6 +113,7 @@
 
 <script setup lang="ts">
 import { useAuthStore, useLanguageStore, useThemeStore } from "@/stores";
+import { useLocalizedAddress } from "@/composables";
 import {
   IonContent,
   IonPage,
@@ -140,19 +141,20 @@ import {
 import { SecondaryHeader } from "@/components";
 import { onMounted, ref, computed } from "vue";
 import UpdateProfileModal from "./auth/components/UpdateProfileModal.vue";
-import AddressModal from "./auth/components/AddressModal.vue";
+import AddressModal from "./profile/components/AddressModal.vue";
 
 const languageStore = useLanguageStore();
 const themeStore = useThemeStore();
 const authStore = useAuthStore();
 
+// Show the stored city/district in the viewer's current language.
+const { cityName, districtName, streetName } = useLocalizedAddress();
+
 const isReady = ref(false);
 
-const canAddAddress = computed(() => {
-  if (authStore.userRole === 'customer') return true;
-  // Tailors and Couriers only allowed one address
-  return authStore.userAddresses.length === 0;
-});
+// Only customers manage addresses in the app. Couriers/tailors get their
+// single address from an admin and can only view it here.
+const canAddAddress = computed(() => authStore.userRole === 'customer');
 
 async function openUpdateProfileModal() {
   const modal = await modalController.create({

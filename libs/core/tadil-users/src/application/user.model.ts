@@ -15,9 +15,26 @@ export type LoginRequestStatusType =
 
 export interface Address {
   id: string;
-  city: string;
+  cityId?: number | null;
+  cityNameAr: string;
+  cityNameEn: string;
+  cityNameBn: string;
+  cityNameHi: string;
+  cityNameUr: string;
+  districtId?: string | null;
+  districtNameAr?: string;
+  districtNameEn?: string;
+  districtNameBn?: string;
+  districtNameHi?: string;
+  districtNameUr?: string;
   street?: string;
-  district?: string;
+  streetAr?: string;
+  streetEn?: string;
+  streetBn?: string;
+  streetHi?: string;
+  streetUr?: string;
+  latitude?: number | null;
+  longitude?: number | null;
   userId: string;
 }
 

@@ -1,5 +1,6 @@
 export const en = {
   nav: {
+    menu: "Menu",
     informations: "Required informations",
     alterations: "Alterations",
     extras: "Extras",
@@ -41,6 +42,7 @@ export const en = {
       title: "Assign Tailor",
       subtitle: "Manually assign a tailor to order {ref}",
       selectLabel: "Choose a Tailor",
+      selectPlaceholder: "Select a tailor",
       submit: "Assign Now",
     },
     details: {
@@ -130,6 +132,12 @@ export const en = {
       actions: "Actions",
     },
     inputs: {
+      autoTranslate: {
+        label: "Auto-translate",
+      },
+      selectMenu: {
+        placeholder: "Select an option",
+      },
       englishName: {
         label: "English Name",
         placeholder: "Enter English Name",
@@ -180,6 +188,7 @@ export const en = {
       },
       infoType: {
         label: "Type",
+        requirement: "Requirement",
         placeholder: "Select Type",
         errorMessage: "Type is required",
         options: {
@@ -268,6 +277,11 @@ export const en = {
       save: "Save",
       delete: "Delete",
       confirm: "Confirm",
+      close: "Close",
+    },
+    theme: {
+      light: "Light mode",
+      dark: "Dark mode",
     },
   },
   informations: {
@@ -396,6 +410,26 @@ export const en = {
     },
   },
   users: {
+    address: {
+      title: "Address",
+      requiredHint: "A city and a location are required. District is optional.",
+      city: "City",
+      cityRequired: "City is required",
+      searchCity: "Search city",
+      noCitiesFound: "No cities found",
+      district: "District",
+      optional: "(optional)",
+      searchDistrict: "Search district",
+      noDistrictsFound: "No districts found",
+      location: "Location",
+      pickOnMap: "Pick on map",
+      mapHint: "Tap or drag the map to place the pin on the address",
+      locating: "Locating…",
+      locationSet: "Location set",
+      pickOnMapFirst: "Pick a point on the map",
+      locationRequired: "Location is required",
+      loading: "Loading…",
+    },
     roles: {
       tailor: "Tailor",
       customer: "Customer",

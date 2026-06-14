@@ -40,8 +40,8 @@
             {{ $t("courier.orderDetails.deliveryAddress") }}
           </h3>
           <div v-if="order.address" class="text-sm">
-            <p class="font-medium">{{ order.address.city }}</p>
-            <p class="text-muted-foreground">{{ order.address.district }} {{ order.address.street }}</p>
+            <p class="font-medium">{{ cityName(order.address) }}</p>
+            <p class="text-muted-foreground">{{ districtName(order.address) }} {{ streetName(order.address) }}</p>
           </div>
           <p v-else class="text-sm text-muted-foreground italic">{{ $t("common.noAddress") }}</p>
         </IonCard>
@@ -139,7 +139,7 @@ import { useRoute, useRouter } from "vue-router";
 import { MapPin } from "lucide-vue-next";
 import { DisplayOrderDTO, ORDER_STATUS } from "@/integration/dtos";
 import { formatDate } from "@/utils";
-import { useToast } from "@/composables";
+import { useToast, useLocalizedAddress } from "@/composables";
 import { apiClient } from "@/integration/api";
 import { useAuthStore } from "@/stores";
 import { ImageContainer, TranslatedName, StatusPill, SecondaryHeader, OrderTimeline, Chat } from "@/components";
@@ -152,6 +152,9 @@ const route = useRoute();
 const router = useRouter();
 const authStore = useAuthStore();
 const { showToast } = useToast();
+
+// Show the stored city/district in the viewer's current language.
+const { cityName, districtName, streetName } = useLocalizedAddress();
 
 const order = ref<DisplayOrderDTO>();
 const isLoading = ref(true);

@@ -94,6 +94,11 @@ export const useAuthStore = defineStore("auth", () => {
     await fetchAddresses();
   }
 
+  async function deleteAddress(id: string) {
+    await apiClient.authControllerDeleteAddress(id);
+    await fetchAddresses();
+  }
+
   async function fetchWallet() {
     if (!userId.value) return;
     try {
@@ -155,8 +160,9 @@ export const useAuthStore = defineStore("auth", () => {
     fetchProfile, 
     updateProfile, 
     fetchAddresses, 
-    addAddress, 
-    updateAddress, 
+    addAddress,
+    updateAddress,
+    deleteAddress,
     fetchWallet,
     requestPayout,
     logout 

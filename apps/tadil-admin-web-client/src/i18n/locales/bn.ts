@@ -1,5 +1,6 @@
 export const bn = {
   nav: {
+    menu: "মেনু",
     informations: "প্রয়োজনীয় তথ্য",
     alterations: "পরিবর্তনসমূহ",
     extras: "অতিরিক্ত",
@@ -36,6 +37,7 @@ export const bn = {
       title: "দর্জি নিযুক্ত করুন",
       subtitle: "{ref} অর্ডারের জন্য ম্যানুয়ালি একজন দর্জি নিযুক্ত করুন",
       selectLabel: "একজন দর্জি চয়ন করুন",
+      selectPlaceholder: "একজন দর্জি নির্বাচন করুন",
       submit: "এখনই নিযুক্ত করুন",
     },
   },
@@ -92,6 +94,9 @@ export const bn = {
       actions: "ক্রিয়াকলাপ",
     },
     inputs: {
+      selectMenu: {
+        placeholder: "একটি বিকল্প নির্বাচন করুন",
+      },
       englishName: {
         label: "ইংরেজি নাম",
         placeholder: "ইংরেজি নাম লিখুন",
@@ -135,6 +140,7 @@ export const bn = {
       },
       infoType: {
         label: "ধরন",
+        requirement: "আবশ্যকতা",
         placeholder: "ধরন নির্বাচন করুন",
         errorMessage: "ধরন আবশ্যক",
         options: {
@@ -223,6 +229,11 @@ export const bn = {
       save: "সংরক্ষণ করুন",
       delete: "মুছে ফেলুন",
       confirm: "নিশ্চিত করুন",
+      close: "বন্ধ করুন",
+    },
+    theme: {
+      light: "লাইট মোড",
+      dark: "ডার্ক মোড",
     },
   },
   informations: {
@@ -342,6 +353,26 @@ export const bn = {
     },
   },
   users: {
+    address: {
+      title: "ঠিকানা",
+      requiredHint: "শহর এবং অবস্থান আবশ্যক। জেলা ঐচ্ছিক।",
+      city: "শহর",
+      cityRequired: "শহর আবশ্যক",
+      searchCity: "শহর খুঁজুন",
+      noCitiesFound: "কোনো শহর পাওয়া যায়নি",
+      district: "জেলা",
+      optional: "(ঐচ্ছিক)",
+      searchDistrict: "জেলা খুঁজুন",
+      noDistrictsFound: "কোনো জেলা পাওয়া যায়নি",
+      location: "অবস্থান",
+      pickOnMap: "মানচিত্রে নির্বাচন করুন",
+      mapHint: "ঠিকানায় পিন রাখতে মানচিত্র ট্যাপ বা টেনে আনুন",
+      locating: "অবস্থান নির্ণয় হচ্ছে…",
+      locationSet: "অবস্থান নির্ধারিত হয়েছে",
+      pickOnMapFirst: "মানচিত্রে একটি বিন্দু নির্বাচন করুন",
+      locationRequired: "অবস্থান আবশ্যক",
+      loading: "লোড হচ্ছে…",
+    },
     roles: {
       tailor: "দর্জি",
       customer: "গ্রাহক",

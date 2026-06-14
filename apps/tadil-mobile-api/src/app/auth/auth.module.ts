@@ -8,6 +8,7 @@ import {
   CompleteProfileUseCaseProvider,
   AddAddressUseCaseProvider,
   UpdateAddressUseCaseProvider,
+  DeleteAddressUseCaseProvider,
   GetMyAddressesUseCaseProvider,
 } from './auth.providers';
 
@@ -21,6 +22,7 @@ import {
     CompleteProfileUseCaseProvider,
     AddAddressUseCaseProvider,
     UpdateAddressUseCaseProvider,
+    DeleteAddressUseCaseProvider,
     GetMyAddressesUseCaseProvider,
   ],
   exports: [AuthGuard],

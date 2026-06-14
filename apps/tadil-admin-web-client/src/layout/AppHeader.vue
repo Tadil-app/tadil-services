@@ -1,16 +1,23 @@
 <template>
-  <div
-    class="h-12 flex rtl:flex-row-reverse justify-between items-center border-b border-border bg-background px-4 z-50"
+  <header
+    class="h-14 flex rtl:flex-row-reverse justify-between items-center border-b border-border bg-background/80 backdrop-blur supports-[backdrop-filter]:bg-background/60 px-4 sticky top-0 z-50"
   >
-    <div>
-      <h1 class="text-xl font-bold text-sidebar-foreground">Tadil-تعديل</h1>
+    <div class="flex items-center gap-2">
+      <img
+        src="/logo.png"
+        alt="Tadil"
+        class="h-10 w-auto select-none"
+        draggable="false"
+      />
     </div>
-    <div>
+    <div class="flex items-center gap-1">
+      <ThemeToggle />
       <LocalesToggle />
     </div>
-  </div>
+  </header>
 </template>
 
 <script setup lang="ts">
 import LocalesToggle from "@/components/LocalesToggle.vue";
+import { ThemeToggle } from "@/components";
 </script>

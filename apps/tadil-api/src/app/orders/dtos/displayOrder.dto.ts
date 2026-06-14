@@ -46,7 +46,34 @@ export class DisplayOrderDto {
   courierName?: string;
   
   @ApiProperty({ required: false })
-  city?: string;
+  cityNameAr?: string;
+
+  @ApiProperty({ required: false })
+  cityNameEn?: string;
+
+  @ApiProperty({ required: false })
+  cityNameBn?: string;
+
+  @ApiProperty({ required: false })
+  cityNameHi?: string;
+
+  @ApiProperty({ required: false })
+  cityNameUr?: string;
+
+  @ApiProperty({ required: false })
+  districtNameAr?: string;
+
+  @ApiProperty({ required: false })
+  districtNameEn?: string;
+
+  @ApiProperty({ required: false })
+  districtNameBn?: string;
+
+  @ApiProperty({ required: false })
+  districtNameHi?: string;
+
+  @ApiProperty({ required: false })
+  districtNameUr?: string;
 
   @ApiProperty({ type: OrderStatusHistoryDto, isArray: true, required: false })
   history?: OrderStatusHistoryDto[];

@@ -1,5 +1,6 @@
 export const ur = {
   nav: {
+    menu: "مینو",
     informations: "مطلوبہ معلومات",
     alterations: "تبدیلیاں",
     extras: "اضافہ",
@@ -36,6 +37,7 @@ export const ur = {
       title: "درزی مقرر کریں",
       subtitle: "آرڈر {ref} کے لیے دستی طور پر درزی مقرر کریں",
       selectLabel: "درزی منتخب کریں",
+      selectPlaceholder: "درزی منتخب کریں",
       submit: "ابھی مقرر کریں",
     },
   },
@@ -92,6 +94,9 @@ export const ur = {
       actions: "کارروائیاں",
     },
     inputs: {
+      selectMenu: {
+        placeholder: "ایک آپشن منتخب کریں",
+      },
       englishName: {
         label: "انگریزی نام",
         placeholder: "انگریزی نام درج کریں",
@@ -135,6 +140,7 @@ export const ur = {
       },
       infoType: {
         label: "قسم",
+        requirement: "ضرورت",
         placeholder: "قسم منتخب کریں",
         errorMessage: "قسم درکار ہے",
         options: {
@@ -223,6 +229,11 @@ export const ur = {
       save: "محفوظ کریں",
       delete: "حذف کریں",
       confirm: "تصدیق کریں",
+      close: "بند کریں",
+    },
+    theme: {
+      light: "لائٹ موڈ",
+      dark: "ڈارک موڈ",
     },
   },
   informations: {
@@ -343,6 +354,26 @@ export const ur = {
     },
   },
   users: {
+    address: {
+      title: "پتہ",
+      requiredHint: "شہر اور مقام لازمی ہیں۔ ضلع اختیاری ہے۔",
+      city: "شہر",
+      cityRequired: "شہر لازمی ہے",
+      searchCity: "شہر تلاش کریں",
+      noCitiesFound: "کوئی شہر نہیں ملا",
+      district: "ضلع",
+      optional: "(اختیاری)",
+      searchDistrict: "ضلع تلاش کریں",
+      noDistrictsFound: "کوئی ضلع نہیں ملا",
+      location: "مقام",
+      pickOnMap: "نقشے پر منتخب کریں",
+      mapHint: "پتے پر پن لگانے کے لیے نقشے کو ٹیپ یا کھینچیں",
+      locating: "مقام کا تعین ہو رہا ہے…",
+      locationSet: "مقام مقرر ہو گیا",
+      pickOnMapFirst: "نقشے پر ایک نقطہ منتخب کریں",
+      locationRequired: "مقام لازمی ہے",
+      loading: "لوڈ ہو رہا ہے…",
+    },
     roles: {
       tailor: "درزی",
       customer: "صارف",

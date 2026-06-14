@@ -28,6 +28,28 @@ export class MinioFileStorageService implements FileStorageService {
     this.bucketName = bucketName;
   }
 
+  /**
+   * Ensures the configured bucket exists, creating it if necessary.
+   * Intended to be called once at application startup.
+   */
+  async ensureBucketExists(): Promise<void> {
+    try {
+      const exists = await this.minioClient.bucketExists(this.bucketName);
+      if (!exists) {
+        await this.minioClient.makeBucket(this.bucketName);
+      }
+    } catch (error: unknown) {
+      if (error instanceof Error)
+        throw new InfrastructureException(
+          `Error ensuring bucket "${this.bucketName}" exists: ${error.message}`
+        );
+      else
+        throw new InfrastructureException(
+          `Error ensuring bucket "${this.bucketName}" exists: ${error}`
+        );
+    }
+  }
+
   async uploadFile(fileId: string, file: ReadableFile): Promise<string> {
     try {
       const metaData = {

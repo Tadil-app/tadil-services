@@ -48,3 +48,8 @@ test-output
 
 # environment
 .env
+
+graphify-out
+mobile-api.log
+CLAUDE.md
+.claude/

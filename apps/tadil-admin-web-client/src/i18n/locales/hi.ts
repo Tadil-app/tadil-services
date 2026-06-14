@@ -1,5 +1,6 @@
 export const hi = {
   nav: {
+    menu: "मेनू",
     informations: "आवश्यक जानकारी",
     alterations: "बदलाव",
     extras: "अतिरिक्त",
@@ -36,6 +37,7 @@ export const hi = {
       title: "दर्जी नियुक्त करें",
       subtitle: "ऑर्डर {ref} के लिए मैन्युअल रूप से दर्जी नियुक्त करें",
       selectLabel: "एक दर्जी चुनें",
+      selectPlaceholder: "एक दर्जी चुनें",
       submit: "अभी नियुक्त करें",
     },
   },
@@ -92,6 +94,9 @@ export const hi = {
       actions: "कार्यवाई",
     },
     inputs: {
+      selectMenu: {
+        placeholder: "एक विकल्प चुनें",
+      },
       englishName: {
         label: "अंग्रेजी नाम",
         placeholder: "अंग्रेजी नाम दर्ज करें",
@@ -135,6 +140,7 @@ export const hi = {
       },
       infoType: {
         label: "प्रकार",
+        requirement: "आवश्यकता",
         placeholder: "प्रकार चुनें",
         errorMessage: "प्रकार आवश्यक है",
         options: {
@@ -223,6 +229,11 @@ export const hi = {
       save: "सहेजें",
       delete: "मिटाएँ",
       confirm: "पुष्टि करें",
+      close: "बंद करें",
+    },
+    theme: {
+      light: "लाइट मोड",
+      dark: "डार्क मोड",
     },
   },
   informations: {
@@ -342,6 +353,26 @@ export const hi = {
     },
   },
   users: {
+    address: {
+      title: "पता",
+      requiredHint: "शहर और स्थान आवश्यक हैं। जिला वैकल्पिक है।",
+      city: "शहर",
+      cityRequired: "शहर आवश्यक है",
+      searchCity: "शहर खोजें",
+      noCitiesFound: "कोई शहर नहीं मिला",
+      district: "जिला",
+      optional: "(वैकल्पिक)",
+      searchDistrict: "जिला खोजें",
+      noDistrictsFound: "कोई जिला नहीं मिला",
+      location: "स्थान",
+      pickOnMap: "मानचित्र पर चुनें",
+      mapHint: "पते पर पिन लगाने के लिए मानचित्र को टैप या खींचें",
+      locating: "स्थान ज्ञात किया जा रहा है…",
+      locationSet: "स्थान निर्धारित",
+      pickOnMapFirst: "मानचित्र पर एक बिंदु चुनें",
+      locationRequired: "स्थान आवश्यक है",
+      loading: "लोड हो रहा है…",
+    },
     roles: {
       tailor: "दर्जी",
       customer: "ग्राहक",

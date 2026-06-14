@@ -3,30 +3,59 @@
     <Edit />
   </Button>
   <Modal v-model="isOpen" @close-modal="closeModal">
-    <div class="w-xl space-y-4">
+    <div class="w-[600px] max-w-full space-y-5">
       <h1 class="text-xl font-bold">
         {{ $t("informations.editInformationModal.title") }}
       </h1>
-      <div class="space-y-1.5">
-        <InputLabel for="type">
-          {{ $t("common.inputs.infoType.label") }}
-        </InputLabel>
-        <SelectMenu
-          v-model="localInformation.type"
-          :options="infoTypeOptions"
-          :placeholder="$t('common.inputs.infoType.placeholder')"
-        />
+      <div class="grid grid-cols-2 gap-4">
+        <div class="space-y-1.5">
+          <InputLabel for="type">
+            {{ $t("common.inputs.infoType.label") }}
+          </InputLabel>
+          <SelectMenu
+            v-model="localInformation.type"
+            :options="infoTypeOptions"
+            :placeholder="$t('common.inputs.infoType.placeholder')"
+          />
+        </div>
+        <div class="space-y-1.5">
+          <InputLabel>
+            {{ $t("common.inputs.infoType.requirement") }}
+          </InputLabel>
+          <div
+            class="flex w-full rounded-lg border border-border bg-muted/40 p-1"
+          >
+            <button
+              type="button"
+              class="flex-1 rounded-md px-3 py-1.5 text-sm font-medium transition-colors"
+              :class="
+                !localInformation.isRequired
+                  ? 'bg-card text-foreground shadow-sm'
+                  : 'text-muted-foreground hover:text-foreground'
+              "
+              @click="localInformation.isRequired = false"
+            >
+              {{ $t("common.inputs.infoType.options.optional") }}
+            </button>
+            <button
+              type="button"
+              class="flex-1 rounded-md px-3 py-1.5 text-sm font-medium transition-colors"
+              :class="
+                localInformation.isRequired
+                  ? 'bg-card text-foreground shadow-sm'
+                  : 'text-muted-foreground hover:text-foreground'
+              "
+              @click="localInformation.isRequired = true"
+            >
+              {{ $t("common.inputs.infoType.options.required") }}
+            </button>
+          </div>
+        </div>
       </div>
-      <div class="h-16 flex justify-center items-center gap-2">
-        <p class="text-sm">
-          {{ $t("common.inputs.infoType.options.optional") }}
-        </p>
-        <ToggleInput v-model="localInformation.isRequired" />
-        <p class="text-sm">
-          {{ $t("common.inputs.infoType.options.required") }}
-        </p>
-      </div>
-      <div v-if="localInformation.type === InformationType.CHECKBOX">
+      <div
+        v-if="localInformation.type === InformationType.CHECKBOX"
+        class="space-y-1.5"
+      >
         <InputLabel for="extras">
           {{ $t("common.inputs.extras.label") }}
         </InputLabel>
@@ -36,43 +65,41 @@
           @update:model-value="onCheckboxExtraSelected"
         />
       </div>
-      <div class="gap-4">
+      <div class="border-t border-border pt-4">
         <MultiLanguageNameForm
           ref="namesForm"
           v-model="localInformation"
-          :isInline="true"
+          is-inline
         />
-        <div class="space-y-2">
-          <div
-            v-if="localInformation.type === InformationType.NUMBER"
-            class="space-y-1.5"
-          >
-            <InputLabel for="unit">
-              {{ $t("common.inputs.unit.label") }}
-            </InputLabel>
-            <SelectMenu
-              v-model="localInformation.unit"
-              :options="unitOptions"
-              :placeholder="$t('common.inputs.unit.placeholder')"
-            />
-          </div>
-          <div
-            v-if="localInformation.type === InformationType.SELECT_MENU"
-            class="space-y-2"
-          >
-            <InputLabel for="extras">
-              {{ $t("common.inputs.extras.label") }}
-            </InputLabel>
-            <SelectMenu
-              v-model="localInformation.extras"
-              :options="extrasOptions"
-              :placeholder="$t('common.inputs.extras.placeholder')"
-              multiple
-            />
-          </div>
-        </div>
       </div>
-      <div class="flex justify-evenly">
+      <div
+        v-if="localInformation.type === InformationType.NUMBER"
+        class="space-y-1.5"
+      >
+        <InputLabel for="unit">
+          {{ $t("common.inputs.unit.label") }}
+        </InputLabel>
+        <SelectMenu
+          v-model="localInformation.unit"
+          :options="unitOptions"
+          :placeholder="$t('common.inputs.unit.placeholder')"
+        />
+      </div>
+      <div
+        v-if="localInformation.type === InformationType.SELECT_MENU"
+        class="space-y-1.5"
+      >
+        <InputLabel for="extras">
+          {{ $t("common.inputs.extras.label") }}
+        </InputLabel>
+        <SelectMenu
+          v-model="localInformation.extras"
+          :options="extrasOptions"
+          :placeholder="$t('common.inputs.extras.placeholder')"
+          multiple
+        />
+      </div>
+      <div class="flex justify-end gap-3 border-t border-border pt-4">
         <Button variant="outline" @click="closeModal">
           {{ $t("common.buttons.cancel") }}
         </Button>
@@ -91,7 +118,6 @@ import {
   Modal,
   InputLabel,
   MultiLanguageNameForm,
-  ToggleInput,
   SelectMenu,
 } from "@/components";
 import { computed, ref, watch } from "vue";

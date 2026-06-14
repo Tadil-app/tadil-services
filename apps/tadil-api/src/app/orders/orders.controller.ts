@@ -64,7 +64,16 @@ export class OrdersController {
       tailorName: order.assignedTailor ? `${order.assignedTailor.firstName} ${order.assignedTailor.lastName}` : undefined,
       courierName: order.assignedCourier ? `${order.assignedCourier.firstName} ${order.assignedCourier.lastName}` : 
                   (order.assignedReturnCourier ? `${order.assignedReturnCourier.firstName} ${order.assignedReturnCourier.lastName}` : undefined),
-      city: order.address?.city ?? undefined,
+      cityNameAr: order.address?.cityNameAr ?? undefined,
+      cityNameEn: order.address?.cityNameEn ?? undefined,
+      cityNameBn: order.address?.cityNameBn ?? undefined,
+      cityNameHi: order.address?.cityNameHi ?? undefined,
+      cityNameUr: order.address?.cityNameUr ?? undefined,
+      districtNameAr: order.address?.districtNameAr ?? undefined,
+      districtNameEn: order.address?.districtNameEn ?? undefined,
+      districtNameBn: order.address?.districtNameBn ?? undefined,
+      districtNameHi: order.address?.districtNameHi ?? undefined,
+      districtNameUr: order.address?.districtNameUr ?? undefined,
       history: order.history.map(h => ({ status: h.status, timestamp: h.timestamp.toISOString() })),
     }));
   }
@@ -124,7 +133,16 @@ export class OrdersController {
       tailorName: order.assignedTailor ? `${order.assignedTailor.firstName} ${order.assignedTailor.lastName}` : undefined,
       courierName: order.assignedCourier ? `${order.assignedCourier.firstName} ${order.assignedCourier.lastName}` : 
                   (order.assignedReturnCourier ? `${order.assignedReturnCourier.firstName} ${order.assignedReturnCourier.lastName}` : undefined),
-      city: order.address?.city ?? undefined,
+      cityNameAr: order.address?.cityNameAr ?? undefined,
+      cityNameEn: order.address?.cityNameEn ?? undefined,
+      cityNameBn: order.address?.cityNameBn ?? undefined,
+      cityNameHi: order.address?.cityNameHi ?? undefined,
+      cityNameUr: order.address?.cityNameUr ?? undefined,
+      districtNameAr: order.address?.districtNameAr ?? undefined,
+      districtNameEn: order.address?.districtNameEn ?? undefined,
+      districtNameBn: order.address?.districtNameBn ?? undefined,
+      districtNameHi: order.address?.districtNameHi ?? undefined,
+      districtNameUr: order.address?.districtNameUr ?? undefined,
       history: order.history.map(h => ({ status: h.status, timestamp: h.timestamp.toISOString() })),
       items: order.items.map(item => ({
         id: item.id,

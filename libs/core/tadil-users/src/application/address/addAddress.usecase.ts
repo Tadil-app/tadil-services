@@ -11,33 +11,70 @@ export class AddAddressUseCase {
 
   async execute(command: {
     userId: string;
-    city: string;
+    cityId?: number;
+    cityNameAr: string;
+    cityNameEn: string;
+    cityNameBn: string;
+    cityNameHi: string;
+    cityNameUr: string;
+    districtId?: string;
+    districtNameAr?: string;
+    districtNameEn?: string;
+    districtNameBn?: string;
+    districtNameHi?: string;
+    districtNameUr?: string;
     street?: string;
-    district?: string;
+    streetAr?: string;
+    streetEn?: string;
+    streetBn?: string;
+    streetHi?: string;
+    streetUr?: string;
+    latitude?: number;
+    longitude?: number;
   }): Promise<void> {
     const user = await this._usersRepository.getUserById(command.userId);
     if (!user) {
       throw new InvalidCommandException('User not found');
     }
 
-    if (!command.city) {
+    // Only customers may add addresses from the app; couriers/tailors are
+    // view-only and get their single address provisioned by an admin.
+    if (user.role !== ROLE.CUSTOMER) {
+      throw new InvalidCommandException('Only customers can add addresses');
+    }
+
+    if (!command.cityNameAr || !command.cityNameEn) {
       throw new InvalidCommandException('City is required');
     }
 
-    const currentAddresses = await this._usersRepository.getAddressesByUserId(command.userId);
-
-    // Enforce single address for tailors and couriers
-    if ((user.role === ROLE.TAILOR || user.role === ROLE.COURIER) && currentAddresses.length > 0) {
-      throw new InvalidCommandException('Tailors and Couriers can only have one address');
+    if (command.latitude == null || command.longitude == null) {
+      throw new InvalidCommandException('Location is required');
     }
 
     try {
       const address: Address = {
         id: uuid(),
         userId: command.userId,
-        city: command.city,
+        cityId: command.cityId,
+        cityNameAr: command.cityNameAr,
+        cityNameEn: command.cityNameEn,
+        cityNameBn: command.cityNameBn,
+        cityNameHi: command.cityNameHi,
+        cityNameUr: command.cityNameUr,
+        districtId: command.districtId,
+        districtNameAr: command.districtNameAr,
+        districtNameEn: command.districtNameEn,
+        districtNameBn: command.districtNameBn,
+        districtNameHi: command.districtNameHi,
+        districtNameUr: command.districtNameUr,
         street: command.street,
-        district: command.district,
+        streetAr: command.streetAr,
+        streetEn: command.streetEn,
+        streetBn: command.streetBn,
+        streetHi: command.streetHi,
+        streetUr: command.streetUr,
+        latitude: command.latitude,
+        longitude: command.longitude,
       };
       await this._usersRepository.addAddress(address);
     } catch (error) {

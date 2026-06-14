@@ -8,7 +8,11 @@
       
       <div class="space-y-1.5">
         <InputLabel>{{ $t("orders.assignModal.selectLabel") }}</InputLabel>
-        <SelectMenu v-model="tailorToAssign" :options="availableTailors" />
+        <SelectMenu
+          v-model="tailorToAssign"
+          :options="availableTailors"
+          placeholder="orders.assignModal.selectPlaceholder"
+        />
       </div>
 
       <div class="flex justify-end gap-3 pt-4">

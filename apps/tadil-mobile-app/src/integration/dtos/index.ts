@@ -205,22 +205,73 @@ export interface UpdateProfileDto {
 }
 
 export interface CreateAddressDto {
-  city: string;
+  cityId?: number;
+  cityNameAr: string;
+  cityNameEn: string;
+  cityNameBn: string;
+  cityNameHi: string;
+  cityNameUr: string;
+  districtId?: string;
+  districtNameAr?: string;
+  districtNameEn?: string;
+  districtNameBn?: string;
+  districtNameHi?: string;
+  districtNameUr?: string;
   street?: string;
-  district?: string;
+  streetAr?: string;
+  streetEn?: string;
+  streetBn?: string;
+  streetHi?: string;
+  streetUr?: string;
+  latitude?: number;
+  longitude?: number;
 }
 
 export interface UpdateAddressDto {
-  city?: string;
+  cityId?: number;
+  cityNameAr?: string;
+  cityNameEn?: string;
+  cityNameBn?: string;
+  cityNameHi?: string;
+  cityNameUr?: string;
+  districtId?: string;
+  districtNameAr?: string;
+  districtNameEn?: string;
+  districtNameBn?: string;
+  districtNameHi?: string;
+  districtNameUr?: string;
   street?: string;
-  district?: string;
+  streetAr?: string;
+  streetEn?: string;
+  streetBn?: string;
+  streetHi?: string;
+  streetUr?: string;
+  latitude?: number;
+  longitude?: number;
 }
 
 export interface DisplayAddressDto {
   id: string;
-  city: string;
+  cityId?: number | null;
+  cityNameAr: string;
+  cityNameEn: string;
+  cityNameBn: string;
+  cityNameHi: string;
+  cityNameUr: string;
+  districtId?: string | null;
+  districtNameAr?: string;
+  districtNameEn?: string;
+  districtNameBn?: string;
+  districtNameHi?: string;
+  districtNameUr?: string;
   street?: string;
-  district?: string;
+  streetAr?: string;
+  streetEn?: string;
+  streetBn?: string;
+  streetHi?: string;
+  streetUr?: string;
+  latitude?: number | null;
+  longitude?: number | null;
   userId: string;
 }
 
@@ -239,4 +290,31 @@ export interface AuthResponseDto {
   token?: string;
   user?: User;
   message?: string;
+}
+
+export interface DisplayCityDTO {
+  id: number;
+  regionId: number;
+  arabicName: string;
+  englishName: string;
+  bengaliName: string;
+  hindiName: string;
+  urduName: string;
+  lat: number | null;
+  lng: number | null;
+}
+
+export interface DisplayDistrictDTO {
+  id: string;
+  cityId: number;
+  arabicName: string;
+  englishName: string;
+  bengaliName: string;
+  hindiName: string;
+  urduName: string;
+}
+
+export interface DisplayBoundaryDTO {
+  type: "Polygon" | "MultiPolygon";
+  coordinates: number[][][] | number[][][][];
 }

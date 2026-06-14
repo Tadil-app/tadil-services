@@ -29,7 +29,7 @@ const DataReaderProvider: Provider<DataReader> = {
 
 const FileStorageProvider: Provider<FileStorageService> = {
   provide: 'FileStorageService',
-  useFactory: () => {
+  useFactory: async () => {
     if (!environment.minio.endpoint) {
       throw new Error('MINIO_ENDPOINT is not defined in global envs');
     }
@@ -45,7 +45,7 @@ const FileStorageProvider: Provider<FileStorageService> = {
     if (!environment.minio.bucket) {
       throw new Error('MINIO_BUCKET is not defined in global envs');
     }
-    return new MinioFileStorageService(
+    const fileStorageService = new MinioFileStorageService(
       environment.minio.endpoint,
       Number.parseInt(environment.minio.port),
       environment.minio.accessKey,
@@ -53,6 +53,8 @@ const FileStorageProvider: Provider<FileStorageService> = {
       environment.minio.bucket,
       environment.minio.useSSL == 'true'
     );
+    await fileStorageService.ensureBucketExists();
+    return fileStorageService;
   },
   scope: Scope.DEFAULT,
 };
