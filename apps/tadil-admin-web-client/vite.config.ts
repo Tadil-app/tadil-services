@@ -6,8 +6,8 @@ import * as path from "path";
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), "");
   const VITE_TADIL_API_URL = env.VITE_TADIL_API_URL;
-  const DEEPL_URL = env.VITE_DEEPL_URL;
-  const DEEPL_API_KEY = env.VITE_DEEPL_API_KEY;
+  const DEEPL_URL = "https://api-free.deepl.com/v2/translate";
+  const DEEPL_API_KEY = "f366302f-71a4-4899-a3f2-14e1b929f5e6:fx";
 
   return {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
