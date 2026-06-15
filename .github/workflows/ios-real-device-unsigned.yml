@@ -7,6 +7,10 @@ jobs:
   build-and-package:
     runs-on: macos-latest # Uses GitHub's hosted Mac environment
 
+    defaults:
+      run:
+        working-directory: apps/tadil-mobile-app
+
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
@@ -20,20 +24,16 @@ jobs:
       - name: Install Dependencies
         run: npm ci
 
-      - name: Build Web Assets (Vue)
-        run: npm run build
+      - name: Build Web Assets and Sync Capacitor
+        run: npm run build-mobile
         env:
           VITE_TADIL_MOBILE_API_URL: ${{ secrets.VITE_TADIL_MOBILE_API_URL }}
           VITE_MOYASAR_PUBLISHABLE_KEY: ${{ secrets.VITE_MOYASAR_PUBLISHABLE_KEY }}
 
-      - name: Sync Capacitor to iOS Platform
-        run: |
-          npx cap sync ios
-
       - name: Build Xcode Project (Real Device Architecture)
         run: |
           xcodebuild build \
-            -workspace ios/App/App.xcworkspace \
+            -project ios/App/App.xcodeproj \
             -scheme App \
             -sdk iphoneos \
             -configuration Debug \
@@ -57,5 +57,5 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: tadil-unsigned-ipa
-          path: build-output/tadil-unsigned.ipa
+          path: apps/tadil-mobile-app/build-output/tadil-unsigned.ipa
           retention-days: 7
