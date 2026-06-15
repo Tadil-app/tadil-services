@@ -7,7 +7,7 @@
 - **10-State Lifecycle**: Implements transitions across a detailed workflow including tailor assignment, courier pickup, tailoring, and return trips.
 - **Automated Assignment**: Logic for matching orders with available service providers (to be fully automated in future phases).
 - **Manual Overrides**: Admin capabilities to manually assign tailors to pending orders.
-- **Payment Verification**: Integration with payment gateways (e.g., Moyasar) to confirm order fulfillment.
+- **Payment Verification**: Defines the `PaymentGateway` interface. The `ConfirmPaymentUseCase` strictly validates the reported payment `id` and the expected `amount` against this interface before allowing an order to transition from `pending`.
 
 ## Status Flow
 1. `pending`: Order created, awaiting payment.

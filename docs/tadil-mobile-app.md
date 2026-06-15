@@ -13,6 +13,18 @@
 
 ## Key Features & Optimizations
 
+### Guest Mode & Smart Routing
+The app supports unauthenticated browsing to maximize conversion rates.
+- **Unrestricted Catalog:** Guests can browse predefined and custom models, and build their cart without logging in.
+- **Smart Redirects:** The Vue Router intercepts protected actions (like proceeding to checkout). It redirects the user to the login screen, appending a `?redirect` query parameter, ensuring they are seamlessly returned to their intended destination post-login.
+- **Defensive UI:** Protected views (like the Dashboard) use `onIonViewWillEnter` to block unauthorized background API calls during fast Ionic tab transitions, providing an `EmptyState` prompt for guests.
+
+### Payment Integration (Moyasar 3DS)
+The app integrates Moyasar for payment processing using a seamless "Hybrid Inline" approach to handle 3D Secure (3DS) authentication without reloading the Vue SPA.
+- **Inline Rendering:** The standard credit card form renders natively within the DOM (`CheckoutView.vue`).
+- **3DS Interception:** If a card requires 3DS verification, the `on_completed` callback intercepts the `initiated` status and securely opens the bank's `transaction_url` using the `@capacitor/inappbrowser` overlay.
+- **Local Interception:** The form sets a dummy local URL (`window.location.origin + '/payment-callback'`) as the callback. The app listens for a `urlChangeEvent` to this specific URL, allowing it to instantly extract the payment parameters and close the WebView overlay without ever hitting the external network or flashing a blank screen.
+
 ### Real-time Communication (Order Chat)
 A full-featured chat system integrated into the order management flow.
 - **Dual Channels**: Separate, private chat rooms for "Customer-Tailor" and "Customer-Courier" coordination.
