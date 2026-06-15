@@ -1,0 +1,61 @@
+name: Build iOS for Real Device (Unsigned IPA)
+
+on:
+  workflow_dispatch: # Allows you to manually trigger it via GitHub UI
+
+jobs:
+  build-and-package:
+    runs-on: macos-latest # Uses GitHub's hosted Mac environment
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'npm'
+
+      - name: Install Dependencies
+        run: npm ci
+
+      - name: Build Web Assets (Vue)
+        run: npm run build
+        env:
+          VITE_TADIL_MOBILE_API_URL: ${{ secrets.VITE_TADIL_MOBILE_API_URL }}
+          VITE_MOYASAR_PUBLISHABLE_KEY: ${{ secrets.VITE_MOYASAR_PUBLISHABLE_KEY }}
+
+      - name: Sync Capacitor to iOS Platform
+        run: |
+          npx cap sync ios
+
+      - name: Build Xcode Project (Real Device Architecture)
+        run: |
+          xcodebuild build \
+            -workspace ios/App/App.xcworkspace \
+            -scheme App \
+            -sdk iphoneos \
+            -configuration Debug \
+            -derivedDataPath ios-build-data \
+            CODE_SIGNING_ALLOWED=NO \
+            CODE_SIGNING_REQUIRED=NO \
+            CODE_SIGNING_IDENTITY=""
+
+      - name: Package App into Unsigned IPA
+        run: |
+          mkdir -p build-output/Payload
+          # Copy the built .app to the Payload folder
+          cp -r ios-build-data/Build/Products/Debug-iphoneos/App.app build-output/Payload/
+          cd build-output
+          # Zip the Payload folder to create an .ipa
+          zip -qr tadil-unsigned.ipa Payload
+          # Clean up the Payload folder
+          rm -rf Payload
+
+      - name: Upload Unsigned IPA as Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: tadil-unsigned-ipa
+          path: build-output/tadil-unsigned.ipa
+          retention-days: 7
