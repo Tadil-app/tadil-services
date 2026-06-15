@@ -68,13 +68,14 @@ import {
   IonRefresherContent,
   onIonViewWillEnter,
 } from "@ionic/vue";
-import { useCustomerOrdersStore } from "@/stores";
+import { useCustomerOrdersStore, useAuthStore } from "@/stores";
 import { MainHeader, StatsGrid, OrderListItem } from "@/components";
 import { computed } from "vue";
 import { useRouter } from "vue-router";
 import { storeToRefs } from "pinia";
 
 const router = useRouter();
+const authStore = useAuthStore();
 const ordersStore = useCustomerOrdersStore();
 const {
   orders,
@@ -83,9 +84,16 @@ const {
   doneOrders,
   isLoading,
 } = storeToRefs(ordersStore);
-const { fetchOrders } = ordersStore;
 
 const recentOrders = computed(() => orders.value.slice(0, 5));
+
+async function fetchOrders(event?: any) {
+  if (authStore.token) {
+    await ordersStore.fetchOrders(event);
+  } else if (event) {
+    event.target.complete();
+  }
+}
 
 onIonViewWillEnter(() => {
   fetchOrders();

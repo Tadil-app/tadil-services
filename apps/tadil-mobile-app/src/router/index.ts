@@ -4,7 +4,7 @@ import { RouteRecordRaw } from "vue-router";
 const routes: Array<RouteRecordRaw> = [
   {
     path: "/",
-    redirect: { name: "customer-dashboard" },
+    redirect: { name: "customer-new-order-category-selection" },
   },
   {
     path: "/login",
@@ -22,24 +22,27 @@ const routes: Array<RouteRecordRaw> = [
     path: "/customer",
     name: "customer",
     component: () => import("../views/customer/CustomerLayout.vue"),
-    redirect: { name: "customer-dashboard" },
-    meta: { requiresAuth: true, role: "customer" },
+    redirect: { name: "customer-new-order-category-selection" },
+    meta: { role: "customer" },
     children: [
       {
         path: "dashboard",
         name: "customer-dashboard",
         component: () => import("../views/customer/DashboardView.vue"),
+        meta: { requiresAuth: true },
       },
       {
         path: "orders",
         name: "customer-orders-history",
         component: () => import("../views/customer/OrdersHistoryView.vue"),
+        meta: { requiresAuth: true },
       },
       {
         path: "orders/:orderId",
         name: "customer-order-details",
         props: true,
         component: () => import("../views/customer/OrderDetailsView.vue"),
+        meta: { requiresAuth: true },
       },
       {
         path: "cart",
@@ -56,11 +59,13 @@ const routes: Array<RouteRecordRaw> = [
         path: "checkout",
         name: "customer-checkout",
         component: () => import("../views/customer/checkout/CheckoutView.vue"),
+        meta: { requiresAuth: true },
       },
       {
         path: "checkout/verify",
         name: "customer-checkout-verify",
         component: () => import("../views/customer/checkout/CheckoutVerifyView.vue"),
+        meta: { requiresAuth: true },
       },
       {
         path: "new-order",
@@ -234,11 +239,11 @@ router.beforeEach(async (to, from, next) => {
 
   // 3. Handle routes that require authentication
   if (to.meta.requiresAuth && !isAuthenticated) {
-    return next({ name: "login" });
+    return next({ name: "login", query: { redirect: to.fullPath } });
   }
 
-  // 4. Handle role-based access
-  if (to.meta.role && to.meta.role !== userRole) {
+  // 4. Handle role-based access safely ignoring guests browsing public customer area
+  if (to.meta.role && userRole && to.meta.role !== userRole) {
     if (userRole === "tailor") return next({ name: "tailor-dashboard" });
     if (userRole === "courier") return next({ name: "courier-dashboard" });
     if (userRole === "customer") return next({ name: "customer-dashboard" });
@@ -251,7 +256,7 @@ router.beforeEach(async (to, from, next) => {
       if (userRole === "courier") return next({ name: "courier-dashboard" });
       return next({ name: "customer-dashboard" });
     } else {
-      return next({ name: "login" });
+      return next({ name: "customer-new-order-category-selection" });
     }
   }
 

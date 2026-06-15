@@ -121,11 +121,12 @@ import {
 import { timeOutline, closeCircleOutline } from "ionicons/icons";
 import { ref } from "vue";
 import { useI18n } from "vue-i18n";
-import { useRouter } from "vue-router";
+import { useRoute, useRouter } from "vue-router";
 
 const { t } = useI18n();
 const authStore = useAuthStore();
 const router = useRouter();
+const route = useRoute();
 
 const loginStep = ref<"phone" | "signup" | "pending" | "rejected">("phone");
 const isLoading = ref(false);
@@ -212,6 +213,12 @@ async function onCompleteProfile() {
 }
 
 function handleNavigation(role?: string) {
+  const redirectPath = route.query.redirect as string;
+  if (redirectPath) {
+    router.push(redirectPath);
+    return;
+  }
+
   if (role === "tailor") {
     router.push({ name: "tailor-dashboard" });
   } else if (role === "courier") {

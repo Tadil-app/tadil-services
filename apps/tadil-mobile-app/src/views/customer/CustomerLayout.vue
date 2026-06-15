@@ -7,7 +7,11 @@
         slot="bottom"
         class="flex rtl:flex-row-reverse"
       >
-        <IonTabButton tab="dashboard" href="/customer/dashboard">
+        <IonTabButton 
+          tab="dashboard" 
+          href="/customer/dashboard"
+          :class="{ 'opacity-50': !authStore.token }"
+        >
           <House />
           <IonLabel class="text-xs">
             {{ $t("tailor.navBar.dashboard") }}
@@ -48,9 +52,10 @@ import {
 import { House, PackagePlus, ShoppingBag } from "lucide-vue-next";
 import { computed } from "vue";
 import { useRoute } from "vue-router";
-import { useCartStore } from "@/stores";
+import { useCartStore, useAuthStore } from "@/stores";
 
 const cartStore = useCartStore();
+const authStore = useAuthStore();
 const route = useRoute();
 const isTabsVisible = computed(() => {
   return (
