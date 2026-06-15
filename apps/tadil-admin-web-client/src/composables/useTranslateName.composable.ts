@@ -4,6 +4,7 @@ export type NameLanguage = "en" | "ar" | "hi" | "ur" | "bn";
 
 // Proxied through Vite (see vite.config.ts) so the DeepL key stays server-side.
 const DEEPL_PROXY_URL = import.meta.env.VITE_DEEPL_URL ?? "/deepl";
+const DEEPL_API_KEY = import.meta.env.VITE_DEEPL_API_KEY;
 
 // DeepL source codes. English is plain "EN" as a source.
 const DEEPL_SOURCE_LANG: Record<NameLanguage, string> = {
@@ -28,11 +29,20 @@ async function translateText(
   source: NameLanguage,
   target: NameLanguage
 ): Promise<string> {
-  const { data } = await axios.post(DEEPL_PROXY_URL, {
-    text: [text],
-    source_lang: DEEPL_SOURCE_LANG[source],
-    target_lang: DEEPL_TARGET_LANG[target],
-  });
+  const { data } = await axios.post(
+    DEEPL_PROXY_URL,
+    {
+      text: [text],
+      target_lang: DEEPL_TARGET_LANG[target],
+      source_lang: DEEPL_SOURCE_LANG[source],
+    },
+    {
+      headers: {
+        "Authorization": `DeepL-Auth-Key ${DEEPL_API_KEY}`,
+        "Content-Type": "application/json",
+      },
+    }
+  );
 
   const translated = data?.translations?.[0]?.text;
   if (typeof translated !== "string" || !translated) return "";
