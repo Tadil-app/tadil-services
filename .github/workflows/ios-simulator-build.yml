@@ -7,6 +7,10 @@ jobs:
   build-and-upload:
     runs-on: macos-latest # Uses GitHub's hosted Mac environment
 
+    defaults:
+      run:
+        working-directory: apps/tadil-mobile-app
+
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
@@ -14,28 +18,23 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '22' # Fixed key name and pinned to stable LTS for mobile builds
+          node-version: '22'
           cache: 'npm'
 
       - name: Install Dependencies
-        run: npm ci # Uses package-lock.json for clean installations
+        run: npm ci
 
-      # Step 3: Injects your custom Vue environment variables securely
-      - name: Build Web Assets (Vue)
-        run: npm run build
+      - name: Build Web Assets and Sync Capacitor
+        run: npm run build-mobile
         env:
           VITE_TADIL_MOBILE_API_URL: ${{ secrets.VITE_TADIL_MOBILE_API_URL }}
           VITE_MOYASAR_PUBLISHABLE_KEY: ${{ secrets.VITE_MOYASAR_PUBLISHABLE_KEY }}
-
-      - name: Sync Capacitor to iOS Platform
-        run: |
-          npx cap sync ios
 
       # Step 4: Compiles an unsigned build, passing a clean local output directory flag
       - name: Build Xcode Project (Simulator Architecture)
         run: |
           xcodebuild build \
-            -workspace ios/App/App.xcworkspace \
+            -project ios/App/App.xcodeproj \
             -scheme App \
             -sdk iphonesimulator \
             -configuration Debug \
@@ -58,5 +57,5 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: ios-simulator-app
-          path: build-output/ios-simulator-app.zip
+          path: apps/tadil-mobile-app/build-output/ios-simulator-app.zip
           retention-days: 7
