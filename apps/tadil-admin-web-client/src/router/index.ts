@@ -33,6 +33,10 @@ const routes = [
         component: () => import("@/views/users/CouriersListView.vue"),
       },
       {
+        path: "/customers",
+        component: () => import("@/views/users/CustomersListView.vue"),
+      },
+      {
         path: "/login-requests",
         component: () => import("@/views/users/LoginRequestsView.vue"),
       },

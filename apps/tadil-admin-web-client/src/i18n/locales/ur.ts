@@ -6,6 +6,7 @@ export const ur = {
     extras: "اضافہ",
     models: "خاکے",
     users: "صارفین",
+    customers: "گاہک",
     loginRequests: "لاگ ان کی درخواستیں",
     payoutRequests: "ادائیگی کی درخواستیں",
     orders: "آرڈرز",
@@ -17,6 +18,13 @@ export const ur = {
       status: "حالت",
       tailor: "درزی",
       courier: "کورئیر",
+      customer: "گاہک",
+      dateFrom: "تاریخ سے",
+      dateTo: "تاریخ تک",
+      allStatuses: "تمام حالتیں",
+      allTailors: "تمام درزی",
+      allCouriers: "تمام کورئیر",
+      allCustomers: "تمام گاہک",
     },
     table: {
       reference: "حوالہ",
@@ -71,12 +79,43 @@ export const ur = {
       reject: "مسترد کریں",
     },
     confirmations: {
+      fulfillTitle: "ادائیگی کی تصدیق",
       fulfill: "کیا آپ نے بینک ٹرانسفر مکمل کر لیا ہے؟ اس سے صارف کے بیلنس میں کمی آئے گی۔",
+      rejectTitle: "ادائیگی کی درخواست مسترد کریں",
       reject: "کیا آپ واقعی اس درخواست کو مسترد کرنا چاہتے ہیں؟",
+    },
+    wallet: {
+      title: "والیٹ کی تفصیلات",
+      error: "والیٹ کی تفصیلات لوڈ کرنے میں ناکام",
+      balance: "موجودہ بیلنس",
+      transactions: "لین دین",
+      payouts: "ادائیگی کی تاریخ",
+      noTransactions: "کوئی لین دین نہیں",
+      noPayouts: "کوئی ادائیگی کی درخواست نہیں",
+      cols: {
+        type: "قسم",
+        reference: "حوالہ",
+        amount: "رقم",
+        date: "تاریخ",
+        status: "حالت",
+      },
+      types: {
+        EARNING: "آمدنی",
+        PAYOUT: "ادائیگی",
+      },
+      statuses: {
+        PENDING: "زیر التواء",
+        FULFILLED: "مکمل",
+        REJECTED: "مسترد",
+      },
     },
   },
   common: {
     loading: "لوڈنگ ہو رہی ہے...",
+    pagination: {
+      showing: "{total} میں سے {from}–{to} دکھایا جا رہا ہے",
+      pageOf: "صفحہ {page} / {pages}",
+    },
     currencies: {
       ras: "RAS",
       usd: "$",
@@ -94,6 +133,12 @@ export const ur = {
       actions: "کارروائیاں",
     },
     inputs: {
+      searchableSelect: {
+        placeholder: "ایک آپشن منتخب کریں",
+        searchPlaceholder: "تلاش کریں…",
+        empty: "کوئی نتیجہ نہیں ملا",
+        all: "تمام",
+      },
       selectMenu: {
         placeholder: "ایک آپشن منتخب کریں",
       },
@@ -399,6 +444,18 @@ export const ur = {
       confirmMessage: "کیا آپ واقعی اس صارف کو حذف کرنا چاہتے ہیں؟",
       success: "صارف کامیابی سے حذف ہو گیا",
       error: "صارف حذف کرتے وقت غلطی ہوئی",
+    },
+  },
+  customers: {
+    searchPlaceholder: "نام یا فون سے تلاش کریں",
+    tableHeaders: {
+      city: "شہر",
+    },
+    table: {
+      empty: "کوئی گاہک نہیں ملا",
+    },
+    buttons: {
+      viewOrders: "آرڈرز دیکھیں",
     },
   },
   toast: {

@@ -1,39 +1,20 @@
-import {
-  Body,
-  Controller,
-  Delete,
-  Get,
-  Param,
-  Post,
-  Put,
-  Query,
-} from '@nestjs/common';
+import { Controller, Get, Param, Query } from '@nestjs/common';
 import { ApiOkResponse, ApiQuery, ApiTags } from '@nestjs/swagger';
 import { DataReader } from '@tadil-database';
-import { CreateUserDTO, DisplayUserDTO, PaginatedUsersDTO, UpdateUserDTO } from '../dtos';
-import {
-  ROLE,
-  CreateUserUseCase,
-  UpdateUserUseCase,
-  DeleteUserUseCase,
-} from '@tadil-users';
+import { DisplayUserDTO, PaginatedUsersDTO } from '../dtos';
+import { ROLE } from '@tadil-users';
 
-@Controller('tailors')
-@ApiTags('Tailors')
-export class TailorsController {
-  constructor(
-    private readonly _dataReader: DataReader,
-    private readonly _createUserUseCase: CreateUserUseCase,
-    private readonly _updateUserUseCase: UpdateUserUseCase,
-    private readonly _deleteUserUseCase: DeleteUserUseCase
-  ) {}
+@Controller('customers')
+@ApiTags('Customers')
+export class CustomersController {
+  constructor(private readonly _dataReader: DataReader) {}
 
   @Get('/')
   @ApiOkResponse({ type: PaginatedUsersDTO })
   @ApiQuery({ name: 'search', required: false, description: 'Matches first name, last name or phone' })
   @ApiQuery({ name: 'page', required: false, description: '1-based page number' })
   @ApiQuery({ name: 'pageSize', required: false })
-  async getTailors(
+  async getCustomers(
     @Query('search') search?: string,
     @Query('page') page?: string,
     @Query('pageSize') pageSize?: string
@@ -43,7 +24,7 @@ export class TailorsController {
 
     const term = search?.trim();
     const where = {
-      role: ROLE.TAILOR,
+      role: ROLE.CUSTOMER,
       ...(term
         ? {
             OR: [
@@ -94,33 +75,9 @@ export class TailorsController {
     return { data, total, page: pageNumber, pageSize: size };
   }
 
-  @Get('/phone/:phone')
-  @ApiOkResponse({ type: DisplayUserDTO })
-  async getTailorByPhone(
-    @Param('phone') phone: string
-  ): Promise<DisplayUserDTO | undefined> {
-    const user = await this._dataReader.queries.user.findUnique({
-      where: { phone },
-    });
-
-    if (!user) return undefined;
-    return {
-      ...user,
-      email: user.email ?? undefined,
-    };
-  }
-
-  @Post('/create')
-  async createTailor(@Body() tailor: CreateUserDTO): Promise<void> {
-    await this._createUserUseCase.execute({
-      ...tailor,
-      role: ROLE.TAILOR,
-    });
-  }
-
   @Get('/:id')
   @ApiOkResponse({ type: DisplayUserDTO })
-  async getTailorById(
+  async getCustomerById(
     @Param('id') id: string
   ): Promise<DisplayUserDTO | undefined> {
     const user = await this._dataReader.queries.user.findUnique({
@@ -132,21 +89,5 @@ export class TailorsController {
       ...user,
       email: user.email ?? undefined,
     };
-  }
-
-  @Put('/:id/update')
-  async updateTailor(
-    @Param('id') id: string,
-    @Body() tailor: UpdateUserDTO
-  ): Promise<void> {
-    await this._updateUserUseCase.execute({
-      ...tailor,
-      id: id,
-    });
-  }
-
-  @Delete('/:id/delete')
-  async deleteTailor(@Param('id') id: string): Promise<void> {
-    await this._deleteUserUseCase.execute({ id });
   }
 }

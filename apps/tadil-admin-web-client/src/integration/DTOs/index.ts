@@ -6,6 +6,7 @@ export * from "./users";
 export * from "./locations";
 export * from "./orders/displayOrder.dto";
 export * from "./orders/displayOrderDetails.dto";
+export * from "./orders/paginatedOrders.dto";
 
 export enum ContentType {
   Json = "application/json",

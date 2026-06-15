@@ -7,6 +7,7 @@ export const en = {
     models: "Models",
     tailors: "Tailors",
     couriers: "Couriers",
+    customers: "Customers",
     loginRequests: "Login Requests",
     payoutRequests: "Payout Requests",
     orders: "Orders",
@@ -19,9 +20,13 @@ export const en = {
       status: "Status",
       tailor: "Tailor",
       courier: "Courier",
+      customer: "Customer",
+      dateFrom: "From Date",
+      dateTo: "To Date",
       allStatuses: "All Statuses",
       allTailors: "All Tailors",
       allCouriers: "All Couriers",
+      allCustomers: "All Customers",
     },
     table: {
       reference: "Ref",
@@ -110,12 +115,43 @@ export const en = {
       reject: "Reject",
     },
     confirmations: {
+      fulfillTitle: "Confirm payout",
       fulfill: "Have you completed the bank transfer? This will deduct the user's balance.",
+      rejectTitle: "Reject payout request",
       reject: "Are you sure you want to reject this request?",
+    },
+    wallet: {
+      title: "Wallet Details",
+      error: "Failed to load wallet details",
+      balance: "Current Balance",
+      transactions: "Transactions",
+      payouts: "Payout History",
+      noTransactions: "No transactions",
+      noPayouts: "No payout requests",
+      cols: {
+        type: "Type",
+        reference: "Reference",
+        amount: "Amount",
+        date: "Date",
+        status: "Status",
+      },
+      types: {
+        EARNING: "Earning",
+        PAYOUT: "Payout",
+      },
+      statuses: {
+        PENDING: "Pending",
+        FULFILLED: "Fulfilled",
+        REJECTED: "Rejected",
+      },
     },
   },
   common: {
     loading: "Loading...",
+    pagination: {
+      showing: "Showing {from}–{to} of {total}",
+      pageOf: "Page {page} of {pages}",
+    },
     currencies: {
       ras: "RAS",
       usd: "$",
@@ -137,6 +173,12 @@ export const en = {
       },
       selectMenu: {
         placeholder: "Select an option",
+      },
+      searchableSelect: {
+        placeholder: "Select an option",
+        searchPlaceholder: "Search…",
+        empty: "No results found",
+        all: "All",
       },
       englishName: {
         label: "English Name",
@@ -455,6 +497,18 @@ export const en = {
       confirmMessage: "Are you sure you want to delete this User?",
       success: "User deleted successfully",
       error: "An error occurred while deleting the User",
+    },
+  },
+  customers: {
+    searchPlaceholder: "Search by name or phone",
+    tableHeaders: {
+      city: "City",
+    },
+    table: {
+      empty: "No customers found",
+    },
+    buttons: {
+      viewOrders: "View Orders",
     },
   },
   toast: {

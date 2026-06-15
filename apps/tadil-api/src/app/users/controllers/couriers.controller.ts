@@ -6,10 +6,11 @@ import {
   Param,
   Post,
   Put,
+  Query,
 } from '@nestjs/common';
-import { ApiOkResponse, ApiTags } from '@nestjs/swagger';
+import { ApiOkResponse, ApiQuery, ApiTags } from '@nestjs/swagger';
 import { DataReader } from '@tadil-database';
-import { CreateUserDTO, DisplayUserDTO, UpdateUserDTO } from '../dtos';
+import { CreateUserDTO, DisplayUserDTO, PaginatedUsersDTO, UpdateUserDTO } from '../dtos';
 import {
   ROLE,
   CreateUserUseCase,
@@ -28,14 +29,44 @@ export class CouriersController {
   ) {}
 
   @Get('/')
-  @ApiOkResponse({ type: DisplayUserDTO, isArray: true })
-  async getCouriers(): Promise<DisplayUserDTO[]> {
-    const users = await this._dataReader.queries.user.findMany({
-      where: { role: ROLE.COURIER },
-      include: { addresses: true },
-    });
+  @ApiOkResponse({ type: PaginatedUsersDTO })
+  @ApiQuery({ name: 'search', required: false, description: 'Matches first name, last name or phone' })
+  @ApiQuery({ name: 'page', required: false, description: '1-based page number' })
+  @ApiQuery({ name: 'pageSize', required: false })
+  async getCouriers(
+    @Query('search') search?: string,
+    @Query('page') page?: string,
+    @Query('pageSize') pageSize?: string
+  ): Promise<PaginatedUsersDTO> {
+    const pageNumber = Math.max(1, parseInt(page ?? '1', 10) || 1);
+    const size = Math.min(100, Math.max(1, parseInt(pageSize ?? '20', 10) || 20));
 
-    return users.map((user) => ({
+    const term = search?.trim();
+    const where = {
+      role: ROLE.COURIER,
+      ...(term
+        ? {
+            OR: [
+              { firstName: { contains: term, mode: 'insensitive' as const } },
+              { lastName: { contains: term, mode: 'insensitive' as const } },
+              { phone: { contains: term, mode: 'insensitive' as const } },
+            ],
+          }
+        : {}),
+    };
+
+    const [total, users] = await Promise.all([
+      this._dataReader.queries.user.count({ where }),
+      this._dataReader.queries.user.findMany({
+        where,
+        include: { addresses: true },
+        orderBy: { firstName: 'asc' },
+        skip: (pageNumber - 1) * size,
+        take: size,
+      }),
+    ]);
+
+    const data = users.map((user) => ({
       ...user,
       email: user.email ?? undefined,
       cityNameAr: user.addresses.length > 0 ? user.addresses[0].cityNameAr : undefined,
@@ -59,6 +90,8 @@ export class CouriersController {
       latitude: user.addresses.length > 0 ? user.addresses[0].latitude ?? undefined : undefined,
       longitude: user.addresses.length > 0 ? user.addresses[0].longitude ?? undefined : undefined,
     }));
+
+    return { data, total, page: pageNumber, pageSize: size };
   }
 
 

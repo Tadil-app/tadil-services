@@ -6,7 +6,8 @@ export const ar = {
     extras: "إضافات",
     models: "النماذج",
     tailors: "الخياطين",
-    couriers: "المناديب",
+    couriers: "السائقين",
+    customers: "العملاء",
     loginRequests: "طلبات الدخول",
     payoutRequests: "طلبات السحب",
     orders: "الطلبات",
@@ -18,17 +19,21 @@ export const ar = {
     filters: {
       status: "الحالة",
       tailor: "الخياط",
-      courier: "المندوب",
+      courier: "السائق",
+      customer: "العميل",
+      dateFrom: "من تاريخ",
+      dateTo: "إلى تاريخ",
       allStatuses: "جميع الحالات",
       allTailors: "جميع الخياطين",
-      allCouriers: "جميع المناديب",
+      allCouriers: "جميع السائقين",
+      allCustomers: "جميع العملاء",
     },
     table: {
       reference: "المرجع",
       date: "التاريخ",
       customer: "العميل",
       tailor: "الخياط",
-      courier: "المندوب",
+      courier: "السائق",
       status: "الحالة",
       total: "المجموع",
       actions: "الإجراءات",
@@ -52,7 +57,7 @@ export const ar = {
       participants: "المشاركون",
       customer: "العميل",
       assignedTailor: "الخياط المعين",
-      assignedCourier: "المندوب المعين",
+      assignedCourier: "السائق المعين",
       statusHistory: "سجل الحالات",
       orderItems: "عناصر الطلب",
       customRequest: "طلب مخصص",
@@ -70,8 +75,8 @@ export const ar = {
     all: "الكل",
     pending: "قيد الانتظار",
     waitingForTailorAssignement: "في انتظار تعيين الخياط",
-    waitingForCourierAssignement: "في انتظار تعيين المندوب",
-    waitingForReturnCourierAssignement: "في انتظار مندوب الإرجاع",
+    waitingForCourierAssignement: "في انتظار تعيين السائق",
+    waitingForReturnCourierAssignement: "في انتظار سائق الإرجاع",
     waitingForPickupFromCustomer: "في انتظار الاستلام (العميل)",
     waitingForDropoffToTailor: "في انتظار التوصيل (الخياط)",
     waitingForPickupFromTailor: "في انتظار الاستلام (الخياط)",
@@ -82,7 +87,7 @@ export const ar = {
   },
   loginRequests: {
     title: "طلبات تسجيل الدخول",
-    subtitle: "إدارة طلبات الموافقة على تسجيل الدخول للخياطين والمندوبين",
+    subtitle: "إدارة طلبات الموافقة على تسجيل الدخول للخياطين والسائقين",
     table: {
       name: "الاسم",
       phone: "الهاتف",
@@ -97,7 +102,7 @@ export const ar = {
   },
   payoutRequests: {
     title: "طلبات السحب",
-    subtitle: "إدارة طلبات سحب الرصيد من الخياطين والمندوبين",
+    subtitle: "إدارة طلبات سحب الرصيد من الخياطين والسائقين",
     table: {
       user: "المستخدم",
       amount: "المبلغ",
@@ -110,12 +115,43 @@ export const ar = {
       reject: "رفض",
     },
     confirmations: {
+      fulfillTitle: "تأكيد الدفع",
       fulfill: "هل أكملت التحويل البنكي؟ سيتم خصم المبلغ من رصيد المستخدم.",
+      rejectTitle: "رفض طلب السحب",
       reject: "هل أنت متأكد من رفض هذا الطلب؟",
+    },
+    wallet: {
+      title: "تفاصيل المحفظة",
+      error: "تعذّر تحميل تفاصيل المحفظة",
+      balance: "الرصيد الحالي",
+      transactions: "المعاملات",
+      payouts: "سجل السحوبات",
+      noTransactions: "لا توجد معاملات",
+      noPayouts: "لا توجد طلبات سحب",
+      cols: {
+        type: "النوع",
+        reference: "المرجع",
+        amount: "المبلغ",
+        date: "التاريخ",
+        status: "الحالة",
+      },
+      types: {
+        EARNING: "أرباح",
+        PAYOUT: "سحب",
+      },
+      statuses: {
+        PENDING: "معلق",
+        FULFILLED: "مكتمل",
+        REJECTED: "مرفوض",
+      },
     },
   },
   common: {
     loading: "جاري التحميل...",
+    pagination: {
+      showing: "عرض {from}–{to} من {total}",
+      pageOf: "صفحة {page} من {pages}",
+    },
     currencies: {
       ras: "ر.س",
       usd: "$",
@@ -135,6 +171,12 @@ export const ar = {
     inputs: {
       autoTranslate: {
         label: "الترجمة التلقائية",
+      },
+      searchableSelect: {
+        placeholder: "اختر خياراً",
+        searchPlaceholder: "بحث…",
+        empty: "لا توجد نتائج",
+        all: "الكل",
       },
       selectMenu: {
         placeholder: "اختر خياراً",
@@ -433,7 +475,7 @@ export const ar = {
     roles: {
       tailor: "مصمم",
       customer: "عميل",
-      courier: "موزع",
+      courier: "سائق",
     },
     tableHeaders: {
       firstName: "الاسم الاول",
@@ -455,6 +497,18 @@ export const ar = {
       confirmMessage: "هل انت متاكد من حذف هذا المستخدم؟",
       success: "تم حذف المستخدم بنجاح",
       error: "حدث خطاء في حذف المستخدم",
+    },
+  },
+  customers: {
+    searchPlaceholder: "ابحث بالاسم أو رقم الهاتف",
+    tableHeaders: {
+      city: "المدينة",
+    },
+    table: {
+      empty: "لا يوجد عملاء",
+    },
+    buttons: {
+      viewOrders: "عرض الطلبات",
     },
   },
   toast: {

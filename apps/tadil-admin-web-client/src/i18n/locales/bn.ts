@@ -6,6 +6,7 @@ export const bn = {
     extras: "অতিরিক্ত",
     models: "নমুনা",
     users: "ব্যবহারকারী",
+    customers: "গ্রাহক",
     loginRequests: "লগইন অনুরোধ",
     payoutRequests: "পেমেন্ট অনুরোধ",
     orders: "অর্ডার",
@@ -17,6 +18,13 @@ export const bn = {
       status: "অবস্থা",
       tailor: "দর্জি",
       courier: "কুরিয়ার",
+      customer: "গ্রাহক",
+      dateFrom: "তারিখ থেকে",
+      dateTo: "তারিখ পর্যন্ত",
+      allStatuses: "সমস্ত অবস্থা",
+      allTailors: "সমস্ত দর্জি",
+      allCouriers: "সমস্ত কুরিয়ার",
+      allCustomers: "সমস্ত গ্রাহক",
     },
     table: {
       reference: "রেফ",
@@ -71,12 +79,43 @@ export const bn = {
       reject: "প্রত্যাখ্যান করুন",
     },
     confirmations: {
+      fulfillTitle: "পেআউট নিশ্চিত করুন",
       fulfill: "আপনি কি ব্যাংক ট্রান্সফার সম্পন্ন করেছেন? এটি ব্যবহারকারীর ব্যালেন্স থেকে বিয়োগ করা হবে।",
+      rejectTitle: "পেআউট অনুরোধ প্রত্যাখ্যান করুন",
       reject: "আপনি কি নিশ্চিত যে আপনি এই অনুরোধটি প্রত্যাখ্যান করতে চান?",
+    },
+    wallet: {
+      title: "ওয়ালেট বিবরণ",
+      error: "ওয়ালেট বিবরণ লোড করতে ব্যর্থ",
+      balance: "বর্তমান ব্যালেন্স",
+      transactions: "লেনদেন",
+      payouts: "পেআউট ইতিহাস",
+      noTransactions: "কোনো লেনদেন নেই",
+      noPayouts: "কোনো পেআউট অনুরোধ নেই",
+      cols: {
+        type: "ধরন",
+        reference: "রেফারেন্স",
+        amount: "পরিমাণ",
+        date: "তারিখ",
+        status: "অবস্থা",
+      },
+      types: {
+        EARNING: "আয়",
+        PAYOUT: "পেআউট",
+      },
+      statuses: {
+        PENDING: "মুলতুবি",
+        FULFILLED: "সম্পন্ন",
+        REJECTED: "প্রত্যাখ্যাত",
+      },
     },
   },
   common: {
     loading: "লোড হচ্ছে...",
+    pagination: {
+      showing: "{total}-এর মধ্যে {from}–{to} দেখানো হচ্ছে",
+      pageOf: "পৃষ্ঠা {page} / {pages}",
+    },
     currencies: {
       ras: "RAS",
       usd: "$",
@@ -94,6 +133,12 @@ export const bn = {
       actions: "ক্রিয়াকলাপ",
     },
     inputs: {
+      searchableSelect: {
+        placeholder: "একটি বিকল্প নির্বাচন করুন",
+        searchPlaceholder: "অনুসন্ধান…",
+        empty: "কোনো ফলাফল পাওয়া যায়নি",
+        all: "সব",
+      },
       selectMenu: {
         placeholder: "একটি বিকল্প নির্বাচন করুন",
       },
@@ -398,6 +443,18 @@ export const bn = {
       confirmMessage: "আপনি কি নিশ্চিত যে আপনি এই ব্যবহারকারীকে মুছে ফেলতে চান?",
       success: "ব্যবহারকারী সফলভাবে মুছে ফেলা হয়েছে",
       error: "ব্যবহারকারী মুছে ফেলার সময় একটি ত্রুটি ঘটেছে",
+    },
+  },
+  customers: {
+    searchPlaceholder: "নাম বা ফোন দিয়ে অনুসন্ধান করুন",
+    tableHeaders: {
+      city: "শহর",
+    },
+    table: {
+      empty: "কোনো গ্রাহক পাওয়া যায়নি",
+    },
+    buttons: {
+      viewOrders: "অর্ডার দেখুন",
     },
   },
   toast: {

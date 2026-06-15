@@ -9,6 +9,7 @@
     :offset="offset"
     :maxWidth="matchTriggerContentWidth ? triggerWidth : undefined"
     @hide="emit('hide')"
+    @shown="emit('shown')"
   >
     <template #default>
       <div ref="triggerRef">
@@ -48,6 +49,7 @@ let resizeObserver: ResizeObserver | null = null;
 
 const emit = defineEmits<{
   (e: "hide"): void;
+  (e: "shown"): void;
 }>();
 
 const updateWidth = () => {
