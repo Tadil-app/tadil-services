@@ -3,7 +3,7 @@ import axios from "axios";
 export type NameLanguage = "en" | "ar" | "hi" | "ur" | "bn";
 
 // Proxied through Vite (see vite.config.ts) so the DeepL key stays server-side.
-const DEEPL_PROXY_URL = "/deepl";
+const DEEPL_PROXY_URL = import.meta.env.VITE_DEEPL_URL ?? "/deepl";
 
 // DeepL source codes. English is plain "EN" as a source.
 const DEEPL_SOURCE_LANG: Record<NameLanguage, string> = {
