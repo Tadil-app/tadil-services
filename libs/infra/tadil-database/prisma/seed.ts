@@ -41,6 +41,16 @@ function loadObject<T>(file: string): T {
   return JSON.parse(readFileSync(join(dataDir, file), 'utf-8')) as T;
 }
 
+// Upserts run one query per row, so run them in bounded batches to avoid
+// opening thousands of connections at once.
+const BATCH_SIZE = 200;
+
+async function inBatches<T>(items: T[], fn: (item: T) => Promise<unknown>) {
+  for (let i = 0; i < items.length; i += BATCH_SIZE) {
+    await Promise.all(items.slice(i, i + BATCH_SIZE).map(fn));
+  }
+}
+
 async function main() {
   console.log('Seeding Saudi cities and districts ...');
 
@@ -50,14 +60,12 @@ async function main() {
   // Generated from the upstream geojson by build-boundaries.mjs.
   const boundaries = loadObject<BoundaryMap>('district_boundaries.json');
 
-  // Address stores names as strings (no FK to these tables), so a clean
-  // wipe + reinsert keeps the seed idempotent without touching addresses.
-  await prisma.district.deleteMany();
-  await prisma.city.deleteMany();
-
-  await prisma.city.createMany({
-    data: cities.map((c) => ({
-      id: c.city_id,
+  // Upsert by id so the seed is idempotent without wiping the tables (a
+  // delete+reinsert would briefly empty the list on every deploy). Address
+  // stores names as strings with no FK to these tables, so rows that are no
+  // longer in the dataset are simply left in place.
+  await inBatches(cities, (c) => {
+    const data = {
       regionId: c.region_id,
       nameAr: c.name_ar,
       nameEn: c.name_en,
@@ -66,31 +74,38 @@ async function main() {
       nameUr: c.name_ur,
       lat: c.lat,
       lng: c.lng,
-    })),
+    };
+    return prisma.city.upsert({
+      where: { id: c.city_id },
+      create: { id: c.city_id, ...data },
+      update: data,
+    });
   });
-  console.log(`Inserted ${cities.length} cities.`);
+  console.log(`Upserted ${cities.length} cities.`);
 
   let withBoundary = 0;
-  await prisma.district.createMany({
-    data: districts.map((d) => {
-      const id = String(d.district_id);
-      const boundary = boundaries[id] ?? null;
-      if (boundary) withBoundary++;
-      return {
-        id,
-        cityId: d.city_id,
-        regionId: d.region_id,
-        nameAr: d.name_ar,
-        nameEn: d.name_en,
-        nameBn: d.name_bn,
-        nameHi: d.name_hi,
-        nameUr: d.name_ur,
-        boundaries: boundary ?? undefined,
-      };
-    }),
+  await inBatches(districts, (d) => {
+    const id = String(d.district_id);
+    const boundary = boundaries[id] ?? null;
+    if (boundary) withBoundary++;
+    const data = {
+      cityId: d.city_id,
+      regionId: d.region_id,
+      nameAr: d.name_ar,
+      nameEn: d.name_en,
+      nameBn: d.name_bn,
+      nameHi: d.name_hi,
+      nameUr: d.name_ur,
+      boundaries: boundary ?? undefined,
+    };
+    return prisma.district.upsert({
+      where: { id },
+      create: { id, ...data },
+      update: data,
+    });
   });
   console.log(
-    `Inserted ${districts.length} districts (${withBoundary} with boundaries).`
+    `Upserted ${districts.length} districts (${withBoundary} with boundaries).`
   );
 
   console.log('Seeding finished.');
