@@ -41,31 +41,35 @@ function loadObject<T>(file: string): T {
   return JSON.parse(readFileSync(join(dataDir, file), 'utf-8')) as T;
 }
 
-// Upserts run one query per row, so run them in bounded batches to avoid
-// opening thousands of connections at once.
-const BATCH_SIZE = 200;
-
-async function inBatches<T>(items: T[], fn: (item: T) => Promise<unknown>) {
-  for (let i = 0; i < items.length; i += BATCH_SIZE) {
-    await Promise.all(items.slice(i, i + BATCH_SIZE).map(fn));
-  }
+function log(msg: string) {
+  console.log(`[seed] ${msg}`);
 }
 
 async function main() {
-  console.log('Seeding Saudi cities and districts ...');
+  const startedAt = Date.now();
+  log('Starting cities/districts seed ...');
 
   const cities = load<RawCity>('cities_lite.json');
   const districts = load<RawDistrict>('districts_lite.json');
   // GeoJSON Polygon per district, keyed by stringified district id.
   // Generated from the upstream geojson by build-boundaries.mjs.
   const boundaries = loadObject<BoundaryMap>('district_boundaries.json');
+  log(`Data files: ${cities.length} cities, ${districts.length} districts.`);
 
-  // Upsert by id so the seed is idempotent without wiping the tables (a
-  // delete+reinsert would briefly empty the list on every deploy). Address
-  // stores names as strings with no FK to these tables, so rows that are no
-  // longer in the dataset are simply left in place.
-  await inBatches(cities, (c) => {
-    const data = {
+  // createMany with skipDuplicates is a single bulk insert per table (one
+  // connection, no connection-storm) and never wipes existing rows, so the
+  // cities/districts list is never briefly emptied on deploy. Existing rows
+  // are skipped by primary key; only genuinely new rows are inserted.
+  const [citiesBefore, districtsBefore] = await Promise.all([
+    prisma.city.count(),
+    prisma.district.count(),
+  ]);
+  log(`Before insert: ${citiesBefore} cities, ${districtsBefore} districts in DB.`);
+
+  const cityResult = await prisma.city.createMany({
+    skipDuplicates: true,
+    data: cities.map((c) => ({
+      id: c.city_id,
       regionId: c.region_id,
       nameAr: c.name_ar,
       nameEn: c.name_en,
@@ -74,46 +78,57 @@ async function main() {
       nameUr: c.name_ur,
       lat: c.lat,
       lng: c.lng,
-    };
-    return prisma.city.upsert({
-      where: { id: c.city_id },
-      create: { id: c.city_id, ...data },
-      update: data,
-    });
+    })),
   });
-  console.log(`Upserted ${cities.length} cities.`);
-
-  let withBoundary = 0;
-  await inBatches(districts, (d) => {
-    const id = String(d.district_id);
-    const boundary = boundaries[id] ?? null;
-    if (boundary) withBoundary++;
-    const data = {
-      cityId: d.city_id,
-      regionId: d.region_id,
-      nameAr: d.name_ar,
-      nameEn: d.name_en,
-      nameBn: d.name_bn,
-      nameHi: d.name_hi,
-      nameUr: d.name_ur,
-      boundaries: boundary ?? undefined,
-    };
-    return prisma.district.upsert({
-      where: { id },
-      create: { id, ...data },
-      update: data,
-    });
-  });
-  console.log(
-    `Upserted ${districts.length} districts (${withBoundary} with boundaries).`
+  log(
+    `Cities: +${cityResult.count} inserted, ${cities.length - cityResult.count} already present (skipped).`
   );
 
-  console.log('Seeding finished.');
+  let withBoundary = 0;
+  const districtResult = await prisma.district.createMany({
+    skipDuplicates: true,
+    data: districts.map((d) => {
+      const id = String(d.district_id);
+      const boundary = boundaries[id] ?? null;
+      if (boundary) withBoundary++;
+      return {
+        id,
+        cityId: d.city_id,
+        regionId: d.region_id,
+        nameAr: d.name_ar,
+        nameEn: d.name_en,
+        nameBn: d.name_bn,
+        nameHi: d.name_hi,
+        nameUr: d.name_ur,
+        boundaries: boundary ?? undefined,
+      };
+    }),
+  });
+  log(
+    `Districts: +${districtResult.count} inserted, ${districts.length - districtResult.count} already present (skipped); ${withBoundary}/${districts.length} have boundaries.`
+  );
+
+  const [citiesAfter, districtsAfter] = await Promise.all([
+    prisma.city.count(),
+    prisma.district.count(),
+  ]);
+  log(`After insert: ${citiesAfter} cities, ${districtsAfter} districts in DB.`);
+
+  // The dataset is the source of truth, so the table should hold at least as
+  // many rows as the file. Fewer means something is off (wrong DB, failed
+  // insert) — surface it loudly rather than letting the app serve a short list.
+  if (citiesAfter < cities.length || districtsAfter < districts.length) {
+    log(
+      `WARNING: row count is below the dataset (${citiesAfter}/${cities.length} cities, ${districtsAfter}/${districts.length} districts). The list may be incomplete.`
+    );
+  }
+
+  log(`Seeding finished in ${((Date.now() - startedAt) / 1000).toFixed(1)}s.`);
 }
 
 main()
   .catch((e) => {
-    console.error(e);
+    console.error('[seed] Seeding failed:', e);
     process.exit(1);
   })
   .finally(async () => {
