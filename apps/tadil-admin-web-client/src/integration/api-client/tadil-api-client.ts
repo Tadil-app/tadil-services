@@ -1095,6 +1095,21 @@ export class Api<
      * No description
      *
      * @tags Payout Requests
+     * @name PayoutRequestsControllerGetWallet
+     * @request GET:/api/payout-requests/wallet/{userId}
+     */
+    payoutRequestsControllerGetWallet: (userId: string, params: RequestParams = {}) =>
+      this.request<any, any>({
+        path: `/api/payout-requests/wallet/${userId}`,
+        method: "GET",
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Payout Requests
      * @name PayoutRequestsControllerFulfill
      * @request POST:/api/payout-requests/{id}/fulfill
      */

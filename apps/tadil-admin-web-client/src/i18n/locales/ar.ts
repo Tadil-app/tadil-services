@@ -115,8 +115,35 @@ export const ar = {
       reject: "رفض",
     },
     confirmations: {
+      fulfillTitle: "تأكيد الدفع",
       fulfill: "هل أكملت التحويل البنكي؟ سيتم خصم المبلغ من رصيد المستخدم.",
+      rejectTitle: "رفض طلب السحب",
       reject: "هل أنت متأكد من رفض هذا الطلب؟",
+    },
+    wallet: {
+      title: "تفاصيل المحفظة",
+      error: "تعذّر تحميل تفاصيل المحفظة",
+      balance: "الرصيد الحالي",
+      transactions: "المعاملات",
+      payouts: "سجل السحوبات",
+      noTransactions: "لا توجد معاملات",
+      noPayouts: "لا توجد طلبات سحب",
+      cols: {
+        type: "النوع",
+        reference: "المرجع",
+        amount: "المبلغ",
+        date: "التاريخ",
+        status: "الحالة",
+      },
+      types: {
+        EARNING: "أرباح",
+        PAYOUT: "سحب",
+      },
+      statuses: {
+        PENDING: "معلق",
+        FULFILLED: "مكتمل",
+        REJECTED: "مرفوض",
+      },
     },
   },
   common: {

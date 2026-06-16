@@ -79,8 +79,35 @@ export const ur = {
       reject: "مسترد کریں",
     },
     confirmations: {
+      fulfillTitle: "ادائیگی کی تصدیق",
       fulfill: "کیا آپ نے بینک ٹرانسفر مکمل کر لیا ہے؟ اس سے صارف کے بیلنس میں کمی آئے گی۔",
+      rejectTitle: "ادائیگی کی درخواست مسترد کریں",
       reject: "کیا آپ واقعی اس درخواست کو مسترد کرنا چاہتے ہیں؟",
+    },
+    wallet: {
+      title: "والیٹ کی تفصیلات",
+      error: "والیٹ کی تفصیلات لوڈ کرنے میں ناکام",
+      balance: "موجودہ بیلنس",
+      transactions: "لین دین",
+      payouts: "ادائیگی کی تاریخ",
+      noTransactions: "کوئی لین دین نہیں",
+      noPayouts: "کوئی ادائیگی کی درخواست نہیں",
+      cols: {
+        type: "قسم",
+        reference: "حوالہ",
+        amount: "رقم",
+        date: "تاریخ",
+        status: "حالت",
+      },
+      types: {
+        EARNING: "آمدنی",
+        PAYOUT: "ادائیگی",
+      },
+      statuses: {
+        PENDING: "زیر التواء",
+        FULFILLED: "مکمل",
+        REJECTED: "مسترد",
+      },
     },
   },
   common: {

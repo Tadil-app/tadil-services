@@ -1,4 +1,4 @@
-import { PayoutRequest, Transaction, WalletDetails, WalletRepository } from '@tadil-wallet';
+import { PayoutRequest, PendingPayoutRequest, Transaction, WalletDetails, WalletRepository } from '@tadil-wallet';
 import { DbClient } from '../../dbClient';
 import { PayoutStatus, TransactionType } from '@prisma/client';
 
@@ -90,15 +90,23 @@ export class PrismaWalletRepository implements WalletRepository {
     });
   }
 
-  async getPendingPayoutRequests(): Promise<PayoutRequest[]> {
+  async getPendingPayoutRequests(): Promise<PendingPayoutRequest[]> {
     const requests = await this._db.payoutRequest.findMany({
       where: { status: PayoutStatus.PENDING },
       orderBy: { date: 'desc' },
+      include: {
+        user: {
+          select: { id: true, firstName: true, lastName: true, phone: true },
+        },
+      },
     });
     return requests.map((r) => ({
-      ...r,
+      id: r.id,
+      amount: r.amount,
       status: r.status as any,
       date: r.date.toISOString(),
+      userId: r.userId,
+      user: r.user,
     }));
   }
 }
