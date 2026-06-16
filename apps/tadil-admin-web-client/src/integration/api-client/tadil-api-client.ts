@@ -763,11 +763,12 @@ export class Api<
     tailorsControllerGetTailors: (
       query?: {
         search?: string;
-        take?: number;
+        page?: number;
+        pageSize?: number;
       },
       params: RequestParams = {},
     ) =>
-      this.request<DisplayUserDTO[], any>({
+      this.request<PaginatedUsersDTO, any>({
         path: `/api/tailors`,
         method: "GET",
         query: query,
@@ -871,11 +872,12 @@ export class Api<
     couriersControllerGetCouriers: (
       query?: {
         search?: string;
-        take?: number;
+        page?: number;
+        pageSize?: number;
       },
       params: RequestParams = {},
     ) =>
-      this.request<DisplayUserDTO[], any>({
+      this.request<PaginatedUsersDTO, any>({
         path: `/api/couriers`,
         method: "GET",
         query: query,
