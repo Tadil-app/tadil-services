@@ -21,12 +21,12 @@
     "prisma-migrate-deploy": "npx prisma migrate deploy",
     "prisma-studio": "npx prisma studio",
     "prisma-seed": "npx prisma db seed",
-    "prisma-seed-payouts-test": "node --loader ts-node/esm prisma/seed-payouts-test.ts",
-    "prisma-clean-payouts-test": "node --loader ts-node/esm prisma/seed-payouts-test.ts --clean",
+    "prisma-seed-payouts-test": "tsx prisma/seed-payouts-test.ts",
+    "prisma-clean-payouts-test": "tsx prisma/seed-payouts-test.ts --clean",
     "prisma-reset": "npx prisma migrate reset"
   },
   "prisma": {
-    "seed": "node --loader ts-node/esm prisma/seed.ts"
+    "seed": "tsx prisma/seed.ts"
   },
   "dependencies": {
     "prisma": "^6.19.0",
@@ -34,6 +34,7 @@
   },
   "devDependencies": {
     "@prisma/client": "^6.19.0",
-    "prisma-json-types-generator": "^3.6.2"
+    "prisma-json-types-generator": "^3.6.2",
+    "tsx": "^4.19.2"
   }
 }
