@@ -10,6 +10,7 @@
           name="alterationType"
           v-model="selectedAlteration"
           interface="action-sheet"
+          :cancel-text="$t('common.buttons.cancel')"
           class="border border-border rounded-lg px-4"
           shape="round"
           :placeholder="$t('alterationForm.alterationType')"
@@ -134,6 +135,7 @@
             "
             compare-with="id"
             interface="action-sheet"
+            :cancel-text="$t('common.buttons.cancel')"
             class="border rounded-lg px-4 transition-colors"
             :class="
               validationErrors[information.id]
