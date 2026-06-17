@@ -812,7 +812,7 @@
     },
     {
       "id": "6276cf38-3edc-46ce-8912-254403c22c34",
-      "clientId": "${env.TADIL_ADMIN_UI_CLIENT_ID}",
+      "clientId": "${env.KC_ADMIN_UI_CLIENT_ID}",
       "name": "",
       "description": "",
       "rootUrl": "",
@@ -823,10 +823,10 @@
       "alwaysDisplayInConsole": false,
       "clientAuthenticatorType": "client-secret",
       "redirectUris": [
-        "${env.TADIL_ADMIN_UI_CLIENT_REDIRECTION_URL}/*"
+        "${env.KC_ADMIN_UI_CLIENT_REDIRECTION_URL}/*"
       ],
       "webOrigins": [
-        "${env.TADIL_ADMIN_UI_CLIENT_REDIRECTION_URL}"
+        "${env.KC_ADMIN_UI_CLIENT_REDIRECTION_URL}"
       ],
       "notBefore": 0,
       "bearerOnly": false,
@@ -887,7 +887,7 @@
     },
     {
       "id": "2dd66a7b-060e-4862-8a2b-cd321509e14e",
-      "clientId": "${env.TADIL_API_CLIENT_ID}",
+      "clientId": "${env.KC_API_CLIENT_ID}",
       "surrogateAuthRequired": false,
       "enabled": true,
       "alwaysDisplayInConsole": false,
