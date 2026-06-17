@@ -97,7 +97,7 @@
       }
     ],
     "client": {
-      "tadil-admin-ui": [],
+      "${env.TADIL_ADMIN_UI_CLIENT_ID}": [],
       "realm-management": [
         {
           "id": "816bed5f-2138-4942-aae6-c9270b78638a",
@@ -412,7 +412,7 @@
           "attributes": {}
         }
       ],
-      "tadil-api": []
+      "${env.TADIL_API_CLIENT_ID}": []
     }
   },
   "groups": [],
@@ -471,12 +471,12 @@
   "users": [
     {
       "id": "f72d9f0c-afda-4f07-b29a-9a27f014fb49",
-      "username": "service-account-tadil-api",
+      "username": "service-account-${env.TADIL_API_CLIENT_ID}",
       "emailVerified": false,
       "enabled": true,
       "createdTimestamp": 1780347133098,
       "totp": false,
-      "serviceAccountClientId": "tadil-api",
+      "serviceAccountClientId": "${env.TADIL_API_CLIENT_ID}",
       "disableableCredentialTypes": [],
       "requiredActions": [],
       "realmRoles": [
@@ -812,7 +812,7 @@
     },
     {
       "id": "6276cf38-3edc-46ce-8912-254403c22c34",
-      "clientId": "tadil-admin-ui",
+      "clientId": "${env.TADIL_ADMIN_UI_CLIENT_ID}",
       "name": "",
       "description": "",
       "rootUrl": "",
@@ -823,10 +823,10 @@
       "alwaysDisplayInConsole": false,
       "clientAuthenticatorType": "client-secret",
       "redirectUris": [
-        "https://tadil-admin-web-client-production-3efb.up.railway.app/*"
+        "${env.TADIL_ADMIN_UI_CLIENT_REDIRECTION_URL}/*"
       ],
       "webOrigins": [
-        "https://tadil-admin-web-client-production-3efb.up.railway.app"
+        "${env.TADIL_ADMIN_UI_CLIENT_REDIRECTION_URL}"
       ],
       "notBefore": 0,
       "bearerOnly": false,
@@ -862,7 +862,7 @@
           "protocolMapper": "oidc-audience-mapper",
           "consentRequired": false,
           "config": {
-            "included.client.audience": "tadil-api",
+            "included.client.audience": "${env.TADIL_API_CLIENT_ID}",
             "id.token.claim": "false",
             "access.token.claim": "true",
             "userinfo.token.claim": "false"
@@ -887,12 +887,12 @@
     },
     {
       "id": "2dd66a7b-060e-4862-8a2b-cd321509e14e",
-      "clientId": "tadil-api",
+      "clientId": "${env.TADIL_API_CLIENT_ID}",
       "surrogateAuthRequired": false,
       "enabled": true,
       "alwaysDisplayInConsole": false,
       "clientAuthenticatorType": "client-secret",
-      "secret": "**********",
+      "secret": "${env.KC_API_CLIENT_SECRET}",
       "redirectUris": [],
       "webOrigins": [],
       "notBefore": 0,
