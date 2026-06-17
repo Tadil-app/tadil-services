@@ -97,7 +97,7 @@
       }
     ],
     "client": {
-      "${env.TADIL_ADMIN_UI_CLIENT_ID}": [],
+      "${env.KC_ADMIN_UI_CLIENT_ID}": [],
       "realm-management": [
         {
           "id": "816bed5f-2138-4942-aae6-c9270b78638a",
@@ -412,7 +412,7 @@
           "attributes": {}
         }
       ],
-      "${env.TADIL_API_CLIENT_ID}": []
+      "${env.KC_API_CLIENT_ID}": []
     }
   },
   "groups": [],
@@ -471,12 +471,12 @@
   "users": [
     {
       "id": "f72d9f0c-afda-4f07-b29a-9a27f014fb49",
-      "username": "service-account-${env.TADIL_API_CLIENT_ID}",
+      "username": "service-account-${env.KC_API_CLIENT_ID}",
       "emailVerified": false,
       "enabled": true,
       "createdTimestamp": 1780347133098,
       "totp": false,
-      "serviceAccountClientId": "${env.TADIL_API_CLIENT_ID}",
+      "serviceAccountClientId": "${env.KC_API_CLIENT_ID}",
       "disableableCredentialTypes": [],
       "requiredActions": [],
       "realmRoles": [
@@ -862,7 +862,7 @@
           "protocolMapper": "oidc-audience-mapper",
           "consentRequired": false,
           "config": {
-            "included.client.audience": "${env.TADIL_API_CLIENT_ID}",
+            "included.client.audience": "${env.KC_API_CLIENT_ID}",
             "id.token.claim": "false",
             "access.token.claim": "true",
             "userinfo.token.claim": "false"
