@@ -24,13 +24,17 @@ COPY keycloak-config/tadil-realm-init.json /opt/keycloak/data/import/
 # Switch to root to write the script and ensure file permissions match
 USER root
 
-# Create a small startup script to swap env vars using native bash manipulation
-RUN echo '#!/bin/bash \n\
-sed -i "s|\${env.KC_ADMIN_UI_CLIENT_ID}|${KC_ADMIN_UI_CLIENT_ID}|g" /opt/keycloak/data/import/tadil-realm-init.json \n\
-sed -i "s|\${env.KC_ADMIN_UI_CLIENT_REDIRECTION_URL}|${KC_ADMIN_UI_CLIENT_REDIRECTION_URL}|g" /opt/keycloak/data/import/tadil-realm-init.json \n\
-exec /opt/keycloak/bin/kc.sh start --optimized --import-realm' > /opt/keycloak/bin/startup.sh && \
-chmod +x /opt/keycloak/bin/startup.sh && \
-chown 1000:0 /opt/keycloak/bin/startup.sh /opt/keycloak/data/import/tadil-realm-init.json
+# Write the startup script using a clean heredoc
+RUN cat << 'EOF' > /opt/keycloak/bin/startup.sh
+#!/bin/bash
+sed -i "s|\${env.KC_ADMIN_UI_CLIENT_ID}|${KC_ADMIN_UI_CLIENT_ID}|g" /opt/keycloak/data/import/tadil-realm-init.json
+sed -i "s|\${env.KC_ADMIN_UI_CLIENT_REDIRECTION_URL}|${KC_ADMIN_UI_CLIENT_REDIRECTION_URL}|g" /opt/keycloak/data/import/tadil-realm-init.json
+exec /opt/keycloak/bin/kc.sh start --optimized --import-realm
+EOF
+
+# Give executable rights and transfer ownership back to the non-root user
+RUN chmod +x /opt/keycloak/bin/startup.sh && \
+    chown -R 1000:0 /opt/keycloak/bin/startup.sh /opt/keycloak/data/import/
 
 # Revert back to Keycloak's standard non-root user
 USER 1000
