@@ -31,5 +31,4 @@ exec /opt/keycloak/bin/kc.sh start --optimized --import-realm' > /opt/keycloak/b
 # KEYCLOAK_ADMIN, KEYCLOAK_ADMIN_PASSWORD, etc.) should be provided by the environment.
 
 # Start Keycloak and import the realm
-ENTRYPOINT ["/opt/keycloak/bin/kc.sh"]
-CMD ["start", "--optimized", "--import-realm"]
+ENTRYPOINT ["/opt/keycloak/bin/startup.sh"]
