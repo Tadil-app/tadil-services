@@ -27,6 +27,8 @@ USER root
 # Write the startup script using a clean heredoc
 RUN cat << 'EOF' > /opt/keycloak/bin/startup.sh
 #!/bin/bash
+sed -i "s|\${env.KC_API_CLIENT_ID}|${KC_API_CLIENT_ID}|g" /opt/keycloak/data/import/tadil-realm-init.json
+sed -i "s|\${env.KC_API_CLIENT_SECRET}|${KC_API_CLIENT_SECRET}|g" /opt/keycloak/data/import/tadil-realm-init.json
 sed -i "s|\${env.KC_ADMIN_UI_CLIENT_ID}|${KC_ADMIN_UI_CLIENT_ID}|g" /opt/keycloak/data/import/tadil-realm-init.json
 sed -i "s|\${env.KC_ADMIN_UI_CLIENT_REDIRECTION_URL}|${KC_ADMIN_UI_CLIENT_REDIRECTION_URL}|g" /opt/keycloak/data/import/tadil-realm-init.json
 exec /opt/keycloak/bin/kc.sh start --optimized --import-realm
