@@ -2,7 +2,7 @@
   <IonPage>
     <IonTabs>
       <IonRouterOutlet />
-      <IonTabBar slot="bottom" class="flex rtl:flex-row-reverse">
+      <IonTabBar slot="bottom" class="flex" dir="rtl">
         <IonTabButton tab="dashboard" href="/courier/dashboard">
           <House />
           <IonLabel>{{ $t("tailor.navBar.dashboard") }}</IonLabel>
@@ -24,7 +24,6 @@
 
 <script setup lang="ts">
 import {
-  IonIcon,
   IonLabel,
   IonPage,
   IonRouterOutlet,
