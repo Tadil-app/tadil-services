@@ -2,37 +2,38 @@
   <IonPage>
     <IonTabs>
       <IonRouterOutlet />
-      <IonTabBar
-        v-show="isTabsVisible"
-        slot="bottom"
-        class="flex rtl:flex-row-reverse"
-      >
-        <IonTabButton 
-          tab="dashboard" 
+      <IonTabBar v-show="isTabsVisible" slot="bottom" class="flex" dir="rtl">
+        <IonTabButton
+          tab="dashboard"
           href="/customer/dashboard"
           :class="{ 'opacity-50': !authStore.token }"
         >
           <House />
           <IonLabel class="text-xs">
-            {{ $t("tailor.navBar.dashboard") }}
+            {{ $t('tailor.navBar.dashboard') }}
           </IonLabel>
         </IonTabButton>
-        <IonTabButton tab="new-order" href="/customer/new-order/category-selection">
+
+        <IonTabButton
+          tab="new-order"
+          href="/customer/new-order/category-selection"
+        >
           <PackagePlus />
-          <IonLabel class="text-xs">{{ $t("tailor.navBar.orders") }}</IonLabel>
+          <IonLabel class="text-xs">{{ $t('tailor.navBar.orders') }}</IonLabel>
         </IonTabButton>
+        
         <IonTabButton tab="cart" href="/customer/cart">
           <div class="relative">
             <ShoppingBag />
             <IonBadge
               v-if="cartStore.itemsCount > 0"
               color="tertiary"
-              class="absolute -top-1 -right-1.5 px-1 min-w-[18px] h-[18px] flex items-center justify-center text-[10px] rounded-full animate-pulse"
+              class="absolute -top-1 -right-1.5 px-1 min-w-4.5 h-4.5 flex items-center justify-center text-[10px] rounded-full animate-pulse"
             >
               {{ cartStore.itemsCount }}
             </IonBadge>
           </div>
-          <IonLabel class="text-xs">{{ $t("cart.title") }}</IonLabel>
+          <IonLabel class="text-xs">{{ $t('cart.title') }}</IonLabel>
         </IonTabButton>
       </IonTabBar>
     </IonTabs>
@@ -48,19 +49,19 @@ import {
   IonLabel,
   IonPage,
   IonBadge,
-} from "@ionic/vue";
-import { House, PackagePlus, ShoppingBag } from "lucide-vue-next";
-import { computed } from "vue";
-import { useRoute } from "vue-router";
-import { useCartStore, useAuthStore } from "@/stores";
+} from '@ionic/vue';
+import { House, PackagePlus, ShoppingBag } from 'lucide-vue-next';
+import { computed } from 'vue';
+import { useRoute } from 'vue-router';
+import { useCartStore, useAuthStore } from '@/stores';
 
 const cartStore = useCartStore();
 const authStore = useAuthStore();
 const route = useRoute();
 const isTabsVisible = computed(() => {
   return (
-    route.name !== "customer-new-order-predefined-model-gallery" &&
-    route.name !== "customer-new-order-custom-upload"
+    route.name !== 'customer-new-order-predefined-model-gallery' &&
+    route.name !== 'customer-new-order-custom-upload'
   );
 });
 </script>

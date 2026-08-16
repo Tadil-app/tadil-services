@@ -377,12 +377,29 @@ export const ar = {
       confirmPickup: "تأكيد الاستلام",
       confirmPickupFromCustomer: "تأكيد الاستلام من العميل",
       confirmPickupFromTailor: "تأكيد الاستلام من الخياط",
-      deliverToTailor: "التسليم للخياط",
-      deliverToCustomer: "التسليم للعميل",
-      markAsDelivered: "تحديد كتم التسليم",
+      deliverToTailor: "توصيل للخياط",
+      deliverToCustomer: "توصيل للعميل",
+      markAsDelivered: "تعيين كمُسَلَّم",
       deliveryAddress: "عنوان التوصيل",
     },
-  },
+    print: {
+      title: "ملصق الشحن والفاتورة",
+      orderRef: "طلب #",
+      date: "التاريخ:",
+      from: "من (العميل)",
+      name: "الاسم:",
+      phone: "الجوال:",
+      address: "العنوان:",
+      to: "إلى (الخياط)",
+      orderDetails: "تفاصيل الطلب",
+      item: "العنصر",
+      details: "التفاصيل / التعديلات",
+      qty: "الكمية",
+      unitPrice: "سعر الوحدة",
+      total: "المجموع",
+      grandTotal: "المجموع الكلي:"
+    }
+    },
   wallet: {
     noTransactions: "لم يتم العثور على معاملات",
     payoutRequest: {

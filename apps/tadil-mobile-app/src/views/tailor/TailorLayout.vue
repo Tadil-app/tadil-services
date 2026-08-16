@@ -2,18 +2,20 @@
   <IonPage>
     <IonTabs>
       <IonRouterOutlet />
-      <IonTabBar slot="bottom" class="flex rtl:flex-row-reverse">
+      <IonTabBar slot="bottom" class="flex" dir="rtl">
         <IonTabButton tab="dashboard" href="/tailor/dashboard">
           <House />
-          <IonLabel>{{ $t("tailor.navBar.dashboard") }}</IonLabel>
+          <IonLabel>{{ $t('tailor.navBar.dashboard') }}</IonLabel>
         </IonTabButton>
+
         <IonTabButton tab="orders" href="/tailor/orders">
           <PackageSearch />
-          <IonLabel>{{ $t("tailor.navBar.orders") }}</IonLabel>
+          <IonLabel>{{ $t('tailor.navBar.orders') }}</IonLabel>
         </IonTabButton>
+        
         <IonTabButton tab="wallet" href="/tailor/wallet">
           <Wallet />
-          <IonLabel>{{ $t("tailor.navBar.wallet") }}</IonLabel>
+          <IonLabel>{{ $t('tailor.navBar.wallet') }}</IonLabel>
         </IonTabButton>
       </IonTabBar>
     </IonTabs>
@@ -28,10 +30,10 @@ import {
   IonTabButton,
   IonTabs,
   IonPage,
-} from "@ionic/vue";
-import { useTailorOrdersStore } from "@/stores";
-import { onBeforeMount } from "vue";
-import { House, PackageSearch, Wallet } from "lucide-vue-next";
+} from '@ionic/vue';
+import { useTailorOrdersStore } from '@/stores';
+import { onBeforeMount } from 'vue';
+import { House, PackageSearch, Wallet } from 'lucide-vue-next';
 
 const ordersStore = useTailorOrdersStore();
 const { fetchOrders } = ordersStore;

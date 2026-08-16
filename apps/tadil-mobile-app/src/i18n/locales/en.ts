@@ -381,6 +381,23 @@ export const en = {
       markAsDelivered: "Mark as Delivered",
       deliveryAddress: "Delivery Address",
     },
+    print: {
+      title: "SHIPPING LABEL & INVOICE",
+      orderRef: "Order #",
+      date: "Date:",
+      from: "FROM (Customer)",
+      name: "Name:",
+      phone: "Phone:",
+      address: "Address:",
+      to: "TO (Tailor)",
+      orderDetails: "Order Details",
+      item: "Item",
+      details: "Details / Alterations",
+      qty: "Qty",
+      unitPrice: "Unit Price",
+      total: "Total",
+      grandTotal: "Grand Total:"
+    }
   },
   wallet: {
     noTransactions: "No transactions found",
