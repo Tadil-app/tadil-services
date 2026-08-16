@@ -28,6 +28,7 @@ import {
   DisplayDistrictDTO,
   DisplayBoundaryDTO,
   User,
+  ShippingLabelDTO,
 } from "../dtos";
 export interface UploadFileDto {
   file: File;
@@ -501,6 +502,21 @@ export class Api<
       this.request<void, any>({
         path: `/api/tailor/${id}/orders/${orderId}/mark-ready`,
         method: "POST",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Courier
+     * @name CourierControllerGetShippingLabel
+     * @request GET:/api/courier/{id}/orders/{orderId}/shipping-label
+     */
+    courierControllerGetShippingLabel: (id: string, orderId: string, params: RequestParams = {}) =>
+      this.request<ShippingLabelDTO, any>({
+        path: `/api/courier/${id}/orders/${orderId}/shipping-label`,
+        method: "GET",
+        format: "json",
         ...params,
       }),
 

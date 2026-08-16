@@ -377,12 +377,29 @@ export const hi = {
       confirmPickup: "पिकअप की पुष्टि करें",
       confirmPickupFromCustomer: "ग्राहक से पिकअप की पुष्टि करें",
       confirmPickupFromTailor: "दर्जी से पिकअप की पुष्टि करें",
-      deliverToTailor: "दर्जी को सुपुर्द करें",
-      deliverToCustomer: "ग्राहक को सुपुर्द करें",
-      markAsDelivered: "डिलीवर के रूप में चिह्नित करें",
+      deliverToTailor: "दर्जी को डिलीवर करें",
+      deliverToCustomer: "ग्राहक को डिलीवर करें",
+      markAsDelivered: "डिलीवर किए गए के रूप में चिह्नित करें",
       deliveryAddress: "वितरण पता",
     },
-  },
+    print: {
+      title: "शिपिंग लेबल और चालान",
+      orderRef: "ऑर्डर #",
+      date: "दिनांक:",
+      from: "प्रेषक (ग्राहक)",
+      name: "नाम:",
+      phone: "फ़ोन:",
+      address: "पता:",
+      to: "प्राप्तकर्ता (दर्जी)",
+      orderDetails: "ऑर्डर विवरण",
+      item: "वस्तु",
+      details: "विवरण / बदलाव",
+      qty: "मात्रा",
+      unitPrice: "इकाई मूल्य",
+      total: "कुल",
+      grandTotal: "कुल योग:"
+    }
+    },
   wallet: {
     noTransactions: "कोई लेनदेन नहीं मिला",
     payoutRequest: {

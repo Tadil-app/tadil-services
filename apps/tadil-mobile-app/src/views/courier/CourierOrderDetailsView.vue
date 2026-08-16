@@ -20,12 +20,9 @@
               </p>
             </div>
             <div class="flex flex-col justify-between items-end">
-              <QrcodeSvg
-                :value="order.reference"
-                :size="80"
-                level="H"
-                class="border border-black p-1 rounded-lg"
-              />
+              <IonButton fill="clear" @click="printLabel" class="ion-hide-print text-primary m-0 p-0 h-10">
+                <Printer class="w-8 h-8" />
+              </IonButton>
               <StatusPill :status="order.status" />
             </div>
           </div>
@@ -136,8 +133,8 @@
 <script setup lang="ts">
 import { onMounted, ref, computed } from "vue";
 import { useRoute, useRouter } from "vue-router";
-import { MapPin } from "lucide-vue-next";
-import { DisplayOrderDTO, ORDER_STATUS } from "@/integration/dtos";
+import { MapPin, Printer } from "lucide-vue-next";
+import { DisplayOrderDTO, ORDER_STATUS, ShippingLabelDTO } from "@/integration/dtos";
 import { formatDate } from "@/utils";
 import { useToast, useLocalizedAddress } from "@/composables";
 import { apiClient } from "@/integration/api";
@@ -145,7 +142,7 @@ import { useAuthStore } from "@/stores";
 import { ImageContainer, TranslatedName, StatusPill, SecondaryHeader, OrderTimeline, Chat } from "@/components";
 import { useI18n } from "vue-i18n";
 import { IonButton, IonCard, IonContent, IonPage, IonSpinner } from "@ionic/vue";
-import { QrcodeSvg } from "qrcode.vue";
+import { getOrderLableHtml } from "./orderPritnable";
 
 const { t } = useI18n();
 const route = useRoute();
@@ -236,6 +233,32 @@ async function performAction(action: () => Promise<any>) {
     showToast({ message: t("common.messages.actionError"), color: "danger" });
   } finally {
     isActionLoading.value = false;
+  }
+}
+
+async function printLabel() {
+  if (!order.value) return;
+  try {
+    const { data: label } = await apiClient.courierControllerGetShippingLabel(
+      authStore.userId,
+      order.value.id
+    );
+
+    const printWindow = window.open("", "_blank");
+    if (!printWindow) {
+      showToast({ message: "Please allow popups to print the label.", color: "danger" });
+      return;
+    }
+
+    
+const html = getOrderLableHtml(label, t);
+    
+
+    printWindow.document.write(html);
+    printWindow.document.close();
+  } catch (error) {
+    console.error("Failed to generate shipping label", error);
+    showToast({ message: "Failed to load printable shipping label.", color: "danger" });
   }
 }
 

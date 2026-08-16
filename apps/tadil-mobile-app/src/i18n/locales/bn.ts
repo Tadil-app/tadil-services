@@ -378,12 +378,29 @@ export const bn = {
       confirmPickup: "পিকআপ নিশ্চিত করুন",
       confirmPickupFromCustomer: "গ্রাহকের থেকে পিকআপ নিশ্চিত করুন",
       confirmPickupFromTailor: "দর্জির থেকে পিকআপ নিশ্চিত করুন",
-      deliverToTailor: "দর্জিকে ডেলিভারি করুন",
-      deliverToCustomer: "গ্রাহককে ডেলিভারি করুন",
-      markAsDelivered: "ডেলিভারি হিসেবে চিহ্নিত করুন",
+      deliverToTailor: "দর্জির কাছে ডেলিভারি দিন",
+      deliverToCustomer: "গ্রাহকের কাছে ডেলিভারি দিন",
+      markAsDelivered: "ডেলিভারি সম্পন্ন হিসেবে চিহ্নিত করুন",
       deliveryAddress: "ডেলিভারি ঠিকানা",
     },
-  },
+    print: {
+      title: "শিপিং লেবেল এবং চালান",
+      orderRef: "অর্ডার #",
+      date: "তারিখ:",
+      from: "প্রেরক (গ্রাহক)",
+      name: "নাম:",
+      phone: "ফোন:",
+      address: "ঠিকানা:",
+      to: "প্রাপক (দর্জি)",
+      orderDetails: "অর্ডারের বিবরণ",
+      item: "আইটেম",
+      details: "বিবরণ / পরিবর্তন",
+      qty: "পরিমাণ",
+      unitPrice: "একক মূল্য",
+      total: "মোট",
+      grandTotal: "সর্বমোট:"
+    }
+    },
   wallet: {
     noTransactions: "কোন লেনদেন পাওয়া যায়নি",
     payoutRequest: {
