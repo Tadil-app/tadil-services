@@ -1,8 +1,9 @@
-import { Controller, Get, Param, Post, Query } from '@nestjs/common';
+import { Controller, Get, Param, Post, Query, NotFoundException } from '@nestjs/common';
 import { ApiOkResponse, ApiTags, ApiOperation } from '@nestjs/swagger';
 import { DataReader } from '@tadil-database';
 import { DisplayOrderDTO } from '../tailor/dtos/order';
 import { InformationType } from '../customer/dtos';
+import { ShippingLabelDTO } from './dtos/shippingLabel.dto';
 import {
   AcceptCourierAssignmentUseCase,
   DeclineCourierAssignmentUseCase,
@@ -102,9 +103,102 @@ export class CourierController {
     });
 
     return orders.map((order) => this._mapOrder(order));
-  }
+    }
 
-  @Post('/orders/:orderId/accept')
+    @Get('/orders/:orderId/shipping-label')
+    @ApiOperation({ summary: 'Get shipping label details for a specific order' })
+    @ApiOkResponse({ type: ShippingLabelDTO })
+    async getShippingLabel(
+    @Param('id') courierId: string,
+    @Param('orderId') orderId: string
+    ): Promise<ShippingLabelDTO> {
+    const prismaOrder = await this._dataReader.queries.order.findUnique({
+      where: { id: orderId },
+      include: {
+        customer: true,
+        address: true,
+        assignedTailor: {
+          include: {
+            addresses: true,
+          },
+        },
+        items: {
+          include: {
+            sections: {
+              include: {
+                alterations: true,
+              },
+            },
+          },
+        },
+        customItems: {
+          include: {
+            alterations: true,
+          },
+        },
+      },
+    });
+
+    if (!prismaOrder) {
+      throw new NotFoundException('Order not found');
+    }
+
+    const order: any = prismaOrder;
+
+    const customerAddressStr = order.address
+      ? `${order.address.cityNameEn}, ${order.address.districtNameEn || ''}, ${order.address.street}`
+      : 'N/A';
+
+    // The tailor's address is stored in the addresses array
+    const tailorAddressObj = order.assignedTailor?.addresses?.[0];
+    const tailorAddressStr = tailorAddressObj
+      ? `${tailorAddressObj.cityNameEn}, ${tailorAddressObj.districtNameEn || ''}, ${tailorAddressObj.street}`
+      : 'N/A';
+
+    const items: any[] = [];
+
+    order.items.forEach((item: any) => {
+     const details = item.sections
+       .map((s: any) => {
+         const alts = s.alterations.map((a: any) => a.englishName).join(', ');
+         return `${s.englishName} (${alts})`;
+       })
+       .join('; ');
+
+     items.push({
+       name: item.englishName,
+       details,
+       price: item.price,
+     });
+    });
+
+    order.customItems.forEach((item: any) => {
+     const details = item.alterations.map((a: any) => a.englishName).join(', ');
+     items.push({
+       name: 'Custom Model',
+       details,
+       price: item.price,
+     });
+    });
+
+    return {
+     orderId: order.id,
+     orderReference: order.reference,
+     orderDate: order.date,
+     totalPrice: order.totalPrice,
+     customerName: `${order.customer.firstName} ${order.customer.lastName}`,
+     customerPhone: order.customer.phone,
+     customerAddress: customerAddressStr,
+     tailorName: order.assignedTailor
+       ? `${order.assignedTailor.firstName} ${order.assignedTailor.lastName}`
+       : 'N/A',
+     tailorPhone: order.assignedTailor?.phone || 'N/A',
+     tailorAddress: tailorAddressStr,
+     items,
+    };
+    }
+
+    @Post('/orders/:orderId/accept')
   @ApiOperation({ summary: 'Accept a courier assignment' })
   async accept(
     @Param('id') courierId: string,

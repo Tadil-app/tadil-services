@@ -10,8 +10,8 @@ interface CanvasDrawingComposable {
   canvasWidth: Ref<number>;
   canvasHeight: Ref<number>;
   initCanvas: () => void;
-  highlightPolygon: (polygon: Point[]) => void;
-  unhighlightPolygon: () => void;
+  highlightPolygons: (polygons: Point[][]) => void;
+  unhighlightPolygons: () => void;
 }
 
 export function useModelSegmenter(): CanvasDrawingComposable {
@@ -20,7 +20,7 @@ export function useModelSegmenter(): CanvasDrawingComposable {
   const canvasWidth = ref<number>(0);
   const canvasHeight = ref<number>(0);
   const isDrawing = ref<boolean>(false);
-  const highlightedPolygon = ref<Point[]>([]);
+  const highlightedPolygons = ref<Point[][]>([]);
   let context: CanvasRenderingContext2D | null = null;
   function initCanvas() {
     isDrawing.value = false;
@@ -42,37 +42,41 @@ export function useModelSegmenter(): CanvasDrawingComposable {
     });
   }
 
-  function highlightPolygon(polygon: Point[]) {
-    highlightedPolygon.value = polygon;
+  function highlightPolygons(polygons: Point[][]) {
+    highlightedPolygons.value = polygons;
     redrawCanvas();
   }
 
-  function unhighlightPolygon() {
-    highlightedPolygon.value = [];
+  function unhighlightPolygons() {
+    highlightedPolygons.value = [];
     redrawCanvas();
   }
 
-  function drawPolygon() {
-    if (highlightedPolygon.value.length < 2 || !context) return;
+  function drawPolygons() {
+    if (!context) return;
 
-    context.beginPath();
-    context.moveTo(
-      highlightedPolygon.value[0]!.x,
-      highlightedPolygon.value[0]!.y
-    );
-    for (let i = 1; i < highlightedPolygon.value.length; i++) {
-      context.lineTo(
-        highlightedPolygon.value[i]!.x,
-        highlightedPolygon.value[i]!.y
+    highlightedPolygons.value.forEach(polygon => {
+      if (polygon.length < 2) return;
+      
+      context!.beginPath();
+      context!.moveTo(
+        polygon[0]!.x,
+        polygon[0]!.y
       );
-    }
+      for (let i = 1; i < polygon.length; i++) {
+        context!.lineTo(
+          polygon[i]!.x,
+          polygon[i]!.y
+        );
+      }
 
-    context.closePath();
-    context.fillStyle = "rgba(188, 85, 54, 0.3)";
-    context.fill();
-    context.strokeStyle = "rgba(188, 85, 54, 1)";
-    context.lineWidth = 1;
-    context.stroke();
+      context!.closePath();
+      context!.fillStyle = "rgba(188, 85, 54, 0.3)";
+      context!.fill();
+      context!.strokeStyle = "rgba(188, 85, 54, 1)";
+      context!.lineWidth = 1;
+      context!.stroke();
+    });
   }
 
   function redrawCanvas() {
@@ -85,7 +89,7 @@ export function useModelSegmenter(): CanvasDrawingComposable {
       canvasWidth.value,
       canvasHeight.value
     );
-    drawPolygon();
+    drawPolygons();
   }
 
   return {
@@ -94,7 +98,7 @@ export function useModelSegmenter(): CanvasDrawingComposable {
     canvasWidth,
     canvasHeight,
     initCanvas,
-    highlightPolygon,
-    unhighlightPolygon,
+    highlightPolygons,
+    unhighlightPolygons,
   };
 }

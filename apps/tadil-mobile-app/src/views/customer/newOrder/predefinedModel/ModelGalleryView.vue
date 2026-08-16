@@ -26,11 +26,11 @@
           @activeIndexChange="onSwiperActiveSlideChange"
         >
           <SwiperSlide v-for="image in modelImages" :key="image.id">
-            <ImageContainer
+            <ModelSegmenter
               :imageUrl="image.imageUrl"
               :alt="selectedModel.englishName"
+              :sections="highlightedSections"
               class="max-h-120"
-              :isSegmenter="true"
               @segmenter:clicked="findSectionAtPoint"
             />
           </SwiperSlide>
@@ -71,7 +71,7 @@
             </IonButton>
             <ModelSegmenter
               :imageUrl="selectedImage.imageUrl"
-              :section="selectedSection.coordinates"
+              :sections="[selectedSection.coordinates]"
               :alt="selectedSection.englishName"
               class="max-h-[30vh]"
             />
@@ -139,7 +139,7 @@ import {
   IonModal,
   IonPage,
 } from "@ionic/vue";
-import { onBeforeMount, ref } from "vue";
+import { computed, onBeforeMount, ref } from "vue";
 import { ModelCategory } from "@/integration/dtos";
 import {
   TranslatedName,
@@ -193,6 +193,25 @@ const {
   resetSelection,
   editingAlterationId,
 } = usePredefinedModel();
+
+const highlightedSections = computed(() => {
+  if (!selectedImage.value || !modelItems.value) return [];
+  
+  const currentImageId = selectedImage.value.id;
+  const cartImageInfo = modelItems.value.modelImages.find(img => img.modelImageId === currentImageId);
+  
+  if (!cartImageInfo) return [];
+
+  // Get the section IDs that have at least one alteration selected
+  const alteredSectionIds = cartImageInfo.sections
+    .filter(sec => sec.alterations.length > 0)
+    .map(sec => sec.sectionId);
+
+  // Find their coordinates from the original selectedImage data
+  return selectedImage.value.sections
+    .filter(sec => alteredSectionIds.includes(sec.id))
+    .map(sec => sec.coordinates);
+});
 
 const currentEditingAlteration = ref<SelectedAlteration>();
 const editingMeta = ref<{ imageId: string; sectionId: string }>();

@@ -318,3 +318,23 @@ export interface DisplayBoundaryDTO {
   type: "Polygon" | "MultiPolygon";
   coordinates: number[][][] | number[][][][];
 }
+
+export interface ShippingLabelItemDTO {
+  name: string;
+  details: string;
+  price: number;
+}
+
+export interface ShippingLabelDTO {
+  orderId: string;
+  orderReference: string;
+  orderDate: string;
+  totalPrice: number;
+  customerName: string;
+  customerPhone: string;
+  customerAddress: string;
+  tailorName?: string;
+  tailorPhone?: string;
+  tailorAddress?: string;
+  items: ShippingLabelItemDTO[];
+}
