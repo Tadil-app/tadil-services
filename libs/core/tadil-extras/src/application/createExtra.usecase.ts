@@ -38,6 +38,10 @@ export class CreateExtraUseCase {
       await this._extrasRepository.createExtra({
         id: newSectionId,
         ...createExtraCommand,
+        sorting:
+          createExtraCommand.sorting == null
+            ? undefined
+            : Number(createExtraCommand.sorting),
       });
     } catch (error: unknown) {
       if (error instanceof Error)
@@ -54,6 +58,7 @@ export class CreateExtraCommand {
   readonly urduName: string;
   readonly bengaliName: string;
   readonly price: number;
+  readonly sorting?: number;
 
   constructor(
     englishName: string,
@@ -62,6 +67,7 @@ export class CreateExtraCommand {
     urduName: string,
     bengaliName: string,
     price: number,
+    sorting?: number,
   ) {
     this.englishName = englishName;
     this.arabicName = arabicName;
@@ -69,5 +75,6 @@ export class CreateExtraCommand {
     this.urduName = urduName;
     this.bengaliName = bengaliName;
     this.price = price;
+    this.sorting = sorting;
   }
 }

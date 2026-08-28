@@ -38,6 +38,17 @@
             multiple
           />
         </div>
+        <div class="space-y-1.5">
+          <InputLabel for="sorting">
+            {{ $t("common.inputs.sorting.label") }}
+          </InputLabel>
+          <TextInput
+            id="sorting"
+            v-model="newAlteration.sorting"
+            type="number"
+            :placeholder="$t('common.inputs.sorting.placeholder')"
+          />
+        </div>
         <div class="col-span-2 space-y-1.5">
           <InputLabel for="informations">
             {{ $t("common.inputs.informations.label") }}
@@ -97,7 +108,8 @@ const newAlteration = ref<CreateAlterationDTO>({
   bengaliName: "",
   price: 0,
   sections: [],
-  informations: []
+  informations: [],
+  sorting: undefined,
 });
 const namesForm = ref<InstanceType<typeof MultiLanguageNameForm>>();
 
@@ -142,7 +154,8 @@ function closeModal() {
     bengaliName: "",
     price: 0,
     sections: [],
-    informations: []
+    informations: [],
+    sorting: undefined,
   };
   priceValidationError.value = "";
   isOpen.value = false;

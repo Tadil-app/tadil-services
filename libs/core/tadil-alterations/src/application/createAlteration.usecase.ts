@@ -38,6 +38,10 @@ export class CreateAlterationUseCase {
       await this._alterationsRepository.createAlteration({
         id: newSectionId,
         ...createAlterationCommand,
+        sorting:
+          createAlterationCommand.sorting == null
+            ? undefined
+            : Number(createAlterationCommand.sorting),
       });
     } catch (error: unknown) {
       if (error instanceof Error)
@@ -56,6 +60,7 @@ export class CreateAlterationCommand {
   readonly price: number;
   readonly sections: string[];
   readonly informations: string[]
+  readonly sorting?: number;
 
   constructor(
     englishName: string,
@@ -65,7 +70,8 @@ export class CreateAlterationCommand {
     bengaliName: string,
     price: number,
     sections: string[],
-    informations: string[]
+    informations: string[],
+    sorting?: number
   ) {
     this.englishName = englishName;
     this.arabicName = arabicName;
@@ -75,5 +81,6 @@ export class CreateAlterationCommand {
     this.price = price;
     this.sections = sections;
     this.informations = informations;
+    this.sorting = sorting;
   }
 }

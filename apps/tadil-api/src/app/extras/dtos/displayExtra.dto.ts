@@ -23,4 +23,6 @@ export class DisplayExtraDTO {
   @ApiProperty()
   @IsNotEmpty()
   price!: number;
+  @ApiProperty()
+  sorting!: number;
 }

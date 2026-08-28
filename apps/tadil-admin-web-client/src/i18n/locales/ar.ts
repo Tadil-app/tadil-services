@@ -166,6 +166,7 @@ export const ar = {
       value: "القيمة",
       unit: "الوحدة",
       price: "السعر",
+      sorting: "الترتيب",
       actions: "الإجراءات",
     },
     inputs: {
@@ -255,6 +256,10 @@ export const ar = {
         label: "السعر",
         placeholder: "0.00",
         errorMessage: "السعر مطلوب",
+      },
+      sorting: {
+        label: "الترتيب",
+        placeholder: "0",
       },
       sections: {
         label: "الأقسام",
@@ -406,6 +411,9 @@ export const ar = {
         confirmMessage: "هل أنت متأكد من أنك تريد حذف هذا القسم؟",
         success: "تم حذف القسم بنجاح",
         error: "حدث خطأ أثناء حذف القسم",
+      },
+      reorder: {
+        error: "حدث خطأ أثناء إعادة ترتيب الأقسام",
       },
     },
   },

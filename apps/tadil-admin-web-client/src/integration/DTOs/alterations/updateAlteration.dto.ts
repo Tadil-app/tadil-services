@@ -7,4 +7,5 @@ export interface UpdateAlterationDTO {
   price: number;
   sections: string[];
   informations: string[];
+  sorting: number;
 }

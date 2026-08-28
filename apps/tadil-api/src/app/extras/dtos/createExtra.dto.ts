@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNotEmpty } from 'class-validator';
+import { IsNotEmpty, IsOptional } from 'class-validator';
 
 export class CreateExtraDTO {
   @ApiProperty()
@@ -20,4 +20,7 @@ export class CreateExtraDTO {
   @ApiProperty()
   @IsNotEmpty()
   price!: number;
+  @ApiProperty({ required: false })
+  @IsOptional()
+  sorting?: number;
 }

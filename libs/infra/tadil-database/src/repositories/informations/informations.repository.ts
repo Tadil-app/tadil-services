@@ -28,10 +28,14 @@ export class PrismaInformationsRepository implements InformationsRepository {
       type: information.type as InformationType,
       unit: information.unit ?? undefined,
       extras: information.extras.map((extra) => extra.id),
+      sorting: information.sorting,
     };
   }
 
   async createInformation(information: Information): Promise<void> {
+    const max = await this._db.information.aggregate({
+      _max: { sorting: true },
+    });
     await this._db.information.create({
       data: {
         id: information.id,
@@ -43,6 +47,10 @@ export class PrismaInformationsRepository implements InformationsRepository {
         isRequired: information.isRequired,
         type: information.type,
         unit: information.unit,
+        sorting:
+          information.sorting === undefined || information.sorting === null
+            ? (max._max.sorting ?? -1) + 1
+            : Number(information.sorting),
         extras: {
           connect: information.extras.map((extraId) => ({ id: extraId })),
         },
@@ -62,6 +70,7 @@ export class PrismaInformationsRepository implements InformationsRepository {
         isRequired: information.isRequired,
         type: information.type,
         unit: information.unit,
+        sorting: Number(information.sorting),
         extras: {
           set: information.extras.map((extraId) => ({ id: extraId })),
         },

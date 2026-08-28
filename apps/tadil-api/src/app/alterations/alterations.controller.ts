@@ -39,6 +39,7 @@ export class AlterationsController {
         sections: { select: { id: true } },
         informations: { select: { id: true } },
       },
+      orderBy: { sorting: 'asc' },
     });
     return alterations.map((alteration) => ({
       ...alteration,

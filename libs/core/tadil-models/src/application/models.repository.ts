@@ -14,4 +14,5 @@ export interface ModelsRepository {
   addSection(section: Section): Promise<void>;
   updateSection(section: Section): Promise<void>;
   deleteSection(sectionId: string): Promise<void>;
+  reorderSections(modelImageId: string, sectionIds: string[]): Promise<void>;
 }

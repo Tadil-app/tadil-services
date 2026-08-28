@@ -30,4 +30,7 @@ export class UpdateInformationDTO {
   @ApiProperty({ type: String, isArray: true })
   @IsNotEmpty()
   extras!: string[];
+  @ApiProperty()
+  @IsNotEmpty()
+  sorting!: number;
 }

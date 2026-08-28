@@ -29,4 +29,6 @@ export class DisplayAlterationDTO {
   @ApiProperty({ type: String, isArray: true })
   @IsNotEmpty()
   informations!: string[];
+  @ApiProperty()
+  sorting!: number;
 }

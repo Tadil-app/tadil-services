@@ -26,4 +26,7 @@ export class UpdateAlterationDTO {
   @ApiProperty({ type: String, isArray: true })
   @IsNotEmpty()
   informations!: string[];
+  @ApiProperty()
+  @IsNotEmpty()
+  sorting!: number;
 }

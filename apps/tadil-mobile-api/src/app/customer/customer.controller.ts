@@ -153,7 +153,7 @@ export class CustomerController {
   ): Promise<DisplayModelImageDTO[]> {
     const modelImages = await this._dataReader.queries.modelImage.findMany({
       where: { modelId: id },
-      include: { sections: true },
+      include: { sections: { orderBy: { sorting: 'asc' } } },
     });
 
     const images = modelImages.map((image) => {
@@ -197,9 +197,11 @@ export class CustomerController {
         : undefined,
       include: {
         informations: {
-          include: { extras: true },
+          include: { extras: { orderBy: { sorting: 'asc' } } },
+          orderBy: { sorting: 'asc' },
         },
       },
+      orderBy: { sorting: 'asc' },
     });
 
     return alterations.map((alteration) => ({

@@ -30,6 +30,9 @@
             <th class="ps-2 text-center">
               {{ $t("common.tableHeaders.price") }}
             </th>
+            <th class="w-24 text-center">
+              {{ $t("common.tableHeaders.sorting") }}
+            </th>
             <th class="w-30">{{ $t("common.tableHeaders.actions") }}</th>
           </tr>
         </thead>
@@ -94,6 +97,7 @@
             <td class="ps-2 text-center max-w-40 truncate">
               {{ alteration.price }}{{ $t("common.currencies.ras") }}
             </td>
+            <td class="ps-2 text-center">{{ alteration.sorting }}</td>
             <td class="">
               <div class="flex gap-2 justify-center">
                 <EditAlterationModal

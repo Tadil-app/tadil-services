@@ -130,6 +130,7 @@ export const hi = {
       value: "मान",
       unit: "इकाई",
       price: "मूल्य",
+      sorting: "क्रम",
       actions: "कार्यवाई",
     },
     inputs: {
@@ -209,6 +210,10 @@ export const hi = {
         label: "मूल्य",
         placeholder: "0.00",
         errorMessage: "मूल्य आवश्यक है",
+      },
+      sorting: {
+        label: "क्रम",
+        placeholder: "0",
       },
       sections: {
         label: "खंड",
@@ -373,6 +378,9 @@ export const hi = {
         confirmMessage: "क्या आप वाकई इस खंड को हटाना चाहते हैं?",
         success: "खंड सफलतापूर्वक हटाया गया",
         error: "खंड हटाते समय एक त्रुटि हुई",
+      },
+      reorder: {
+        error: "खंडों को पुनः क्रमबद्ध करते समय एक त्रुटि हुई",
       },
     },
   },

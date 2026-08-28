@@ -27,6 +27,9 @@
             <th class="ps-2 text-center">
               {{ $t("common.tableHeaders.bengaliName") }}
             </th>
+            <th class="w-24 text-center">
+              {{ $t("common.tableHeaders.sorting") }}
+            </th>
             <th class="w-30">{{ $t("common.tableHeaders.actions") }}</th>
           </tr>
         </thead>
@@ -83,6 +86,7 @@
             <td class="ps-2 text-center max-w-40 truncate">
               {{ information.bengaliName }}
             </td>
+            <td class="ps-2 text-center">{{ information.sorting }}</td>
             <td class="">
               <div class="flex gap-2 justify-center">
                 <EditInformationModal

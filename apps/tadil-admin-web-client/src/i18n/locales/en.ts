@@ -165,6 +165,7 @@ export const en = {
       urduName: "Urdu Name",
       unit: "Unit",
       price: "Price",
+      sorting: "Sorting",
       actions: "Actions",
     },
     inputs: {
@@ -254,6 +255,10 @@ export const en = {
         label: "Price",
         placeholder: "0.00",
         errorMessage: "Price is required",
+      },
+      sorting: {
+        label: "Sorting",
+        placeholder: "0",
       },
       sections: {
         label: "Sections",
@@ -406,6 +411,9 @@ export const en = {
         confirmMessage: "Are you sure you want to delete this section?",
         success: "Section deleted successfully",
         error: "An error occurred while deleting the section",
+      },
+      reorder: {
+        error: "An error occurred while reordering sections",
       },
     },
   },

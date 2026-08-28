@@ -5,4 +5,5 @@ export interface CreateExtraDTO {
   hindiName: string;
   bengaliName: string;
   price: number;
+  sorting?: number;
 }

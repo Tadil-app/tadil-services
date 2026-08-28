@@ -20,4 +20,7 @@ export class UpdateExtraDTO {
   @ApiProperty()
   @IsNotEmpty()
   price!: number;
+  @ApiProperty()
+  @IsNotEmpty()
+  sorting!: number;
 }

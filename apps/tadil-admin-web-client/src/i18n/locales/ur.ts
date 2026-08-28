@@ -130,6 +130,7 @@ export const ur = {
       value: "قدر",
       unit: "یونٹ",
       price: "قیمت",
+      sorting: "ترتیب",
       actions: "کارروائیاں",
     },
     inputs: {
@@ -209,6 +210,10 @@ export const ur = {
         label: "قیمت",
         placeholder: "0.00",
         errorMessage: "قیمت درکار ہے",
+      },
+      sorting: {
+        label: "ترتیب",
+        placeholder: "0",
       },
       sections: {
         label: "سیکشنز",
@@ -374,6 +379,9 @@ export const ur = {
         confirmMessage: "کیا آپ واقعی اس سیکشن کو حذف کرنا چاہتے ہیں؟",
         success: "سیکشن کامیابی سے حذف ہو گیا",
         error: "سیکشن کو حذف کرتے وقت ایک خرابی پیش آئی",
+      },
+      reorder: {
+        error: "سیکشنز کو ترتیب دیتے وقت ایک خرابی پیش آئی",
       },
     },
   },

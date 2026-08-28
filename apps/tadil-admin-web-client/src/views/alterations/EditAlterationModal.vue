@@ -37,6 +37,17 @@
             multiple
           />
         </div>
+        <div class="space-y-1.5">
+          <InputLabel for="sorting">
+            {{ $t("common.inputs.sorting.label") }}
+          </InputLabel>
+          <TextInput
+            id="sorting"
+            v-model="localAlteration.sorting"
+            type="number"
+            :placeholder="$t('common.inputs.sorting.placeholder')"
+          />
+        </div>
         <div class="col-span-2 space-y-1.5">
           <InputLabel for="informations">
             {{ $t("common.inputs.informations.label") }}

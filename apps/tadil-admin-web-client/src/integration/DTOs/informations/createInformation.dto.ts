@@ -10,4 +10,5 @@ export interface CreateInformationDTO {
   type: InformationType;
   extras: string[];
   unit: string;
+  sorting?: number;
 }

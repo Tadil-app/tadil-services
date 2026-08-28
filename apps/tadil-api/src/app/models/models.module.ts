@@ -7,6 +7,7 @@ import {
   DeleteModelImageUseCaseProvider,
   DeleteModelUseCaseProvider,
   DeleteSectionUseCaseProvider,
+  ReorderSectionsUseCaseProvider,
   ModelsRepositoryProvider,
   UpdateModelUseCaseProvider,
 } from './models.providers';
@@ -25,6 +26,7 @@ import { CommonModule } from '../common/common.module';
     AddSectionUseCaseProvider,
     UpdateSectionUseCaseProvider,
     DeleteSectionUseCaseProvider,
+    ReorderSectionsUseCaseProvider,
     UpdateModelUseCaseProvider,
   ],
   exports: [],

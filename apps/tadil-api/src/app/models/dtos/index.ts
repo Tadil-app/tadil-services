@@ -4,5 +4,6 @@ export * from './updateModel.dto';
 export * from './displaySection.dto';
 export * from './addSection.dto';
 export * from './updateSection.dto';
+export * from './reorderSections.dto';
 export * from './displayModelImage.dto';
 export * from './addModelImage.dto';

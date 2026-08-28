@@ -33,6 +33,7 @@ export interface Section {
   bengaliName: string;
   coordinates: Point[];
   alterations: string[];
+  sorting: number;
 }
 
 export interface Point {

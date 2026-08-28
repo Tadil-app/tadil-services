@@ -8,8 +8,8 @@
         {{ $t("extras.editExtraModal.title") }}
       </h1>
       <MultiLanguageNameForm ref="namesForm" v-model="localExtra" is-inline />
-      <div class="border-t border-border pt-4">
-        <div class="space-y-1.5 sm:w-1/2">
+      <div class="grid grid-cols-2 gap-4 border-t border-border pt-4">
+        <div class="space-y-1.5">
           <InputLabel for="price">
             {{ $t("common.inputs.price.label") }}
           </InputLabel>
@@ -25,6 +25,17 @@
               {{ $t("common.currencies.ras") }}
             </p>
           </div>
+        </div>
+        <div class="space-y-1.5">
+          <InputLabel for="sorting">
+            {{ $t("common.inputs.sorting.label") }}
+          </InputLabel>
+          <TextInput
+            id="sorting"
+            v-model="localExtra.sorting"
+            type="number"
+            :placeholder="$t('common.inputs.sorting.placeholder')"
+          />
         </div>
       </div>
       <div class="flex justify-end gap-3 border-t border-border pt-4">

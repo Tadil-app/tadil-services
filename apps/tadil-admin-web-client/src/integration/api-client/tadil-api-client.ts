@@ -32,6 +32,7 @@ import type {
   DisplayDistrictDTO,
   DisplayBoundaryDTO,
   UpdateSectionDTO,
+  ReorderSectionsDTO,
   DisplayOrderDetailsDto,
   PaginatedOrdersDto,
   PaginatedUsersDTO,
@@ -371,6 +372,24 @@ export class Api<
     ) =>
       this.request<void, any>({
         path: `/api/models/images/sections/${id}/update`,
+        method: "PATCH",
+        body: data,
+        type: ContentType.Json,
+        ...params,
+      }),
+
+    /**
+     * @tags Models
+     * @name ModelsControllerReorderSections
+     * @request PATCH:/api/models/images/{id}/sections/reorder
+     */
+    modelsControllerReorderSections: (
+      id: string,
+      data: ReorderSectionsDTO,
+      params: RequestParams = {},
+    ) =>
+      this.request<void, any>({
+        path: `/api/models/images/${id}/sections/reorder`,
         method: "PATCH",
         body: data,
         type: ContentType.Json,
