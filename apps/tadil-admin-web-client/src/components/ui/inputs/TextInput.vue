@@ -39,6 +39,8 @@ const props = withDefaults(
       | "decimal";
     pattern?: string;
     maxlength?: number;
+    min?: number;
+    max?: number;
   }>(),
   {
     type: "text",

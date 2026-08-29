@@ -6,6 +6,7 @@ import {
   CustomersController,
   LoginRequestsController,
   PayoutRequestsController,
+  UsersSortingController,
 } from './controllers';
 import {
   UsersRepositoryProvider,
@@ -28,6 +29,7 @@ import {
     CustomersController,
     LoginRequestsController,
     PayoutRequestsController,
+    UsersSortingController,
   ],
   providers: [
     UsersRepositoryProvider,

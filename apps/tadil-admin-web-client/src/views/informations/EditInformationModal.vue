@@ -99,17 +99,6 @@
           multiple
         />
       </div>
-      <div class="space-y-1.5">
-        <InputLabel for="sorting">
-          {{ $t("common.inputs.sorting.label") }}
-        </InputLabel>
-        <TextInput
-          id="sorting"
-          v-model="localInformation.sorting"
-          type="number"
-          :placeholder="$t('common.inputs.sorting.placeholder')"
-        />
-      </div>
       <div class="flex justify-end gap-3 border-t border-border pt-4">
         <Button variant="outline" @click="closeModal">
           {{ $t("common.buttons.cancel") }}
@@ -130,7 +119,6 @@ import {
   InputLabel,
   MultiLanguageNameForm,
   SelectMenu,
-  TextInput,
 } from "@/components";
 import { computed, ref, watch } from "vue";
 import { useI18n } from "vue-i18n";

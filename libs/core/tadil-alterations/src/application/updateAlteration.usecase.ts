@@ -77,7 +77,7 @@ export class UpdateAlterationCommand {
     price: number,
     sections: string[],
     informations: string[],
-    sorting: number = 0
+    sorting: number = 1
   ) {
     this.id = id;
     this.englishName = englishName;

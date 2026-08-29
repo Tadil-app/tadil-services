@@ -26,17 +26,6 @@
             </p>
           </div>
         </div>
-        <div class="space-y-1.5">
-          <InputLabel for="sorting">
-            {{ $t("common.inputs.sorting.label") }}
-          </InputLabel>
-          <TextInput
-            id="sorting"
-            v-model="localExtra.sorting"
-            type="number"
-            :placeholder="$t('common.inputs.sorting.placeholder')"
-          />
-        </div>
       </div>
       <div class="flex justify-end gap-3 border-t border-border pt-4">
         <Button variant="outline" @click="closeModal">

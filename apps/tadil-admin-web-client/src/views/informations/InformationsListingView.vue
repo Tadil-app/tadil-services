@@ -12,6 +12,9 @@
       <table class="relative w-full table-fixed">
         <thead class="border-b sticky top-0 z-10 bg-background h-12">
           <tr class="divide-x">
+            <th class="w-24 text-center">
+              {{ $t("common.tableHeaders.sorting") }}
+            </th>
             <th class="ps-2 text-center">
               {{ $t("common.tableHeaders.englishName") }}
             </th>
@@ -26,9 +29,6 @@
             </th>
             <th class="ps-2 text-center">
               {{ $t("common.tableHeaders.bengaliName") }}
-            </th>
-            <th class="w-24 text-center">
-              {{ $t("common.tableHeaders.sorting") }}
             </th>
             <th class="w-30">{{ $t("common.tableHeaders.actions") }}</th>
           </tr>
@@ -71,6 +71,7 @@
             :key="information.id"
             class="h-12 divide-x"
           >
+            <td class="ps-2 text-center">{{ information.sorting }}</td>
             <td class="ps-2 text-center max-w-40 truncate">
               {{ information.englishName }}
             </td>
@@ -86,9 +87,13 @@
             <td class="ps-2 text-center max-w-40 truncate">
               {{ information.bengaliName }}
             </td>
-            <td class="ps-2 text-center">{{ information.sorting }}</td>
             <td class="">
               <div class="flex gap-2 justify-center">
+                <SortingButton
+                  :sorting="information.sorting"
+                  :max="informations.length"
+                  :save="(sorting) => updateSorting(information, sorting)"
+                />
                 <EditInformationModal
                   :key="information.id"
                   :information="information"
@@ -121,6 +126,7 @@ import {
   Button,
   DestructiveActionAlert,
   SkeletonItem,
+  SortingButton,
   useToast,
 } from "@/components";
 import { Trash2 } from "lucide-vue-next";
@@ -145,6 +151,18 @@ async function getInformations() {
     await apiClient.informationsControllerGetInformations()
   ).data;
   isLoading.value = false;
+}
+
+async function updateSorting(
+  information: DisplayInformationDTO,
+  sorting: number
+) {
+  await apiClient.catalogSortingControllerUpdateSorting(
+    "informations",
+    information.id,
+    { sorting }
+  );
+  await getInformations();
 }
 
 async function deleteInformation(informationId: string) {

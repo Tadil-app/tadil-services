@@ -35,7 +35,7 @@ export class PrismaAlterationsRepository implements AlterationsRepository {
         price: Number(alteration.price),
         sorting:
           alteration.sorting === undefined || alteration.sorting === null
-            ? (max._max.sorting ?? -1) + 1
+            ? (max._max.sorting ?? 0) + 1
             : Number(alteration.sorting),
         sections: {
           connect: alteration.sections.map((sectionId) => ({ id: sectionId })),

@@ -25,7 +25,7 @@ export class PrismaExtrasRepository implements ExtrasRepository {
         price: Number(extra.price),
         sorting:
           extra.sorting === undefined || extra.sorting === null
-            ? (max._max.sorting ?? -1) + 1
+            ? (max._max.sorting ?? 0) + 1
             : Number(extra.sorting),
       },
     });

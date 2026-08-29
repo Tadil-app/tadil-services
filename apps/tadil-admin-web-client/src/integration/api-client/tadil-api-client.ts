@@ -36,6 +36,7 @@ import type {
   DisplayOrderDetailsDto,
   PaginatedOrdersDto,
   PaginatedUsersDTO,
+  UpdateSortingDTO,
 } from "../DTOs";
 
 import type {
@@ -769,6 +770,43 @@ export class Api<
       this.request<void, any>({
         path: `/api/extras/delete/${id}`,
         method: "DELETE",
+        ...params,
+      }),
+
+    /**
+     * @tags Catalog
+     * @name CatalogSortingControllerUpdateSorting
+     * @request PATCH:/api/catalog/{entity}/{id}/sorting
+     */
+    catalogSortingControllerUpdateSorting: (
+      entity: "alterations" | "informations" | "extras",
+      id: string,
+      data: UpdateSortingDTO,
+      params: RequestParams = {},
+    ) =>
+      this.request<void, any>({
+        path: `/api/catalog/${entity}/${id}/sorting`,
+        method: "PATCH",
+        body: data,
+        type: ContentType.Json,
+        ...params,
+      }),
+
+    /**
+     * @tags Users
+     * @name UsersSortingControllerUpdateSorting
+     * @request PATCH:/api/users/{id}/sorting
+     */
+    usersSortingControllerUpdateSorting: (
+      id: string,
+      data: UpdateSortingDTO,
+      params: RequestParams = {},
+    ) =>
+      this.request<void, any>({
+        path: `/api/users/${id}/sorting`,
+        method: "PATCH",
+        body: data,
+        type: ContentType.Json,
         ...params,
       }),
 

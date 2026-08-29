@@ -8,6 +8,9 @@
       <table class="relative w-full table-fixed">
         <thead class="border-b sticky top-0 z-10 bg-background h-12">
           <tr class="divide-x">
+            <th class="w-24 text-center">
+              {{ $t("common.tableHeaders.sorting") }}
+            </th>
             <th class="ps-2 text-center">
               {{ $t("common.tableHeaders.englishName") }}
             </th>
@@ -25,9 +28,6 @@
             </th>
             <th class="ps-2 text-center">
               {{ $t("common.tableHeaders.price") }}
-            </th>
-            <th class="w-24 text-center">
-              {{ $t("common.tableHeaders.sorting") }}
             </th>
             <th class="w-30">{{ $t("common.tableHeaders.actions") }}</th>
           </tr>
@@ -75,6 +75,7 @@
             :key="extra.id"
             class="h-12 divide-x"
           >
+            <td class="ps-2 text-center">{{ extra.sorting }}</td>
             <td class="ps-2 text-center max-w-40 truncate">
               {{ extra.englishName }}
             </td>
@@ -93,9 +94,13 @@
             <td class="ps-2 text-center max-w-40 truncate">
               {{ extra.price }}{{ $t("common.currencies.ras") }}
             </td>
-            <td class="ps-2 text-center">{{ extra.sorting }}</td>
             <td class="">
               <div class="flex gap-2 justify-center">
+                <SortingButton
+                  :sorting="extra.sorting"
+                  :max="extras.length"
+                  :save="(sorting) => updateSorting(extra, sorting)"
+                />
                 <EditExtraModal
                   :key="extra.id"
                   :extra="extra"
@@ -126,6 +131,7 @@ import {
   Button,
   DestructiveActionAlert,
   SkeletonItem,
+  SortingButton,
   useToast,
 } from "@/components";
 import { Trash2 } from "lucide-vue-next";
@@ -144,6 +150,13 @@ async function getExtras() {
   isLoading.value = true;
   extras.value = (await apiClient.extrasControllerGetExtras()).data;
   isLoading.value = false;
+}
+
+async function updateSorting(extra: DisplayExtraDTO, sorting: number) {
+  await apiClient.catalogSortingControllerUpdateSorting("extras", extra.id, {
+    sorting,
+  });
+  await getExtras();
 }
 
 async function deleteExtra(extraId: string) {

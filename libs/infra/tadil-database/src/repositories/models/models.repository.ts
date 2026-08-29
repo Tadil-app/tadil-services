@@ -111,7 +111,7 @@ export class PrismaModelsRepository implements ModelsRepository {
         urduName: section.urduName,
         bengaliName: section.bengaliName,
         coordinates: section.coordinates,
-        sorting: (max._max.sorting ?? -1) + 1,
+        sorting: (max._max.sorting ?? 0) + 1,
         services: {
           connect: section.alterations.map((alterationId) => ({
             id: alterationId,
@@ -160,7 +160,7 @@ export class PrismaModelsRepository implements ModelsRepository {
       ids.map((id, index) =>
         this._db.section.update({
           where: { id },
-          data: { sorting: index },
+          data: { sorting: index + 1 },
         })
       )
     );

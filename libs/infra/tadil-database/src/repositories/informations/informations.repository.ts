@@ -49,7 +49,7 @@ export class PrismaInformationsRepository implements InformationsRepository {
         unit: information.unit,
         sorting:
           information.sorting === undefined || information.sorting === null
-            ? (max._max.sorting ?? -1) + 1
+            ? (max._max.sorting ?? 0) + 1
             : Number(information.sorting),
         extras: {
           connect: information.extras.map((extraId) => ({ id: extraId })),

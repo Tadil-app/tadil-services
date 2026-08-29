@@ -69,7 +69,7 @@ export class UpdateExtraCommand {
     urduName: string,
     bengaliName: string,
     price: number,
-    sorting: number = 0
+    sorting: number = 1
   ) {
     this.id = id;
     this.englishName = englishName;
