@@ -231,6 +231,14 @@ function handleNavigation(role?: string) {
 
 <style scoped>
 ion-content {
-  --background: linear-gradient(to bottom right, #a8c5dd, #d4a5c7, #e87b56);
+  --background:
+    radial-gradient(circle at 85% 15%, rgba(200, 112, 130, 0.2), transparent 34%),
+    radial-gradient(circle at 10% 88%, rgba(199, 123, 88, 0.14), transparent 30%),
+    #fffaf6;
+}
+
+ion-card {
+  border: 1px solid rgba(109, 15, 47, 0.18);
+  box-shadow: 0 16px 38px rgba(109, 15, 47, 0.14);
 }
 </style>

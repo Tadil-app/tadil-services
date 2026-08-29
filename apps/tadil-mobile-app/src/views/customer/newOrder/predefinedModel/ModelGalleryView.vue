@@ -359,7 +359,7 @@ onBeforeMount(async () => {
 @reference '@/theme/tailwind.css';
 
 ion-toolbar {
-  --background: linear-gradient(to right, #4f46e5, #9333ea);
+  --background: var(--ion-color-primary);
   --color: white;
   border-bottom-left-radius: 24px;
   border-bottom-right-radius: 24px;

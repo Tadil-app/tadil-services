@@ -40,11 +40,7 @@ withDefaults(
 
 <style scoped>
 ion-toolbar {
-  --background: linear-gradient(
-    to right,
-    var(--ion-color-primary),
-    var(--ion-color-secondary)
-  );
+  --background: var(--ion-color-primary);
   --color: white;
   border-bottom-left-radius: 24px;
   border-bottom-right-radius: 24px;
