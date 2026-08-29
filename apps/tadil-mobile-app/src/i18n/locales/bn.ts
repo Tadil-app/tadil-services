@@ -113,6 +113,7 @@ export const bn = {
         signup: "নিবন্ধন করুন",
         back: "ফিরে যান",
       },
+      agreement: "চালিয়ে যাওয়ার মাধ্যমে আপনি শর্তাবলীতে সম্মত হচ্ছেন",
     },
   },
   profileSettings: {
