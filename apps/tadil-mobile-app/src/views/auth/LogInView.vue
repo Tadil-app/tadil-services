@@ -4,7 +4,7 @@
       <div class="login-page">
         <IonCard color="light" class="login-card">
           <div class="login-logo">
-            <img src="/logo.png" alt="Tadil-تعديل" />
+            <img src="/Tadil_logo.svg" alt="Tadil-تعديل" />
           </div>
 
           <!-- Step 1: Phone Input -->

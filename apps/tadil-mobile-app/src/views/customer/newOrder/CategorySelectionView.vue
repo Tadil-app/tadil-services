@@ -42,15 +42,12 @@ import { IonPage, IonContent, IonCard } from "@ionic/vue";
 import { ChevronRight } from "lucide-vue-next";
 import { computed } from "vue";
 import { SecondaryHeader } from "@/components";
-import womenImage from "../../../../../../femals.jpeg";
-import kidsImage from "../../../../../../kids.jpeg";
-import menImage from "../../../../../../males.jpeg";
 
 const selectedCategory = defineModel<ModelCategory>();
 const categories = computed(() => [
-  { value: ModelCategory.Women, tone: "rose", image: womenImage },
-  { value: ModelCategory.Kids, tone: "sand", image: kidsImage },
-  { value: ModelCategory.Men, tone: "wine", image: menImage },
+  { value: ModelCategory.Women, tone: "rose", image: "/images/categories/women.jpeg" },
+  { value: ModelCategory.Kids, tone: "sand", image: "/images/categories/kids.jpeg" },
+  { value: ModelCategory.Men, tone: "wine", image: "/images/categories/men.jpeg" },
 ]);
 </script>
 
