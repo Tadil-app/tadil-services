@@ -214,6 +214,8 @@ export const ur = {
       sorting: {
         label: "ترتیب",
         placeholder: "0",
+        errorMessage: "1 سے {max} تک ایک عدد درج کریں",
+        saveError: "ترتیب اپ ڈیٹ نہیں ہو سکی",
       },
       sections: {
         label: "سیکشنز",

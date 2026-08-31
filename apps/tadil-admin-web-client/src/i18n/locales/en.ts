@@ -259,6 +259,8 @@ export const en = {
       sorting: {
         label: "Sorting",
         placeholder: "0",
+        errorMessage: "Enter a number from 1 to {max}",
+        saveError: "Failed to update sorting",
       },
       sections: {
         label: "Sections",

@@ -214,6 +214,8 @@ export const hi = {
       sorting: {
         label: "क्रम",
         placeholder: "0",
+        errorMessage: "1 से {max} तक एक संख्या दर्ज करें",
+        saveError: "क्रम अपडेट करने में विफल",
       },
       sections: {
         label: "खंड",

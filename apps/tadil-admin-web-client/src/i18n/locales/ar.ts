@@ -260,6 +260,8 @@ export const ar = {
       sorting: {
         label: "الترتيب",
         placeholder: "0",
+        errorMessage: "أدخل رقماً من 1 إلى {max}",
+        saveError: "فشل تحديث الترتيب",
       },
       sections: {
         label: "الأقسام",

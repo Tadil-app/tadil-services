@@ -1,5 +1,5 @@
 <template>
-  <Button variant="outline" size="sm" @click="isOpen = true">
+  <Button variant="outline" size="sm" @click="openModal">
     <Edit />
   </Button>
   <Modal v-model="isOpen" @close-modal="closeModal">
@@ -76,7 +76,7 @@ import {
   type DisplayAlterationDTO,
   type UpdateAlterationDTO,
 } from "@/integration";
-import { ref } from "vue";
+import { ref, watch } from "vue";
 import { useI18n } from "vue-i18n";
 import { Edit } from "lucide-vue-next";
 
@@ -97,6 +97,13 @@ const isOpen = ref<boolean>(false);
 const localAlteration = ref<UpdateAlterationDTO>({ ...props.alteration });
 const namesForm = ref<InstanceType<typeof MultiLanguageNameForm>>();
 
+watch(
+  () => props.alteration.sorting,
+  (sorting) => {
+    localAlteration.value.sorting = sorting;
+  }
+);
+
 const priceValidationError = ref<string>("");
 function validatePrice() {
   if (!localAlteration.value.price) {
@@ -113,7 +120,10 @@ async function updateAlteration() {
     if (namesForm.value.validateForm() && validatePrice()) {
       await apiClient.alterationsControllerUpdateAlteration(
         props.alteration.id,
-        localAlteration.value,
+        {
+          ...localAlteration.value,
+          sorting: props.alteration.sorting,
+        },
       );
       openToast(t("alterations.editAlterationModal.success"));
       emit("updated:alteration");
@@ -128,6 +138,11 @@ async function updateAlteration() {
       "destructive",
     );
   }
+}
+
+function openModal() {
+  localAlteration.value = { ...props.alteration };
+  isOpen.value = true;
 }
 
 function closeModal() {

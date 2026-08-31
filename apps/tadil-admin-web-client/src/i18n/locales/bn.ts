@@ -214,6 +214,8 @@ export const bn = {
       sorting: {
         label: "ক্রম",
         placeholder: "0",
+        errorMessage: "১ থেকে {max} পর্যন্ত একটি সংখ্যা লিখুন",
+        saveError: "ক্রম আপডেট করা যায়নি",
       },
       sections: {
         label: "বিভাগসমূহ",

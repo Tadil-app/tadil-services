@@ -23,7 +23,9 @@
         <Button variant="outline" @click="isOpen = false">
           {{ $t("common.buttons.cancel") }}
         </Button>
-        <Button @click="submit">{{ $t("common.buttons.save") }}</Button>
+        <Button :disabled="isSaving" @click="submit">
+          {{ $t("common.buttons.save") }}
+        </Button>
       </div>
     </div>
   </Modal>
@@ -32,14 +34,18 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import { ArrowUpDown } from "lucide-vue-next";
-import { Button, Modal, TextInput } from "@/components";
+import { Button, Modal, TextInput, useToast } from "@/components";
+import { useI18n } from "vue-i18n";
 
 const props = defineProps<{
   sorting: number;
   max: number;
   save: (sorting: number) => Promise<void>;
 }>();
+const { t } = useI18n();
+const { openToast } = useToast();
 const isOpen = ref(false);
+const isSaving = ref(false);
 const value = ref<number | string>(props.sorting);
 const error = ref("");
 
@@ -52,10 +58,22 @@ function open() {
 async function submit() {
   const sorting = Number(value.value);
   if (!Number.isInteger(sorting) || sorting < 1 || sorting > props.max) {
-    error.value = `Enter a number from 1 to ${props.max}`;
+    error.value = t("common.inputs.sorting.errorMessage", { max: props.max });
     return;
   }
-  await props.save(sorting);
-  isOpen.value = false;
+  isSaving.value = true;
+  try {
+    await props.save(sorting);
+    isOpen.value = false;
+  } catch (err: any) {
+    openToast(
+      t("common.inputs.sorting.saveError"),
+      err?.response?.data?.message || undefined,
+      undefined,
+      "destructive"
+    );
+  } finally {
+    isSaving.value = false;
+  }
 }
 </script>
