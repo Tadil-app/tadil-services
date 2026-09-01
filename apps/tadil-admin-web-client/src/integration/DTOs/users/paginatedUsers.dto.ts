@@ -5,4 +5,5 @@ export interface PaginatedUsersDTO {
   total: number;
   page: number;
   pageSize: number;
+  sortingMax: number;
 }

@@ -14,7 +14,12 @@
       </div>
     </div>
 
-    <CustomersTable :customers="customers" :is-loading="isLoading" />
+    <CustomersTable
+      :customers="customers"
+      :is-loading="isLoading"
+      :max-sorting="sortingMax"
+      @refresh="fetchCustomers"
+    />
 
     <Pagination
       :page="page"
@@ -39,6 +44,7 @@ const search = ref("");
 const page = ref(1);
 const pageSize = ref(20);
 const total = ref(0);
+const sortingMax = ref(0);
 
 let debounceTimer: ReturnType<typeof setTimeout> | null = null;
 
@@ -52,6 +58,7 @@ const fetchCustomers = async () => {
     });
     customers.value = res.data.data;
     total.value = res.data.total;
+    sortingMax.value = res.data.sortingMax;
   } catch (error) {
     console.error("Failed to fetch customers", error);
   } finally {

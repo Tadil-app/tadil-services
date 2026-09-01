@@ -33,4 +33,6 @@ export class DisplayInformationDTO {
   @ApiProperty({ type: String, isArray: true })
   @IsNotEmpty()
   extras!: string[];
+  @ApiProperty()
+  sorting!: number;
 }

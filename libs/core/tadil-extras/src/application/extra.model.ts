@@ -6,4 +6,5 @@ export interface Extra {
   urduName: string;
   bengaliName: string;
   price: number;
+  sorting?: number;
 }

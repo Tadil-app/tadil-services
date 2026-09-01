@@ -97,7 +97,8 @@ const newAlteration = ref<CreateAlterationDTO>({
   bengaliName: "",
   price: 0,
   sections: [],
-  informations: []
+  informations: [],
+  sorting: undefined,
 });
 const namesForm = ref<InstanceType<typeof MultiLanguageNameForm>>();
 
@@ -142,7 +143,8 @@ function closeModal() {
     bengaliName: "",
     price: 0,
     sections: [],
-    informations: []
+    informations: [],
+    sorting: undefined,
   };
   priceValidationError.value = "";
   isOpen.value = false;

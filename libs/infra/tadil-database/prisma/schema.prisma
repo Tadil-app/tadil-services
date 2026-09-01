@@ -62,7 +62,7 @@ enum PayoutStatus {
 }
 
 model Section {
-    id          String @id @default(uuid())
+    id          String   @id @default(uuid())
     englishName String
     arabicName  String
     urduName    String
@@ -70,6 +70,8 @@ model Section {
     bengaliName String
     /// ![{x: number; y:number}]
     coordinates Json[]
+    sorting     Int      @default(1)
+    createdAt   DateTime @default(now())
 
     services     Alteration[] @relation("alterations-sections")
     modelImageId String
@@ -112,6 +114,7 @@ model Information {
     isRequired  Boolean         @default(false)
     type        InformationType @default(text)
     unit        String?
+    sorting     Int             @default(1)
 
     services Alteration[] @relation("alterations-informations")
     extras   Extra[]      @relation("informations-extras")
@@ -127,6 +130,7 @@ model Alteration {
     hindiName   String
     bengaliName String
     price       Float
+    sorting     Int    @default(1)
 
     sections     Section[]     @relation("alterations-sections")
     informations Information[] @relation("alterations-informations")
@@ -142,6 +146,7 @@ model Extra {
     hindiName   String
     bengaliName String
     price       Float
+    sorting     Int    @default(1)
 
     informations Information[] @relation("informations-extras")
 
@@ -382,6 +387,7 @@ model User {
 
     walletBalance  Float @default(0)
     commissionRate Float @default(10)
+    sorting        Int   @default(1)
 
     addresses Address[]
 

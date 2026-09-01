@@ -12,4 +12,5 @@ export interface DisplaySectionDTO {
   bengaliName: string;
   coordinates: Point[];
   alterations: string[];
+  sorting: number;
 }

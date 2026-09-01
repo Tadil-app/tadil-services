@@ -28,6 +28,7 @@ describe('UpdateModelUseCase', () => {
       deleteSection: jest.fn(),
       getSectionById: jest.fn(),
       updateSection: jest.fn(),
+      reorderSections: jest.fn(),
     };
     updateModelUseCase = new UpdateModelUseCase(modelsRepository);
   });

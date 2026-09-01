@@ -32,9 +32,11 @@ import type {
   DisplayDistrictDTO,
   DisplayBoundaryDTO,
   UpdateSectionDTO,
+  ReorderSectionsDTO,
   DisplayOrderDetailsDto,
   PaginatedOrdersDto,
   PaginatedUsersDTO,
+  UpdateSortingDTO,
 } from "../DTOs";
 
 import type {
@@ -371,6 +373,24 @@ export class Api<
     ) =>
       this.request<void, any>({
         path: `/api/models/images/sections/${id}/update`,
+        method: "PATCH",
+        body: data,
+        type: ContentType.Json,
+        ...params,
+      }),
+
+    /**
+     * @tags Models
+     * @name ModelsControllerReorderSections
+     * @request PATCH:/api/models/images/{id}/sections/reorder
+     */
+    modelsControllerReorderSections: (
+      id: string,
+      data: ReorderSectionsDTO,
+      params: RequestParams = {},
+    ) =>
+      this.request<void, any>({
+        path: `/api/models/images/${id}/sections/reorder`,
         method: "PATCH",
         body: data,
         type: ContentType.Json,
@@ -750,6 +770,43 @@ export class Api<
       this.request<void, any>({
         path: `/api/extras/delete/${id}`,
         method: "DELETE",
+        ...params,
+      }),
+
+    /**
+     * @tags Catalog
+     * @name CatalogSortingControllerUpdateSorting
+     * @request PATCH:/api/catalog/{entity}/{id}/sorting
+     */
+    catalogSortingControllerUpdateSorting: (
+      entity: "alterations" | "informations" | "extras",
+      id: string,
+      data: UpdateSortingDTO,
+      params: RequestParams = {},
+    ) =>
+      this.request<void, any>({
+        path: `/api/catalog/${entity}/${id}/sorting`,
+        method: "PATCH",
+        body: data,
+        type: ContentType.Json,
+        ...params,
+      }),
+
+    /**
+     * @tags Users
+     * @name UsersSortingControllerUpdateSorting
+     * @request PATCH:/api/users/{id}/sorting
+     */
+    usersSortingControllerUpdateSorting: (
+      id: string,
+      data: UpdateSortingDTO,
+      params: RequestParams = {},
+    ) =>
+      this.request<void, any>({
+        path: `/api/users/${id}/sorting`,
+        method: "PATCH",
+        body: data,
+        type: ContentType.Json,
         ...params,
       }),
 

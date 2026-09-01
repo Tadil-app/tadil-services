@@ -33,6 +33,7 @@ describe('AddModelImageUseCase', () => {
       deleteSection: jest.fn(),
       getSectionById: jest.fn(),
       updateSection: jest.fn(),
+      reorderSections: jest.fn(),
     };
     fileStorageService = {
       uploadFile: jest.fn(),

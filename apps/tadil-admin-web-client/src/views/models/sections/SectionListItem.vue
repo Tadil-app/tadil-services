@@ -1,6 +1,6 @@
 <template>
   <div
-    class="flex justify-between items-center p-2 border border-border rounded-lg overflow-hidden hover:bg-muted"
+    class="flex justify-between items-center p-2 border border-border rounded-lg overflow-hidden hover:bg-muted cursor-grab"
     @mouseenter="drawingState.highlightPolygon(section.coordinates)"
     @mouseleave="drawingState.unhighlightPolygon"
   >

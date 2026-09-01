@@ -6,5 +6,6 @@ export * from './deleteModel.usecase';
 export * from './addSection.usecase';
 export * from './updateSection.usecase';
 export * from './deleteSection.usecase';
+export * from './reorderSections.usecase';
 export * from './addModelImage.usecase';
 export * from './deleteModelImage.usecase';

@@ -104,6 +104,10 @@ export class PrismaUsersRepository implements UsersRepository {
   }
 
   async createUser(user: User): Promise<void> {
+    const max = await this._db.user.aggregate({
+      where: { role: user.role },
+      _max: { sorting: true },
+    });
     await this._db.user.create({
       data: {
         id: user.id,
@@ -116,6 +120,7 @@ export class PrismaUsersRepository implements UsersRepository {
         loginToken: user.loginToken,
         walletBalance: user.walletBalance ?? 0,
         commissionRate: user.commissionRate ?? 10,
+        sorting: user.sorting ?? (max._max.sorting ?? 0) + 1,
       },
     });
   }
@@ -133,6 +138,7 @@ export class PrismaUsersRepository implements UsersRepository {
         loginToken: user.loginToken,
         walletBalance: user.walletBalance,
         commissionRate: user.commissionRate,
+        sorting: user.sorting,
       },
     });
   }

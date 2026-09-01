@@ -5,4 +5,5 @@ export interface UpdateExtraDTO {
   hindiName: string;
   bengaliName: string;
   price: number;
+  sorting: number;
 }

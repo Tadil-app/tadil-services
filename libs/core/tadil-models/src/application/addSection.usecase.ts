@@ -51,6 +51,7 @@ export class AddSectionUseCase {
       await this._modelsRepository.addSection({
         id: newSectionId,
         ...addSectionCommand,
+        sorting: 1,
       });
     } catch (error: unknown) {
       if (error instanceof Error)

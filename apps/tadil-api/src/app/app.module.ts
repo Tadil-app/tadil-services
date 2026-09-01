@@ -11,6 +11,7 @@ import { AppController } from './app.controller';
 import { CommonModule } from './common/common.module';
 import { KeycloakAuthGuard } from './auth/guards/keycloak.guard';
 import { RolesGuard } from './auth/guards/roles.guard';
+import { CatalogSortingController } from './catalog-sorting.controller';
 
 @Module({
   imports: [
@@ -23,7 +24,7 @@ import { RolesGuard } from './auth/guards/roles.guard';
     OrdersModule,
     LocationsModule,
   ],
-  controllers: [AppController],
+  controllers: [AppController, CatalogSortingController],
   providers: [
     {
       provide: APP_GUARD,

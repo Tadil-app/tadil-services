@@ -6,4 +6,5 @@ export interface DisplayExtraDTO {
   hindiName: string;
   bengaliName: string;
   price: number;
+  sorting: number;
 }

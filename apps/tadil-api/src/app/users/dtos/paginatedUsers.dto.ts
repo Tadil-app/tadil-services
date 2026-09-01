@@ -13,4 +13,7 @@ export class PaginatedUsersDTO {
 
   @ApiProperty()
   pageSize!: number;
+
+  @ApiProperty()
+  sortingMax!: number;
 }

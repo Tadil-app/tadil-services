@@ -16,4 +16,5 @@ export interface Information {
   isRequired: boolean;
   type: InformationType;
   unit?: string;
+  sorting?: number;
 }

@@ -22,6 +22,7 @@
       :users="tailors"
       :is-loading="isLoading"
       :user-type="ROLE.TAILOR"
+      :max-sorting="sortingMax"
       @refresh="fetchTailors"
     />
 
@@ -49,6 +50,7 @@ const search = ref("");
 const page = ref(1);
 const pageSize = ref(20);
 const total = ref(0);
+const sortingMax = ref(0);
 
 let debounceTimer: ReturnType<typeof setTimeout> | null = null;
 
@@ -62,6 +64,7 @@ const fetchTailors = async () => {
     });
     tailors.value = response.data.data;
     total.value = response.data.total;
+    sortingMax.value = response.data.sortingMax;
   } catch (error) {
     console.error("Failed to fetch tailors", error);
   } finally {

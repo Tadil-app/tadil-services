@@ -1,5 +1,5 @@
 <template>
-  <Button variant="outline" size="sm" @click="isOpen = true">
+  <Button variant="outline" size="sm" @click="openModal">
     <Edit />
   </Button>
   <Modal v-model="isOpen" @close-modal="closeModal">
@@ -8,8 +8,8 @@
         {{ $t("extras.editExtraModal.title") }}
       </h1>
       <MultiLanguageNameForm ref="namesForm" v-model="localExtra" is-inline />
-      <div class="border-t border-border pt-4">
-        <div class="space-y-1.5 sm:w-1/2">
+      <div class="grid grid-cols-2 gap-4 border-t border-border pt-4">
+        <div class="space-y-1.5">
           <InputLabel for="price">
             {{ $t("common.inputs.price.label") }}
           </InputLabel>
@@ -53,7 +53,7 @@ import {
   type DisplayExtraDTO,
   type UpdateExtraDTO,
 } from "@/integration";
-import { ref } from "vue";
+import { ref, watch } from "vue";
 import { useI18n } from "vue-i18n";
 import { Edit } from "lucide-vue-next";
 
@@ -72,6 +72,13 @@ const isOpen = ref<boolean>(false);
 const localExtra = ref<UpdateExtraDTO>({ ...props.extra });
 const namesForm = ref<InstanceType<typeof MultiLanguageNameForm>>();
 
+watch(
+  () => props.extra.sorting,
+  (sorting) => {
+    localExtra.value.sorting = sorting;
+  }
+);
+
 const priceValidationError = ref<string>("");
 function validatePrice() {
   if (!localExtra.value.price) {
@@ -86,10 +93,10 @@ async function updateExtra() {
   if (!namesForm.value) return;
   try {
     if (namesForm.value.validateForm() && validatePrice()) {
-      await apiClient.extrasControllerUpdateExtra(
-        props.extra.id,
-        localExtra.value
-      );
+      await apiClient.extrasControllerUpdateExtra(props.extra.id, {
+        ...localExtra.value,
+        sorting: props.extra.sorting,
+      });
       openToast(t("extras.editExtraModal.success"));
       emit("updated:extra");
       closeModal();
@@ -103,6 +110,11 @@ async function updateExtra() {
       "destructive"
     );
   }
+}
+
+function openModal() {
+  localExtra.value = { ...props.extra };
+  isOpen.value = true;
 }
 
 function closeModal() {

@@ -3,6 +3,9 @@
     <table class="relative w-full table-fixed">
       <thead class="border-b sticky top-0 z-10 bg-background h-12">
         <tr class="divide-x">
+          <th class="w-24 text-center">
+            {{ $t("common.tableHeaders.sorting") }}
+          </th>
           <th class="ps-2 text-center">
             {{ $t("users.tableHeaders.phone") }}
           </th>
@@ -15,7 +18,7 @@
           <th class="ps-2 text-center">
             {{ $t("users.tableHeaders.email") }}
           </th>
-          <th class="w-30">{{ $t("common.tableHeaders.actions") }}</th>
+          <th class="w-40">{{ $t("common.tableHeaders.actions") }}</th>
         </tr>
       </thead>
       <tbody class="divide-y">
@@ -51,6 +54,7 @@
           :key="user.id"
           class="h-12 divide-x"
         >
+          <td class="ps-2 text-center">{{ user.sorting }}</td>
           <td class="ps-2 text-center truncate">
             {{ user.phone }}
           </td>
@@ -65,6 +69,11 @@
           </td>
           <td>
             <div class="flex gap-2 justify-center">
+              <SortingButton
+                :sorting="user.sorting"
+                :max="maxSorting"
+                :save="(sorting) => updateSorting(user.id, sorting)"
+              />
               <EditUserModal
                 :user="user"
                 :selectedUserType="userType"
@@ -92,6 +101,7 @@
 import {
   Button,
   SkeletonItem,
+  SortingButton,
   useToast,
   DestructiveActionAlert,
 } from "@/components";
@@ -107,6 +117,7 @@ const props = defineProps<{
   users: DisplayUserDTO[];
   isLoading: boolean;
   userType: RoleType;
+  maxSorting: number;
 }>();
 
 const emit = defineEmits<{
@@ -116,6 +127,11 @@ const emit = defineEmits<{
 const handleRefresh = () => {
   emit("refresh");
 };
+
+async function updateSorting(id: string, sorting: number) {
+  await apiClient.usersSortingControllerUpdateSorting(id, { sorting });
+  handleRefresh();
+}
 
 async function deleteUser(id: string) {
   try {

@@ -23,6 +23,7 @@ export class PrismaAlterationsRepository implements AlterationsRepository {
   }
 
   async createAlteration(alteration: Alteration): Promise<void> {
+    const max = await this._db.alteration.aggregate({ _max: { sorting: true } });
     await this._db.alteration.create({
       data: {
         id: alteration.id,
@@ -32,6 +33,10 @@ export class PrismaAlterationsRepository implements AlterationsRepository {
         urduName: alteration.urduName,
         bengaliName: alteration.bengaliName,
         price: Number(alteration.price),
+        sorting:
+          alteration.sorting === undefined || alteration.sorting === null
+            ? (max._max.sorting ?? 0) + 1
+            : Number(alteration.sorting),
         sections: {
           connect: alteration.sections.map((sectionId) => ({ id: sectionId })),
         },
@@ -54,6 +59,7 @@ export class PrismaAlterationsRepository implements AlterationsRepository {
         urduName: alteration.urduName,
         bengaliName: alteration.bengaliName,
         price: Number(alteration.price),
+        sorting: Number(alteration.sorting),
         sections: {
           set: alteration.sections.map((sectionId) => ({ id: sectionId })),
         },

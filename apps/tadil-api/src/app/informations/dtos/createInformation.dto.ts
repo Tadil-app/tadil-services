@@ -30,4 +30,7 @@ export class CreateInformationDTO {
   @ApiProperty({ type: String, isArray: true })
   @IsNotEmpty()
   extras!: string[];
+  @ApiProperty({ required: false })
+  @IsOptional()
+  sorting?: number;
 }

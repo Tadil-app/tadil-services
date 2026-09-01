@@ -130,6 +130,7 @@ export const bn = {
       value: "মান",
       unit: "একক",
       price: "মূল্য",
+      sorting: "ক্রম",
       actions: "ক্রিয়াকলাপ",
     },
     inputs: {
@@ -209,6 +210,12 @@ export const bn = {
         label: "মূল্য",
         placeholder: "0.00",
         errorMessage: "মূল্য আবশ্যক",
+      },
+      sorting: {
+        label: "ক্রম",
+        placeholder: "0",
+        errorMessage: "১ থেকে {max} পর্যন্ত একটি সংখ্যা লিখুন",
+        saveError: "ক্রম আপডেট করা যায়নি",
       },
       sections: {
         label: "বিভাগসমূহ",
@@ -352,6 +359,9 @@ export const bn = {
         confirmMessage: "আপনি কি নিশ্চিত যে এই বিভাগটি মুছে ফেলতে চান?",
         success: "বিভাগ সফলভাবে মুছে ফেলা হয়েছে",
         error: "বিভাগ মুছে ফেলার সময় একটি ত্রুটি হয়েছে",
+      },
+      reorder: {
+        error: "বিভাগ পুনর্বিন্যাস করার সময় একটি ত্রুটি হয়েছে",
       },
     },
   },

@@ -17,6 +17,8 @@ export class DisplaySectionDTO {
   coordinates!: Point[];
   @ApiProperty({ type: String, isArray: true })
   alterations!: string[];
+  @ApiProperty()
+  sorting!: number;
 }
 
 export class Point {

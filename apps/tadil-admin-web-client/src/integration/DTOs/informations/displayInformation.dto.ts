@@ -11,4 +11,5 @@ export interface DisplayInformationDTO {
   type: InformationType;
   extras: string[];
   unit: string;
+  sorting: number;
 }

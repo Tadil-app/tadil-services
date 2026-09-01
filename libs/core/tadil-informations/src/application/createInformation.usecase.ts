@@ -40,6 +40,10 @@ export class CreateInformationUseCase {
       await this._informationsRepository.createInformation({
         ...createInformationCommand,
         id: newInformationId,
+        sorting:
+          createInformationCommand.sorting == null
+            ? undefined
+            : Number(createInformationCommand.sorting),
       });
     } catch (error: unknown) {
       if (error instanceof Error)
@@ -59,6 +63,7 @@ export class CreateInformationCommand {
   readonly type: InformationType;
   readonly extras: string[];
   readonly unit?: string;
+  readonly sorting?: number;
   constructor(
     englishName: string,
     arabicName: string,
@@ -68,7 +73,8 @@ export class CreateInformationCommand {
     isRequired: boolean,
     type: InformationType,
     extras: string[],
-    unit?: string
+    unit?: string,
+    sorting?: number
   ) {
     this.englishName = englishName;
     this.arabicName = arabicName;
@@ -79,5 +85,6 @@ export class CreateInformationCommand {
     this.type = type;
     this.extras = extras;
     this.unit = unit;
+    this.sorting = sorting;
   }
 }

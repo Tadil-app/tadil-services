@@ -30,6 +30,7 @@ describe('AddSectionUseCase', () => {
       deleteSection: jest.fn(),
       getSectionById: jest.fn(),
       updateSection: jest.fn(),
+      reorderSections: jest.fn(),
     };
     addSectionUseCase = new AddSectionUseCase(modelsRepository);
   });

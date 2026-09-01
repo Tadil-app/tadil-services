@@ -6,6 +6,7 @@ export * from "./addModelImage.dto";
 export * from "./displaySection.dto";
 export * from "./addSection.dto";
 export * from "./updateSection.dto";
+export * from "./reorderSections.dto";
 
 export enum ModelCategory {
   ALL = "all",

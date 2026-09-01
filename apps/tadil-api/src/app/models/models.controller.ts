@@ -26,11 +26,13 @@ import {
   DeleteModelImageUseCase,
   DeleteModelUseCase,
   DeleteSectionUseCase,
+  ReorderSectionsUseCase,
 } from '@tadil-models';
 import {
   AddModelImageDTO,
   AddSectionDTO,
   UpdateSectionDTO,
+  ReorderSectionsDTO,
   CreateModelDTO,
   DisplayModelDTO,
   DisplayModelImageDTO,
@@ -59,6 +61,7 @@ export class ModelsController {
     private readonly _addSectionUseCase: AddSectionUseCase,
     private readonly _updateSectionUseCase: UpdateSectionUseCase,
     private readonly _deleteSectionUseCase: DeleteSectionUseCase,
+    private readonly _reorderSectionsUseCase: ReorderSectionsUseCase,
     @Inject('FileStorageService')
     private readonly _fileStorageService: FileStorageService
   ) {}
@@ -160,12 +163,25 @@ export class ModelsController {
   async getSections(): Promise<DisplaySectionDTO[]> {
     const sections = await this._dataReader.queries.section.findMany({
       include: { services: { select: { id: true } } },
+      orderBy: { sorting: 'asc' },
     });
     return sections.map((section) => ({
       ...section,
       coordinates: section.coordinates as unknown as { x: number; y: number }[],
       alterations: section.services.map((service) => service.id),
     }));
+  }
+
+  @Patch('/images/:id/sections/reorder')
+  @ApiParam({ name: 'id', type: 'string' })
+  async reorderSections(
+    @Param('id') id: string,
+    @Body() body: ReorderSectionsDTO
+  ): Promise<void> {
+    await this._reorderSectionsUseCase.execute({
+      modelImageId: id,
+      sectionIds: body.sectionIds,
+    });
   }
 
   @Delete('/images/sections/:id/delete')
@@ -187,6 +203,7 @@ export class ModelsController {
           include: {
             services: { select: { id: true } },
           },
+          orderBy: { sorting: 'asc' },
         },
       },
     });
@@ -213,6 +230,7 @@ export class ModelsController {
               y: number;
             }[],
             alterations: section.services.map((service) => service.id),
+            sorting: section.sorting,
           })),
         };
       })

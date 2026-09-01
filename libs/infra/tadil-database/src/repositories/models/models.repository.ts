@@ -97,6 +97,10 @@ export class PrismaModelsRepository implements ModelsRepository {
   }
 
   async addSection(section: Section): Promise<void> {
+    const max = await this._db.section.aggregate({
+      where: { modelImageId: section.modelImageId },
+      _max: { sorting: true },
+    });
     await this._db.section.create({
       data: {
         id: section.id,
@@ -107,6 +111,7 @@ export class PrismaModelsRepository implements ModelsRepository {
         urduName: section.urduName,
         bengaliName: section.bengaliName,
         coordinates: section.coordinates,
+        sorting: (max._max.sorting ?? 0) + 1,
         services: {
           connect: section.alterations.map((alterationId) => ({
             id: alterationId,
@@ -139,5 +144,25 @@ export class PrismaModelsRepository implements ModelsRepository {
     await this._db.section.delete({
       where: { id: sectionId },
     });
+  }
+
+  async reorderSections(
+    modelImageId: string,
+    sectionIds: string[]
+  ): Promise<void> {
+    const owned = await this._db.section.findMany({
+      where: { modelImageId, id: { in: sectionIds } },
+      select: { id: true },
+    });
+    const ownedIds = new Set(owned.map((s) => s.id));
+    const ids = sectionIds.filter((id) => ownedIds.has(id));
+    await this._db.$transaction(
+      ids.map((id, index) =>
+        this._db.section.update({
+          where: { id },
+          data: { sorting: index + 1 },
+        })
+      )
+    );
   }
 }

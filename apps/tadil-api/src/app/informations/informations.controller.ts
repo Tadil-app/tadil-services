@@ -39,6 +39,7 @@ export class InformationsController {
       include: {
         extras: { select: { id: true } },
       },
+      orderBy: { sorting: 'asc' },
     });
     return informations.map((information) => ({
       id: information.id,
@@ -51,6 +52,7 @@ export class InformationsController {
       type: information.type as InformationType,
       unit: information.unit ?? undefined,
       extras: information.extras.map((extra) => extra.id),
+      sorting: information.sorting,
     }));
   }
 
@@ -80,6 +82,7 @@ export class InformationsController {
       type: information.type as InformationType,
       unit: information.unit ?? undefined,
       extras: information.extras.map((extra) => extra.id),
+      sorting: information.sorting,
     };
   }
 

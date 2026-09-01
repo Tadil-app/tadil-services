@@ -30,15 +30,22 @@
               @created:section="getModelImages"
             />
             <div class="max-h-[500px] space-y-2 overflow-auto">
-              <SectionListItem
-                v-for="section of selectedModelImage.sections"
+              <div
+                v-for="(section, index) of selectedModelImage.sections"
                 :key="section.id"
-                :section="section"
-                :imageBase64String="selectedModelImage.imageBase64String"
-                :drawingState="drawingState"
-                @deleted:section="getModelImages"
-                @updated:section="getModelImages"
-              />
+                draggable="true"
+                @dragstart="onSectionDragStart(index)"
+                @dragover.prevent
+                @drop="onSectionDrop(index)"
+              >
+                <SectionListItem
+                  :section="section"
+                  :imageBase64String="selectedModelImage.imageBase64String"
+                  :drawingState="drawingState"
+                  @deleted:section="getModelImages"
+                  @updated:section="getModelImages"
+                />
+              </div>
             </div>
           </div>
           <DestructiveActionAlert
@@ -182,6 +189,40 @@ async function deleteModelImage() {
       undefined,
       "destructive"
     );
+  }
+}
+
+const draggedSectionIndex = ref<number | null>(null);
+
+function onSectionDragStart(index: number) {
+  draggedSectionIndex.value = index;
+}
+
+async function onSectionDrop(targetIndex: number) {
+  const image = selectedModelImage.value;
+  if (!image || draggedSectionIndex.value === null) return;
+  const from = draggedSectionIndex.value;
+  draggedSectionIndex.value = null;
+  if (from === targetIndex) return;
+
+  const sections = [...image.sections];
+  const [moved] = sections.splice(from, 1);
+  if (!moved) return;
+  sections.splice(targetIndex, 0, moved);
+  image.sections = sections;
+
+  try {
+    await apiClient.modelsControllerReorderSections(image.id, {
+      sectionIds: sections.map((s) => s.id),
+    });
+  } catch (error: any) {
+    openToast(
+      t("models.sections.reorder.error"),
+      error?.response?.data?.message || undefined,
+      undefined,
+      "destructive"
+    );
+    getModelImages();
   }
 }
 

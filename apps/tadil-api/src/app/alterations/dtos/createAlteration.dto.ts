@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNotEmpty } from 'class-validator';
+import { IsNotEmpty, IsOptional } from 'class-validator';
 
 export class CreateAlterationDTO {
   @ApiProperty()
@@ -26,4 +26,7 @@ export class CreateAlterationDTO {
   @ApiProperty({ type: String, isArray: true })
   @IsNotEmpty()
   informations!: string[];
+  @ApiProperty({ required: false })
+  @IsOptional()
+  sorting?: number;
 }

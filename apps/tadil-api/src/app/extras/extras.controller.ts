@@ -30,7 +30,9 @@ export class ExtrasController {
   @Get('/')
   @ApiOkResponse({ type: DisplayExtraDTO, isArray: true })
   async getExtras(): Promise<DisplayExtraDTO[]> {
-    const extras = await this._dataReader.queries.extra.findMany();
+    const extras = await this._dataReader.queries.extra.findMany({
+      orderBy: { sorting: 'asc' },
+    });
     return extras;
   }
 

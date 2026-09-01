@@ -55,15 +55,16 @@ export class TailorsController {
         : {}),
     };
 
-    const [total, users] = await Promise.all([
+    const [total, users, sortingMax] = await Promise.all([
       this._dataReader.queries.user.count({ where }),
       this._dataReader.queries.user.findMany({
         where,
         include: { addresses: true },
-        orderBy: { firstName: 'asc' },
+        orderBy: [{ sorting: 'asc' }, { firstName: 'asc' }],
         skip: (pageNumber - 1) * size,
         take: size,
       }),
+      this._dataReader.queries.user.count({ where: { role: ROLE.TAILOR } }),
     ]);
 
     const data = users.map((user) => ({
@@ -91,7 +92,7 @@ export class TailorsController {
       longitude: user.addresses.length > 0 ? user.addresses[0].longitude ?? undefined : undefined,
     }));
 
-    return { data, total, page: pageNumber, pageSize: size };
+    return { data, total, page: pageNumber, pageSize: size, sortingMax };
   }
 
   @Get('/phone/:phone')

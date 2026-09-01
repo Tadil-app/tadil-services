@@ -60,6 +60,7 @@ export class UpdateExtraCommand {
   readonly urduName: string;
   readonly bengaliName: string;
   readonly price: number;
+  readonly sorting: number;
   constructor(
     id: string,
     englishName: string,
@@ -67,7 +68,8 @@ export class UpdateExtraCommand {
     hindiName: string,
     urduName: string,
     bengaliName: string,
-    price: number
+    price: number,
+    sorting: number = 1
   ) {
     this.id = id;
     this.englishName = englishName;
@@ -76,5 +78,6 @@ export class UpdateExtraCommand {
     this.urduName = urduName;
     this.bengaliName = bengaliName;
     this.price = price;
+    this.sorting = sorting;
   }
 }

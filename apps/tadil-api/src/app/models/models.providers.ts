@@ -8,6 +8,7 @@ import {
   AddSectionUseCase,
   UpdateSectionUseCase,
   DeleteSectionUseCase,
+  ReorderSectionsUseCase,
   UpdateModelUseCase,
   AddModelImageUseCase,
   DeleteModelImageUseCase,
@@ -101,6 +102,15 @@ const DeleteSectionUseCaseProvider: Provider<DeleteSectionUseCase> = {
   inject: ['ModelsRepository'],
 };
 
+const ReorderSectionsUseCaseProvider: Provider<ReorderSectionsUseCase> = {
+  provide: ReorderSectionsUseCase,
+  useFactory: (modelsRepository: ModelsRepository) => {
+    return new ReorderSectionsUseCase(modelsRepository);
+  },
+  scope: Scope.REQUEST,
+  inject: ['ModelsRepository'],
+};
+
 export {
   ModelsRepositoryProvider,
   CreateModelUseCaseProvider,
@@ -110,5 +120,6 @@ export {
   AddSectionUseCaseProvider,
   UpdateSectionUseCaseProvider,
   DeleteSectionUseCaseProvider,
+  ReorderSectionsUseCaseProvider,
   UpdateModelUseCaseProvider,
 };

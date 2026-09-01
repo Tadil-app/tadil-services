@@ -12,6 +12,9 @@
       <table class="relative w-full table-fixed">
         <thead class="border-b sticky top-0 z-10 bg-background h-12">
           <tr class="divide-x">
+            <th class="w-24 text-center">
+              {{ $t("common.tableHeaders.sorting") }}
+            </th>
             <th class="ps-2 text-center">
               {{ $t("common.tableHeaders.englishName") }}
             </th>
@@ -76,6 +79,7 @@
             :key="alteration.id"
             class="h-12 divide-x"
           >
+            <td class="ps-2 text-center">{{ alteration.sorting }}</td>
             <td class="ps-2 text-center max-w-40 truncate">
               {{ alteration.englishName }}
             </td>
@@ -96,6 +100,11 @@
             </td>
             <td class="">
               <div class="flex gap-2 justify-center">
+                <SortingButton
+                  :sorting="alteration.sorting"
+                  :max="alterations.length"
+                  :save="(sorting) => updateSorting(alteration, sorting)"
+                />
                 <EditAlterationModal
                   :key="alteration.id"
                   :alteration="alteration"
@@ -128,6 +137,7 @@ import {
   Button,
   DestructiveActionAlert,
   SkeletonItem,
+  SortingButton,
   useToast,
 } from "@/components";
 import { Trash2 } from "lucide-vue-next";
@@ -153,6 +163,18 @@ async function getAlterations() {
     await apiClient.alterationsControllerGetAlterations()
   ).data;
   isLoading.value = false;
+}
+
+async function updateSorting(
+  alteration: DisplayAlterationDTO,
+  sorting: number
+) {
+  await apiClient.catalogSortingControllerUpdateSorting(
+    "alterations",
+    alteration.id,
+    { sorting }
+  );
+  await getAlterations();
 }
 
 async function deleteAlteration(alterationId: string) {

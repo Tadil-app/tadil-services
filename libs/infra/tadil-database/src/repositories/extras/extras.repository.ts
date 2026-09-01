@@ -13,6 +13,7 @@ export class PrismaExtrasRepository implements ExtrasRepository {
   }
 
   async createExtra(extra: Extra): Promise<void> {
+    const max = await this._db.extra.aggregate({ _max: { sorting: true } });
     await this._db.extra.create({
       data: {
         id: extra.id,
@@ -21,7 +22,11 @@ export class PrismaExtrasRepository implements ExtrasRepository {
         hindiName: extra.hindiName,
         urduName: extra.urduName,
         bengaliName: extra.bengaliName,
-        price: Number(extra.price)
+        price: Number(extra.price),
+        sorting:
+          extra.sorting === undefined || extra.sorting === null
+            ? (max._max.sorting ?? 0) + 1
+            : Number(extra.sorting),
       },
     });
   }
@@ -35,7 +40,8 @@ export class PrismaExtrasRepository implements ExtrasRepository {
         hindiName: extra.hindiName,
         urduName: extra.urduName,
         bengaliName: extra.bengaliName,
-        price: Number(extra.price)
+        price: Number(extra.price),
+        sorting: Number(extra.sorting),
       },
     });
   }

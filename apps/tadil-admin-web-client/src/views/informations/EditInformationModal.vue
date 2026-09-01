@@ -1,5 +1,5 @@
 <template>
-  <Button variant="outline" size="sm" @click="isOpen = true">
+  <Button variant="outline" size="sm" @click="openModal">
     <Edit />
   </Button>
   <Modal v-model="isOpen" @close-modal="closeModal">
@@ -185,32 +185,35 @@ function onCheckboxExtraSelected(extraId?: string | string[]) {
   localInformation.value.bengaliName = extra.bengaliName;
 }
 
-const localInformation = ref<UpdateInformationDTO>({
-  englishName: props.information.englishName,
-  arabicName: props.information.arabicName,
-  hindiName: props.information.hindiName,
-  urduName: props.information.urduName,
-  bengaliName: props.information.bengaliName,
-  isRequired: props.information.isRequired,
-  type: props.information.type,
-  extras: props.information.extras,
-  unit: props.information.unit,
-});
+function informationToUpdateDto(
+  information: DisplayInformationDTO
+): UpdateInformationDTO {
+  return {
+    englishName: information.englishName,
+    arabicName: information.arabicName,
+    hindiName: information.hindiName,
+    urduName: information.urduName,
+    bengaliName: information.bengaliName,
+    isRequired: information.isRequired,
+    type: information.type,
+    extras: information.extras,
+    unit: information.unit,
+    sorting: information.sorting,
+  };
+}
+
+const localInformation = ref<UpdateInformationDTO>(
+  informationToUpdateDto(props.information)
+);
 
 watch(
   () => props.information,
   (newInfo) => {
-    localInformation.value = {
-      englishName: newInfo.englishName,
-      arabicName: newInfo.arabicName,
-      hindiName: newInfo.hindiName,
-      urduName: newInfo.urduName,
-      bengaliName: newInfo.bengaliName,
-      isRequired: newInfo.isRequired,
-      type: newInfo.type,
-      extras: newInfo.extras,
-      unit: newInfo.unit,
-    };
+    if (isOpen.value) {
+      localInformation.value.sorting = newInfo.sorting;
+      return;
+    }
+    localInformation.value = informationToUpdateDto(newInfo);
   }
 );
 
@@ -222,7 +225,10 @@ async function updateInformation() {
     if (namesForm.value.validateForm()) {
       await apiClient.informationsControllerUpdateInformation(
         props.information.id,
-        localInformation.value
+        {
+          ...localInformation.value,
+          sorting: props.information.sorting,
+        }
       );
       openToast(t("informations.editInformationModal.success"));
       emit("updated:information");
@@ -239,18 +245,13 @@ async function updateInformation() {
   }
 }
 
+function openModal() {
+  localInformation.value = informationToUpdateDto(props.information);
+  isOpen.value = true;
+}
+
 function closeModal() {
-  localInformation.value = {
-    englishName: props.information.englishName,
-    arabicName: props.information.arabicName,
-    hindiName: props.information.hindiName,
-    urduName: props.information.urduName,
-    bengaliName: props.information.bengaliName,
-    isRequired: props.information.isRequired,
-    type: props.information.type,
-    extras: props.information.extras,
-    unit: props.information.unit,
-  };
+  localInformation.value = informationToUpdateDto(props.information);
   isOpen.value = false;
 }
 </script>

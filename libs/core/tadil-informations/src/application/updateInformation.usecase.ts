@@ -68,6 +68,7 @@ export class UpdateInformationCommand {
   readonly type: InformationType;
   readonly extras: string[];
   readonly unit?: string;
+  readonly sorting: number;
   constructor(
     id: string,
     englishName: string,
@@ -78,7 +79,8 @@ export class UpdateInformationCommand {
     isRequired: boolean,
     type: InformationType,
     extras: string[],
-    unit?: string
+    unit?: string,
+    sorting: number = 1
   ) {
     this.id = id;
     this.englishName = englishName;
@@ -90,5 +92,6 @@ export class UpdateInformationCommand {
     this.type = type;
     this.extras = extras;
     this.unit = unit;
+    this.sorting = sorting;
   }
 }

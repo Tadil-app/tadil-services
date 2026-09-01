@@ -186,6 +186,7 @@ const newInformation = ref<CreateInformationDTO>({
   type: InformationType.TEXT,
   extras: [],
   unit: "",
+  sorting: undefined,
 });
 const namesForm = ref<InstanceType<typeof MultiLanguageNameForm>>();
 
@@ -222,6 +223,7 @@ function closeModal() {
     type: InformationType.TEXT,
     extras: [],
     unit: "",
+    sorting: undefined,
   };
   isOpen.value = false;
 }
