@@ -358,6 +358,6 @@ function confirm() {
 <style scoped>
 ion-checkbox::part(container) {
   border-radius: 6px;
-  border: 2px solid #a8c5dd;
+  border: 2px solid var(--ion-color-secondary);
 }
 </style>

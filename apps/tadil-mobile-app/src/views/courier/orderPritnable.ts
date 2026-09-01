@@ -70,13 +70,28 @@ export function getOrderLableHtml(label: ShippingLabelDTO, t: (key: string, ...a
             padding-top: 15px;
             border-top: 2px solid #333;
           }
+          .close-print {
+            position: fixed;
+            top: max(16px, env(safe-area-inset-top));
+            inset-inline-start: 16px;
+            z-index: 10;
+            border: 0;
+            border-radius: 999px;
+            padding: 10px 18px;
+            color: #fff;
+            background: #6d0f2f;
+            font: inherit;
+            font-weight: 700;
+          }
           @media print {
             body { padding: 10px; }
             .box { background-color: transparent; }
+            .close-print { display: none; }
           }
         </style>
       </head>
       <body>
+        <button class="close-print" type="button" onclick="window.close()">× ${t('login.form.buttons.back')}</button>
         <div class="header">
           <h1>TADIL - تـعـديـل</h1>
           <p>${t('courier.print.title')}</p>
@@ -123,7 +138,6 @@ export function getOrderLableHtml(label: ShippingLabelDTO, t: (key: string, ...a
         <script>
           window.onload = function() {
             window.print();
-            setTimeout(function() { window.close(); }, 500);
           }
         </script>
       </body>

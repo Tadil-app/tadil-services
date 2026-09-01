@@ -112,6 +112,7 @@ export const ar = {
         signup: "إنشاء حساب",
         back: "رجوع",
       },
+      agreement: "بمتابعتك، أنت توافق على الشروط والأحكام",
     },
   },
   profileSettings: {

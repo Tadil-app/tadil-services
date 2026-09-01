@@ -112,6 +112,7 @@ export const hi = {
         signup: "साइन अप करें",
         back: "पीछे",
       },
+      agreement: "जारी रखकर, आप नियम और शर्तों से सहमत होते हैं",
     },
   },
   profileSettings: {

@@ -34,23 +34,19 @@ withDefaults(
   {
     showBackButton: true,
     defaultHref: "customer/dashboard",
-  },
+  }
 );
 </script>
 
 <style scoped>
 ion-toolbar {
-  --background: linear-gradient(
-    to right,
-    var(--ion-color-primary),
-    var(--ion-color-secondary)
-  );
+  --background: var(--ion-color-primary);
   --color: white;
   border-bottom-left-radius: 24px;
   border-bottom-right-radius: 24px;
-  --min-height: 80px;
-  --padding-top: calc(var(--ion-safe-area-top, 0px) + 20px);
-  --padding-bottom: 20px;
+  --min-height: 112px;
+  --padding-top: calc(var(--ion-safe-area-top, 0px) + 24px);
+  --padding-bottom: 24px;
 }
 
 body.dark ion-toolbar {

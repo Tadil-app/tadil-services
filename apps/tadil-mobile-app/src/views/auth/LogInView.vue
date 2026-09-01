@@ -1,84 +1,48 @@
 <template>
   <IonPage>
     <IonContent class="ion-padding">
-      <div class="w-full h-full flex justify-center items-center">
-        <IonCard color="light" class="ion-padding w-full">
-          <div class="w-full">
-            <img src="/logo.png" alt="Tadil-تعديل" class="h-60 w-60 mx-auto" />
+      <div class="login-page">
+        <IonCard color="light" class="login-card">
+          <div class="login-logo">
+            <img src="/Tadil_logo.svg" alt="Tadil-تعديل" />
           </div>
 
           <!-- Step 1: Phone Input -->
-          <div v-if="loginStep === 'phone'" class="px-10 space-y-10">
-            <div>
-              <IonInput
-                v-model="phoneNumber"
-                :label="$t('login.form.phoneNumber.label')"
-                label-placement="floating"
-                type="tel"
-                inputmode="tel"
-                fill="solid"
-                :placeholder="$t('login.form.phoneNumber.placeholder')"
-                :minlength="10"
-                :maxlength="10"
-                :required="true"
-                enterkeyhint="send"
-                :error-text="phoneNumberErrorMessage"
-              />
+          <div v-if="loginStep === 'phone'" class="login-form">
+            <div class="login-field">
+              <label>{{ $t("login.form.phoneNumber.label") }}</label>
+              <div class="phone-input-shell">
+                <span class="phone-input-icon" aria-hidden="true">
+                  <IonIcon :icon="callOutline" />
+                </span>
+                <IonInput v-model="phoneNumber" type="tel" inputmode="tel" dir="ltr" class="phone-input" :placeholder="$t('login.form.phoneNumber.placeholder')" :minlength="10" :maxlength="10" :required="true" enterkeyhint="send" :error-text="phoneNumberErrorMessage" />
+              </div>
               <p v-if="phoneNumberErrorMessage" class="text-sm text-danger">
                 {{ phoneNumberErrorMessage }}
               </p>
             </div>
 
-            <IonButton
-              expand="block"
-              color="primary"
-              type="submit"
-              class="w-full"
-              @click="onLogin"
-              :disabled="isLoading"
-            >
+            <IonButton expand="block" color="primary" type="submit" class="login-button" @click="onLogin" :disabled="isLoading">
               <IonSpinner v-if="isLoading" name="crescent" />
               <span v-else>{{ $t("login.form.buttons.login") }}</span>
             </IonButton>
+            <p class="login-agreement">{{ $t("login.form.agreement") }}</p>
           </div>
 
           <!-- Step 2: Signup Form (Complete Profile) -->
           <div v-if="loginStep === 'signup'" class="px-10 space-y-5">
-            <h2 class="text-center font-bold">{{ $t("login.form.signup.title") }}</h2>
-            <IonInput
-              v-model="firstName"
-              :label="$t('login.form.signup.firstName.label')"
-              label-placement="floating"
-              fill="solid"
-              :placeholder="$t('login.form.signup.firstName.placeholder')"
-              required
-            />
-            <IonInput
-              v-model="lastName"
-              :label="$t('login.form.signup.lastName.label')"
-              label-placement="floating"
-              fill="solid"
-              :placeholder="$t('login.form.signup.lastName.placeholder')"
-              required
-            />
+            <h2 class="text-center font-bold">
+              {{ $t("login.form.signup.title") }}
+            </h2>
+            <IonInput v-model="firstName" :label="$t('login.form.signup.firstName.label')" label-placement="floating" fill="solid" :placeholder="$t('login.form.signup.firstName.placeholder')" required />
+            <IonInput v-model="lastName" :label="$t('login.form.signup.lastName.label')" label-placement="floating" fill="solid" :placeholder="$t('login.form.signup.lastName.placeholder')" required />
 
             <div class="pt-5 space-y-3">
-              <IonButton
-                expand="block"
-                color="primary"
-                class="w-full"
-                @click="onCompleteProfile"
-                :disabled="isLoading"
-              >
+              <IonButton expand="block" color="primary" class="w-full" @click="onCompleteProfile" :disabled="isLoading">
                 <IonSpinner v-if="isLoading" name="crescent" />
                 <span v-else>{{ $t("login.form.buttons.signup") }}</span>
               </IonButton>
-              <IonButton
-                expand="block"
-                fill="clear"
-                class="w-full"
-                @click="loginStep = 'phone'"
-              >
+              <IonButton expand="block" fill="clear" class="w-full" @click="loginStep = 'phone'">
                 {{ $t("login.form.buttons.back") }}
               </IonButton>
             </div>
@@ -108,17 +72,8 @@
 
 <script setup lang="ts">
 import { useAuthStore } from "@/stores";
-import {
-  IonButton,
-  IonCard,
-  IonContent,
-  IonInput,
-  IonPage,
-  IonSpinner,
-  IonIcon,
-  onIonViewWillEnter,
-} from "@ionic/vue";
-import { timeOutline, closeCircleOutline } from "ionicons/icons";
+import { IonButton, IonCard, IonContent, IonInput, IonPage, IonSpinner, IonIcon, onIonViewWillEnter } from "@ionic/vue";
+import { callOutline, timeOutline, closeCircleOutline } from "ionicons/icons";
 import { ref } from "vue";
 import { useI18n } from "vue-i18n";
 import { useRoute, useRouter } from "vue-router";
@@ -173,7 +128,7 @@ async function onLogin() {
   isLoading.value = true;
   try {
     const response = await authStore.login(phoneNumber.value);
-    
+
     if (response.status === "authenticated") {
       handleNavigation(response.user?.role);
     } else if (response.status === "signup_required") {
@@ -197,11 +152,7 @@ async function onCompleteProfile() {
 
   isLoading.value = true;
   try {
-    const response = await authStore.completeProfile(
-      phoneNumber.value,
-      firstName.value,
-      lastName.value
-    );
+    const response = await authStore.completeProfile(phoneNumber.value, firstName.value, lastName.value);
     if (response.status === "authenticated") {
       handleNavigation(response.user?.role);
     }
@@ -231,6 +182,117 @@ function handleNavigation(role?: string) {
 
 <style scoped>
 ion-content {
-  --background: linear-gradient(to bottom right, #a8c5dd, #d4a5c7, #e87b56);
+  --background: radial-gradient(ellipse at 18% 16%, rgba(200, 112, 130, 0.16), transparent 34%), radial-gradient(ellipse at 84% 78%, rgba(199, 123, 88, 0.12), transparent 32%), linear-gradient(135deg, #fffdf9 0%, #fff6f3 48%, #fffaf6 100%);
+}
+
+.login-page {
+  display: grid;
+  min-height: 100%;
+  place-items: center;
+  padding: 28px 8px;
+}
+
+.login-card {
+  width: min(100%, 430px);
+  margin: 0;
+  padding: 24px 24px 32px;
+  border: 1px solid rgba(109, 15, 47, 0.22);
+  border-radius: 24px;
+  box-shadow: 0 16px 38px rgba(109, 15, 47, 0.14);
+}
+
+.login-logo {
+  display: grid;
+  place-items: center;
+  min-height: 250px;
+}
+
+.login-logo img {
+  width: 220px;
+  height: 220px;
+  object-fit: contain;
+}
+
+.login-form {
+  display: grid;
+  gap: 24px;
+}
+
+.login-field {
+  display: grid;
+  gap: 10px;
+}
+
+.login-field label {
+  color: var(--ion-text-color);
+  font-size: 17px;
+  font-weight: 600;
+}
+
+.phone-input-shell {
+  display: grid;
+  direction: ltr;
+  grid-template-columns: 70px minmax(0, 1fr);
+  overflow: hidden;
+  min-height: 58px;
+  border: 1px solid #c9939f;
+  border-radius: 12px;
+  background: rgba(255, 253, 251, 0.82);
+}
+
+.phone-input-shell:focus-within {
+  border-color: var(--ion-color-primary);
+}
+
+.phone-input-icon {
+  display: grid;
+  border-right: 1px solid #dfb7c0;
+  place-items: center;
+  color: var(--ion-color-secondary);
+}
+
+.phone-input-icon ion-icon {
+  font-size: 25px;
+}
+
+.phone-input {
+  --background: transparent;
+  --border-width: 0;
+  --highlight-height: 0;
+  --padding-start: 16px;
+  --padding-end: 16px;
+  min-height: 58px;
+  text-align: center;
+}
+
+.login-button {
+  --border-radius: 12px;
+  min-height: 58px;
+  margin: 0;
+  font-size: 20px;
+  font-weight: 700;
+}
+
+.login-agreement {
+  color: var(--ion-step-400);
+  font-size: 13px;
+  text-align: center;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
+@media (max-height: 720px) {
+  .login-page {
+    padding-block: 12px;
+  }
+
+  .login-logo {
+    min-height: 190px;
+  }
+
+  .login-logo img {
+    width: 176px;
+    height: 176px;
+  }
 }
 </style>

@@ -112,6 +112,7 @@ export const ur = {
         signup: "سائن اپ",
         back: "واپس",
       },
+      agreement: "جاری رکھ کر، آپ شرائط و ضوابط سے اتفاق کرتے ہیں",
     },
   },
   profileSettings: {

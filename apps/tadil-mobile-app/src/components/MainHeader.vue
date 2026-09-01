@@ -5,7 +5,7 @@
         class="max-w-125 mx-auto flex rtl:flex-row-reverse justify-between items-center px-4"
       >
         <IonImg
-          src="/logo.png"
+          src="/Tadil_logo.svg"
           alt="Tadil-تعديل"
           :style="{ width: '74px', height: '74px' }"
         />

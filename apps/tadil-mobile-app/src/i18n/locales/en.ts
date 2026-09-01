@@ -112,6 +112,7 @@ export const en = {
         signup: "Sign Up",
         back: "Back",
       },
+      agreement: "By continuing, you agree to the Terms and Conditions",
     },
   },
   profileSettings: {
