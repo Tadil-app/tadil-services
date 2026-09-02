@@ -4,7 +4,7 @@
   >
     <div class="flex items-center gap-2">
       <img
-        src="/logo.png"
+        src="/Tadil_logo.svg"
         alt="Tadil"
         class="h-10 w-auto select-none"
         draggable="false"

@@ -16,7 +16,7 @@
       <div v-if="imageUrl && section" class="bg-background">
         <ModelSegmenter
           :imageUrl="imageUrl"
-          :section="section.coordinates"
+          :sections="[section.coordinates]"
           :alt="section.englishName"
           class="max-h-[30vh]"
         />

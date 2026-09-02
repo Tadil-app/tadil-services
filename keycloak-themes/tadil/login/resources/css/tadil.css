@@ -1,38 +1,38 @@
 /*
- * Tadil login theme — indigo branding to match the admin dashboard.
+ * Tadil login theme — warm burgundy branding to match the admin dashboard.
  * Overrides the stock PatternFly-based "keycloak" login theme.
  * Supports a light and dark palette toggled by js/tadil.js (adds
  * `.tadil-dark` on <html>).
  */
 
 :root {
-  --tadil-primary: #4f46e5;        /* indigo-600, admin app primary */
-  --tadil-primary-hover: #4338ca;  /* indigo-700 */
-  --tadil-bg-from: #e0e7ff;        /* indigo-100 */
-  --tadil-bg-mid: #eef2ff;         /* indigo-50 */
-  --tadil-bg-base: #f8fafc;        /* slate-50 */
-  --tadil-card: #ffffff;
-  --tadil-input-bg: #ffffff;
-  --tadil-foreground: #1e293b;     /* slate-800 */
-  --tadil-muted: #64748b;          /* slate-500 */
-  --tadil-border: #cbd5e1;         /* slate-300 — visible on white */
-  --tadil-border-strong: #94a3b8;  /* slate-400 */
+  --tadil-primary: #6d0f2f;        /* burgundy, admin app primary */
+  --tadil-primary-hover: #600d29;  /* deep burgundy */
+  --tadil-bg-from: #fae9ec;        /* blush */
+  --tadil-bg-mid: #fff0e4;         /* warm sand */
+  --tadil-bg-base: #fffaf6;        /* ivory */
+  --tadil-card: #fffdfb;
+  --tadil-input-bg: #fffdfb;
+  --tadil-foreground: #4a1723;     /* deep wine */
+  --tadil-muted: #915668;          /* muted rose */
+  --tadil-border: #ead3d6;         /* soft rose border */
+  --tadil-border-strong: #c89ba5;  /* dusty rose */
   --tadil-radius: 14px;
-  --tadil-shadow: 0 10px 30px -12px rgba(79, 70, 229, 0.25), 0 4px 10px -6px rgba(15, 23, 42, 0.08);
+  --tadil-shadow: 0 10px 30px -12px rgba(109, 15, 47, 0.25), 0 4px 10px -6px rgba(74, 23, 35, 0.08);
 }
 
 html.tadil-dark {
-  --tadil-primary: #6366f1;        /* indigo-500 */
-  --tadil-primary-hover: #818cf8;  /* indigo-400 */
-  --tadil-bg-from: #1e293b;        /* slate-800 */
-  --tadil-bg-mid: #0f172a;         /* slate-900 */
-  --tadil-bg-base: #020617;        /* slate-950 */
-  --tadil-card: #1e293b;           /* slate-800 */
-  --tadil-input-bg: #0f172a;       /* slate-900 */
-  --tadil-foreground: #e2e8f0;     /* slate-200 */
-  --tadil-muted: #94a3b8;          /* slate-400 */
-  --tadil-border: #475569;         /* slate-600 */
-  --tadil-border-strong: #64748b;  /* slate-500 */
+  --tadil-primary: #9b3154;        /* light burgundy */
+  --tadil-primary-hover: #a54665;  /* rose tint */
+  --tadil-bg-from: #3b1d28;        /* wine surface */
+  --tadil-bg-mid: #211117;         /* dark wine */
+  --tadil-bg-base: #180d11;        /* deepest wine */
+  --tadil-card: #2a171e;           /* raised wine surface */
+  --tadil-input-bg: #211117;       /* dark input */
+  --tadil-foreground: #fff4f1;     /* warm white */
+  --tadil-muted: #c996a0;          /* muted rose */
+  --tadil-border: #482733;         /* wine border */
+  --tadil-border-strong: #724253;  /* strong wine border */
   --tadil-shadow: 0 10px 30px -12px rgba(0, 0, 0, 0.6), 0 4px 10px -6px rgba(0, 0, 0, 0.4);
 }
 
@@ -65,7 +65,7 @@ body.login-pf {
   width: 100%;
   height: 140px;
   margin: 0 auto 8px;
-  background-image: url(../img/logo.png);
+  background-image: url(../img/Tadil_logo.svg);
   background-repeat: no-repeat;
   background-position: center;
   background-size: contain;
@@ -136,7 +136,7 @@ input[type="text"]:focus,
 input[type="password"]:focus,
 input[type="email"]:focus {
   border-color: var(--tadil-primary) !important;
-  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.22) !important;
+  box-shadow: 0 0 0 3px rgba(109, 15, 47, 0.22) !important;
   outline: none;
 }
 
@@ -191,7 +191,7 @@ input[type="submit"].pf-m-primary,
   font-weight: 600;
   letter-spacing: 0.2px;
   color: #fff !important;
-  box-shadow: 0 6px 14px -6px rgba(79, 70, 229, 0.6);
+  box-shadow: 0 6px 14px -6px rgba(109, 15, 47, 0.6);
   transition: background 0.15s ease, transform 0.05s ease;
 }
 
