@@ -13,7 +13,7 @@
       <ModelSegmenter
         v-else
         :imageUrl="imageUrl"
-        :section="section.coordinates"
+        :sections="[section.coordinates]"
         :alt="section.englishName"
         class="h-full w-full object-cover"
       />

@@ -5,10 +5,10 @@
       <AddExtraModal @created:extra="getExtras" />
     </div>
     <div class="mt-4 border rounded-lg overflow-auto">
-      <table class="relative w-full table-fixed">
+      <table class="relative w-full table-fixed text-sm">
         <thead class="border-b sticky top-0 z-10 bg-background h-12">
           <tr class="divide-x">
-            <th class="w-24 text-center">
+            <th class="w-20 text-center">
               {{ $t("common.tableHeaders.sorting") }}
             </th>
             <th class="ps-2 text-center">
@@ -29,7 +29,7 @@
             <th class="ps-2 text-center">
               {{ $t("common.tableHeaders.price") }}
             </th>
-            <th class="w-30">{{ $t("common.tableHeaders.actions") }}</th>
+            <th class="w-36">{{ $t("common.tableHeaders.actions") }}</th>
           </tr>
         </thead>
         <tbody class="divide-y">
