@@ -13,6 +13,7 @@ export class AppController {
   async getFileStream(@Param('id') fileId: string, @Res() res: Response) {
     try {
       const fileStream = await this._fileStorageService.downloadFile(fileId);
+      res.type(fileId);
       res.setHeader('Cache-Control', 'public, max-age=31536000, immutable');
       res.setHeader('Content-Disposition', `inline; filename="${fileId}"`);
       fileStream.on('error', (error) => {
