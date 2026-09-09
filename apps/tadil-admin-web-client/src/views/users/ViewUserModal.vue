@@ -1,7 +1,11 @@
 <template>
-  <Button size="sm" variant="outline" @click="isOpen = true">
-    <Eye class="h-4 w-4 me-1" />
-    {{ $t("users.buttons.view") }}
+  <Button
+    size="sm"
+    variant="outline"
+    :aria-label="$t('users.buttons.view')"
+    @click="isOpen = true"
+  >
+    <Eye />
   </Button>
   <Modal
     v-model="isOpen"
