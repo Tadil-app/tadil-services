@@ -18,11 +18,24 @@
           <th class="ps-2 text-center">
             {{ $t("users.tableHeaders.email") }}
           </th>
+          <th class="ps-2 text-center">
+            {{ $t("customers.tableHeaders.city") }}
+          </th>
           <th class="w-40">{{ $t("common.tableHeaders.actions") }}</th>
         </tr>
       </thead>
       <tbody class="divide-y">
         <tr v-if="isLoading" v-for="index in 5" :key="index" class="divide-x">
+          <td>
+            <div class="ps-2 flex justify-center">
+              <SkeletonItem variant="short-text" />
+            </div>
+          </td>
+          <td>
+            <div class="ps-2 flex justify-center">
+              <SkeletonItem variant="short-text" />
+            </div>
+          </td>
           <td>
             <div class="ps-2 flex justify-center">
               <SkeletonItem variant="short-text" />
@@ -67,6 +80,9 @@
           <td class="ps-2 text-center truncate">
             {{ user.email ?? "--" }}
           </td>
+          <td class="ps-2 text-center truncate">
+            {{ cityLabel(user) || "--" }}
+          </td>
           <td>
             <div class="flex gap-2 justify-center">
               <SortingButton
@@ -109,9 +125,11 @@ import { Trash2 } from "lucide-vue-next";
 import { useI18n } from "vue-i18n";
 import EditUserModal from "../EditUserModal.vue";
 import { apiClient, ROLE, type DisplayUserDTO, type RoleType } from "@/integration";
+import { useLocalizedCityComposable } from "@/composables";
 
 const { t } = useI18n();
 const { openToast } = useToast();
+const { cityLabel } = useLocalizedCityComposable();
 
 const props = defineProps<{
   users: DisplayUserDTO[];
