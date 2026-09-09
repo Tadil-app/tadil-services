@@ -464,7 +464,16 @@ export const bn = {
       empty: "কোনো গ্রাহক পাওয়া যায়নি",
     },
     buttons: {
+      view: "দেখুন",
       viewOrders: "অর্ডার দেখুন",
+    },
+    viewModal: {
+      title: "গ্রাহকের বিবরণ",
+      personalInfo: "ব্যক্তিগত তথ্য",
+      address: "ঠিকানা",
+      street: "রাস্তা",
+      coordinates: "স্থানাঙ্ক",
+      noAddress: "কোনো ঠিকানা নেই",
     },
   },
   toast: {

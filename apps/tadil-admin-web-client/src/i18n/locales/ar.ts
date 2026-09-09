@@ -518,7 +518,16 @@ export const ar = {
       empty: "لا يوجد عملاء",
     },
     buttons: {
+      view: "عرض",
       viewOrders: "عرض الطلبات",
+    },
+    viewModal: {
+      title: "تفاصيل العميل",
+      personalInfo: "المعلومات الشخصية",
+      address: "العنوان",
+      street: "الشارع",
+      coordinates: "الإحداثيات",
+      noAddress: "لا يوجد عنوان مسجل",
     },
   },
   toast: {
