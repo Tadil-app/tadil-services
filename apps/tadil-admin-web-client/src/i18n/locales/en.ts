@@ -518,7 +518,16 @@ export const en = {
       empty: "No customers found",
     },
     buttons: {
+      view: "View",
       viewOrders: "View Orders",
+    },
+    viewModal: {
+      title: "Customer details",
+      personalInfo: "Personal information",
+      address: "Address",
+      street: "Street",
+      coordinates: "Coordinates",
+      noAddress: "No address on file",
     },
   },
   toast: {

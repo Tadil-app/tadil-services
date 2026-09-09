@@ -464,7 +464,16 @@ export const hi = {
       empty: "कोई ग्राहक नहीं मिला",
     },
     buttons: {
+      view: "देखें",
       viewOrders: "ऑर्डर देखें",
+    },
+    viewModal: {
+      title: "ग्राहक विवरण",
+      personalInfo: "व्यक्तिगत जानकारी",
+      address: "पता",
+      street: "सड़क",
+      coordinates: "निर्देशांक",
+      noAddress: "कोई पता दर्ज नहीं है",
     },
   },
   toast: {

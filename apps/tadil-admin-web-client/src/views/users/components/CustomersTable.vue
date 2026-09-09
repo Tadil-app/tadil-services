@@ -8,7 +8,7 @@
           <th class="ps-2 text-center">{{ $t("users.tableHeaders.lastName") }}</th>
           <th class="ps-2 text-center">{{ $t("users.tableHeaders.phone") }}</th>
           <th class="ps-2 text-center">{{ $t("customers.tableHeaders.city") }}</th>
-          <th class="w-48">{{ $t("common.tableHeaders.actions") }}</th>
+          <th class="w-72">{{ $t("common.tableHeaders.actions") }}</th>
         </tr>
       </thead>
       <tbody class="divide-y">
@@ -20,6 +20,8 @@
           </td>
           <td class="flex gap-2 justify-center">
             <SkeletonItem variant="action-button" />
+            <SkeletonItem variant="action-button" />
+            <SkeletonItem variant="action-button" />
           </td>
         </tr>
         <tr v-else-if="customers.length === 0">
@@ -27,19 +29,20 @@
             {{ $t("customers.table.empty") }}
           </td>
         </tr>
-        <tr v-else v-for="customer in customers" :key="customer.id" class="h-12 divide-x">
+        <tr v-else v-for="customer in customers" :key="customer.id" class="min-h-12 divide-x">
           <td class="ps-2 text-center">{{ customer.sorting }}</td>
           <td class="ps-2 text-center truncate">{{ customer.firstName }}</td>
           <td class="ps-2 text-center truncate">{{ customer.lastName }}</td>
           <td class="ps-2 text-center truncate">{{ customer.phone }}</td>
           <td class="ps-2 text-center truncate">{{ cityLabel(customer) || "--" }}</td>
           <td>
-            <div class="flex gap-2 justify-center">
+            <div class="flex flex-wrap gap-2 justify-center px-1 py-1">
               <SortingButton
                 :sorting="customer.sorting"
                 :max="maxSorting"
                 :save="(sorting) => updateSorting(customer.id, sorting)"
               />
+              <ViewCustomerModal :customer="customer" />
               <Button size="sm" variant="outline" @click="viewOrders(customer)">
                 <ClipboardList class="h-4 w-4 me-1" />
                 {{ $t("customers.buttons.viewOrders") }}
@@ -58,6 +61,7 @@ import { Button, SkeletonItem, SortingButton } from "@/components";
 import { ClipboardList } from "lucide-vue-next";
 import { apiClient, type DisplayUserDTO } from "@/integration";
 import { useLocalizedCityComposable } from "@/composables";
+import ViewCustomerModal from "../ViewCustomerModal.vue";
 
 defineProps<{
   customers: DisplayUserDTO[];

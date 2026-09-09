@@ -465,7 +465,16 @@ export const ur = {
       empty: "کوئی گاہک نہیں ملا",
     },
     buttons: {
+      view: "دیکھیں",
       viewOrders: "آرڈرز دیکھیں",
+    },
+    viewModal: {
+      title: "گاہک کی تفصیلات",
+      personalInfo: "ذاتی معلومات",
+      address: "پتہ",
+      street: "سڑک",
+      coordinates: "نقطہ مقام",
+      noAddress: "کوئی پتہ درج نہیں",
     },
   },
   toast: {
