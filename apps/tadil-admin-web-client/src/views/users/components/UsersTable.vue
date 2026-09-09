@@ -21,7 +21,7 @@
           <th class="ps-2 text-center">
             {{ $t("customers.tableHeaders.city") }}
           </th>
-          <th class="w-40">{{ $t("common.tableHeaders.actions") }}</th>
+          <th class="w-56">{{ $t("common.tableHeaders.actions") }}</th>
         </tr>
       </thead>
       <tbody class="divide-y">
@@ -59,13 +59,15 @@
           <td class="flex gap-2 justify-center">
             <SkeletonItem variant="action-button" />
             <SkeletonItem variant="action-button" />
+            <SkeletonItem variant="action-button" />
+            <SkeletonItem variant="action-button" />
           </td>
         </tr>
         <tr
           v-else
           v-for="user in users"
           :key="user.id"
-          class="h-12 divide-x"
+          class="min-h-12 divide-x"
         >
           <td class="ps-2 text-center">{{ user.sorting }}</td>
           <td class="ps-2 text-center truncate">
@@ -84,12 +86,13 @@
             {{ cityLabel(user) || "--" }}
           </td>
           <td>
-            <div class="flex gap-2 justify-center">
+            <div class="flex flex-wrap gap-2 justify-center px-1 py-1">
               <SortingButton
                 :sorting="user.sorting"
                 :max="maxSorting"
                 :save="(sorting) => updateSorting(user.id, sorting)"
               />
+              <ViewUserModal :user="user" :user-type="userType" />
               <EditUserModal
                 :user="user"
                 :selectedUserType="userType"
@@ -124,6 +127,7 @@ import {
 import { Trash2 } from "lucide-vue-next";
 import { useI18n } from "vue-i18n";
 import EditUserModal from "../EditUserModal.vue";
+import ViewUserModal from "../ViewUserModal.vue";
 import { apiClient, ROLE, type DisplayUserDTO, type RoleType } from "@/integration";
 import { useLocalizedCityComposable } from "@/composables";
 

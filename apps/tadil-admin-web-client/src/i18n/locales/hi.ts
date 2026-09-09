@@ -454,6 +454,21 @@ export const hi = {
       success: "उपयोगकर्ता सफलतापूर्वक हटा दिया गया",
       error: "उपयोगकर्ता हटाते समय त्रुटि हुई",
     },
+    buttons: {
+      view: "देखें",
+    },
+    viewModal: {
+      title: {
+        customer: "ग्राहक विवरण",
+        tailor: "दर्जी विवरण",
+        courier: "कूरियर विवरण",
+      },
+      personalInfo: "व्यक्तिगत जानकारी",
+      address: "पता",
+      street: "सड़क",
+      coordinates: "निर्देशांक",
+      noAddress: "कोई पता दर्ज नहीं है",
+    },
   },
   customers: {
     searchPlaceholder: "नाम या फ़ोन से खोजें",
@@ -464,16 +479,7 @@ export const hi = {
       empty: "कोई ग्राहक नहीं मिला",
     },
     buttons: {
-      view: "देखें",
       viewOrders: "ऑर्डर देखें",
-    },
-    viewModal: {
-      title: "ग्राहक विवरण",
-      personalInfo: "व्यक्तिगत जानकारी",
-      address: "पता",
-      street: "सड़क",
-      coordinates: "निर्देशांक",
-      noAddress: "कोई पता दर्ज नहीं है",
     },
   },
   toast: {

@@ -508,6 +508,21 @@ export const ar = {
       success: "تم حذف المستخدم بنجاح",
       error: "حدث خطاء في حذف المستخدم",
     },
+    buttons: {
+      view: "عرض",
+    },
+    viewModal: {
+      title: {
+        customer: "تفاصيل العميل",
+        tailor: "تفاصيل الخياط",
+        courier: "تفاصيل السائق",
+      },
+      personalInfo: "المعلومات الشخصية",
+      address: "العنوان",
+      street: "الشارع",
+      coordinates: "الإحداثيات",
+      noAddress: "لا يوجد عنوان مسجل",
+    },
   },
   customers: {
     searchPlaceholder: "ابحث بالاسم أو رقم الهاتف",
@@ -518,16 +533,7 @@ export const ar = {
       empty: "لا يوجد عملاء",
     },
     buttons: {
-      view: "عرض",
       viewOrders: "عرض الطلبات",
-    },
-    viewModal: {
-      title: "تفاصيل العميل",
-      personalInfo: "المعلومات الشخصية",
-      address: "العنوان",
-      street: "الشارع",
-      coordinates: "الإحداثيات",
-      noAddress: "لا يوجد عنوان مسجل",
     },
   },
   toast: {
