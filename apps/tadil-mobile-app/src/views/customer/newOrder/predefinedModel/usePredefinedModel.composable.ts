@@ -23,6 +23,7 @@ const models = ref<DisplayModelDTO[]>([]);
 const selectedModel = ref<DisplayModelDTO>();
 const modelImages = ref<DisplayModelImageDTO[]>([]);
 const selectedImage = ref<DisplayModelImageDTO>();
+const loadedImagesModelId = ref<string>();
 const selectedSection = ref<DisplaySectionDTO>();
 const alterations = ref<DisplayAlterationDTO[]>([]);
 const modelItems = ref<ModelItems>();
@@ -152,10 +153,24 @@ export function usePredefinedModel() {
   }
 
   async function getModelImages(modelId: string) {
+    if (loadedImagesModelId.value === modelId && selectedImage.value) {
+      return;
+    }
+
+    const previousImageId = selectedImage.value?.id;
+    modelImages.value = [];
+    selectedImage.value = undefined;
+
     try {
       const { data } = await apiClient.customerControllerGetModelImages(modelId);
       modelImages.value = data;
-      if (data.length > 0) selectedImage.value = data[0];
+      loadedImagesModelId.value = modelId;
+      if (data.length === 0) {
+        selectedImage.value = undefined;
+        return;
+      }
+      selectedImage.value =
+        data.find((image) => image.id === previousImageId) ?? data[0];
     } catch (error) {
       showToast({ message: t("common.errors.loadImages"), color: "danger" });
     }
@@ -280,6 +295,7 @@ export function usePredefinedModel() {
     selectedModel.value = undefined;
     modelImages.value = [];
     selectedImage.value = undefined;
+    loadedImagesModelId.value = undefined;
     selectedSection.value = undefined;
     alterations.value = [];
     modelItems.value = undefined;

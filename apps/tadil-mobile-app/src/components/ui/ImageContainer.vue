@@ -15,7 +15,7 @@
       :src="computedImageUrl"
       :alt="alt"
       class="max-h-full"
-      loading="lazy"
+      @error="hasError = true"
       @click="getOriginalImageCoords"
     />
   </div>
@@ -24,10 +24,11 @@
 <script setup lang="ts">
 import { Point } from "@/integration/dtos";
 import { Image } from "lucide-vue-next";
-import { computed, ref } from "vue";
-import { Capacitor } from "@capacitor/core";
+import { computed, ref, watch } from "vue";
+import { resolveMediaSrc } from "@/utils";
 
 const imageRef = ref<HTMLImageElement | null>(null);
+const hasError = ref(false);
 const emit = defineEmits<{
   (e: "segmenter:clicked", clickPosition: Point): void;
 }>();
@@ -38,16 +39,12 @@ const props = defineProps<{
   isSegmenter?: boolean;
 }>();
 
-const computedImageUrl = computed(() => {
-  if (!props.imageUrl) return undefined;
-  if (
-    props.imageUrl.startsWith("file://") ||
-    props.imageUrl.startsWith("content://") ||
-    props.imageUrl.startsWith("/")
-  ) {
-    return Capacitor.convertFileSrc(props.imageUrl);
-  }
-  return props.imageUrl;
+const computedImageUrl = computed(() =>
+  hasError.value ? undefined : resolveMediaSrc(props.imageUrl),
+);
+
+watch(() => props.imageUrl, () => {
+  hasError.value = false;
 });
 
 function getOriginalImageCoords(event: MouseEvent) {

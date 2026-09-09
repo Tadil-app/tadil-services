@@ -12,13 +12,12 @@
         <IonCard
           v-for="model in models"
           :key="model.id"
-          :button="true"
           class="model-card"
-          :router-link="{
-            name: 'customer-new-order-predefined-model-gallery',
-            params: { category, modelId: model.id },
-          }"
-          @click="selectedModel = model"
+          role="button"
+          tabindex="0"
+          @click="openModel(model)"
+          @keydown.enter="openModel(model)"
+          @keydown.space.prevent="openModel(model)"
         >
           <div class="model-card__body">
             <ImageContainer :imageUrl="model.thumbnailImageUrl" :alt="model.englishName" class="model-card__image" />
@@ -32,13 +31,15 @@
 
 <script setup lang="ts">
 import { useToast } from "@/composables";
-import { ModelCategory } from "@/integration/dtos";
+import { DisplayModelDTO, ModelCategory } from "@/integration/dtos";
 import { IonPage, RefresherCustomEvent, IonContent, IonRefresher, IonRefresherContent, IonCard, IonSkeletonText } from "@ionic/vue";
 import { usePredefinedModel } from "./usePredefinedModel.composable";
 import { onBeforeMount, onBeforeUnmount } from "vue";
 import { ImageContainer, TranslatedName, SecondaryHeader } from "@/components";
+import { useRouter } from "vue-router";
 
 const { dismissToast } = useToast();
+const router = useRouter();
 
 const props = defineProps<{
   category: ModelCategory;
@@ -48,6 +49,14 @@ const { isLoadingModels, models, selectedModel, getModels, resetSelection } = us
 async function onRefresh(event: RefresherCustomEvent) {
   await getModels(props.category);
   event.target.complete();
+}
+
+function openModel(model: DisplayModelDTO) {
+  selectedModel.value = model;
+  router.push({
+    name: "customer-new-order-predefined-model-gallery",
+    params: { category: props.category, modelId: model.id },
+  });
 }
 
 onBeforeMount(() => {
@@ -72,6 +81,7 @@ onBeforeUnmount(() => {
   --background: #fffdfb;
   margin: 0;
   overflow: hidden;
+  cursor: pointer;
   border: 1px solid #e8bfc8;
   border-radius: 20px;
   box-shadow: 0 3px 8px rgba(109, 15, 47, 0.08);
@@ -81,6 +91,7 @@ onBeforeUnmount(() => {
   display: grid;
   grid-template-rows: minmax(190px, 1fr) auto;
   min-height: 278px;
+  pointer-events: none;
 }
 
 .model-card__image {

@@ -138,8 +138,9 @@ import {
   IonHeader,
   IonModal,
   IonPage,
+  onIonViewWillEnter,
 } from "@ionic/vue";
-import { computed, onBeforeMount, ref } from "vue";
+import { computed, ref } from "vue";
 import { ModelCategory } from "@/integration/dtos";
 import {
   TranslatedName,
@@ -177,7 +178,9 @@ const props = defineProps<{
 }>();
 
 const {
+  models,
   selectedModel,
+  getModels,
   modelImages,
   selectedImage,
   selectedSection,
@@ -343,7 +346,15 @@ onBeforeRouteLeave(async () => {
   return true;
 });
 
-onBeforeMount(async () => {
+onIonViewWillEnter(async () => {
+  if (selectedModel.value?.id !== props.modelId) {
+    selectedModel.value = models.value.find((model) => model.id === props.modelId);
+    if (!selectedModel.value) {
+      await getModels(props.category);
+      selectedModel.value = models.value.find((model) => model.id === props.modelId);
+    }
+  }
+
   if (!selectedModel.value) {
     router.replace({
       name: "customer-new-order-predefined-model-selection",
@@ -351,6 +362,7 @@ onBeforeMount(async () => {
     });
     return;
   }
+
   await getModelImages(props.modelId);
 });
 </script>

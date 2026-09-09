@@ -40,6 +40,7 @@ describe('AddModelImageUseCase', () => {
       deleteFile: jest.fn(),
       downloadFile: jest.fn(),
       getFileUrl: jest.fn(),
+      statFile: jest.fn(),
     };
     addModelImageUseCase = new AddModelImageUseCase(
       modelsRepository,

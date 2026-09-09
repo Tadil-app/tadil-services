@@ -1,6 +1,7 @@
 import * as Minio from 'minio';
 import { Readable } from 'stream';
 import {
+  FileMetadata,
   FileStorageService,
   InfrastructureException,
   ReadableFile,
@@ -53,7 +54,7 @@ export class MinioFileStorageService implements FileStorageService {
   async uploadFile(fileId: string, file: ReadableFile): Promise<string> {
     try {
       const metaData = {
-        ContentType: file.mimetype,
+        'Content-Type': file.mimetype,
         OriginalName: file.originalName,
       };
       await this.minioClient.fPutObject(
@@ -88,6 +89,25 @@ export class MinioFileStorageService implements FileStorageService {
         );
       else
         throw new InfrastructureException(`Error getting file URL: ${error}`);
+    }
+  }
+
+  async statFile(fileId: string): Promise<FileMetadata> {
+    try {
+      const stat = await this.minioClient.statObject(this.bucketName, fileId);
+      const contentType = Object.entries(stat.metaData).find(
+        ([key]) => key.toLowerCase() === 'content-type'
+      )?.[1];
+      return { contentType: typeof contentType === 'string' ? contentType : undefined };
+    } catch (error: unknown) {
+      if (error instanceof Error)
+        throw new InfrastructureException(
+          `Error getting file metadata: ${error.message}`
+        );
+      else
+        throw new InfrastructureException(
+          `Error getting file metadata: ${error}`
+        );
     }
   }
 

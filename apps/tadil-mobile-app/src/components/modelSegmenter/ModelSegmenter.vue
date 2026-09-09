@@ -23,7 +23,7 @@
 import { Point } from "@/integration/dtos";
 import { useModelSegmenter } from "./useModelSegmenter.composable";
 import { onBeforeUnmount, computed, watch } from "vue";
-import { Capacitor } from "@capacitor/core";
+import { resolveMediaSrc } from "@/utils";
 
 const props = defineProps<{
   imageUrl: string;
@@ -35,17 +35,7 @@ const emit = defineEmits<{
   (e: "segmenter:clicked", clickPosition: Point): void;
 }>();
 
-const computedImageUrl = computed(() => {
-  if (!props.imageUrl) return "";
-  if (
-    props.imageUrl.startsWith("file://") ||
-    props.imageUrl.startsWith("content://") ||
-    props.imageUrl.startsWith("/")
-  ) {
-    return Capacitor.convertFileSrc(props.imageUrl);
-  }
-  return props.imageUrl;
-});
+const computedImageUrl = computed(() => resolveMediaSrc(props.imageUrl) || "");
 
 const {
   canvasRef,

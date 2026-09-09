@@ -37,6 +37,7 @@ describe('DeleteModelImageUseCase', () => {
       deleteFile: jest.fn(),
       downloadFile: jest.fn(),
       getFileUrl: jest.fn(),
+      statFile: jest.fn(),
     };
     deleteModelImageUseCase = new DeleteModelImageUseCase(
       modelsRepository,
