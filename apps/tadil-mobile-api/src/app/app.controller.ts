@@ -1,4 +1,4 @@
-import { Controller, Get, Inject, Param, Res } from '@nestjs/common';
+import { Controller, Get, Headers, Inject, Param, Res } from '@nestjs/common';
 import { type FileStorageService } from '@tadil-common';
 import { type Response } from 'express';
 
@@ -10,10 +10,21 @@ export class AppController {
   ) {}
 
   @Get('files/:id')
-  async getFileStream(@Param('id') fileId: string, @Res() res: Response) {
+  async getFileStream(
+    @Param('id') fileId: string,
+    @Headers('accept') accept: string | undefined,
+    @Res() res: Response
+  ) {
     try {
+      const { contentType } = await this._fileStorageService.statFile(fileId);
       const fileStream = await this._fileStorageService.downloadFile(fileId);
-      res.type(fileId);
+      res.type(contentType || fileId);
+      if (
+        !contentType &&
+        res.getHeader('Content-Type') === 'application/octet-stream' &&
+        accept?.includes('image/')
+      )
+        res.type('image/jpeg');
       res.setHeader('Cache-Control', 'public, max-age=31536000, immutable');
       res.setHeader('Content-Disposition', `inline; filename="${fileId}"`);
       fileStream.on('error', (error) => {

@@ -152,6 +152,8 @@ export function usePredefinedModel() {
   }
 
   async function getModelImages(modelId: string) {
+    modelImages.value = [];
+    selectedImage.value = undefined;
     try {
       const { data } = await apiClient.customerControllerGetModelImages(modelId);
       modelImages.value = data;
