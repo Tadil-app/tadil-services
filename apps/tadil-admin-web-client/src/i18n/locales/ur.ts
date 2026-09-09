@@ -455,6 +455,21 @@ export const ur = {
       success: "صارف کامیابی سے حذف ہو گیا",
       error: "صارف حذف کرتے وقت غلطی ہوئی",
     },
+    buttons: {
+      view: "دیکھیں",
+    },
+    viewModal: {
+      title: {
+        customer: "گاہک کی تفصیلات",
+        tailor: "درزی کی تفصیلات",
+        courier: "کورئیر کی تفصیلات",
+      },
+      personalInfo: "ذاتی معلومات",
+      address: "پتہ",
+      street: "سڑک",
+      coordinates: "نقطہ مقام",
+      noAddress: "کوئی پتہ درج نہیں",
+    },
   },
   customers: {
     searchPlaceholder: "نام یا فون سے تلاش کریں",
@@ -465,16 +480,7 @@ export const ur = {
       empty: "کوئی گاہک نہیں ملا",
     },
     buttons: {
-      view: "دیکھیں",
       viewOrders: "آرڈرز دیکھیں",
-    },
-    viewModal: {
-      title: "گاہک کی تفصیلات",
-      personalInfo: "ذاتی معلومات",
-      address: "پتہ",
-      street: "سڑک",
-      coordinates: "نقطہ مقام",
-      noAddress: "کوئی پتہ درج نہیں",
     },
   },
   toast: {

@@ -42,7 +42,7 @@
                 :max="maxSorting"
                 :save="(sorting) => updateSorting(customer.id, sorting)"
               />
-              <ViewCustomerModal :customer="customer" />
+              <ViewUserModal :user="customer" />
               <Button size="sm" variant="outline" @click="viewOrders(customer)">
                 <ClipboardList class="h-4 w-4 me-1" />
                 {{ $t("customers.buttons.viewOrders") }}
@@ -61,7 +61,7 @@ import { Button, SkeletonItem, SortingButton } from "@/components";
 import { ClipboardList } from "lucide-vue-next";
 import { apiClient, type DisplayUserDTO } from "@/integration";
 import { useLocalizedCityComposable } from "@/composables";
-import ViewCustomerModal from "../ViewCustomerModal.vue";
+import ViewUserModal from "../ViewUserModal.vue";
 
 defineProps<{
   customers: DisplayUserDTO[];
