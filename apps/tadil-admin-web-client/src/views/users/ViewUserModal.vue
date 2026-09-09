@@ -1,7 +1,7 @@
 <template>
   <Button size="sm" variant="outline" @click="isOpen = true">
     <Eye class="h-4 w-4 me-1" />
-    {{ $t("customers.buttons.view") }}
+    {{ $t("users.buttons.view") }}
   </Button>
   <Modal
     v-model="isOpen"
@@ -13,21 +13,21 @@
         <div
           class="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary"
         >
-          <User class="h-5 w-5" />
+          <component :is="headerIcon" class="h-5 w-5" />
         </div>
         <div class="min-w-0">
           <h1 class="text-lg font-bold leading-tight">
-            {{ $t("customers.viewModal.title") }}
+            {{ $t(`users.viewModal.title.${role}`) }}
           </h1>
           <p class="truncate text-sm text-muted-foreground">
-            {{ customer.firstName }} {{ customer.lastName }}
+            {{ user.firstName }} {{ user.lastName }}
           </p>
         </div>
       </div>
 
       <section class="space-y-3">
         <h2 class="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
-          {{ $t("customers.viewModal.personalInfo") }}
+          {{ $t("users.viewModal.personalInfo") }}
         </h2>
         <dl class="grid grid-cols-1 gap-3 sm:grid-cols-2">
           <div class="rounded-lg border border-border bg-muted/30 p-3">
@@ -35,7 +35,7 @@
               {{ $t("users.tableHeaders.firstName") }}
             </dt>
             <dd class="mt-0.5 truncate font-medium">
-              {{ display(customer.firstName) }}
+              {{ display(user.firstName) }}
             </dd>
           </div>
           <div class="rounded-lg border border-border bg-muted/30 p-3">
@@ -43,7 +43,7 @@
               {{ $t("users.tableHeaders.lastName") }}
             </dt>
             <dd class="mt-0.5 truncate font-medium">
-              {{ display(customer.lastName) }}
+              {{ display(user.lastName) }}
             </dd>
           </div>
           <div class="rounded-lg border border-border bg-muted/30 p-3">
@@ -51,7 +51,7 @@
               {{ $t("users.tableHeaders.phone") }}
             </dt>
             <dd class="mt-0.5 truncate font-medium" dir="ltr">
-              {{ display(customer.phone) }}
+              {{ display(user.phone) }}
             </dd>
           </div>
           <div class="rounded-lg border border-border bg-muted/30 p-3">
@@ -59,7 +59,18 @@
               {{ $t("users.tableHeaders.email") }}
             </dt>
             <dd class="mt-0.5 truncate font-medium">
-              {{ display(customer.email) }}
+              {{ display(user.email) }}
+            </dd>
+          </div>
+          <div
+            v-if="showCommission"
+            class="rounded-lg border border-border bg-muted/30 p-3 sm:col-span-2"
+          >
+            <dt class="text-xs text-muted-foreground">
+              {{ $t("common.inputs.commissionRate.label") }}
+            </dt>
+            <dd class="mt-0.5 truncate font-medium">
+              {{ display(user.commissionRate) }}
             </dd>
           </div>
         </dl>
@@ -67,13 +78,13 @@
 
       <section class="space-y-3">
         <h2 class="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
-          {{ $t("customers.viewModal.address") }}
+          {{ $t("users.viewModal.address") }}
         </h2>
         <p
           v-if="!hasAddress"
           class="rounded-lg border border-dashed border-border px-3 py-6 text-center text-sm text-muted-foreground"
         >
-          {{ $t("customers.viewModal.noAddress") }}
+          {{ $t("users.viewModal.noAddress") }}
         </p>
         <dl v-else class="grid grid-cols-1 gap-3 sm:grid-cols-2">
           <div class="rounded-lg border border-border bg-muted/30 p-3">
@@ -81,7 +92,7 @@
               {{ $t("users.address.city") }}
             </dt>
             <dd class="mt-0.5 truncate font-medium">
-              {{ display(cityLabel(customer)) }}
+              {{ display(cityLabel(user)) }}
             </dd>
           </div>
           <div class="rounded-lg border border-border bg-muted/30 p-3">
@@ -89,15 +100,15 @@
               {{ $t("users.address.district") }}
             </dt>
             <dd class="mt-0.5 truncate font-medium">
-              {{ display(districtLabel(customer)) }}
+              {{ display(districtLabel(user)) }}
             </dd>
           </div>
           <div class="rounded-lg border border-border bg-muted/30 p-3 sm:col-span-2">
             <dt class="text-xs text-muted-foreground">
-              {{ $t("customers.viewModal.street") }}
+              {{ $t("users.viewModal.street") }}
             </dt>
             <dd class="mt-0.5 font-medium">
-              {{ display(streetLabel(customer)) }}
+              {{ display(streetLabel(user)) }}
             </dd>
           </div>
           <div
@@ -105,7 +116,7 @@
             class="rounded-lg border border-border bg-muted/30 p-3 sm:col-span-2"
           >
             <dt class="text-xs text-muted-foreground">
-              {{ $t("customers.viewModal.coordinates") }}
+              {{ $t("users.viewModal.coordinates") }}
             </dt>
             <dd class="mt-0.5 font-medium" dir="ltr">
               <a
@@ -114,7 +125,7 @@
                 rel="noopener noreferrer"
                 class="text-primary hover:underline"
               >
-                {{ customer.latitude }}, {{ customer.longitude }}
+                {{ user.latitude }}, {{ user.longitude }}
               </a>
             </dd>
           </div>
@@ -127,16 +138,36 @@
 <script setup lang="ts">
 import { computed, ref } from "vue";
 import { Button, Modal } from "@/components";
-import { Eye, User } from "lucide-vue-next";
-import type { DisplayUserDTO } from "@/integration";
+import { Eye, Scissors, Truck, User } from "lucide-vue-next";
+import { ROLE, type DisplayUserDTO, type RoleType } from "@/integration";
 import { useLocalizedCityComposable } from "@/composables";
 
 const props = defineProps<{
-  customer: DisplayUserDTO;
+  user: DisplayUserDTO;
+  userType?: RoleType;
 }>();
 
 const isOpen = ref(false);
 const { cityLabel, districtLabel, streetLabel } = useLocalizedCityComposable();
+
+const role = computed(
+  () => props.userType ?? props.user.role ?? ROLE.CUSTOMER,
+);
+
+const headerIcon = computed(() => {
+  switch (role.value) {
+    case ROLE.TAILOR:
+      return Scissors;
+    case ROLE.COURIER:
+      return Truck;
+    default:
+      return User;
+  }
+});
+
+const showCommission = computed(
+  () => role.value === ROLE.TAILOR || role.value === ROLE.COURIER,
+);
 
 const display = (value?: string | number | null) => {
   if (value === undefined || value === null || value === "") return "--";
@@ -144,22 +175,21 @@ const display = (value?: string | number | null) => {
 };
 
 const hasCoordinates = computed(
-  () =>
-    props.customer.latitude != null && props.customer.longitude != null,
+  () => props.user.latitude != null && props.user.longitude != null,
 );
 
 const hasAddress = computed(
   () =>
     Boolean(
-      cityLabel(props.customer) ||
-        districtLabel(props.customer) ||
-        streetLabel(props.customer) ||
+      cityLabel(props.user) ||
+        districtLabel(props.user) ||
+        streetLabel(props.user) ||
         hasCoordinates.value,
     ),
 );
 
 const mapUrl = computed(() => {
   if (!hasCoordinates.value) return undefined;
-  return `https://www.openstreetmap.org/?mlat=${props.customer.latitude}&mlon=${props.customer.longitude}#map=16/${props.customer.latitude}/${props.customer.longitude}`;
+  return `https://www.openstreetmap.org/?mlat=${props.user.latitude}&mlon=${props.user.longitude}#map=16/${props.user.latitude}/${props.user.longitude}`;
 });
 </script>

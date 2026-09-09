@@ -454,6 +454,21 @@ export const bn = {
       success: "ব্যবহারকারী সফলভাবে মুছে ফেলা হয়েছে",
       error: "ব্যবহারকারী মুছে ফেলার সময় একটি ত্রুটি ঘটেছে",
     },
+    buttons: {
+      view: "দেখুন",
+    },
+    viewModal: {
+      title: {
+        customer: "গ্রাহকের বিবরণ",
+        tailor: "দর্জির বিবরণ",
+        courier: "কুরিয়ারের বিবরণ",
+      },
+      personalInfo: "ব্যক্তিগত তথ্য",
+      address: "ঠিকানা",
+      street: "রাস্তা",
+      coordinates: "স্থানাঙ্ক",
+      noAddress: "কোনো ঠিকানা নেই",
+    },
   },
   customers: {
     searchPlaceholder: "নাম বা ফোন দিয়ে অনুসন্ধান করুন",
@@ -464,16 +479,7 @@ export const bn = {
       empty: "কোনো গ্রাহক পাওয়া যায়নি",
     },
     buttons: {
-      view: "দেখুন",
       viewOrders: "অর্ডার দেখুন",
-    },
-    viewModal: {
-      title: "গ্রাহকের বিবরণ",
-      personalInfo: "ব্যক্তিগত তথ্য",
-      address: "ঠিকানা",
-      street: "রাস্তা",
-      coordinates: "স্থানাঙ্ক",
-      noAddress: "কোনো ঠিকানা নেই",
     },
   },
   toast: {

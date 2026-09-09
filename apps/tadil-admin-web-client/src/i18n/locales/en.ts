@@ -508,6 +508,21 @@ export const en = {
       success: "User deleted successfully",
       error: "An error occurred while deleting the User",
     },
+    buttons: {
+      view: "View",
+    },
+    viewModal: {
+      title: {
+        customer: "Customer details",
+        tailor: "Tailor details",
+        courier: "Courier details",
+      },
+      personalInfo: "Personal information",
+      address: "Address",
+      street: "Street",
+      coordinates: "Coordinates",
+      noAddress: "No address on file",
+    },
   },
   customers: {
     searchPlaceholder: "Search by name or phone",
@@ -518,16 +533,7 @@ export const en = {
       empty: "No customers found",
     },
     buttons: {
-      view: "View",
       viewOrders: "View Orders",
-    },
-    viewModal: {
-      title: "Customer details",
-      personalInfo: "Personal information",
-      address: "Address",
-      street: "Street",
-      coordinates: "Coordinates",
-      noAddress: "No address on file",
     },
   },
   toast: {
