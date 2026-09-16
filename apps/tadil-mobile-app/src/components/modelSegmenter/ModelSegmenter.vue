@@ -6,7 +6,7 @@
       ref="imageRef"
       :src="computedImageUrl"
       :alt="alt"
-      @load="initCanvas(), highlightPolygons(sections)"
+      @load="drawAnnotations"
       class="max-h-full hidden"
     />
     <canvas
@@ -20,22 +20,28 @@
 </template>
 
 <script setup lang="ts">
-import { Point } from "@/integration/dtos";
-import { useModelSegmenter } from "./useModelSegmenter.composable";
-import { onBeforeUnmount, computed, watch } from "vue";
-import { resolveMediaSrc } from "@/utils";
+import { Point } from '@/integration/dtos';
+import { useModelSegmenter } from './useModelSegmenter.composable';
+import { onBeforeUnmount, computed, watch } from 'vue';
+import { resolveMediaSrc } from '@/utils';
 
-const props = defineProps<{
-  imageUrl: string;
-  sections: Point[][];
-  alt?: string;
-}>();
+const props = withDefaults(
+  defineProps<{
+    imageUrl: string;
+    sections: Point[][];
+    points?: Point[];
+    alt?: string;
+  }>(),
+  {
+    points: () => [],
+  }
+);
 
 const emit = defineEmits<{
-  (e: "segmenter:clicked", clickPosition: Point): void;
+  (e: 'segmenter:clicked', clickPosition: Point): void;
 }>();
 
-const computedImageUrl = computed(() => resolveMediaSrc(props.imageUrl) || "");
+const computedImageUrl = computed(() => resolveMediaSrc(props.imageUrl) || '');
 
 const {
   canvasRef,
@@ -44,13 +50,21 @@ const {
   canvasHeight,
   initCanvas,
   highlightPolygons,
+  highlightPoints,
   unhighlightPolygons,
 } = useModelSegmenter();
 
+function drawAnnotations() {
+  initCanvas();
+  highlightPolygons(props.sections);
+  highlightPoints(props.points);
+}
+
 watch(
-  () => props.sections,
-  (newSections) => {
-    highlightPolygons(newSections);
+  [() => props.sections, () => props.points],
+  () => {
+    highlightPolygons(props.sections);
+    highlightPoints(props.points);
   },
   { deep: true }
 );
@@ -75,7 +89,7 @@ function getOriginalImageCoords(event: MouseEvent) {
   const yOriginal = yClient * scaleY;
 
   const clickPoint = { x: Math.round(xOriginal), y: Math.round(yOriginal) };
-  emit("segmenter:clicked", clickPoint);
+  emit('segmenter:clicked', clickPoint);
 }
 
 onBeforeUnmount(() => {

@@ -135,12 +135,12 @@ body.dark {
   --ion-color-light-tint: #472f38;
 
   /* Primary Override */
-  --ion-color-primary: #9b3154;
-  --ion-color-primary-rgb: 155, 49, 84;
+  --ion-color-primary: #5f1428;
+  --ion-color-primary-rgb: 95, 20, 40;
   --ion-color-primary-contrast: #ffffff;
   --ion-color-primary-contrast-rgb: 255, 255, 255;
-  --ion-color-primary-shade: #882b4a;
-  --ion-color-primary-tint: #a54665;
+  --ion-color-primary-shade: #541223;
+  --ion-color-primary-tint: #6f2c3e;
 
   /* Secondary Override */
   --ion-color-secondary: #d98197;

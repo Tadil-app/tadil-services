@@ -36,7 +36,11 @@
         <IonCard color="transparent" class="ion-padding">
           <p>{{ $t("tailor.orderDetails.alterations.title") }}</p>
           <IonCard v-for="item in order.items" :key="item.id" class="m-0 mb-4 overflow-hidden">
-            <ImageContainer :imageUrl="item.imageFileUrl" class="max-h-40" />
+            <ModelSegmenter
+              :image-url="item.imageFileUrl"
+              :sections="item.sections.map((section) => section.coordinates)"
+              class="max-h-80"
+            />
             <div class="divide-y divide-border space-y-2 p-2">
               <div v-for="section in item.sections" :key="section.id" class="py-2">
                 <TranslatedName :names="section" class="text-lg font-semibold" />
@@ -57,7 +61,12 @@
             </div>
           </IonCard>
           <IonCard v-for="item in order.customItems" :key="item.id" class="m-0 mb-4 overflow-hidden space-y-2">
-            <ImageContainer :imageUrl="item.imageFileUrl" class="max-h-40" />
+            <ModelSegmenter
+              :image-url="item.imageFileUrl"
+              :sections="[]"
+              :points="item.alterations.flatMap((alteration) => alteration.customCoordinates)"
+              class="max-h-80"
+            />
             <div v-for="alteration in item.alterations" :key="alteration.id" class="px-4 py-2">
               <TranslatedName :names="alteration" class="font-semibold" />
               <div class="grid grid-cols-2 gap-4">
@@ -116,7 +125,7 @@ import { formatDate } from "@/utils";
 import { useToast } from "@/composables";
 import { useI18n } from "vue-i18n";
 import { apiClient } from "@/integration/api";
-import { ImageContainer, TranslatedName, StatusPill, SecondaryHeader, OrderTimeline, Chat } from "@/components";
+import { ModelSegmenter, TranslatedName, StatusPill, SecondaryHeader, OrderTimeline, Chat } from "@/components";
 import { IonSegment, IonSegmentButton, IonLabel, IonButton, IonCard, IonContent, IonPage, IonSpinner, onIonViewWillEnter } from "@ionic/vue";
 import { QrcodeSvg } from "qrcode.vue";
 import { storeToRefs } from "pinia";
