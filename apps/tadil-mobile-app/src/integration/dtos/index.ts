@@ -130,7 +130,7 @@ export interface DisplayOrderItemSectionDTO {
   urduName: string;
   hindiName: string;
   bengaliName: string;
-  coordinates: string[];
+  coordinates: DisplayOrderDtoPoint[];
   alterations: DisplayItemAlterationDTO[];
 }
 
