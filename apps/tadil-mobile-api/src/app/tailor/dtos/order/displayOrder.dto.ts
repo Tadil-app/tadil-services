@@ -115,6 +115,8 @@ export class DisplayOrderDTO {
   @ApiProperty()
   customerId!: string;
   @ApiProperty()
+  customerName!: string;
+  @ApiProperty()
   reference!: string;
   @ApiProperty()
   date!: Date;

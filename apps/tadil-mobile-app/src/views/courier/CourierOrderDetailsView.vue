@@ -14,6 +14,8 @@
             <div>
               <p class="font-light">{{ $t("tailor.orderDetails.referenceLabel") }}</p>
               <p class="font-semibold text-lg">#{{ order.reference }}</p>
+              <p class="mt-4 font-light">{{ $t("tailor.orderDetails.customerName") }}</p>
+              <p class="font-semibold">{{ order.customerName }}</p>
               <p class="mt-4 font-light">{{ formatDate(order.date) }}</p>
               <p class="text-lg text-secondary font-semibold">
                 {{ $t("common.currencies.sar") }} {{ order.totalPrice }}
@@ -76,7 +78,8 @@
               :points="item.alterations.flatMap((alteration) => alteration.customCoordinates)"
               class="max-h-80"
             />
-            <div v-for="alteration in item.alterations" :key="alteration.id" class="px-4 py-2">
+            <div v-for="(alteration, index) in item.alterations" :key="alteration.id" class="px-4 py-2">
+              <p class="font-semibold">{{ $t("customModel.point", { number: index + 1 }) }}</p>
               <TranslatedName :names="alteration" class="font-semibold" />
               <div class="grid grid-cols-2 gap-4">
                 <div v-for="information in alteration.informations" :key="information.id" class="px-4 py-2 bg-gray-100 rounded-lg">

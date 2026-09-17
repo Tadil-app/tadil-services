@@ -67,7 +67,8 @@
               :points="item.alterations.flatMap((alteration) => alteration.customCoordinates)"
               class="max-h-80"
             />
-            <div v-for="alteration in item.alterations" :key="alteration.id" class="px-4 py-2">
+            <div v-for="(alteration, index) in item.alterations" :key="alteration.id" class="px-4 py-2">
+              <p class="font-semibold">{{ $t("customModel.point", { number: index + 1 }) }}</p>
               <TranslatedName :names="alteration" class="font-semibold" />
               <div class="grid grid-cols-2 gap-4">
                 <div v-for="information in alteration.informations" :key="information.id" class="px-4 py-2 bg-gray-100 rounded-lg">

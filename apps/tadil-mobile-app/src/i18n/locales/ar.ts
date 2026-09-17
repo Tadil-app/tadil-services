@@ -209,6 +209,7 @@ export const ar = {
     instructions: "اضغط على أجزاء قطعة الملابس التي ترغب في تعديلها",
     changePhoto: "تغيير الصورة",
     pointSelection: "اختيار نقطة مخصصة",
+    point: "نقطة {number}",
     categories: {
       dress: "فستان",
       shirt: "قميص",
@@ -340,6 +341,7 @@ export const ar = {
       title: "تفاصيل الطلب",
       reference: "الرقم التعريفي",
       referenceLabel: "المرجع",
+      customerName: "اسم العميل",
       confirmReceiptFromCourier: "تأكيد الاستلام من المندوب",
       markWorkAsReady: "تحديد العمل كجاهز",
       alterations: {

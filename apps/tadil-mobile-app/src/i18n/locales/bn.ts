@@ -209,6 +209,7 @@ export const bn = {
     instructions: "পোশাকের যে অংশগুলি পরিবর্তন করতে চান সেখানে ক্লিক করুন",
     changePhoto: "ছবি পরিবর্তন করুন",
     pointSelection: "কাস্টম পয়েন্ট নির্বাচন",
+    point: "পয়েন্ট {number}",
     categories: {
       dress: "পোশাক",
       shirt: "শার্ট",
@@ -341,6 +342,7 @@ export const bn = {
       title: "অর্ডারের বিবরণ",
       reference: "অর্ডার রেফারেন্স",
       referenceLabel: "রেফারেন্স",
+      customerName: "গ্রাহকের নাম",
       confirmReceiptFromCourier: "কুরিয়ার থেকে রসিদ নিশ্চিত করুন",
       markWorkAsReady: "কাজটি প্রস্তুত হিসেবে চিহ্নিত করুন",
       alterations: {
