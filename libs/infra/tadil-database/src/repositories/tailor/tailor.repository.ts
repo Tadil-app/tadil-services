@@ -35,17 +35,23 @@ export class PrismaTailorRepository implements TailorRepository {
     });
   }
 
-  async confirmReceipt(orderId: string): Promise<void> {
-    await this._db.order.update({
-      where: { id: orderId },
-      data: {
-        status: OrderStatus.inProgress,
-        history: {
-          create: {
-            status: OrderStatus.inProgress,
-          },
+  async confirmReceipt(tailorId: string, orderId: string): Promise<boolean> {
+    return this._db.$transaction(async (db) => {
+      const result = await db.order.updateMany({
+        where: {
+          id: orderId,
+          assignedTailorId: tailorId,
+          status: OrderStatus.waitingForDropoffToTailor,
         },
-      },
+        data: { status: OrderStatus.inProgress },
+      });
+
+      if (result.count === 0) return false;
+
+      await db.orderStatusHistory.create({
+        data: { orderId, status: OrderStatus.inProgress },
+      });
+      return true;
     });
   }
 

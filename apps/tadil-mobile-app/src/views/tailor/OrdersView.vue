@@ -8,7 +8,7 @@
       />
       <div class="px-4 pb-2 bg-background">
         <div class="flex items-center">
-          <QrCodeScanner v-model="ordersSearchFilter" />
+          <QrCodeScanner :model-value="ordersSearchFilter" @update:model-value="handleScan" />
           <IonSearchbar
             show-clear-button="always"
             :placeholder="$t('tailor.orders.search')"
@@ -73,6 +73,7 @@ import { ORDER_STATUS } from "@/integration/dtos";
 import { OrderListItem, SecondaryHeader } from "@/components";
 import { useRouter } from "vue-router";
 import { storeToRefs } from "pinia";
+import { getTailorOrderPath } from "@/utils";
 
 const router = useRouter();
 const ordersStore = useTailorOrdersStore();
@@ -80,6 +81,14 @@ const { orders, isLoading } = storeToRefs(ordersStore);
 const { fetchOrders } = ordersStore;
 
 const ordersSearchFilter = ref("");
+
+function handleScan(value: string | undefined) {
+  if (!value) return;
+  const path = getTailorOrderPath(value);
+  if (path) router.push(path);
+  else ordersSearchFilter.value = value;
+}
+
 const orderStatus = [
   "all",
   ORDER_STATUS.WAITING_FOR_TAILOR_ASSIGNMENT,

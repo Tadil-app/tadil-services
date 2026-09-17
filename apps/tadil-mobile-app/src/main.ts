@@ -1,6 +1,8 @@
 import { createApp } from "vue";
+import { App as CapacitorApp } from "@capacitor/app";
 import App from "./App.vue";
 import router from "./router";
+import { getTailorOrderPath } from "./utils";
 
 import { IonicVue, iosTransitionAnimation } from "@ionic/vue";
 
@@ -67,6 +69,17 @@ themeStore.initTheme();
 const cartStore = useCartStore();
 cartStore.loadCart();
 
-router.isReady().then(() => {
+async function openDeepLink(url: string) {
+  const path = getTailorOrderPath(url);
+  if (!path) return;
+  await router.isReady();
+  await router.push(path);
+}
+
+CapacitorApp.addListener("appUrlOpen", ({ url }) => void openDeepLink(url));
+
+router.isReady().then(async () => {
   app.mount("#app");
+  const launchUrl = await CapacitorApp.getLaunchUrl();
+  if (launchUrl) await openDeepLink(launchUrl.url);
 });

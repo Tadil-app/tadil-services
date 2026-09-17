@@ -1,5 +1,18 @@
-import { Controller, Get, Param, Post } from '@nestjs/common';
-import { ApiOkResponse, ApiTags, ApiOperation } from '@nestjs/swagger';
+import {
+  Controller,
+  ForbiddenException,
+  Get,
+  Param,
+  Post,
+  Req,
+  UseGuards,
+} from '@nestjs/common';
+import {
+  ApiBearerAuth,
+  ApiOkResponse,
+  ApiTags,
+  ApiOperation,
+} from '@nestjs/swagger';
 import { DataReader } from '@tadil-database';
 import { DisplayOrderDTO } from './dtos/order';
 import { InformationType } from '../customer/dtos';
@@ -9,6 +22,7 @@ import {
   ConfirmReceiptUseCase, 
   MarkOrderReadyUseCase 
 } from '@tadil-tailor';
+import { AuthGuard } from '../auth/auth.guard';
 
 @Controller('tailor/:id')
 @ApiTags('Tailor')
@@ -117,9 +131,27 @@ export class TailorController {
   }
 
   @Post('/orders/:orderId/confirm-receipt')
+  @UseGuards(AuthGuard)
+  @ApiBearerAuth()
   @ApiOperation({ summary: 'Confirm receipt of items from courier' })
-  async confirmReceipt(@Param('orderId') orderId: string) {
-    await this._confirmReceiptUseCase.execute({ orderId });
+  async confirmReceipt(
+    @Req() req: any,
+    @Param('id') tailorId: string,
+    @Param('orderId') orderId: string
+  ) {
+    if (req.user.role !== 'tailor' || req.user.sub !== tailorId) {
+      throw new ForbiddenException();
+    }
+
+    const confirmed = await this._confirmReceiptUseCase.execute({
+      tailorId: req.user.sub,
+      orderId,
+    });
+    if (!confirmed) {
+      throw new ForbiddenException(
+        'Order is not assigned to this tailor or cannot be received'
+      );
+    }
   }
 
   @Post('/orders/:orderId/mark-ready')

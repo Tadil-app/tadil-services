@@ -21,7 +21,7 @@
             </div>
             <div class="flex flex-col justify-between items-end">
               <QrcodeSvg
-                :value="order.reference"
+                :value="createTailorOrderDeepLink(order.reference)"
                 :size="80"
                 level="H"
                 class="border border-black p-1 rounded-lg"
@@ -122,7 +122,7 @@ import { computed, ref, watch } from "vue";
 import { useRouter } from "vue-router";
 import { DisplayOrderDTO, ORDER_STATUS } from "@/integration/dtos";
 import { useCustomerOrdersStore } from "@/stores";
-import { formatDate } from "@/utils";
+import { createTailorOrderDeepLink, formatDate } from "@/utils";
 import { useToast } from "@/composables";
 import { useI18n } from "vue-i18n";
 import { apiClient } from "@/integration/api";
