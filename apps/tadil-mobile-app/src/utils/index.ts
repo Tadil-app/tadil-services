@@ -3,3 +3,4 @@ export * from "./price.util";
 export * from "./geofence.util";
 export * from "./media.util";
 export * from "./orderDeepLink.util";
+export * from "./orderItemImages.util";

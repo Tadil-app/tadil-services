@@ -50,8 +50,10 @@
           <p class="mb-4 font-bold">{{ $t("tailor.orderDetails.alterations.title") }}</p>
           <IonCard v-for="item in order.items" :key="item.id" class="m-0 mb-4 overflow-hidden">
             <ModelSegmenter
-              :image-url="item.imageFileUrl"
-              :sections="item.sections.map((section) => section.coordinates)"
+              v-for="group in groupOrderItemSectionImages(item)"
+              :key="group.imageUrl"
+              :image-url="group.imageUrl"
+              :sections="group.sections.map((section) => section.coordinates)"
               class="max-h-80"
             />
             <div class="divide-y divide-border space-y-2 p-2">
@@ -147,7 +149,7 @@ import { onMounted, ref, computed } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { MapPin, Printer } from "lucide-vue-next";
 import { DisplayOrderDTO, ORDER_STATUS, ShippingLabelDTO } from "@/integration/dtos";
-import { createTailorOrderDeepLink, formatDate } from "@/utils";
+import { createTailorOrderDeepLink, formatDate, groupOrderItemSectionImages } from "@/utils";
 import QRCode from "qrcode";
 import { useToast, useLocalizedAddress } from "@/composables";
 import { apiClient } from "@/integration/api";
@@ -257,18 +259,18 @@ async function printLabel() {
       order.value.id
     );
 
+    const qrCodeDataUrl = await QRCode.toDataURL(
+      createTailorOrderDeepLink(label.orderReference),
+      { errorCorrectionLevel: "H", margin: 1, width: 240 }
+    );
+    const html = getOrderLableHtml(label, t, qrCodeDataUrl);
     const printWindow = window.open("", "_blank");
     if (!printWindow) {
       showToast({ message: "Please allow popups to print the label.", color: "danger" });
       return;
     }
 
-    const qrCodeDataUrl = await QRCode.toDataURL(
-      createTailorOrderDeepLink(label.orderReference),
-      { errorCorrectionLevel: "H", margin: 1, width: 240 }
-    );
-    const html = getOrderLableHtml(label, t, qrCodeDataUrl);
-
+    printWindow.document.open();
     printWindow.document.write(html);
     printWindow.document.close();
   } catch (error) {
