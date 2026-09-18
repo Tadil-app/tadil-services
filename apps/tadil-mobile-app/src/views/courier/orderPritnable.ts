@@ -1,7 +1,11 @@
 import { ShippingLabelDTO } from "@/integration/dtos";
 import { formatDate } from "@/utils";
 
-export function getOrderLableHtml(label: ShippingLabelDTO, t: (key: string, ...args: any[]) => string) {
+export function getOrderLableHtml(
+  label: ShippingLabelDTO,
+  t: (key: string, ...args: any[]) => string,
+  qrCodeDataUrl: string
+) {
     const itemsHtml = label.items
       .map(
         (item) => `
@@ -28,14 +32,23 @@ export function getOrderLableHtml(label: ShippingLabelDTO, t: (key: string, ...a
             direction: ${t('common.dir') || 'ltr'};
           }
           .header {
+            position: relative;
+            min-height: 130px;
             text-align: center;
             border-bottom: 2px dashed #333;
-            padding-bottom: 20px;
+            padding: 0 150px 20px;
             margin-bottom: 30px;
           }
           .header h1 { margin: 0 0 10px 0; font-size: 28px; letter-spacing: 2px; }
           .header p { margin: 5px 0; font-size: 14px; }
           .reference { font-size: 20px; font-weight: bold; margin-top: 10px; }
+          .qr-code {
+            position: absolute;
+            top: 0;
+            inset-inline-end: 0;
+            width: 120px;
+            height: 120px;
+          }
           .grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -79,7 +92,7 @@ export function getOrderLableHtml(label: ShippingLabelDTO, t: (key: string, ...a
             border-radius: 999px;
             padding: 10px 18px;
             color: #fff;
-            background: #6d0f2f;
+            background: #501a2e;
             font: inherit;
             font-weight: 700;
           }
@@ -97,6 +110,7 @@ export function getOrderLableHtml(label: ShippingLabelDTO, t: (key: string, ...a
           <p>${t('courier.print.title')}</p>
           <div class="reference">${t('courier.print.orderRef')}${label.orderReference}</div>
           <p><strong>${t('courier.print.date')}</strong> ${formatDate(label.orderDate)}</p>
+          <img class="qr-code" src="${qrCodeDataUrl}" alt="Order QR code" />
         </div>
 
         <div class="grid">

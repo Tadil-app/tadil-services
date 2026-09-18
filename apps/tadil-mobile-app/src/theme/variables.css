@@ -5,7 +5,7 @@
   /** Custom App Variables **/
   --app-background: #fffaf6;
   --app-border: #ead3d6;
-  --app-shadow: rgba(109, 15, 47, 0.12) 0 4px 14px 0;
+  --app-shadow: rgba(80, 26, 46, 0.12) 0 4px 14px 0;
 
   /** Background & Text **/
   --ion-background-color: #fffaf6;
@@ -28,12 +28,12 @@
   --ion-tab-bar-border-color: #f0dfe1;
 
   /** Primary - Burgundy **/
-  --ion-color-primary: #6d0f2f;
-  --ion-color-primary-rgb: 109, 15, 47;
+  --ion-color-primary: #501a2e;
+  --ion-color-primary-rgb: 80, 26, 46;
   --ion-color-primary-contrast: #ffffff;
   --ion-color-primary-contrast-rgb: 255, 255, 255;
-  --ion-color-primary-shade: #600d29;
-  --ion-color-primary-tint: #7c2744;
+  --ion-color-primary-shade: #461728;
+  --ion-color-primary-tint: #623143;
 
   /** Secondary - Dusty Rose **/
   --ion-color-secondary: #c87082;
@@ -135,12 +135,12 @@ body.dark {
   --ion-color-light-tint: #472f38;
 
   /* Primary Override */
-  --ion-color-primary: #5f1428;
-  --ion-color-primary-rgb: 95, 20, 40;
+  --ion-color-primary: #501a2e;
+  --ion-color-primary-rgb: 80, 26, 46;
   --ion-color-primary-contrast: #ffffff;
   --ion-color-primary-contrast-rgb: 255, 255, 255;
-  --ion-color-primary-shade: #541223;
-  --ion-color-primary-tint: #6f2c3e;
+  --ion-color-primary-shade: #461728;
+  --ion-color-primary-tint: #623143;
 
   /* Secondary Override */
   --ion-color-secondary: #d98197;

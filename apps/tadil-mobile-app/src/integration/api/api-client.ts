@@ -475,6 +475,7 @@ export class Api<
      * @tags Tailor
      * @name TailorControllerConfirmReceipt
      * @request POST:/api/tailor/{id}/orders/{orderId}/confirm-receipt
+     * @secure
      */
     tailorControllerConfirmReceipt: (
       id: string,
@@ -484,6 +485,7 @@ export class Api<
       this.request<void, any>({
         path: `/api/tailor/${id}/orders/${orderId}/confirm-receipt`,
         method: "POST",
+        secure: true,
         ...params,
       }),
 

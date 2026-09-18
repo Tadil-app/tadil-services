@@ -196,9 +196,9 @@ ion-content {
   width: min(100%, 430px);
   margin: 0;
   padding: 24px 24px 32px;
-  border: 1px solid rgba(109, 15, 47, 0.22);
+  border: 1px solid rgba(80, 26, 46, 0.22);
   border-radius: 24px;
-  box-shadow: 0 16px 38px rgba(109, 15, 47, 0.14);
+  box-shadow: 0 16px 38px rgba(80, 26, 46, 0.14);
 }
 
 .login-logo {

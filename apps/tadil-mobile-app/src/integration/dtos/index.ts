@@ -161,6 +161,7 @@ export interface OrderStatusHistoryDTO {
 export interface DisplayOrderDTO {
   id: string;
   customerId: string;
+  customerName: string;
   reference: string;
   date: string;
   totalPrice: number;

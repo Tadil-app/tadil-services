@@ -208,6 +208,7 @@ export const ur = {
     instructions: "لباس کے ان حصوں پر کلک کریں جن میں آپ تبدیلی چاہتے ہیں",
     changePhoto: "تصویر تبدیل کریں",
     pointSelection: "کسٹم پوائنٹ سلیکشن",
+    point: "نکتہ {number}",
     categories: {
       dress: "لباس",
       shirt: "قمیض",
@@ -339,6 +340,7 @@ export const ur = {
       title: "آرڈر کی تفصیلات",
       reference: "آرڈر کا حوالہ",
       referenceLabel: "حوالہ",
+      customerName: "کسٹمر کا نام",
       confirmReceiptFromCourier: "کوریئر سے وصولی کی تصدیق کریں",
       markWorkAsReady: "کام کو تیار نشان زد کریں",
       alterations: {

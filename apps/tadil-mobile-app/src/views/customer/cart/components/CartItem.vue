@@ -62,7 +62,7 @@ const imagesCount = computed(() => props.item.configuration.modelImages.length);
   border: 1px solid #ead7d4;
   border-radius: 18px;
   background: #fffdfb;
-  box-shadow: 0 4px 10px rgba(109, 15, 47, 0.09);
+  box-shadow: 0 4px 10px rgba(80, 26, 46, 0.09);
 }
 
 .cart-item__image {

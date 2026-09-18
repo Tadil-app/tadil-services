@@ -208,6 +208,7 @@ export const en = {
     instructions: "Click on the areas of the garment you want to modify",
     changePhoto: "Change Photo",
     pointSelection: "Custom Point Selection",
+    point: "Point {number}",
     categories: {
       dress: "Dress",
       shirt: "Shirt",
@@ -339,6 +340,7 @@ export const en = {
       title: "Order Details",
       reference: "Order Reference",
       referenceLabel: "Reference",
+      customerName: "Customer Name",
       confirmReceiptFromCourier: "Confirm Receipt from Courier",
       markWorkAsReady: "Mark Work as Ready",
       alterations: {

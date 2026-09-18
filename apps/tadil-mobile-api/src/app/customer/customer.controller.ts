@@ -63,6 +63,7 @@ export class CustomerController {
       where: { customerId: req.user.sub },
       orderBy: { date: 'desc' },
       include: {
+        customer: { select: { firstName: true, lastName: true } },
         items: { include: { sections: { include: { alterations: { include: { informations: true } } } } } },
         customItems: { include: { alterations: { include: { informations: true } } } },
         history: { orderBy: { timestamp: 'desc' } },
@@ -252,6 +253,7 @@ export class CustomerController {
   private _mapOrder(order: any): DisplayOrderDTO {
     return {
       ...order,
+      customerName: `${order.customer.firstName} ${order.customer.lastName}`,
       items: order.items.map((item: any) => ({
         ...item,
         imageFileUrl: `${process.env.TADIL_MOBILE_API}/api/files/${item.imageFileId}`,
