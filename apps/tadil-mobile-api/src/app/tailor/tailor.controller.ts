@@ -166,9 +166,15 @@ export class TailorController {
       customerName: `${order.customer.firstName} ${order.customer.lastName}`,
       items: order.items.map((item: any) => ({
         ...item,
-        imageFileUrl: `${process.env.TADIL_MOBILE_API}/api/files/${item.imageFileId}`,
+        imageFileUrl: `${process.env.TADIL_MOBILE_API}/api/files/${
+          item.sections.find((section: any) => section.imageFileId)?.imageFileId ||
+          item.imageFileId
+        }`,
         sections: item.sections.map((section: any) => ({
           ...section,
+          imageFileUrl: `${process.env.TADIL_MOBILE_API}/api/files/${
+            section.imageFileId || item.imageFileId
+          }`,
           alterations: section.alterations.map((alt: any) => ({
             ...alt,
             informations: alt.informations.map((info: any) => ({

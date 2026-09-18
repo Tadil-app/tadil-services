@@ -65,6 +65,8 @@ export class DisplayOrderItemSectionDTO {
   @ApiProperty()
   bengaliName!: string;
   @ApiProperty()
+  imageFileUrl?: string;
+  @ApiProperty()
   coordinates!: Point[];
   @ApiProperty({ type: DisplayItemAlterationDTO, isArray: true })
   alterations!: DisplayItemAlterationDTO[];

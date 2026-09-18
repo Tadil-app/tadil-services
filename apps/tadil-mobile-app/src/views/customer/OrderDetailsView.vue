@@ -37,8 +37,10 @@
           <p>{{ $t("tailor.orderDetails.alterations.title") }}</p>
           <IonCard v-for="item in order.items" :key="item.id" class="m-0 mb-4 overflow-hidden">
             <ModelSegmenter
-              :image-url="item.imageFileUrl"
-              :sections="item.sections.map((section) => section.coordinates)"
+              v-for="group in groupOrderItemSectionImages(item)"
+              :key="group.imageUrl"
+              :image-url="group.imageUrl"
+              :sections="group.sections.map((section) => section.coordinates)"
               class="max-h-80"
             />
             <div class="divide-y divide-border space-y-2 p-2">
@@ -122,7 +124,7 @@ import { computed, ref, watch } from "vue";
 import { useRouter } from "vue-router";
 import { DisplayOrderDTO, ORDER_STATUS } from "@/integration/dtos";
 import { useCustomerOrdersStore } from "@/stores";
-import { createTailorOrderDeepLink, formatDate } from "@/utils";
+import { createTailorOrderDeepLink, formatDate, groupOrderItemSectionImages } from "@/utils";
 import { useToast } from "@/composables";
 import { useI18n } from "vue-i18n";
 import { apiClient } from "@/integration/api";

@@ -22,7 +22,7 @@
 <script setup lang="ts">
 import { Point } from '@/integration/dtos';
 import { useModelSegmenter } from './useModelSegmenter.composable';
-import { onBeforeUnmount, computed, watch } from 'vue';
+import { onBeforeUnmount, onMounted, computed, nextTick, watch } from 'vue';
 import { resolveMediaSrc } from '@/utils';
 
 const props = withDefaults(
@@ -56,9 +56,25 @@ const {
 
 function drawAnnotations() {
   initCanvas();
-  highlightPolygons(props.sections);
-  highlightPoints(props.points);
+  nextTick(() => {
+    highlightPolygons(props.sections);
+    highlightPoints(props.points);
+  });
 }
+
+function tryDrawFromCache() {
+  const img = imageRef.value;
+  if (img && img.complete && img.naturalWidth > 0) {
+    drawAnnotations();
+  }
+}
+
+onMounted(tryDrawFromCache);
+
+watch(computedImageUrl, async () => {
+  await nextTick();
+  tryDrawFromCache();
+});
 
 watch(
   [() => props.sections, () => props.points],

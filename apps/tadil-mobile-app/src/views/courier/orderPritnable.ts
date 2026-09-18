@@ -32,22 +32,22 @@ export function getOrderLableHtml(
             direction: ${t('common.dir') || 'ltr'};
           }
           .header {
-            position: relative;
-            min-height: 130px;
-            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
             border-bottom: 2px dashed #333;
-            padding: 0 150px 20px;
+            padding-bottom: 20px;
             margin-bottom: 30px;
           }
+          .header-text { flex: 1; text-align: center; }
           .header h1 { margin: 0 0 10px 0; font-size: 28px; letter-spacing: 2px; }
           .header p { margin: 5px 0; font-size: 14px; }
           .reference { font-size: 20px; font-weight: bold; margin-top: 10px; }
           .qr-code {
-            position: absolute;
-            top: 0;
-            inset-inline-end: 0;
             width: 120px;
             height: 120px;
+            flex-shrink: 0;
           }
           .grid {
             display: grid;
@@ -106,10 +106,12 @@ export function getOrderLableHtml(
       <body>
         <button class="close-print" type="button" onclick="window.close()">× ${t('login.form.buttons.back')}</button>
         <div class="header">
-          <h1>TADIL - تـعـديـل</h1>
-          <p>${t('courier.print.title')}</p>
-          <div class="reference">${t('courier.print.orderRef')}${label.orderReference}</div>
-          <p><strong>${t('courier.print.date')}</strong> ${formatDate(label.orderDate)}</p>
+          <div class="header-text">
+            <h1>TADIL - تـعـديـل</h1>
+            <p>${t('courier.print.title')}</p>
+            <div class="reference">${t('courier.print.orderRef')}${label.orderReference}</div>
+            <p><strong>${t('courier.print.date')}</strong> ${formatDate(label.orderDate)}</p>
+          </div>
           <img class="qr-code" src="${qrCodeDataUrl}" alt="Order QR code" />
         </div>
 
@@ -150,9 +152,18 @@ export function getOrderLableHtml(
         </div>
 
         <script>
-          window.onload = function() {
-            window.print();
+          function printWhenReady() {
+            var img = document.querySelector('img.qr-code');
+            function printNow() { window.print(); }
+            if (img && !img.complete) {
+              img.addEventListener('load', printNow);
+              img.addEventListener('error', printNow);
+            } else {
+              printNow();
+            }
           }
+          if (document.readyState === 'complete') printWhenReady();
+          else window.addEventListener('load', printWhenReady);
         </script>
       </body>
       </html>

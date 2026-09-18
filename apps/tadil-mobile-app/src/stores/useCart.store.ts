@@ -120,7 +120,10 @@ export const useCartStore = defineStore("cart", () => {
         urduName: model.urduName,
         hindiName: model.hindiName,
         bengaliName: model.bengaliName,
-        imageFileId: model.thumbnailImageUrl?.split("/").pop() || "",
+        imageFileId:
+          configuration.modelImages.find((img) => img.sections.length > 0)?.imageUrl.split("/").pop() ||
+          model.thumbnailImageUrl?.split("/").pop() ||
+          "",
         sections: configuration.modelImages.flatMap((img) =>
           img.sections.map((sec) => ({
             id: uuidv4(),

@@ -32,15 +32,14 @@
 
         <OrderTimeline v-if="order.history && order.history.length > 0" :history="order.history" />
 
-        <!-- Alterations omitted for brevity in this replace call, but they should remain -->
-        <!-- I'll use write_file to be sure I don't break the complex UI -->
-
         <IonCard color="transparent" class="ion-padding">
           <p>{{ $t("tailor.orderDetails.alterations.title") }}</p>
           <IonCard v-for="item in order.items" :key="item.id">
             <ModelSegmenter
-              :image-url="item.imageFileUrl"
-              :sections="item.sections.map((section) => section.coordinates)"
+              v-for="group in groupOrderItemSectionImages(item)"
+              :key="group.imageUrl"
+              :image-url="group.imageUrl"
+              :sections="group.sections.map((section) => section.coordinates)"
               class="max-h-80"
             />
             <div class="divide-y divide-border space-y-2">
@@ -128,7 +127,7 @@ import { onBeforeUnmount, ref } from "vue";
 import { useRouter } from "vue-router";
 import { DisplayOrderDTO, ORDER_STATUS } from "@/integration/dtos";
 import { useTailorOrdersStore } from "@/stores";
-import { createTailorOrderDeepLink, formatDate } from "@/utils";
+import { createTailorOrderDeepLink, formatDate, groupOrderItemSectionImages } from "@/utils";
 import { useToast } from "@/composables";
 import { useI18n } from "vue-i18n";
 import { apiClient } from "@/integration/api";
