@@ -71,9 +71,9 @@ export function useModelSegmenter(): CanvasDrawingComposable {
         context!.lineTo(polygon[i]!.x, polygon[i]!.y);
       }
       context!.closePath();
-      context!.fillStyle = '#5f14284d';
+      context!.fillStyle = '#501a2e4d';
       context!.fill();
-      context!.strokeStyle = '#5f1428';
+      context!.strokeStyle = '#501a2e';
       context!.lineWidth = 1;
       context!.stroke();
     });
@@ -82,7 +82,7 @@ export function useModelSegmenter(): CanvasDrawingComposable {
       const scaledPoint = scalePercentPoint(point, canvasWidth.value, canvasHeight.value);
       context!.beginPath();
       context!.arc(scaledPoint.x, scaledPoint.y, Math.max(8, canvasWidth.value * 0.015), 0, Math.PI * 2);
-      context!.fillStyle = '#5f1428e6';
+      context!.fillStyle = '#501a2ee6';
       context!.fill();
       context!.strokeStyle = 'white';
       context!.lineWidth = Math.max(2, canvasWidth.value * 0.003);

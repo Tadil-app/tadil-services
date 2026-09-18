@@ -66,7 +66,7 @@ function selectAndNext(value: string) {
   border-radius: 18px;
   color: var(--card-accent);
   background: #fffdfb;
-  box-shadow: 0 3px 7px rgba(109, 15, 47, 0.1);
+  box-shadow: 0 3px 7px rgba(80, 26, 46, 0.1);
 }
 
 .custom-category-card::before {

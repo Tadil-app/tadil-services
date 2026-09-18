@@ -84,7 +84,7 @@ onBeforeUnmount(() => {
   cursor: pointer;
   border: 1px solid #e8bfc8;
   border-radius: 20px;
-  box-shadow: 0 3px 8px rgba(109, 15, 47, 0.08);
+  box-shadow: 0 3px 8px rgba(80, 26, 46, 0.08);
 }
 
 .model-card__body {

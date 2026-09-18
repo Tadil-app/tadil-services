@@ -63,7 +63,7 @@ const categories = computed(() => [
   border: 1px solid color-mix(in srgb, var(--card-accent) 28%, transparent);
   --background: var(--card-background);
   background: var(--card-background);
-  box-shadow: 0 5px 14px rgba(109, 15, 47, 0.1);
+  box-shadow: 0 5px 14px rgba(80, 26, 46, 0.1);
 }
 
 .category-card--rose {

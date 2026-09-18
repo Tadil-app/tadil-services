@@ -147,7 +147,8 @@ import { onMounted, ref, computed } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { MapPin, Printer } from "lucide-vue-next";
 import { DisplayOrderDTO, ORDER_STATUS, ShippingLabelDTO } from "@/integration/dtos";
-import { formatDate } from "@/utils";
+import { createTailorOrderDeepLink, formatDate } from "@/utils";
+import QRCode from "qrcode";
 import { useToast, useLocalizedAddress } from "@/composables";
 import { apiClient } from "@/integration/api";
 import { useAuthStore } from "@/stores";
@@ -262,9 +263,11 @@ async function printLabel() {
       return;
     }
 
-    
-const html = getOrderLableHtml(label, t);
-    
+    const qrCodeDataUrl = await QRCode.toDataURL(
+      createTailorOrderDeepLink(label.orderReference),
+      { errorCorrectionLevel: "H", margin: 1, width: 240 }
+    );
+    const html = getOrderLableHtml(label, t, qrCodeDataUrl);
 
     printWindow.document.write(html);
     printWindow.document.close();
