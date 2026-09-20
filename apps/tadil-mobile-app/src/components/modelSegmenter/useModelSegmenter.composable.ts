@@ -78,15 +78,21 @@ export function useModelSegmenter(): CanvasDrawingComposable {
       context!.stroke();
     });
 
-    highlightedPoints.value.forEach((point) => {
+    highlightedPoints.value.forEach((point, index) => {
       const scaledPoint = scalePercentPoint(point, canvasWidth.value, canvasHeight.value);
+      const radius = Math.max(12, canvasWidth.value * 0.022);
       context!.beginPath();
-      context!.arc(scaledPoint.x, scaledPoint.y, Math.max(8, canvasWidth.value * 0.015), 0, Math.PI * 2);
+      context!.arc(scaledPoint.x, scaledPoint.y, radius, 0, Math.PI * 2);
       context!.fillStyle = '#501a2ee6';
       context!.fill();
       context!.strokeStyle = 'white';
       context!.lineWidth = Math.max(2, canvasWidth.value * 0.003);
       context!.stroke();
+      context!.fillStyle = 'white';
+      context!.font = `bold ${radius}px sans-serif`;
+      context!.textAlign = 'center';
+      context!.textBaseline = 'middle';
+      context!.fillText(String(index + 1), scaledPoint.x, scaledPoint.y);
     });
   }
 

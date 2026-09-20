@@ -208,7 +208,7 @@ export const ur = {
     instructions: "لباس کے ان حصوں پر کلک کریں جن میں آپ تبدیلی چاہتے ہیں",
     changePhoto: "تصویر تبدیل کریں",
     pointSelection: "کسٹم پوائنٹ سلیکشن",
-    point: "نکتہ {number}",
+    point: "ترمیم {number}",
     categories: {
       dress: "لباس",
       shirt: "قمیض",
