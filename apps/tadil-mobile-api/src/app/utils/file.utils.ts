@@ -42,16 +42,17 @@ export function filterChatFiles(
     'audio/m4a',
     'audio/mp4',
     'audio/x-m4a',
+    'audio/webm',
   ];
-  const isMimeTypeValid = allowedMimeTypes.includes(file.mimetype);
-  const isExtensionValid = RegExp(/\.(jpg|jpeg|png|svg|webp|mp3|wav|ogg|aac|m4a)$/).test(
+  const isMimeTypeValid = allowedMimeTypes.includes(file.mimetype.split(';')[0]);
+  const isExtensionValid = RegExp(/\.(jpg|jpeg|png|svg|webp|mp3|wav|ogg|aac|m4a|mp4|webm)$/).test(
     file.originalname.toLowerCase()
   );
 
   if (!isMimeTypeValid || !isExtensionValid) {
     return cb(
       new BadRequestException(
-        'Invalid file type! Supported formats: images (jpg, png, webp, svg) and audio (mp3, wav, m4a, ogg, aac)'
+        'Invalid file type! Supported formats: images (jpg, png, webp, svg) and audio (mp3, wav, m4a, mp4, ogg, aac, webm)'
       ),
       false
     );

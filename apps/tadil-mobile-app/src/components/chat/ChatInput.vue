@@ -102,7 +102,8 @@ function handleSendText() {
 async function handleSendVoice() {
   const audioBlob = await stopAndGetBlob();
   if (audioBlob) {
-    const file = new File([audioBlob], `voice_${Date.now()}.m4a`, { type: 'audio/m4a' });
+    const extension = audioBlob.type.split(/[;/]/)[1] || 'aac';
+    const file = new File([audioBlob], `voice_${Date.now()}.${extension}`, { type: audioBlob.type });
     emit('send-file', file, 'AUDIO', { duration: recordingDuration.value });
   }
 }
