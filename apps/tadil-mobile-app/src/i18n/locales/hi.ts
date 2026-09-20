@@ -209,7 +209,7 @@ export const hi = {
       "कपड़े के उन हिस्सों पर क्लिक करें जिन्हें आप बदलना चाहते हैं",
     changePhoto: "फोटो बदलें",
     pointSelection: "कस्टम बिंदु चयन",
-    point: "बिंदु {number}",
+    point: "बदलाव {number}",
     categories: {
       dress: "पोशाक",
       shirt: "कमीज़",

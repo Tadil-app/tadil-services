@@ -209,7 +209,7 @@ export const bn = {
     instructions: "পোশাকের যে অংশগুলি পরিবর্তন করতে চান সেখানে ক্লিক করুন",
     changePhoto: "ছবি পরিবর্তন করুন",
     pointSelection: "কাস্টম পয়েন্ট নির্বাচন",
-    point: "পয়েন্ট {number}",
+    point: "পরিবর্তন {number}",
     categories: {
       dress: "পোশাক",
       shirt: "শার্ট",

@@ -208,7 +208,7 @@ export const en = {
     instructions: "Click on the areas of the garment you want to modify",
     changePhoto: "Change Photo",
     pointSelection: "Custom Point Selection",
-    point: "Point {number}",
+    point: "Alteration {number}",
     categories: {
       dress: "Dress",
       shirt: "Shirt",

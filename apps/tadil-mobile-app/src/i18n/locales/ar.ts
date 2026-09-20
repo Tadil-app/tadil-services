@@ -209,7 +209,7 @@ export const ar = {
     instructions: "اضغط على أجزاء قطعة الملابس التي ترغب في تعديلها",
     changePhoto: "تغيير الصورة",
     pointSelection: "اختيار نقطة مخصصة",
-    point: "نقطة {number}",
+    point: "تعديل {number}",
     categories: {
       dress: "فستان",
       shirt: "قميص",
