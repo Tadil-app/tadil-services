@@ -29,6 +29,7 @@
     "seed": "tsx prisma/seed.ts"
   },
   "dependencies": {
+    "argon2": "^0.44.0",
     "prisma": "^6.19.0",
     "tslib": "^2.3.0"
   },

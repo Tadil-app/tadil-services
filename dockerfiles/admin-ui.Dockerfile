@@ -22,6 +22,7 @@ RUN npm run build
 
 # Production stage
 FROM nginx:stable-alpine AS production
+ENV NGINX_ENVSUBST_FILTER="^(PORT|TADIL_API_UPSTREAM)$"
 COPY apps/tadil-admin-web-client/nginx.conf /etc/nginx/templates/default.conf.template
 COPY --from=build /app/dist /usr/share/nginx/html
 EXPOSE 80
