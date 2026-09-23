@@ -81,7 +81,8 @@ const submit = async () => {
       typeof route.query.returnUrl === 'string' &&
       route.query.returnUrl.startsWith('/') &&
       !route.query.returnUrl.startsWith('//') &&
-      !route.query.returnUrl.includes('\\')
+      !route.query.returnUrl.includes('\\') &&
+      route.query.returnUrl !== '/no-access'
         ? route.query.returnUrl
         : '/';
     await router.replace(target);

@@ -97,12 +97,13 @@ const routes: RouteRecordRaw[] = [
   {
     path: '/',
     component: () => import('@/layout/Layout.vue'),
-    redirect: () =>
-      pages.find(([, permission]) => !!permission && can(permission))?.[0]
-        ? `/${
-            pages.find(([, permission]) => !!permission && can(permission))?.[0]
-          }`
-        : '/no-access',
+    redirect: () => {
+      if (!authState.user) return '/login';
+      const page = pages.find(
+        ([, permission]) => !!permission && can(permission)
+      );
+      return page ? `/${page[0]}` : '/no-access';
+    },
     children: [
       ...pages.map(([path, permission, component]) => ({
         path,
