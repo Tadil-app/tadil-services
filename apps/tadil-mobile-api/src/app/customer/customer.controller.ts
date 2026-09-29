@@ -20,7 +20,7 @@ import {
   ApiOperation,
   ApiBearerAuth,
 } from '@nestjs/swagger';
-import { ReadableFile, type FileStorageService } from '@tadil-common';
+import { ORDER_STATUS, ReadableFile, type FileStorageService } from '@tadil-common';
 import { DataReader } from '@tadil-database';
 import {
   DisplayAlterationDTO,
@@ -38,8 +38,9 @@ import { v4 as uuidv4 } from 'uuid';
 import { extname } from 'path';
 import { UploadFileDto } from './dtos/uploadFile.dto';
 import { ConfirmReceiptUseCase } from '@tadil-customer';
-import { CreateOrderUseCase, ConfirmPaymentUseCase } from '@tadil-orders';
+import { CreateOrderUseCase, ConfirmPaymentUseCase, OrdersRepository } from '@tadil-orders';
 import { AuthGuard } from '../auth/auth.guard';
+import { isAppleReviewPhone } from './apple-review-phones';
 
 @Controller('customer')
 @ApiTags('Customer')
@@ -50,7 +51,9 @@ export class CustomerController {
     private readonly _fileStorageService: FileStorageService,
     private readonly _confirmReceiptUseCase: ConfirmReceiptUseCase,
     private readonly _createOrderUseCase: CreateOrderUseCase,
-    private readonly _confirmPaymentUseCase: ConfirmPaymentUseCase
+    private readonly _confirmPaymentUseCase: ConfirmPaymentUseCase,
+    @Inject('OrdersRepository')
+    private readonly _ordersRepository: OrdersRepository
   ) {}
 
   @Get('orders')
@@ -78,12 +81,27 @@ export class CustomerController {
   @ApiBearerAuth()
   @ApiOperation({ summary: 'Create a new order from cart' })
   async createOrder(@Req() req: any, @Body() dto: CreateOrderDto) {
-    return this._createOrderUseCase.execute({
+    const order = await this._createOrderUseCase.execute({
       customerId: req.user.sub,
       addressId: dto.addressId,
       items: dto.items,
       customItems: dto.customItems,
     });
+
+    if (!isAppleReviewPhone(req.user?.phone)) {
+      return order;
+    }
+
+    await this._ordersRepository.updateStatus(
+      order.id,
+      ORDER_STATUS.WAITING_FOR_TAILOR_ASSIGNMENT
+    );
+
+    return {
+      ...order,
+      status: ORDER_STATUS.WAITING_FOR_TAILOR_ASSIGNMENT,
+      cashOnDelivery: true,
+    };
   }
 
   @Post('orders/:orderId/payment')

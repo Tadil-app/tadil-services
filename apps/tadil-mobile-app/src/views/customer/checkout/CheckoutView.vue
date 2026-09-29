@@ -69,16 +69,47 @@
           </IonCard>
         </div>
 
-        <div class="pt-10">
+        <div class="pt-10 space-y-3">
+          <p
+            v-if="paysCashOnDelivery"
+            class="text-sm text-center text-muted-foreground"
+          >
+            {{ $t('checkout.cashOnDelivery.note') }}
+          </p>
           <IonButton
             expand="block"
             :disabled="!selectedAddressId || isProcessing"
             @click="proceedToPayment"
           >
             <IonSpinner v-if="isProcessing" name="crescent" />
-            <span v-else>{{ $t('checkout.buttons.proceedToPayment') }}</span>
+            <span v-else>{{
+              paysCashOnDelivery
+                ? $t('checkout.cashOnDelivery.button')
+                : $t('checkout.buttons.proceedToPayment')
+            }}</span>
           </IonButton>
         </div>
+      </div>
+
+      <div
+        v-if="step === 'success'"
+        class="flex flex-col items-center justify-center py-20 text-center space-y-6"
+      >
+        <div class="w-24 h-24 bg-success/20 rounded-full flex items-center justify-center">
+          <Check class="w-12 h-12 text-success" />
+        </div>
+        <div>
+          <h2 class="text-2xl font-bold">{{ $t('checkout.success.title') }}</h2>
+          <p class="text-muted-foreground mt-2">
+            {{ $t('checkout.success.message', { reference: createdOrder?.reference }) }}
+          </p>
+          <p v-if="paysCashOnDelivery" class="text-sm text-muted-foreground mt-3">
+            {{ $t('checkout.cashOnDelivery.confirmed') }}
+          </p>
+        </div>
+        <IonButton expand="block" class="w-full" @click="goToOrders">
+          {{ $t('customer.ordersHistory.title') }}
+        </IonButton>
       </div>
 
       <!-- Step 2: Moyasar Payment -->
@@ -126,7 +157,8 @@ import { ref, computed, onMounted } from 'vue';
 import { useAuthStore, useCartStore } from '@/stores';
 import { useLocalizedAddress } from '@/composables';
 import { useRouter } from 'vue-router';
-import { MapPin, ShoppingBag } from 'lucide-vue-next';
+import { Check, MapPin, ShoppingBag } from 'lucide-vue-next';
+import { isAppleReviewPhone } from '@/utils/appleReviewPhones';
 import { DisplayOrderDTO } from '@/integration/dtos';
 import { useI18n } from 'vue-i18n';
 import { Preferences } from '@capacitor/preferences';
@@ -153,9 +185,14 @@ onIonViewWillEnter(async () => {
   }
 });
 
+const paysCashOnDelivery = computed(() =>
+  isAppleReviewPhone(authStore.userInfo?.phone)
+);
+
 const stepTitle = computed(() => {
   if (step.value === 'address') return t('checkout.address.title');
   if (step.value === 'payment') return t('tailor.orderDetails.title');
+  if (step.value === 'success') return t('checkout.success.title');
   return '';
 });
 
@@ -174,6 +211,13 @@ async function proceedToPayment() {
   try {
     const order = await cartStore.createOrder(selectedAddressId.value);
     createdOrder.value = order;
+
+    if (order.cashOnDelivery) {
+      await cartStore.clearCart();
+      step.value = 'success';
+      return;
+    }
+
     await Preferences.set({ key: 'pendingOrderId', value: order.id });
     await Preferences.set({ key: 'pendingOrderReference', value: order.reference });
     step.value = 'payment';

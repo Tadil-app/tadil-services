@@ -285,6 +285,11 @@ export const en = {
       title: "Order Placed!",
       message: "Your order #{reference} has been successfully placed and is pending tailor assignment.",
     },
+    cashOnDelivery: {
+      note: "This review account pays in cash on delivery. No card is required.",
+      button: "Place order (cash on delivery)",
+      confirmed: "Payment will be collected in cash when the order is delivered.",
+    },
     buttons: {
       proceedToPayment: "Proceed to Payment",
       bypassPayment: "Bypass Payment (Testing)",
