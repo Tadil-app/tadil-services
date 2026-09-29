@@ -173,6 +173,8 @@ export interface DisplayOrderDTO {
   customItems: DisplayCustomOrderItemDTO[];
   address?: DisplayAddressDto;
   history: OrderStatusHistoryDTO[];
+  /** Présent seulement pour les numéros de revue App Store. */
+  cashOnDelivery?: boolean;
 }
 
 export interface CreateOrderDto {
