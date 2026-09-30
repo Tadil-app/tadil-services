@@ -9,6 +9,11 @@ export interface UsersRepository {
   createUser(user: User): Promise<void>;
   updateUser(user: User): Promise<void>;
   deleteUser(id: string): Promise<void>;
+  /**
+   * Removes personal data and disables login without deleting orders.
+   * Order rows stay so tailor/courier assignments and accounting records survive.
+   */
+  anonymizeAccount(id: string): Promise<void>;
 
   // Address management
   getAddressesByUserId(userId: string): Promise<Address[]>;

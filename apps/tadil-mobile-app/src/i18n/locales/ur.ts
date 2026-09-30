@@ -161,6 +161,11 @@ export const ur = {
       logAsTailor: "درزی کے طور پر لاگ ان کریں",
       logAsCustomer: "گاہک کے طور پر لاگ ان کریں",
       logout: "لاگ آؤٹ",
+      deleteAccount: "اکاؤنٹ حذف کریں",
+      deleteAccountConfirmTitle: "اپنا اکاؤنٹ حذف کریں؟",
+      deleteAccountConfirmMessage:
+        "آپ کا پروفائل، فون نمبر اور پتے ہٹا دیے جائیں گے، پھر آپ لاگ آؤٹ ہو جائیں گے۔ حساب کتاب کے لیے ضروری آرڈر ریکارڈ آپ کی ذاتی تفصیلات کے بغیر رکھے جا سکتے ہیں۔",
+      deleteAccountError: "اکاؤنٹ حذف نہیں ہو سکا۔ دوبارہ کوشش کریں۔",
     },
   },
   modelCategory: {

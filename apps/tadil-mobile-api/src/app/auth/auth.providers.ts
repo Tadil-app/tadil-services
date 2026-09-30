@@ -16,6 +16,7 @@ import {
   UpdateAddressUseCase,
   DeleteAddressUseCase,
   GetMyAddressesUseCase,
+  DeleteMyAccountUseCase,
 } from '@tadil-users';
 import { environment } from '../../environments/environment';
 
@@ -102,6 +103,15 @@ const GetMyAddressesUseCaseProvider: Provider<GetMyAddressesUseCase> = {
   inject: ['UsersRepository'],
 };
 
+const DeleteMyAccountUseCaseProvider: Provider<DeleteMyAccountUseCase> = {
+  provide: DeleteMyAccountUseCase,
+  useFactory: (usersRepository: UsersRepository) => {
+    return new DeleteMyAccountUseCase(usersRepository);
+  },
+  scope: Scope.REQUEST,
+  inject: ['UsersRepository'],
+};
+
 const DeleteAddressUseCaseProvider: Provider<DeleteAddressUseCase> = {
   provide: DeleteAddressUseCase,
   useFactory: (usersRepository: UsersRepository) => {
@@ -121,5 +131,6 @@ export {
   AddAddressUseCaseProvider,
   UpdateAddressUseCaseProvider,
   DeleteAddressUseCaseProvider,
+  DeleteMyAccountUseCaseProvider,
   GetMyAddressesUseCaseProvider,
 };

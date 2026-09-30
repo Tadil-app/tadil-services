@@ -20,6 +20,7 @@ describe('DeleteUserUseCase', () => {
       getUserById: jest.fn(),
       updateUser: jest.fn(),
       deleteUser: jest.fn(),
+      anonymizeAccount: jest.fn(),
       getUserByPhone: jest.fn(),
     };
     deleteUserUseCase = new DeleteUserUseCase(usersRepository);

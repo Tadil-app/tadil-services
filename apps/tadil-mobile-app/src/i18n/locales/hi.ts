@@ -161,6 +161,11 @@ export const hi = {
       logAsTailor: "दर्जी के रूप में लॉगिन करें",
       logAsCustomer: "ग्राहक के रूप में लॉगिन करें",
       logout: "लॉगआउट",
+      deleteAccount: "खाता हटाएँ",
+      deleteAccountConfirmTitle: "अपना खाता हटाएँ?",
+      deleteAccountConfirmMessage:
+        "आपकी प्रोफ़ाइल, फ़ोन नंबर और पते हटा दिए जाएँगे, फिर आप लॉग आउट हो जाएँगे। लेखांकन के लिए आवश्यक ऑर्डर रिकॉर्ड आपके व्यक्तिगत विवरण के बिना रखे जा सकते हैं।",
+      deleteAccountError: "खाता नहीं हटाया जा सका। फिर से कोशिश करें।",
     },
   },
   modelCategory: {

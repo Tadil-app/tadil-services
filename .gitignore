@@ -49,6 +49,10 @@ test-output
 # environment
 .env
 
+# Android upload keystores (Play App Signing)
+*.jks
+*.keystore
+
 graphify-out
 mobile-api.log
 .hoplite/bin/

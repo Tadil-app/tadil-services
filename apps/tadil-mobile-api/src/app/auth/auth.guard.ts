@@ -7,6 +7,8 @@ import {
 import * as jwt from 'jsonwebtoken';
 import { environment } from '../../environments/environment';
 import { Request } from 'express';
+import { DbClient } from '@tadil-database';
+import { assertAccountActive } from './account-status';
 
 interface AuthenticatedRequest extends Request {
   user?: string | jwt.JwtPayload;
@@ -14,6 +16,8 @@ interface AuthenticatedRequest extends Request {
 
 @Injectable()
 export class AuthGuard implements CanActivate {
+  constructor(private readonly _db: DbClient) {}
+
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const request = context.switchToHttp().getRequest<AuthenticatedRequest>();
     const token = this.extractTokenFromHeader(request);
@@ -25,6 +29,8 @@ export class AuthGuard implements CanActivate {
     try {
       const secret = environment.jwtSecret || 'super-secret';
       const payload = jwt.verify(token, secret);
+      const sub = typeof payload === 'string' ? undefined : payload.sub;
+      await assertAccountActive(this._db, sub);
       request.user = payload;
     } catch {
       throw new UnauthorizedException();

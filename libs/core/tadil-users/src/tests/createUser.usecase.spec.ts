@@ -22,6 +22,7 @@ describe('CreateUserUseCase', () => {
       getUserById: jest.fn(),
       updateUser: jest.fn(),
       deleteUser: jest.fn(),
+      anonymizeAccount: jest.fn(),
       getUserByPhone: jest.fn(),
     };
     createUserUseCase = new CreateUserUseCase(usersRepository);

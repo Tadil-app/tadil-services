@@ -161,6 +161,11 @@ export const en = {
       logAsTailor: "Login as Tailor",
       logAsCustomer: "Login as Customer",
       logout: "Logout",
+      deleteAccount: "Delete account",
+      deleteAccountConfirmTitle: "Delete your account?",
+      deleteAccountConfirmMessage:
+        "Your profile, phone number, and addresses will be removed. You will be signed out. Order records required for accounting may be kept without your personal details.",
+      deleteAccountError: "Could not delete the account. Try again.",
     },
   },
   modelCategory: {

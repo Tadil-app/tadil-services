@@ -161,6 +161,11 @@ export const ar = {
       logAsTailor: "تسجيل الدخول كخياط",
       logAsCustomer: "تسجيل الدخول كعميل",
       logout: "تسجيل الخروج",
+      deleteAccount: "حذف الحساب",
+      deleteAccountConfirmTitle: "حذف حسابك؟",
+      deleteAccountConfirmMessage:
+        "سيُزال ملفك ورقم جوالك وعناوينك، ثم يتم تسجيل خروجك. قد تُحفظ سجلات الطلبات اللازمة للمحاسبة دون بياناتك الشخصية.",
+      deleteAccountError: "تعذر حذف الحساب. حاول مرة أخرى.",
     },
   },
   modelCategory: {

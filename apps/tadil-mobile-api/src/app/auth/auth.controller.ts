@@ -30,6 +30,7 @@ import {
   UpdateAddressUseCase,
   DeleteAddressUseCase,
   GetMyAddressesUseCase,
+  DeleteMyAccountUseCase,
   type UsersRepository,
 } from '@tadil-users';
 
@@ -44,7 +45,8 @@ export class AuthController {
     private readonly _addAddressUseCase: AddAddressUseCase,
     private readonly _updateAddressUseCase: UpdateAddressUseCase,
     private readonly _deleteAddressUseCase: DeleteAddressUseCase,
-    private readonly _getMyAddressesUseCase: GetMyAddressesUseCase
+    private readonly _getMyAddressesUseCase: GetMyAddressesUseCase,
+    private readonly _deleteMyAccountUseCase: DeleteMyAccountUseCase
   ) {}
 
   @Get('/me')
@@ -65,6 +67,17 @@ export class AuthController {
       email: user.email ?? undefined,
       addresses: user.addresses,
     };
+  }
+
+  @Delete('/me')
+  @UseGuards(AuthGuard)
+  @ApiBearerAuth()
+  @HttpCode(HttpStatus.NO_CONTENT)
+  @ApiOperation({
+    summary: 'Delete the current account and its personal data',
+  })
+  async deleteAccount(@Req() req: any): Promise<void> {
+    await this._deleteMyAccountUseCase.execute(req.user.sub);
   }
 
   @Put('/me')

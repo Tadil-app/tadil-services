@@ -162,6 +162,11 @@ export const bn = {
       logAsTailor: "দর্জি হিসেবে লগইন করুন",
       logAsCustomer: "গ্রাহক হিসেবে লগইন করুন",
       logout: "লগআউট",
+      deleteAccount: "অ্যাকাউন্ট মুছুন",
+      deleteAccountConfirmTitle: "আপনার অ্যাকাউন্ট মুছবেন?",
+      deleteAccountConfirmMessage:
+        "আপনার প্রোফাইল, ফোন নম্বর এবং ঠিকানা সরিয়ে দেওয়া হবে, তারপর আপনি লগ আউট হবেন। হিসাবের জন্য প্রয়োজনীয় অর্ডার রেকর্ড আপনার ব্যক্তিগত তথ্য ছাড়া রাখা হতে পারে।",
+      deleteAccountError: "অ্যাকাউন্ট মুছে ফেলা যায়নি। আবার চেষ্টা করুন।",
     },
   },
   modelCategory: {
