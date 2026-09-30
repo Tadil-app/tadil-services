@@ -133,6 +133,11 @@ export const useAuthStore = defineStore("auth", () => {
     }
   }
 
+  async function deleteAccount() {
+    await apiClient.authControllerDeleteAccount();
+    await logout();
+  }
+
   async function logout() {
     token.value = "";
     userId.value = "";
@@ -165,6 +170,7 @@ export const useAuthStore = defineStore("auth", () => {
     deleteAddress,
     fetchWallet,
     requestPayout,
+    deleteAccount,
     logout 
   };
 });

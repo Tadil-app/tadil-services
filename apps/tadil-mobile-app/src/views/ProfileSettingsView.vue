@@ -104,6 +104,10 @@
               <LogOut aria-hidden="true" class="me-2" slot="start" />
               <IonLabel>{{ $t("profileSettings.identity.logout") }}</IonLabel>
             </IonItem>
+            <IonItem button :detail="false" @click="confirmDeleteAccount">
+              <Trash2 aria-hidden="true" class="me-2 text-danger" slot="start" />
+              <IonLabel color="danger">{{ $t("profileSettings.identity.deleteAccount") }}</IonLabel>
+            </IonItem>
           </IonList>
         </IonCard>
       </template>
@@ -128,6 +132,7 @@ import {
   IonCard,
   IonButton,
   modalController,
+  alertController,
 } from "@ionic/vue";
 import {
   CircleUserRound,
@@ -137,12 +142,15 @@ import {
   Plus,
   MapPin,
   Settings2,
+  Trash2,
 } from "lucide-vue-next";
 import { SecondaryHeader } from "@/components";
 import { onMounted, ref, computed } from "vue";
+import { useI18n } from "vue-i18n";
 import UpdateProfileModal from "./auth/components/UpdateProfileModal.vue";
 import AddressModal from "./profile/components/AddressModal.vue";
 
+const { t } = useI18n();
 const languageStore = useLanguageStore();
 const themeStore = useThemeStore();
 const authStore = useAuthStore();
@@ -155,6 +163,31 @@ const isReady = ref(false);
 // Only customers manage addresses in the app. Couriers/tailors get their
 // single address from an admin and can only view it here.
 const canAddAddress = computed(() => authStore.userRole === 'customer');
+
+async function confirmDeleteAccount() {
+  const alert = await alertController.create({
+    header: t("profileSettings.identity.deleteAccountConfirmTitle"),
+    message: t("profileSettings.identity.deleteAccountConfirmMessage"),
+    buttons: [
+      { text: t("common.buttons.cancel"), role: "cancel" },
+      {
+        text: t("profileSettings.identity.deleteAccount"),
+        role: "destructive",
+        handler: () => {
+          void authStore.deleteAccount().catch(() => {
+            void alertController
+              .create({
+                header: t("profileSettings.identity.deleteAccountError"),
+                buttons: [t("common.buttons.cancel")],
+              })
+              .then((errorAlert) => errorAlert.present());
+          });
+        },
+      },
+    ],
+  });
+  await alert.present();
+}
 
 async function openUpdateProfileModal() {
   const modal = await modalController.create({

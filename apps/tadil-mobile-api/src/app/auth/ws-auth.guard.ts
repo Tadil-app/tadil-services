@@ -7,9 +7,13 @@ import * as jwt from 'jsonwebtoken';
 import { environment } from '../../environments/environment';
 import { WsException } from '@nestjs/websockets';
 import { Socket } from 'socket.io';
+import { DbClient } from '@tadil-database';
+import { assertSocketAccountActive } from './account-status';
 
 @Injectable()
 export class WsAuthGuard implements CanActivate {
+  constructor(private readonly _db: DbClient) {}
+
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const client: Socket = context.switchToWs().getClient<Socket>();
     const token = this.extractTokenFromHandshake(client);
@@ -21,6 +25,8 @@ export class WsAuthGuard implements CanActivate {
     try {
       const secret = environment.jwtSecret || 'super-secret';
       const payload = jwt.verify(token, secret);
+      const sub = typeof payload === 'string' ? undefined : payload.sub;
+      await assertSocketAccountActive(this._db, sub);
       // @ts-expect-error - we are adding user to the client object
       client.user = payload;
     } catch {

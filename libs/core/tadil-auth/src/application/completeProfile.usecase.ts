@@ -1,5 +1,5 @@
 import { InvalidCommandException } from '@tadil-common';
-import { UsersRepository, User } from '@tadil-users';
+import { UsersRepository, User, isDeletedAccountPhone } from '@tadil-users';
 import * as jwt from 'jsonwebtoken';
 
 export class CompleteProfileUseCase {
@@ -11,6 +11,9 @@ export class CompleteProfileUseCase {
   async execute(phone: string, firstName: string, lastName: string): Promise<{ token: string; user: User }> {
     if (!phone || !firstName || !lastName) {
       throw new InvalidCommandException('Phone, first name, and last name are required');
+    }
+    if (isDeletedAccountPhone(phone)) {
+      throw new InvalidCommandException('This account has been deleted');
     }
 
     const user = await this._usersRepository.getUserByPhone(phone);

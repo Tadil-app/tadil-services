@@ -729,6 +729,22 @@ export class Api<
       }),
 
     /**
+     * Delete the signed-in account and its personal data.
+     *
+     * @tags Auth
+     * @name AuthControllerDeleteAccount
+     * @request DELETE:/api/auth/me
+     * @secure
+     */
+    authControllerDeleteAccount: (params: RequestParams = {}) =>
+      this.request<void, any>({
+        path: `/api/auth/me`,
+        method: "DELETE",
+        secure: true,
+        ...params,
+      }),
+
+    /**
      * No description
      *
      * @tags Wallet

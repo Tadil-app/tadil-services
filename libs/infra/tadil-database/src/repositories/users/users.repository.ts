@@ -1,4 +1,10 @@
-import { User, UsersRepository, LoginRequestStatusType, Address } from '@tadil-users';
+import {
+  User,
+  UsersRepository,
+  LoginRequestStatusType,
+  Address,
+  deletedAccountPhone,
+} from '@tadil-users';
 import { DbClient } from '../../dbClient';
 
 type AddressRow = {
@@ -146,6 +152,35 @@ export class PrismaUsersRepository implements UsersRepository {
   async deleteUser(id: string): Promise<void> {
     await this._db.user.delete({
       where: { id },
+    });
+  }
+
+  async anonymizeAccount(id: string): Promise<void> {
+    await this._db.$transaction(async (tx) => {
+      await tx.address.updateMany({
+        where: { userId: id },
+        data: {
+          street: null,
+          streetAr: null,
+          streetEn: null,
+          streetBn: null,
+          streetHi: null,
+          streetUr: null,
+          latitude: null,
+          longitude: null,
+        },
+      });
+      await tx.user.update({
+        where: { id },
+        data: {
+          phone: deletedAccountPhone(id),
+          firstName: '',
+          lastName: '',
+          email: null,
+          loginToken: null,
+          loginRequestStatus: null,
+        },
+      });
     });
   }
 

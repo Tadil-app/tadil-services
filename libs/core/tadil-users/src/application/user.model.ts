@@ -5,6 +5,17 @@ export const ROLE = {
 } as const;
 export type RoleType = (typeof ROLE)[keyof typeof ROLE];
 
+/** Phone stored after a user deletes their own account. Not a dialable number. */
+export const DELETED_ACCOUNT_PHONE_PREFIX = 'deleted-';
+
+export function deletedAccountPhone(userId: string): string {
+  return `${DELETED_ACCOUNT_PHONE_PREFIX}${userId}`;
+}
+
+export function isDeletedAccountPhone(phone: string | null | undefined): boolean {
+  return !!phone?.startsWith(DELETED_ACCOUNT_PHONE_PREFIX);
+}
+
 export const LOGIN_REQUEST_STATUS = {
   PENDING: 'PENDING',
   APPROVED: 'APPROVED',

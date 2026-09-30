@@ -13,10 +13,11 @@ import {
   CreditOrderEarningUseCaseProvider,
 } from './customer.providers';
 import { CommonModule } from '../common/common.module';
+import { AuthModule } from '../auth/auth.module';
 import { CustomerController } from './customer.controller';
 
 @Module({
-  imports: [CommonModule],
+  imports: [CommonModule, AuthModule],
   controllers: [CustomerController],
   providers: [
     CustomerRepositoryProvider,
