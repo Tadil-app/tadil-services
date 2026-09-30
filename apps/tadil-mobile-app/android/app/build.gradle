@@ -1,8 +1,25 @@
 apply plugin: 'com.android.application'
 
+def uploadStoreFile = project.findProperty('MYAPP_UPLOAD_STORE_FILE')
+def uploadStorePassword = project.findProperty('MYAPP_UPLOAD_STORE_PASSWORD')
+def uploadKeyAlias = project.findProperty('MYAPP_UPLOAD_KEY_ALIAS')
+def uploadKeyPassword = project.findProperty('MYAPP_UPLOAD_KEY_PASSWORD')
+
 android {
     namespace = "com.tadil.app"
     compileSdk = rootProject.ext.compileSdkVersion
+    signingConfigs {
+        release {
+            if (uploadStoreFile) {
+                storeFile file(uploadStoreFile)
+                storePassword uploadStorePassword
+                keyAlias uploadKeyAlias
+                keyPassword uploadKeyPassword
+                // The upload key is a PKCS12 file, even though CI names it release.keystore.
+                storeType = 'PKCS12'
+            }
+        }
+    }
     defaultConfig {
         applicationId "com.tadil.app"
         minSdkVersion rootProject.ext.minSdkVersion
@@ -18,8 +35,21 @@ android {
     }
     buildTypes {
         release {
+            if (uploadStoreFile) {
+                signingConfig signingConfigs.release
+            }
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+}
+
+afterEvaluate {
+    tasks.matching { it.name == 'bundleRelease' }.configureEach {
+        doFirst {
+            if (!uploadStoreFile) {
+                throw new GradleException('bundleRelease requires MYAPP_UPLOAD_STORE_FILE, MYAPP_UPLOAD_STORE_PASSWORD, MYAPP_UPLOAD_KEY_ALIAS and MYAPP_UPLOAD_KEY_PASSWORD. Refusing to produce an unsigned AAB.')
+            }
         }
     }
 }
