@@ -51,13 +51,15 @@ jobs:
           security set-keychain-settings -lut 21600 $KEYCHAIN_PATH
           security unlock-keychain -p "$KEYCHAIN_PASSWORD" $KEYCHAIN_PATH
 
-          # import certificate to keychain
-          security import $CERTIFICATE_PATH -P "$P12_PASSWORD" -A -t cert -f pkcs12 -k $KEYCHAIN_PATH
+          # import certificate and private key into the keychain
+          security import $CERTIFICATE_PATH -P "$P12_PASSWORD" -A -f pkcs12 -k $KEYCHAIN_PATH
+          security set-key-partition-list -S apple-tool:,apple:,codesign: -s -k "$KEYCHAIN_PASSWORD" $KEYCHAIN_PATH
           security list-keychain -d user -s $KEYCHAIN_PATH
 
-          # apply provisioning profile
+          # provisioning profiles are looked up by UUID
           mkdir -p ~/Library/MobileDevice/Provisioning\ Profiles
-          cp $PP_PATH ~/Library/MobileDevice/Provisioning\ Profiles
+          PROFILE_UUID=$(security cms -D -i "$PP_PATH" | plutil -extract UUID raw -)
+          cp $PP_PATH ~/Library/MobileDevice/Provisioning\ Profiles/$PROFILE_UUID.mobileprovision
 
       - name: Build and Archive Xcode Project
         run: |
@@ -67,20 +69,31 @@ jobs:
             -sdk iphoneos \
             -configuration Release \
             -archivePath ios-build-data/App.xcarchive \
-            CODE_SIGNING_ALLOWED=YES
+            CODE_SIGN_STYLE=Manual \
+            DEVELOPMENT_TEAM=K24LU6XC52 \
+            CODE_SIGN_IDENTITY="Apple Distribution" \
+            PROVISIONING_PROFILE_SPECIFIER=tadil
 
       - name: Export Signed IPA
         run: |
-          # Create an exportOptions.plist dynamically
           cat <<EOF > exportOptions.plist
           <?xml version="1.0" encoding="UTF-8"?>
           <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
           <plist version="1.0">
           <dict>
               <key>method</key>
-              <string>ad-hoc</string> <!-- Change to "app-store" if building for TestFlight -->
-              <key>compileBitcode</key>
-              <false/>
+              <string>app-store-connect</string>
+              <key>teamID</key>
+              <string>K24LU6XC52</string>
+              <key>signingStyle</key>
+              <string>manual</string>
+              <key>signingCertificate</key>
+              <string>Apple Distribution</string>
+              <key>provisioningProfiles</key>
+              <dict>
+                  <key>com.tadil.app</key>
+                  <string>tadil</string>
+              </dict>
           </dict>
           </plist>
           EOF
@@ -88,8 +101,7 @@ jobs:
           xcodebuild -exportArchive \
             -archivePath ios-build-data/App.xcarchive \
             -exportOptionsPlist exportOptions.plist \
-            -exportPath build-output \
-            -allowProvisioningUpdates
+            -exportPath build-output
 
       - name: Upload Signed IPA as Artifact
         uses: actions/upload-artifact@v4
@@ -98,17 +110,12 @@ jobs:
           path: apps/tadil-mobile-app/build-output/App.ipa
           retention-days: 7
 
-      # Optional: Uncomment and configure this step to automatically upload to TestFlight
-      # Make sure the exportOptions.plist method is set to "app-store" above.
-      # - name: Upload to TestFlight
-      #   env:
-      #     API_KEY_ISSUER_ID: ${{ secrets.APP_STORE_CONNECT_ISSUER_ID }}
-      #     API_KEY_KEY_ID: ${{ secrets.APP_STORE_CONNECT_KEY_IDENTIFIER }}
-      #     API_KEY_PRIVATE_KEY: ${{ secrets.APP_STORE_CONNECT_PRIVATE_KEY }}
-      #   run: |
-      #     # Create API Key file
-      #     mkdir -p ~/.appstoreconnect/private_keys/
-      #     echo "$API_KEY_PRIVATE_KEY" > ~/.appstoreconnect/private_keys/AuthKey_$API_KEY_KEY_ID.p8
-      #     
-      #     # Upload using altool
-      #     xcrun altool --upload-app -f build-output/App.ipa -t ios --apiKey "$API_KEY_KEY_ID" --apiIssuer "$API_KEY_ISSUER_ID"
+      - name: Upload to TestFlight
+        env:
+          API_KEY_ISSUER_ID: ${{ secrets.APP_STORE_CONNECT_ISSUER_ID }}
+          API_KEY_KEY_ID: ${{ secrets.APP_STORE_CONNECT_KEY_IDENTIFIER }}
+          API_KEY_PRIVATE_KEY: ${{ secrets.APP_STORE_CONNECT_PRIVATE_KEY }}
+        run: |
+          mkdir -p ~/.private_keys
+          printf '%s\n' "$API_KEY_PRIVATE_KEY" > ~/.private_keys/AuthKey_${API_KEY_KEY_ID}.p8
+          xcrun altool --upload-app -f build-output/App.ipa -t ios --apiKey "$API_KEY_KEY_ID" --apiIssuer "$API_KEY_ISSUER_ID"
