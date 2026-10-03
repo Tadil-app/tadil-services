@@ -30,6 +30,23 @@ jobs:
           VITE_TADIL_MOBILE_API_URL: ${{ secrets.VITE_TADIL_MOBILE_API_URL }}
           VITE_MOYASAR_PUBLISHABLE_KEY: ${{ secrets.VITE_MOYASAR_PUBLISHABLE_KEY }}
 
+      - name: Use the App Store Connect bundle ID
+        run: |
+          python3 - << 'PY'
+          from pathlib import Path
+          path = Path("ios/App/App.xcodeproj/project.pbxproj")
+          text = path.read_text()
+          text = text.replace(
+              "PRODUCT_BUNDLE_IDENTIFIER = com.tadil.app;",
+              "PRODUCT_BUNDLE_IDENTIFIER = com.mbtker.Tadil;",
+          )
+          text = text.replace(
+              "PROVISIONING_PROFILE_SPECIFIER = tadil;",
+              "PROVISIONING_PROFILE_SPECIFIER = tadil-mbtker;",
+          )
+          path.write_text(text)
+          PY
+
       - name: Install the Apple Certificate and Provisioning Profile
         env:
           BUILD_CERTIFICATE_BASE64: ${{ secrets.BUILD_CERTIFICATE_BASE64 }}
@@ -87,8 +104,8 @@ jobs:
               <string>Apple Distribution</string>
               <key>provisioningProfiles</key>
               <dict>
-                  <key>com.tadil.app</key>
-                  <string>tadil</string>
+                  <key>com.mbtker.Tadil</key>
+                  <string>tadil-mbtker</string>
               </dict>
           </dict>
           </plist>
