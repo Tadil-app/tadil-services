@@ -11,7 +11,7 @@
     />
     <canvas
       ref="canvasRef"
-      class="max-h-full mx-auto"
+      class="max-w-full max-h-full mx-auto"
       :width="canvasWidth"
       :height="canvasHeight"
       @click="getOriginalImageCoords"
