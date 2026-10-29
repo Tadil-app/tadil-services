@@ -13,9 +13,12 @@ RUN npm install
 # Copy the app's source code
 COPY apps/tadil-mobile-app/ .
 
-# Inject environment variables
+# Inject environment variables. Vite inlines VITE_* at build time, so these
+# must be present on the Railway service before the image is built.
 ARG VITE_TADIL_MOBILE_API_URL
 ENV VITE_TADIL_MOBILE_API_URL=${VITE_TADIL_MOBILE_API_URL}
+ARG VITE_MOYASAR_PUBLISHABLE_KEY
+ENV VITE_MOYASAR_PUBLISHABLE_KEY=${VITE_MOYASAR_PUBLISHABLE_KEY}
 
 # Run the local build script
 RUN npm run build
