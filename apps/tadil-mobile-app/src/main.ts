@@ -2,7 +2,7 @@ import { createApp } from "vue";
 import { App as CapacitorApp } from "@capacitor/app";
 import App from "./App.vue";
 import router from "./router";
-import { getTailorOrderPath } from "./utils";
+import { getPaymentReturnPath, getTailorOrderPath } from "./utils";
 
 import { IonicVue, iosTransitionAnimation } from "@ionic/vue";
 
@@ -70,7 +70,7 @@ const cartStore = useCartStore();
 cartStore.loadCart();
 
 async function openDeepLink(url: string) {
-  const path = getTailorOrderPath(url);
+  const path = getTailorOrderPath(url) ?? getPaymentReturnPath(url);
   if (!path) return;
   await router.isReady();
   await router.push(path);

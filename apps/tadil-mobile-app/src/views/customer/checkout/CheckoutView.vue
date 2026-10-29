@@ -153,7 +153,7 @@ import {
   onIonViewWillEnter,
 } from '@ionic/vue';
 import { SecondaryHeader, EmptyState } from '@/components';
-import { ref, computed, onMounted } from 'vue';
+import { ref, computed, onMounted, nextTick } from 'vue';
 import { useAuthStore, useCartStore } from '@/stores';
 import { useLocalizedAddress } from '@/composables';
 import { useRouter } from 'vue-router';
@@ -221,6 +221,7 @@ async function proceedToPayment() {
     await Preferences.set({ key: 'pendingOrderId', value: order.id });
     await Preferences.set({ key: 'pendingOrderReference', value: order.reference });
     step.value = 'payment';
+    await nextTick();
     initMoyasar();
   } catch (error) {
     console.error('Failed to create order', error);
@@ -235,7 +236,22 @@ async function proceedToPayment() {
   }
 }
 
+const IOS_PAYMENT_RETURN_URL =
+  'https://tadil-mobile-app-production-1db5.up.railway.app/payment-return.html';
+
+function moyasarCallbackUrl(): string {
+  const path = '/customer/checkout/verify';
+  const origin = window.location.origin;
+  // Moyasar only accepts an http(s) callback. The iPhone app runs on
+  // capacitor://localhost, which the form rejects before it is shown.
+  if (/^https?:\/\//i.test(origin)) {
+    return `${origin}${path}`;
+  }
+  return IOS_PAYMENT_RETURN_URL;
+}
+
 function initMoyasar() {
+  const amount = Math.round(Number(createdOrder.value?.totalPrice || 0) * 100);
   const link = document.createElement('link');
   link.rel = 'stylesheet';
   link.href = 'https://cdn.jsdelivr.net/npm/moyasar-payment-form@2.2.9/dist/moyasar.css';
@@ -248,11 +264,11 @@ function initMoyasar() {
     // @ts-ignore
     Moyasar.init({
       element: '.mysr-form',
-      amount: (createdOrder.value?.totalPrice || 0) * 100, // Halalas
+      amount,
       currency: 'SAR',
       description: `Order #${createdOrder.value?.reference} for Tadil`,
       publishable_api_key: import.meta.env.VITE_MOYASAR_PUBLISHABLE_KEY,
-      callback_url: window.location.origin + '/customer/checkout/verify',
+      callback_url: moyasarCallbackUrl(),
       supported_networks: ['visa', 'mastercard', 'mada'],
       methods: ['creditcard']
     });
