@@ -22,3 +22,18 @@ export function getTailorOrderPath(value: string): string | undefined {
     return;
   }
 }
+
+export function getPaymentReturnPath(value: string): string | undefined {
+  try {
+    const url = new URL(value);
+    if (url.protocol !== ORDER_DEEP_LINK_SCHEME || url.hostname !== "checkout") {
+      return;
+    }
+    if (url.pathname !== "/verify") {
+      return;
+    }
+    return `/customer/checkout/verify${url.search}`;
+  } catch {
+    return;
+  }
+}

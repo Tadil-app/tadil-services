@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Tadil</title>
+  </head>
+  <body>
+    <script>
+      const target = new URL("tadil://checkout/verify");
+      const params = new URLSearchParams(window.location.search);
+      params.forEach((value, key) => target.searchParams.set(key, value));
+      window.location.replace(target.toString());
+    </script>
+  </body>
+</html>

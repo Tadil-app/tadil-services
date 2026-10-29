@@ -1,5 +1,9 @@
 import { describe, expect, it } from "vitest";
-import { createTailorOrderDeepLink, getTailorOrderPath } from "./orderDeepLink.util";
+import {
+  createTailorOrderDeepLink,
+  getPaymentReturnPath,
+  getTailorOrderPath,
+} from "./orderDeepLink.util";
 
 describe("tailor order deep links", () => {
   it("creates and parses an order deep link", () => {
@@ -13,4 +17,12 @@ describe("tailor order deep links", () => {
     "rejects unsupported link %s",
     (link) => expect(getTailorOrderPath(link)).toBeUndefined(),
   );
+});
+
+describe("payment return deep links", () => {
+  it("keeps the Moyasar query on the checkout verification route", () => {
+    expect(
+      getPaymentReturnPath("tadil://checkout/verify?id=pay_1&status=paid&message=Succeeded"),
+    ).toBe("/customer/checkout/verify?id=pay_1&status=paid&message=Succeeded");
+  });
 });
