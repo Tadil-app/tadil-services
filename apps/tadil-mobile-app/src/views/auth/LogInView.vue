@@ -104,6 +104,14 @@ onIonViewWillEnter(() => {
   phoneNumberErrorMessage.value = "";
 });
 
+function internalRedirect(value: unknown): string | undefined {
+  const path = Array.isArray(value) ? value[0] : value;
+  if (typeof path !== "string" || !path.startsWith("/") || path.startsWith("//")) {
+    return undefined;
+  }
+  return path;
+}
+
 function validatePhoneNumber() {
   if (!phoneNumber.value) {
     phoneNumberErrorMessage.value = t("login.form.phoneNumber.undefinedErrorMessage");
@@ -164,9 +172,13 @@ async function onCompleteProfile() {
 }
 
 function handleNavigation(role?: string) {
-  const redirectPath = route.query.redirect as string;
+  const redirectPath = internalRedirect(route.query.redirect);
+  // Replace /login so it does not stay under the protected page. A push leaves
+  // login in history, and the back control then hits the guest guard instead
+  // of the cart. Signup always passes through this redirect; an already open
+  // session never does, which is why only new accounts lose the cart link.
   if (redirectPath) {
-    router.push(redirectPath);
+    router.replace(redirectPath);
     return;
   }
 

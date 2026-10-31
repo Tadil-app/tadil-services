@@ -185,6 +185,18 @@ export interface CreateOrderDto {
 
 export interface ConfirmPaymentDto {
   paymentId: string;
+  /** Optional: the payment metadata carries the order id. */
+  orderId?: string;
+}
+
+export interface ConfirmPaymentResultDto {
+  orderId: string;
+  reference: string;
+}
+
+export interface ReconcilePendingOrderResultDto {
+  /** `pending`: a payment is still processing or needs review; the order was kept. */
+  status: "confirmed" | "abandoned" | "pending" | "missing";
 }
 
 export interface RequestPayoutDto {

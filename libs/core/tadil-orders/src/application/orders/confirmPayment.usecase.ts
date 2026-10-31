@@ -6,49 +6,85 @@ import {
 import { OrdersRepository } from '../orders.repository';
 import { PaymentGateway } from '../payment.gateway';
 
+export interface ConfirmPaymentResult {
+  orderId: string;
+  reference: string;
+}
+
 export class ConfirmPaymentUseCase {
   constructor(
     private readonly _ordersRepository: OrdersRepository,
     private readonly _paymentGateway: PaymentGateway
   ) {}
 
+  /**
+   * Moves a PENDING order to WAITING_FOR_TAILOR_ASSIGNMENT once Moyasar
+   * reports the payment as paid for the right amount.
+   *
+   * `orderId` is optional: the payment carries `metadata.order_id`, so a
+   * device that lost its local state can still claim the order it paid for.
+   * Confirming an already confirmed order is a no-op, which lets the client
+   * retry safely.
+   */
   async execute(command: {
-    orderId: string;
     paymentId: string;
-  }): Promise<void> {
-    if (!command.orderId || !command.paymentId) {
-      throw new InvalidCommandException('Order ID and Payment ID are required');
+    customerId: string;
+    orderId?: string;
+  }): Promise<ConfirmPaymentResult> {
+    if (!command.paymentId || !command.customerId) {
+      throw new InvalidCommandException('Payment ID and customer are required');
+    }
+
+    let payment;
+    try {
+      payment = await this._paymentGateway.getPayment(command.paymentId);
+    } catch (error) {
+      throw new InfrastructureException(
+        error instanceof Error ? error.message : 'Payment provider unavailable'
+      );
+    }
+    if (!payment) {
+      throw new InvalidCommandException(`Payment ${command.paymentId} not found`);
+    }
+
+    const orderId = command.orderId || payment.metadata?.order_id;
+    if (!orderId) {
+      throw new InvalidCommandException('Payment is not linked to an order');
+    }
+    if (command.orderId && payment.metadata?.order_id && payment.metadata.order_id !== command.orderId) {
+      throw new InvalidCommandException('Payment does not belong to this order');
+    }
+
+    const order = await this._ordersRepository.getById(orderId);
+    if (!order || order.customerId !== command.customerId) {
+      throw new InvalidCommandException(`Order ${orderId} not found`);
+    }
+
+    if (order.status !== ORDER_STATUS.PENDING) {
+      // Already confirmed (e.g. by a previous call or a reconcile). Idempotent.
+      return { orderId: order.id, reference: order.reference };
+    }
+
+    const expectedHalalas = Math.round(order.totalPrice * 100);
+    if (payment.status !== 'paid' || payment.amount !== expectedHalalas) {
+      console.warn(
+        `Payment verification failed: status=${payment.status}, amount=${payment.amount}, expected=${expectedHalalas}`
+      );
+      throw new InvalidCommandException('Payment verification failed');
     }
 
     try {
-      const order = await this._ordersRepository.getById(command.orderId);
-      if (!order) {
-        throw new InvalidCommandException(`Order with ID ${command.orderId} not found`);
-      }
-
-      if (order.status !== ORDER_STATUS.PENDING) {
-        throw new InvalidCommandException(`Order ${command.orderId} is not in PENDING status`);
-      }
-
-      const isVerified = await this._paymentGateway.verifyPayment(command.paymentId, order.totalPrice);
-      if (!isVerified) {
-        throw new InvalidCommandException('Payment verification failed');
-      }
-
-      // Transition from PENDING to WAITING_FOR_TAILOR_ASSIGNMENT
       await this._ordersRepository.updateStatus(
-        command.orderId,
+        order.id,
         ORDER_STATUS.WAITING_FOR_TAILOR_ASSIGNMENT
       );
-      
-      console.log(`Payment ${command.paymentId} confirmed for order ${command.orderId}`);
     } catch (error) {
-      if (error instanceof InvalidCommandException) {
-        throw error;
-      }
-      if (error instanceof Error)
-        throw new InfrastructureException(error.message);
-      else throw error;
+      throw new InfrastructureException(
+        error instanceof Error ? error.message : 'Failed to update order'
+      );
     }
+
+    console.log(`Payment ${command.paymentId} confirmed for order ${order.id}`);
+    return { orderId: order.id, reference: order.reference };
   }
 }

@@ -301,6 +301,9 @@ export const bn = {
       proceedToPayment: "পেমেন্টে এগিয়ে যান",
       bypassPayment: "পেমেন্ট বাইপাস করুন (টেস্টিং)",
     },
+    payment: {
+      unavailable: "কার্ড পেমেন্ট সাময়িকভাবে বন্ধ। পরে আবার চেষ্টা করুন।",
+    },
   },
   chat: {
     title: "অর্ডার চ্যাট",

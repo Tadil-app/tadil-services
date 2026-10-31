@@ -5,4 +5,5 @@ export interface OrdersRepository {
   getById(id: string): Promise<Order | undefined>;
   updateStatus(id: string, status: string): Promise<void>;
   assignTailor(id: string, tailorId: string): Promise<void>;
+  delete(id: string): Promise<void>;
 }

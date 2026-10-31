@@ -2,6 +2,8 @@ import {
   Body,
   Controller,
   Get,
+  HttpCode,
+  HttpStatus,
   Inject,
   Param,
   Post,
@@ -30,6 +32,8 @@ import {
   ModelCategory,
   CreateOrderDto,
   ConfirmPaymentDto,
+  ConfirmPaymentResultDto,
+  ReconcilePendingOrderResultDto,
   DisplayOrderDTO,
 } from './dtos';
 import { fileUploadLocalPath } from '../utils';
@@ -38,7 +42,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { extname } from 'path';
 import { UploadFileDto } from './dtos/uploadFile.dto';
 import { ConfirmReceiptUseCase } from '@tadil-customer';
-import { CreateOrderUseCase, ConfirmPaymentUseCase, OrdersRepository } from '@tadil-orders';
+import { CreateOrderUseCase, ConfirmPaymentUseCase, ReconcilePendingOrderUseCase, OrdersRepository } from '@tadil-orders';
 import { AuthGuard } from '../auth/auth.guard';
 import { isAppleReviewPhone } from './apple-review-phones';
 
@@ -52,6 +56,7 @@ export class CustomerController {
     private readonly _confirmReceiptUseCase: ConfirmReceiptUseCase,
     private readonly _createOrderUseCase: CreateOrderUseCase,
     private readonly _confirmPaymentUseCase: ConfirmPaymentUseCase,
+    private readonly _reconcilePendingOrderUseCase: ReconcilePendingOrderUseCase,
     @Inject('OrdersRepository')
     private readonly _ordersRepository: OrdersRepository
   ) {}
@@ -63,7 +68,11 @@ export class CustomerController {
   @ApiOkResponse({ type: DisplayOrderDTO, isArray: true })
   async getOrders(@Req() req: any): Promise<DisplayOrderDTO[]> {
     const orders = await this._dataReader.queries.order.findMany({
-      where: { customerId: req.user.sub },
+      where: {
+        customerId: req.user.sub,
+        // PENDING is an unpaid checkout. It is not a placed order.
+        status: { not: ORDER_STATUS.PENDING },
+      },
       orderBy: { date: 'desc' },
       include: {
         customer: { select: { firstName: true, lastName: true } },
@@ -104,17 +113,39 @@ export class CustomerController {
     };
   }
 
-  @Post('orders/:orderId/payment')
+  @Post('orders/:orderId/reconcile')
   @UseGuards(AuthGuard)
   @ApiBearerAuth()
-  @ApiOperation({ summary: 'Confirm payment for an order' })
-  async confirmPayment(
-    @Param('orderId') orderId: string,
-    @Body() dto: ConfirmPaymentDto
-  ) {
-    await this._confirmPaymentUseCase.execute({
+  @HttpCode(HttpStatus.OK)
+  @ApiOperation({
+    summary: 'Settle a pending order: confirm it if Moyasar holds a paid payment, otherwise drop it',
+  })
+  @ApiOkResponse({ type: ReconcilePendingOrderResultDto })
+  async reconcilePendingOrder(
+    @Req() req: any,
+    @Param('orderId') orderId: string
+  ): Promise<ReconcilePendingOrderResultDto> {
+    const status = await this._reconcilePendingOrderUseCase.execute({
       orderId,
+      customerId: req.user.sub,
+    });
+    return { status };
+  }
+
+  @Post('payments/confirm')
+  @UseGuards(AuthGuard)
+  @ApiBearerAuth()
+  @HttpCode(HttpStatus.OK)
+  @ApiOperation({ summary: 'Confirm a Moyasar payment and place its order' })
+  @ApiOkResponse({ type: ConfirmPaymentResultDto })
+  async confirmPayment(
+    @Req() req: any,
+    @Body() dto: ConfirmPaymentDto
+  ): Promise<ConfirmPaymentResultDto> {
+    return this._confirmPaymentUseCase.execute({
       paymentId: dto.paymentId,
+      orderId: dto.orderId,
+      customerId: req.user.sub,
     });
   }
 

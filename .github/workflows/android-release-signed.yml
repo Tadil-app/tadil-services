@@ -53,13 +53,18 @@ jobs:
           ORG_GRADLE_PROJECT_MYAPP_UPLOAD_KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
           ORG_GRADLE_PROJECT_MYAPP_UPLOAD_STORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
           ORG_GRADLE_PROJECT_MYAPP_UPLOAD_KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
+        run: ./gradlew bundleRelease
+
+      - name: Verify the AAB is signed
+        working-directory: apps/tadil-mobile-app
         run: |
-          ./gradlew bundleRelease \
-            -Pandroid.injected.signing.storeFile=release.keystore \
-            -Pandroid.injected.signing.storeType=PKCS12 \
-            -Pandroid.injected.signing.storePassword="$ORG_GRADLE_PROJECT_MYAPP_UPLOAD_STORE_PASSWORD" \
-            -Pandroid.injected.signing.keyAlias="$ORG_GRADLE_PROJECT_MYAPP_UPLOAD_KEY_ALIAS" \
-            -Pandroid.injected.signing.keyPassword="$ORG_GRADLE_PROJECT_MYAPP_UPLOAD_KEY_PASSWORD"
+          set -o pipefail
+          jarsigner -verify android/app/build/outputs/bundle/release/app-release.aab | tee /tmp/aab-verify.txt
+          grep -q "jar verified" /tmp/aab-verify.txt
+          if grep -q "jar is unsigned" /tmp/aab-verify.txt; then
+            echo "AAB is unsigned"
+            exit 1
+          fi
 
       - name: Upload Signed Release AAB as Artifact
         uses: actions/upload-artifact@v4

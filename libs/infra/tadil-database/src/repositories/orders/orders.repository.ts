@@ -136,6 +136,10 @@ export class PrismaOrdersRepository implements OrdersRepository {
     });
   }
 
+  async delete(id: string): Promise<void> {
+    await this._db.order.delete({ where: { id } });
+  }
+
   async assignTailor(id: string, tailorId: string): Promise<void> {
     await this._db.order.update({
       where: { id },

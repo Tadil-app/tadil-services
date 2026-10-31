@@ -300,6 +300,9 @@ export const ar = {
       proceedToPayment: "المتابعة للدفع",
       bypassPayment: "تجاوز الدفع (للتجربة)",
     },
+    payment: {
+      unavailable: "الدفع بالبطاقة غير متاح مؤقتاً. يرجى المحاولة لاحقاً.",
+    },
   },
   chat: {
     title: "دردشة الطلب",

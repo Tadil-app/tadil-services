@@ -41,7 +41,7 @@
             <ModelSegmenter
               :image-url="item.imageFileUrl"
               :sections="item.sections.map((section) => section.coordinates)"
-              class="max-h-80"
+              fit="contain"
             />
             <div class="divide-y divide-border space-y-2">
               <div v-for="section in item.sections" :key="section.id" class="p-2">
@@ -67,7 +67,7 @@
               :image-url="item.imageFileUrl"
               :sections="[]"
               :points="item.alterations.flatMap((alteration) => alteration.customCoordinates)"
-              class="max-h-80"
+              fit="contain"
             />
             <div v-for="(alteration, index) in item.alterations" :key="alteration.id" class="px-4">
               <p class="font-semibold">{{ $t("customModel.point", { number: index + 1 }) }}</p>

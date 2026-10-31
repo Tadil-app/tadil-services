@@ -299,6 +299,9 @@ export const en = {
       proceedToPayment: "Proceed to Payment",
       bypassPayment: "Bypass Payment (Testing)",
     },
+    payment: {
+      unavailable: "Card payment is temporarily unavailable. Please try again later.",
+    },
   },
   chat: {
     title: "Order Chat",
