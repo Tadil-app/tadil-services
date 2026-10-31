@@ -267,14 +267,18 @@ async function proceedToPayment() {
   }
 }
 
+const IOS_PAYMENT_RETURN_URL =
+  'https://tadil-mobile-app-production-1db5.up.railway.app/payment-return.html';
+
 function moyasarCallbackUrl(): string {
   const path = '/customer/checkout/verify';
   const origin = window.location.origin;
-  // Moyasar only accepts http(s) callback URLs. iOS Capacitor uses capacitor://.
+  // Moyasar only accepts an http(s) callback. The iPhone app runs on
+  // capacitor://localhost, which the form rejects before it is shown.
   if (/^https?:\/\//i.test(origin)) {
     return `${origin}${path}`;
   }
-  return `https://localhost${path}`;
+  return IOS_PAYMENT_RETURN_URL;
 }
 
 function initMoyasar() {
@@ -289,7 +293,7 @@ function initMoyasar() {
     return;
   }
 
-  const amount = Math.round((createdOrder.value?.totalPrice || 0) * 100);
+  const amount = Math.round(Number(createdOrder.value?.totalPrice || 0) * 100);
   if (amount < 100) {
     console.error('Moyasar amount must be an integer of at least 100 halalas.', {
       totalPrice: createdOrder.value?.totalPrice,

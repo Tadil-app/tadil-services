@@ -12,7 +12,7 @@
     />
     <canvas
       ref="canvasRef"
-      :class="fit === 'contain' ? 'block h-auto w-full max-w-full object-contain' : 'mx-auto max-h-full'"
+      :class="fit === 'contain' ? 'block h-auto w-full max-w-full object-contain' : 'mx-auto max-h-full max-w-full'"
       :style="fit === 'contain' && canvasWidth && canvasHeight ? { aspectRatio: `${canvasWidth} / ${canvasHeight}` } : undefined"
       :width="canvasWidth"
       :height="canvasHeight"
