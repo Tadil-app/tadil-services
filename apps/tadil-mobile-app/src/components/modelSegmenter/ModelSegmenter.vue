@@ -1,6 +1,7 @@
 <template>
   <div
-    class="aspect-3/4 h-full w-full flex items-center justify-center bg-primary/10 overflow-hidden"
+    class="flex w-full items-center justify-center bg-primary/10"
+    :class="fit === 'contain' ? 'h-auto overflow-visible' : 'aspect-3/4 h-full overflow-hidden'"
   >
     <img
       ref="imageRef"
@@ -11,7 +12,8 @@
     />
     <canvas
       ref="canvasRef"
-      class="max-h-full mx-auto"
+      :class="fit === 'contain' ? 'block h-auto w-full max-w-full object-contain' : 'mx-auto max-h-full'"
+      :style="fit === 'contain' && canvasWidth && canvasHeight ? { aspectRatio: `${canvasWidth} / ${canvasHeight}` } : undefined"
       :width="canvasWidth"
       :height="canvasHeight"
       @click="getOriginalImageCoords"
@@ -31,9 +33,11 @@ const props = withDefaults(
     sections: Point[][];
     points?: Point[];
     alt?: string;
+    fit?: 'clip' | 'contain';
   }>(),
   {
     points: () => [],
+    fit: 'clip',
   }
 );
 
