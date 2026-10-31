@@ -41,6 +41,8 @@
 	<string>We need access to your photos to upload clothes products images and share photos in chat.</string>
 	<key>NSMicrophoneUsageDescription</key>
 	<string>We need microphone access for voice messages in chat.</string>
+	<key>ITSAppUsesNonExemptEncryption</key>
+	<false/>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>UILaunchStoryboardName</key>
