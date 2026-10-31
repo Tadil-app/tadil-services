@@ -206,9 +206,53 @@ export const useCartStore = defineStore("cart", () => {
     return data;
   }
 
-  async function confirmPayment(orderId: string, paymentId: string) {
-    await apiClient.customerControllerConfirmPayment(orderId, { paymentId });
+  async function clearPendingOrder() {
+    await Preferences.remove({ key: "pendingOrderId" });
+    await Preferences.remove({ key: "pendingOrderReference" });
+  }
+
+  /**
+   * Confirms a paid Moyasar payment. The order id is optional because the
+   * payment carries it in its metadata; this lets a device that lost its
+   * pending order confirm what it paid for.
+   */
+  async function confirmPayment(paymentId: string, orderId?: string) {
+    const { data } = await apiClient.customerControllerConfirmPayment({ paymentId, orderId });
+    await clearPendingOrder();
     await clearCart();
+    return data;
+  }
+
+  /**
+   * Settles the checkout we lost track of. The server asks Moyasar: a paid
+   * payment confirms the order (and we clear the cart), an unpaid order is
+   * dropped, and an order whose payment is still processing is kept. On a
+   * network/provider error we keep the local state so the next attempt can
+   * retry.
+   */
+  async function reconcilePendingOrder(): Promise<
+    "confirmed" | "abandoned" | "pending" | "missing" | "none" | "error"
+  > {
+    const { value: orderId } = await Preferences.get({ key: "pendingOrderId" });
+    if (!orderId) return "none";
+
+    let status: "confirmed" | "abandoned" | "pending" | "missing";
+    try {
+      ({ data: { status } } = await apiClient.customerControllerReconcilePendingOrder(orderId));
+    } catch (error) {
+      console.error("Failed to reconcile pending order", error);
+      return "error";
+    }
+
+    // Keep the local id while the payment is still processing so a later
+    // reconcile can finish the job.
+    if (status !== "pending") {
+      await clearPendingOrder();
+    }
+    if (status === "confirmed") {
+      await clearCart();
+    }
+    return status;
   }
 
   return {
@@ -223,5 +267,6 @@ export const useCartStore = defineStore("cart", () => {
     clearCart,
     createOrder,
     confirmPayment,
+    reconcilePendingOrder,
   };
 });

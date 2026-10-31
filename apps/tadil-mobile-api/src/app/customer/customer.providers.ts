@@ -19,8 +19,10 @@ import { InformationsRepository } from '@tadil-informations';
 import { UsersRepository } from '@tadil-users';
 import {
   OrdersRepository,
+  PaymentGateway,
   CreateOrderUseCase,
   ConfirmPaymentUseCase,
+  ReconcilePendingOrderUseCase,
 } from '@tadil-orders';
 import {
   WalletRepository,
@@ -103,13 +105,24 @@ const CreateOrderUseCaseProvider: Provider<CreateOrderUseCase> = {
   scope: Scope.REQUEST,
 };
 
+const PaymentGatewayProvider: Provider<PaymentGateway> = {
+  provide: 'PaymentGateway',
+  useFactory: () => new MoyasarPaymentGateway(process.env.MOYASAR_SECRET_KEY || ''),
+};
+
+const ReconcilePendingOrderUseCaseProvider: Provider<ReconcilePendingOrderUseCase> = {
+  provide: ReconcilePendingOrderUseCase,
+  useFactory: (repository: OrdersRepository, paymentGateway: PaymentGateway) =>
+    new ReconcilePendingOrderUseCase(repository, paymentGateway),
+  inject: ['OrdersRepository', 'PaymentGateway'],
+  scope: Scope.REQUEST,
+};
+
 const ConfirmPaymentUseCaseProvider: Provider<ConfirmPaymentUseCase> = {
   provide: ConfirmPaymentUseCase,
-  useFactory: (repository: OrdersRepository) => {
-    const paymentGateway = new MoyasarPaymentGateway(process.env.MOYASAR_SECRET_KEY || '');
-    return new ConfirmPaymentUseCase(repository, paymentGateway);
-  },
-  inject: ['OrdersRepository'],
+  useFactory: (repository: OrdersRepository, paymentGateway: PaymentGateway) =>
+    new ConfirmPaymentUseCase(repository, paymentGateway),
+  inject: ['OrdersRepository', 'PaymentGateway'],
   scope: Scope.REQUEST,
 };
 
@@ -123,6 +136,8 @@ export {
   WalletRepositoryProvider,
   ConfirmReceiptUseCaseProvider,
   CreateOrderUseCaseProvider,
+  PaymentGatewayProvider,
+  ReconcilePendingOrderUseCaseProvider,
   ConfirmPaymentUseCaseProvider,
   CreditOrderEarningUseCaseProvider,
 };

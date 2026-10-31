@@ -1,6 +1,10 @@
 <template>
   <IonPage>
-    <SecondaryHeader :title="stepTitle" default-href="/customer/cart" />
+    <SecondaryHeader
+      :title="stepTitle"
+      default-href="/customer/cart"
+      force-default-href
+    />
     <IonContent class="ion-padding">
       <EmptyState
         v-if="cartStore.itemsCount === 0"
@@ -153,10 +157,10 @@ import {
   onIonViewWillEnter,
 } from '@ionic/vue';
 import { SecondaryHeader, EmptyState } from '@/components';
-import { ref, computed, onMounted } from 'vue';
+import { ref, computed, onMounted, nextTick } from 'vue';
 import { useAuthStore, useCartStore } from '@/stores';
 import { useLocalizedAddress } from '@/composables';
-import { useRouter } from 'vue-router';
+import { onBeforeRouteLeave, useRouter } from 'vue-router';
 import { Check, MapPin, ShoppingBag } from 'lucide-vue-next';
 import { isAppleReviewPhone } from '@/utils/appleReviewPhones';
 import { DisplayOrderDTO } from '@/integration/dtos';
@@ -177,13 +181,29 @@ const isProcessing = ref(false);
 const createdOrder = ref<DisplayOrderDTO | null>(null);
 const paymentError = ref('');
 
+onBeforeRouteLeave(async (to) => {
+  // The payment callback lands on the verify page; it owns the order then.
+  if (to.name === 'customer-checkout-verify') return;
+  await cartStore.reconcilePendingOrder();
+});
+
 onIonViewWillEnter(async () => {
+  // Ionic caches this page. A return from a failed or abandoned payment must
+  // start again from the address, not on a Moyasar form for a dropped order.
+  resetCheckout();
+
   const { value: shouldRedirect } = await Preferences.get({ key: 'redirectToOrders' });
   if (shouldRedirect === 'true') {
     await Preferences.remove({ key: 'redirectToOrders' });
     router.push('/customer/orders');
   }
 });
+
+function resetCheckout() {
+  step.value = 'address';
+  createdOrder.value = null;
+  paymentError.value = '';
+}
 
 const paysCashOnDelivery = computed(() =>
   isAppleReviewPhone(authStore.userInfo?.phone)
@@ -209,6 +229,17 @@ async function proceedToPayment() {
 
   isProcessing.value = true;
   try {
+    // Settle any earlier checkout first so it is not left orphaned. If it
+    // turns out to have been paid, the cart is already cleared: show it.
+    const previous = await cartStore.reconcilePendingOrder();
+    if (previous === 'confirmed') {
+      router.replace('/customer/orders');
+      return;
+    }
+    if (previous === 'error') {
+      throw new Error('Could not settle the previous checkout');
+    }
+
     const order = await cartStore.createOrder(selectedAddressId.value);
     createdOrder.value = order;
 
@@ -221,6 +252,7 @@ async function proceedToPayment() {
     await Preferences.set({ key: 'pendingOrderId', value: order.id });
     await Preferences.set({ key: 'pendingOrderReference', value: order.reference });
     step.value = 'payment';
+    await nextTick();
     initMoyasar();
   } catch (error) {
     console.error('Failed to create order', error);
@@ -235,7 +267,61 @@ async function proceedToPayment() {
   }
 }
 
+function moyasarCallbackUrl(): string {
+  const path = '/customer/checkout/verify';
+  const origin = window.location.origin;
+  // Moyasar only accepts http(s) callback URLs. iOS Capacitor uses capacitor://.
+  if (/^https?:\/\//i.test(origin)) {
+    return `${origin}${path}`;
+  }
+  return `https://localhost${path}`;
+}
+
 function initMoyasar() {
+  const publishableKey = import.meta.env.VITE_MOYASAR_PUBLISHABLE_KEY as
+    | string
+    | undefined;
+  if (!publishableKey || !/^pk_(test|live)_/.test(publishableKey)) {
+    console.error(
+      'VITE_MOYASAR_PUBLISHABLE_KEY is missing or invalid. Moyasar cannot render the payment form.'
+    );
+    paymentError.value = t('checkout.payment.unavailable');
+    return;
+  }
+
+  const amount = Math.round((createdOrder.value?.totalPrice || 0) * 100);
+  if (amount < 100) {
+    console.error('Moyasar amount must be an integer of at least 100 halalas.', {
+      totalPrice: createdOrder.value?.totalPrice,
+      amount,
+    });
+    paymentError.value = t('checkout.payment.unavailable');
+    return;
+  }
+
+  const orderId = createdOrder.value?.id;
+  const renderForm = () => {
+    // @ts-ignore
+    Moyasar.init({
+      element: '.mysr-form',
+      amount,
+      currency: 'SAR',
+      description: `Order #${createdOrder.value?.reference} for Tadil`,
+      publishable_api_key: publishableKey,
+      callback_url: moyasarCallbackUrl(),
+      // Lets the server find this order's payment without the callback.
+      metadata: { order_id: orderId },
+      supported_networks: ['visa', 'mastercard', 'mada'],
+      methods: ['creditcard']
+    });
+  };
+
+  // @ts-ignore
+  if (typeof window.Moyasar !== 'undefined') {
+    renderForm();
+    return;
+  }
+
   const link = document.createElement('link');
   link.rel = 'stylesheet';
   link.href = 'https://cdn.jsdelivr.net/npm/moyasar-payment-form@2.2.9/dist/moyasar.css';
@@ -244,19 +330,7 @@ function initMoyasar() {
   const script = document.createElement('script');
   script.src = 'https://cdn.jsdelivr.net/npm/moyasar-payment-form@2.2.9/dist/moyasar.umd.min.js';
   script.async = true;
-  script.onload = () => {
-    // @ts-ignore
-    Moyasar.init({
-      element: '.mysr-form',
-      amount: (createdOrder.value?.totalPrice || 0) * 100, // Halalas
-      currency: 'SAR',
-      description: `Order #${createdOrder.value?.reference} for Tadil`,
-      publishable_api_key: import.meta.env.VITE_MOYASAR_PUBLISHABLE_KEY,
-      callback_url: window.location.origin + '/customer/checkout/verify',
-      supported_networks: ['visa', 'mastercard', 'mada'],
-      methods: ['creditcard']
-    });
-  };
+  script.onload = renderForm;
   document.body.appendChild(script);
 }
 

@@ -299,6 +299,9 @@ export const ur = {
       proceedToPayment: "ادائیگی کے لیے آگے بڑھیں",
       bypassPayment: "ادائیگی نظر انداز کریں (ٹیسٹنگ)",
     },
+    payment: {
+      unavailable: "کارڈ سے ادائیگی عارضی طور پر دستیاب نہیں۔ براہ کرم بعد میں کوشش کریں۔",
+    },
   },
   chat: {
     title: "آرڈر چیٹ",

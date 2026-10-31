@@ -67,35 +67,28 @@ onMounted(async () => {
   const status = route.query.status as string;
   const message = route.query.message as string;
 
-  if (!paymentId || !status) {
-    errorMessage.value = t('checkout.error.invalidCallback', 'Invalid payment callback received.');
+  if (!paymentId || !status || status !== 'paid') {
+    // Not paid as far as the callback says. Let the server settle the order:
+    // it checks Moyasar before dropping anything.
+    await cartStore.reconcilePendingOrder();
+    errorMessage.value = !paymentId || !status
+      ? t('checkout.error.invalidCallback', 'Invalid payment callback received.')
+      : message || t('checkout.error.paymentFailed', 'Payment failed.');
     isLoading.value = false;
     return;
   }
 
-  if (status !== 'paid') {
-    errorMessage.value = message || t('checkout.error.paymentFailed', 'Payment failed.');
-    isLoading.value = false;
-    return;
-  }
-
+  // The payment itself carries the order id, so confirmation works even if
+  // local state was lost between the Moyasar page and this callback.
   const { value: pendingOrderId } = await Preferences.get({ key: 'pendingOrderId' });
 
-  if (!pendingOrderId) {
-    // If order is already processed, safely navigate away
-    await goToOrders();
-    return;
-  }
-
-  orderReference.value = (await Preferences.get({ key: 'pendingOrderReference' })).value || '';
-
   try {
-    await cartStore.confirmPayment(pendingOrderId, paymentId);
+    const result = await cartStore.confirmPayment(paymentId, pendingOrderId || undefined);
+    orderReference.value = result.reference;
     isSuccess.value = true;
-    await Preferences.remove({ key: 'pendingOrderId' });
-    await Preferences.remove({ key: 'pendingOrderReference' });
-    await cartStore.clearCart();
   } catch (error) {
+    // Keep pendingOrderId: the next reconcile (app start, checkout) will
+    // find the paid payment on Moyasar and confirm the order.
     console.error('Payment confirmation failed:', error);
     errorMessage.value = t('checkout.error.confirmationFailed', 'Payment was successful, but we failed to update your order. Please contact support.');
   } finally {

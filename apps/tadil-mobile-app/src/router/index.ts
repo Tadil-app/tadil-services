@@ -232,6 +232,11 @@ router.beforeEach(async (to, from, next) => {
 
   // 2. Handle guest-only routes (like /login)
   if (to.meta.guestOnly && isAuthenticated) {
+    // Back from checkout lands on /login?redirect=... after signup. Sending
+    // that navigation to the dashboard makes the cart link look broken.
+    if (from.name === "customer-checkout") {
+      return next({ name: "customer-cart" });
+    }
     if (userRole === "tailor") return next({ name: "tailor-dashboard" });
     if (userRole === "courier") return next({ name: "courier-dashboard" });
     return next({ name: "customer-dashboard" });

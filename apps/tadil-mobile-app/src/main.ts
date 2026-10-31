@@ -58,7 +58,7 @@ app.use(router);
 app.use(pinia);
 
 const authStore = useAuthStore();
-authStore.initAuth();
+const authReady = authStore.initAuth();
 
 const languageStore = useLanguageStore();
 languageStore.initLanguage();
@@ -79,6 +79,12 @@ async function openDeepLink(url: string) {
 CapacitorApp.addListener("appUrlOpen", ({ url }) => void openDeepLink(url));
 
 router.isReady().then(async () => {
+  await authReady;
+  // Settle a checkout that never reached the payment callback: the server
+  // confirms it if Moyasar holds a paid payment, otherwise drops it.
+  if (authStore.token && router.currentRoute.value.name !== "customer-checkout-verify") {
+    await cartStore.reconcilePendingOrder();
+  }
   app.mount("#app");
   const launchUrl = await CapacitorApp.getLaunchUrl();
   if (launchUrl) await openDeepLink(launchUrl.url);

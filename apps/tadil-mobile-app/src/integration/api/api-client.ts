@@ -16,6 +16,8 @@ import {
   DisplayOrderDTO,
   CreateOrderDto,
   ConfirmPaymentDto,
+  ConfirmPaymentResultDto,
+  ReconcilePendingOrderResultDto,
   RequestPayoutDto,
   LoginDto,
   CompleteProfileDto,
@@ -277,24 +279,44 @@ export class Api<
       }),
 
     /**
-     * No description
+     * Settle a pending order: confirm it if Moyasar holds a paid payment, otherwise drop it.
+     *
+     * @tags Customer
+     * @name CustomerControllerReconcilePendingOrder
+     * @request POST:/api/customer/orders/{orderId}/reconcile
+     * @secure
+     */
+    customerControllerReconcilePendingOrder: (
+      orderId: string,
+      params: RequestParams = {},
+    ) =>
+      this.request<ReconcilePendingOrderResultDto, any>({
+        path: `/api/customer/orders/${orderId}/reconcile`,
+        method: "POST",
+        secure: true,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * Confirm a Moyasar payment and place its order.
      *
      * @tags Customer
      * @name CustomerControllerConfirmPayment
-     * @request POST:/api/customer/orders/{orderId}/payment
+     * @request POST:/api/customer/payments/confirm
      * @secure
      */
     customerControllerConfirmPayment: (
-      orderId: string,
       data: ConfirmPaymentDto,
       params: RequestParams = {},
     ) =>
-      this.request<void, any>({
-        path: `/api/customer/orders/${orderId}/payment`,
+      this.request<ConfirmPaymentResultDto, any>({
+        path: `/api/customer/payments/confirm`,
         method: "POST",
         body: data,
         secure: true,
         type: ContentType.Json,
+        format: "json",
         ...params,
       }),
 

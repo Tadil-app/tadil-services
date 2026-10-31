@@ -55,7 +55,9 @@ export class OrdersController {
 
     const where = {
       AND: [
-        status ? { status: status as any } : {},
+        // Unfiltered list hides unpaid checkouts. They stay PENDING until
+        // payment is confirmed, and staff can still filter on that status.
+        status ? { status: status as any } : { status: { not: 'pending' } },
         tailorId ? { assignedTailorId: tailorId } : {},
         courierId ? {
           OR: [
