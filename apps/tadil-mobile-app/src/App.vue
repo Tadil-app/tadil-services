@@ -7,8 +7,12 @@
 <script setup lang="ts">
 import { IonApp, IonRouterOutlet } from "@ionic/vue";
 import { onMounted } from "vue";
+import { useLanguageStore } from "@/stores";
+
+const languageStore = useLanguageStore();
 
 onMounted(() => {
+  languageStore.applyDomAttributes(languageStore.currentLocale);
   setTimeout(() => {
     const webSplash = document.getElementById("custom-splash");
     if (webSplash) {

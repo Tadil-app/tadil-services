@@ -1,5 +1,6 @@
 import UIKit
 import Capacitor
+import WebKit
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -46,4 +47,27 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         return ApplicationDelegateProxy.shared.application(application, continue: userActivity, restorationHandler: restorationHandler)
     }
 
+}
+
+// iOS mirrors the WKWebView when it resolves an RTL layout direction (Arabic
+// phone or page). The HTML `dir` attribute already handles direction, so the
+// webview itself must stay left-to-right. Native UI keeps the system direction.
+class TadilBridgeViewController: CAPBridgeViewController {
+    override func webView(with frame: CGRect, configuration: WKWebViewConfiguration) -> WKWebView {
+        let created = super.webView(with: frame, configuration: configuration)
+        created.semanticContentAttribute = .forceLeftToRight
+        created.scrollView.semanticContentAttribute = .forceLeftToRight
+        return created
+    }
+
+    override func capacitorDidLoad() {
+        super.capacitorDidLoad()
+        pinWebViewToLeftToRight()
+    }
+
+    private func pinWebViewToLeftToRight() {
+        view.semanticContentAttribute = .forceLeftToRight
+        webView?.semanticContentAttribute = .forceLeftToRight
+        webView?.scrollView.semanticContentAttribute = .forceLeftToRight
+    }
 }

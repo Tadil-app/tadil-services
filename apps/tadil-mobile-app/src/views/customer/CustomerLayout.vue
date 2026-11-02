@@ -2,7 +2,7 @@
   <IonPage>
     <IonTabs>
       <IonRouterOutlet />
-      <IonTabBar v-show="isTabsVisible" slot="bottom" class="flex" dir="rtl">
+      <IonTabBar v-show="isTabsVisible" slot="bottom" class="flex" :dir="languageStore.currentLocale.direction">
         <IonTabButton tab="dashboard" href="/customer/dashboard" :class="{ 'opacity-50': !authStore.token }">
           <House />
           <IonLabel class="text-xs">
@@ -34,10 +34,11 @@ import { IonRouterOutlet, IonTabBar, IonTabButton, IonTabs, IonLabel, IonPage, I
 import { House, PackagePlus, ShoppingBag } from "lucide-vue-next";
 import { computed } from "vue";
 import { useRoute } from "vue-router";
-import { useCartStore, useAuthStore } from "@/stores";
+import { useCartStore, useAuthStore, useLanguageStore } from "@/stores";
 
 const cartStore = useCartStore();
 const authStore = useAuthStore();
+const languageStore = useLanguageStore();
 const route = useRoute();
 const isTabsVisible = computed(() => {
   return route.name !== "customer-new-order-predefined-model-gallery" && route.name !== "customer-new-order-custom-upload";

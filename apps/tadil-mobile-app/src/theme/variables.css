@@ -268,6 +268,13 @@ ion-tab-bar {
   padding-bottom: var(--ion-safe-area-bottom);
 }
 
+/* iOS reverses the glyphs of a label that inherits RTL inside the tab flex row
+   ("Home" paints as "emoh"). The bar's dir still controls button order. */
+ion-tab-button ion-label {
+  unicode-bidi: isolate;
+  direction: inherit;
+}
+
 ion-footer {
   background: var(--ion-background-color);
   border-top: 1px solid var(--ion-border-color);
