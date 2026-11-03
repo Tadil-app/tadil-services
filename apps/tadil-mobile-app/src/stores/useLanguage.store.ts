@@ -50,10 +50,15 @@ export const useLanguageStore = defineStore("language", () => {
   function applyDomAttributes(locale: Locale) {
     // Set the property, not only the attribute: iOS WebKit ignores a late
     // setAttribute when deciding text direction inside flex and shadow DOM.
+    //
+    // Direction is declared on <html> and <body> only, and nowhere else.
+    // On iPhone every element carrying an explicit dir="rtl" is painted
+    // mirrored relative to its parent, so a third dir (ion-app, tab bar,
+    // swiper, ...) flips the subtree back. Keep exactly these two and let
+    // everything below inherit.
     document.documentElement.lang = locale.key;
     document.documentElement.dir = locale.direction;
     if (document.body) document.body.dir = locale.direction;
-    document.querySelector("ion-app")?.setAttribute("dir", locale.direction);
     try {
       localStorage.setItem("locale", locale.key);
     } catch {
