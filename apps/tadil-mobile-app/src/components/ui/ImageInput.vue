@@ -51,13 +51,15 @@ import {
 import { ref } from "vue";
 import { IonButton, IonModal } from "@ionic/vue";
 import { CapacitorException } from "@capacitor/core";
+import { unlockIonicTabBar } from "@/utils";
 
 const imageSourceModal = ref();
 
 const imageUrl = defineModel<string>();
 
 async function uploadImage(source: CameraSource) {
-  if (imageSourceModal.value) imageSourceModal.value.$el.dismiss();
+  const modalEl = imageSourceModal.value?.$el;
+  if (modalEl) await modalEl.dismiss();
   try {
     const { webPath } = await Camera.getPhoto({
       resultType: CameraResultType.Uri,
@@ -77,6 +79,9 @@ async function uploadImage(source: CameraSource) {
     )
       return;
     throw error.message;
+  } finally {
+    // iPhone camera/photos overlay can leave ion-tab-bar in keyboard-hidden state.
+    unlockIonicTabBar();
   }
 }
 </script>

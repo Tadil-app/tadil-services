@@ -134,6 +134,7 @@ import {
   IonModal,
   IonPage,
   onIonViewWillEnter,
+  useIonRouter,
 } from "@ionic/vue";
 import { computed, ref } from "vue";
 import { ModelCategory } from "@/integration/dtos";
@@ -225,6 +226,7 @@ function onSwiperActiveSlideChange(swiper: SwiperType) {
 }
 
 const router = useRouter();
+const ionRouter = useIonRouter();
 
 function handleEditAlteration(
   imageId: string,
@@ -294,20 +296,23 @@ async function handleAddToCart() {
       {
         text: t("common.alerts.itemAddedOptions.continueShopping"),
         cssClass: "btn-cancel",
-        handler: () => {
-          router.replace({ name: "customer-new-order" });
-        },
+        role: "continue-shopping",
       },
       {
         text: t("common.alerts.itemAddedOptions.viewCart"),
         cssClass: "btn-add",
-        handler: () => {
-          router.replace({ name: "customer-cart" });
-        },
+        role: "view-cart",
       },
     ],
   });
   await alert.present();
+  const { role } = await alert.onDidDismiss();
+
+  if (role === "view-cart") {
+    ionRouter.navigate("/customer/cart", "root", "replace");
+    return;
+  }
+  ionRouter.navigate("/customer/new-order/category-selection", "root", "replace");
 }
 
 onBeforeRouteLeave(async () => {
