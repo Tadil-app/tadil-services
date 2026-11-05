@@ -32,15 +32,58 @@
 <script setup lang="ts">
 import { IonRouterOutlet, IonTabBar, IonTabButton, IonTabs, IonLabel, IonPage, IonBadge } from "@ionic/vue";
 import { House, PackagePlus, ShoppingBag } from "lucide-vue-next";
-import { computed } from "vue";
+import { computed, nextTick, onMounted, onUnmounted, watch } from "vue";
 import { useRoute } from "vue-router";
 import { useCartStore, useAuthStore } from "@/stores";
+import { unlockIonicTabBar } from "@/utils";
+
+const HIDDEN_TAB_ROUTES = new Set([
+  "customer-new-order-predefined-model-gallery",
+  "customer-new-order-custom-upload",
+]);
 
 const cartStore = useCartStore();
 const authStore = useAuthStore();
 const route = useRoute();
-const isTabsVisible = computed(() => {
-  return route.name !== "customer-new-order-predefined-model-gallery" && route.name !== "customer-new-order-custom-upload";
+const isTabsVisible = computed(() => !HIDDEN_TAB_ROUTES.has(String(route.name)));
+
+let revealTimer: ReturnType<typeof setTimeout> | undefined;
+let visibilityTimer: ReturnType<typeof setTimeout> | undefined;
+
+function scheduleUnlock() {
+  window.clearTimeout(revealTimer);
+  revealTimer = window.setTimeout(() => {
+    if (isTabsVisible.value) unlockIonicTabBar();
+  }, 80);
+}
+
+async function revealTabBar() {
+  if (!isTabsVisible.value) return;
+  await nextTick();
+  unlockIonicTabBar();
+  scheduleUnlock();
+}
+
+watch(isTabsVisible, (visible) => {
+  if (visible) void revealTabBar();
+});
+
+function onDocumentVisible() {
+  if (document.visibilityState !== "visible") return;
+  window.clearTimeout(visibilityTimer);
+  visibilityTimer = window.setTimeout(() => {
+    if (isTabsVisible.value) unlockIonicTabBar();
+  }, 80);
+}
+
+onMounted(() => {
+  document.addEventListener("visibilitychange", onDocumentVisible);
+});
+
+onUnmounted(() => {
+  document.removeEventListener("visibilitychange", onDocumentVisible);
+  window.clearTimeout(revealTimer);
+  window.clearTimeout(visibilityTimer);
 });
 </script>
 

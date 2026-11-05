@@ -136,6 +136,7 @@ import {
   IonTitle,
   IonSpinner,
   alertController,
+  useIonRouter,
 } from "@ionic/vue";
 import { onBeforeMount, onBeforeUnmount, ref } from "vue";
 import { ModelCategory, Point } from "@/integration/dtos";
@@ -178,6 +179,7 @@ const {
 const cartStore = useCartStore();
 const { showToast } = useToast();
 const router = useRouter();
+const ionRouter = useIonRouter();
 const { t } = useI18n();
 
 const isModalOpen = ref(false);
@@ -374,20 +376,26 @@ async function handleAddToCart() {
       {
         text: t("common.alerts.itemAddedOptions.continueShopping"),
         cssClass: "btn-cancel",
-        handler: () => {
-          router.replace({ name: "customer-new-order" });
-        },
+        role: "continue-shopping",
       },
       {
         text: t("common.alerts.itemAddedOptions.viewCart"),
         cssClass: "btn-add",
-        handler: () => {
-          router.replace({ name: "customer-cart" });
-        },
+        role: "view-cart",
       },
     ],
   });
   await alert.present();
+  const { role } = await alert.onDidDismiss();
+
+  // Wait for the overlay to finish: navigating from the button handler
+  // destroys this page while the alert is still dismissing, which on iPhone
+  // leaves the tab bar hidden.
+  if (role === "view-cart") {
+    ionRouter.navigate("/customer/cart", "root", "replace");
+    return;
+  }
+  ionRouter.navigate("/customer/new-order/category-selection", "root", "replace");
 }
 
 onBeforeRouteLeave(async () => {
