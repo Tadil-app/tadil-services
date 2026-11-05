@@ -12,8 +12,7 @@
         >
           <IonIcon
             slot="icon-only"
-            class="force-back-icon"
-            :icon="chevronBack"
+            :icon="isRtl ? chevronForward : chevronBack"
             aria-hidden="true"
           />
         </IonButton>
@@ -49,9 +48,11 @@ import {
   IonIcon,
   useIonRouter,
 } from "@ionic/vue";
-import { chevronBack } from "ionicons/icons";
+import { chevronBack, chevronForward } from "ionicons/icons";
+import { computed } from "vue";
 import TranslatedName from "./TranslatedName.vue";
 import type { TranslatedNameObject } from "@/types/cart.types";
+import { useLanguageStore } from "@/stores";
 
 const props = withDefaults(
   defineProps<{
@@ -71,6 +72,10 @@ const props = withDefaults(
 );
 
 const ionRouter = useIonRouter();
+const languageStore = useLanguageStore();
+// ion-icon only mirrors named chevrons. This icon is an SVG object, so the
+// direction has to be chosen here or the arrow keeps pointing left in Arabic.
+const isRtl = computed(() => languageStore.currentLocale.direction === "rtl");
 
 function goToDefaultHref() {
   ionRouter.navigate(props.defaultHref, "back", "pop");
@@ -95,9 +100,5 @@ body.dark ion-toolbar {
 .force-back {
   --padding-start: 8px;
   --padding-end: 8px;
-}
-
-:global([dir="rtl"]) .force-back-icon {
-  transform: scaleX(-1);
 }
 </style>
