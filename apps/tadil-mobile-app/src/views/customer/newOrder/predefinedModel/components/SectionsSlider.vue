@@ -13,7 +13,6 @@
       <ChevronRight />
     </div>
     <Swiper
-      :dir="direction"
       class="w-full px-2"
       slidesPerView="auto"
       :spaceBetween="8"
@@ -47,7 +46,6 @@ import { DisplaySectionDTO } from "@/integration/dtos";
 import SectionsSliderItem from "./SectionsSliderItem.vue";
 
 defineProps<{
-  direction: "ltr" | "rtl";
   sections: DisplaySectionDTO[];
 }>();
 

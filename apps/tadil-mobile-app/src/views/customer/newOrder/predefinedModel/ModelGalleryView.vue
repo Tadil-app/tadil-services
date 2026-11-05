@@ -7,12 +7,8 @@
         :showBackButton="true"
       />
       <IonContent class="ion-padding space-y-2">
-        <SectionsSlider
-          :direction="currentLocale.direction"
-          :sections="selectedImage!.sections"
-        />
+        <SectionsSlider :sections="selectedImage!.sections" />
         <Swiper
-          :dir="currentLocale.direction"
           :style="{
             '--swiper-pagination-color': '#d6613d',
           }"
@@ -36,7 +32,6 @@
           </SwiperSlide>
         </Swiper>
         <Swiper
-          :dir="currentLocale.direction"
           @swiper="setThumbsSwiper"
           :spaceBetween="12"
           :slidesPerView="3"
@@ -157,7 +152,7 @@ import "swiper/css/free-mode";
 import "swiper/css/pagination";
 import "swiper/css/thumbs";
 import { onBeforeRouteLeave, useRouter } from "vue-router";
-import { useCartStore, useLanguageStore } from "@/stores";
+import { useCartStore } from "@/stores";
 import SectionsSlider from "./components/SectionsSlider.vue";
 import { CircleX } from "lucide-vue-next";
 import AlterationForm from "../../components/AlterationForm.vue";
@@ -168,7 +163,6 @@ import { useToast } from "@/composables";
 import { useI18n } from "vue-i18n";
 import { SelectedAlteration, SelectedSection } from "@/types/cart.types";
 
-const { currentLocale } = useLanguageStore();
 const { addItem } = useCartStore();
 const { showToast } = useToast();
 const { t } = useI18n();

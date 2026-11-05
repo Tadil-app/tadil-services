@@ -2,7 +2,7 @@
   <IonPage>
     <IonTabs>
       <IonRouterOutlet />
-      <IonTabBar slot="bottom" class="flex" :dir="languageStore.currentLocale.direction">
+      <IonTabBar slot="bottom" class="flex">
         <IonTabButton tab="dashboard" href="/courier/dashboard">
           <House />
           <IonLabel>{{ $t("tailor.navBar.dashboard") }}</IonLabel>
@@ -32,7 +32,4 @@ import {
   IonTabs,
 } from "@ionic/vue";
 import { PackageSearch, House, Wallet } from "lucide-vue-next";
-import { useLanguageStore } from "@/stores";
-
-const languageStore = useLanguageStore();
 </script>

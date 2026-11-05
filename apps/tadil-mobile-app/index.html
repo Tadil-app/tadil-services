@@ -181,8 +181,11 @@
       }
     }
   </style>
-  <body>
-    <div id="custom-splash" class="overlay-container" dir="ltr">
+  <body dir="rtl">
+    <script>
+      document.body.dir = document.documentElement.dir || "rtl";
+    </script>
+    <div id="custom-splash" class="overlay-container">
       <div class="text-center">
         <div class="logo-wrapper">
           <div class="relative-container">
