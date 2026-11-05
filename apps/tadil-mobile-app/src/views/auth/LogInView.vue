@@ -26,6 +26,9 @@
               <IonSpinner v-if="isLoading" name="crescent" />
               <span v-else>{{ $t("login.form.buttons.login") }}</span>
             </IonButton>
+            <IonButton expand="block" fill="clear" class="back-to-app" @click="returnToApp">
+              {{ $t("login.form.buttons.backToApp") }}
+            </IonButton>
             <p class="login-agreement">{{ $t("login.form.agreement") }}</p>
           </div>
 
@@ -45,6 +48,9 @@
               <IonButton expand="block" fill="clear" class="w-full" @click="loginStep = 'phone'">
                 {{ $t("login.form.buttons.back") }}
               </IonButton>
+              <IonButton expand="block" fill="clear" class="back-to-app w-full" @click="returnToApp">
+                {{ $t("login.form.buttons.backToApp") }}
+              </IonButton>
             </div>
           </div>
 
@@ -55,6 +61,9 @@
             <IonButton expand="block" fill="clear" @click="loginStep = 'phone'">
               {{ $t("login.form.buttons.back") }}
             </IonButton>
+            <IonButton expand="block" fill="clear" class="back-to-app" @click="returnToApp">
+              {{ $t("login.form.buttons.backToApp") }}
+            </IonButton>
           </div>
 
           <div v-if="loginStep === 'rejected'" class="px-10 text-center space-y-5">
@@ -62,6 +71,9 @@
             <p>{{ statusMessage || $t("login.form.status.rejected") }}</p>
             <IonButton expand="block" fill="clear" @click="loginStep = 'phone'">
               {{ $t("login.form.buttons.back") }}
+            </IonButton>
+            <IonButton expand="block" fill="clear" class="back-to-app" @click="returnToApp">
+              {{ $t("login.form.buttons.backToApp") }}
             </IonButton>
           </div>
         </IonCard>
@@ -72,7 +84,7 @@
 
 <script setup lang="ts">
 import { useAuthStore } from "@/stores";
-import { IonButton, IonCard, IonContent, IonInput, IonPage, IonSpinner, IonIcon, onIonViewWillEnter } from "@ionic/vue";
+import { IonButton, IonCard, IonContent, IonInput, IonPage, IonSpinner, IonIcon, onIonViewWillEnter, useIonRouter } from "@ionic/vue";
 import { callOutline, timeOutline, closeCircleOutline } from "ionicons/icons";
 import { ref } from "vue";
 import { useI18n } from "vue-i18n";
@@ -82,6 +94,7 @@ const { t } = useI18n();
 const authStore = useAuthStore();
 const router = useRouter();
 const route = useRoute();
+const ionRouter = useIonRouter();
 
 const loginStep = ref<"phone" | "signup" | "pending" | "rejected">("phone");
 const isLoading = ref(false);
@@ -169,6 +182,12 @@ async function onCompleteProfile() {
   } finally {
     isLoading.value = false;
   }
+}
+
+function returnToApp() {
+  // Root replace drops /login from the stack. A plain back navigation from
+  // here often returns to a protected page, which the guard sends to login.
+  ionRouter.navigate("/customer/new-order/category-selection", "root", "replace");
 }
 
 function handleNavigation(role?: string) {
@@ -283,6 +302,15 @@ ion-content {
   margin: 0;
   font-size: 20px;
   font-weight: 700;
+}
+
+.back-to-app {
+  --color: var(--ion-color-secondary);
+  margin: 0;
+  min-height: 44px;
+  font-size: 16px;
+  font-weight: 600;
+  text-transform: none;
 }
 
 .login-agreement {

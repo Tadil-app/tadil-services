@@ -111,6 +111,7 @@ export const en = {
         login: "Login",
         signup: "Sign Up",
         back: "Back",
+        backToApp: "Back to the app",
       },
       agreement: "By continuing, you agree to the Terms and Conditions",
     },
