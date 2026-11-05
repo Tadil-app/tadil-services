@@ -156,7 +156,6 @@ export const bn = {
     preferences: {
       title: "পছন্দসমূহ",
       language: "ভাষা",
-      darkTheme: "ডার্ক থিম",
     },
     identity: {
       title: "পরিচয়",

@@ -155,7 +155,6 @@ export const ur = {
     preferences: {
       title: "ترجیحات",
       language: "زبان",
-      darkTheme: "ڈارک تھیم",
     },
     identity: {
       title: "شناخت",

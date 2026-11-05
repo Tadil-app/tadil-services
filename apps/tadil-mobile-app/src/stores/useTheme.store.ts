@@ -6,23 +6,16 @@ export const useThemeStore = defineStore("theme", () => {
   const currentTheme = ref<string>();
 
   async function initTheme() {
-    const { value } = await Preferences.get({ key: "theme" });
-    currentTheme.value = value || "light";
-    document.body.classList.toggle("dark", currentTheme.value === "dark");
-  }
-
-  async function toggleTheme() {
-    currentTheme.value = currentTheme.value === "dark" ? "light" : "dark";
-    document.body.classList.toggle("dark", currentTheme.value === "dark");
+    currentTheme.value = "light";
+    document.body.classList.remove("dark");
     await Preferences.set({
       key: "theme",
-      value: currentTheme.value,
+      value: "light",
     });
   }
 
   return {
     currentTheme,
     initTheme,
-    toggleTheme,
   };
 });

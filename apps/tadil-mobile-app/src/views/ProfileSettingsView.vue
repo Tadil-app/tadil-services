@@ -84,17 +84,6 @@
                 </IonSelectOption>
               </IonSelect>
             </IonItem>
-            <IonItem button :detail="false">
-              <Moon aria-hidden="true" slot="start" class="me-2" />
-              <IonToggle
-                color="success"
-                label-placement="start"
-                :checked="themeStore.currentTheme === 'dark'"
-                @ionChange="themeStore.toggleTheme"
-              >
-                {{ $t("profileSettings.preferences.darkTheme") }}
-              </IonToggle>
-            </IonItem>
           </IonList>
         </IonCard>
 
@@ -116,7 +105,7 @@
 </template>
 
 <script setup lang="ts">
-import { useAuthStore, useLanguageStore, useThemeStore } from "@/stores";
+import { useAuthStore, useLanguageStore } from "@/stores";
 import { useLocalizedAddress } from "@/composables";
 import {
   IonContent,
@@ -125,7 +114,6 @@ import {
   IonImg,
   IonList,
   IonItem,
-  IonToggle,
   IonSelect,
   IonSelectOption,
   IonLabel,
@@ -138,7 +126,6 @@ import {
   CircleUserRound,
   Languages,
   LogOut,
-  Moon,
   Plus,
   MapPin,
   Settings2,
@@ -152,7 +139,6 @@ import AddressModal from "./profile/components/AddressModal.vue";
 
 const { t } = useI18n();
 const languageStore = useLanguageStore();
-const themeStore = useThemeStore();
 const authStore = useAuthStore();
 
 // Show the stored city/district in the viewer's current language.
