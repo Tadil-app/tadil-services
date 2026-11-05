@@ -157,8 +157,8 @@ import {
   onIonViewWillEnter,
 } from '@ionic/vue';
 import { SecondaryHeader, EmptyState } from '@/components';
-import { ref, computed, onMounted, nextTick } from 'vue';
-import { useAuthStore, useCartStore } from '@/stores';
+import { ref, computed, onMounted, onBeforeUnmount, nextTick } from 'vue';
+import { useAuthStore, useCartStore, useLanguageStore } from '@/stores';
 import { useLocalizedAddress } from '@/composables';
 import { onBeforeRouteLeave, useRouter } from 'vue-router';
 import { Check, MapPin, ShoppingBag } from 'lucide-vue-next';
@@ -170,6 +170,7 @@ import { Preferences } from '@capacitor/preferences';
 const { t } = useI18n();
 const authStore = useAuthStore();
 const cartStore = useCartStore();
+const languageStore = useLanguageStore();
 const router = useRouter();
 
 // Show the stored city/district in the viewer's current language.
@@ -200,6 +201,7 @@ onIonViewWillEnter(async () => {
 });
 
 function resetCheckout() {
+  stopPinningMoyasarDir();
   step.value = 'address';
   createdOrder.value = null;
   paymentError.value = '';
@@ -313,11 +315,15 @@ function initMoyasar() {
       description: `Order #${createdOrder.value?.reference} for Tadil`,
       publishable_api_key: publishableKey,
       callback_url: moyasarCallbackUrl(),
+      // Arabic labels. The form also paints dir="rtl" on its wrapper; that
+      // attribute is stripped just after init so iPhone does not mirror it.
+      language: languageStore.currentLocale.direction === 'rtl' ? 'ar' : 'en',
       // Lets the server find this order's payment without the callback.
       metadata: { order_id: orderId },
       supported_networks: ['visa', 'mastercard', 'mada'],
       methods: ['creditcard']
     });
+    pinMoyasarFormDirection();
   };
 
   // @ts-ignore
@@ -338,6 +344,39 @@ function initMoyasar() {
   document.body.appendChild(script);
 }
 
+let moyasarDirObserver: MutationObserver | null = null;
+
+function stopPinningMoyasarDir() {
+  moyasarDirObserver?.disconnect();
+  moyasarDirObserver = null;
+}
+
+function pinMoyasarFormDirection() {
+  const host = document.querySelector('.mysr-form');
+  if (!host) return;
+
+  const pin = (root: Element) => {
+    if (root.getAttribute('dir') === 'rtl') root.setAttribute('dir', 'ltr');
+    root.querySelectorAll('[dir="rtl"]').forEach((el) => {
+      el.setAttribute('dir', 'ltr');
+    });
+  };
+
+  pin(host);
+  stopPinningMoyasarDir();
+  moyasarDirObserver = new MutationObserver(() => pin(host));
+  moyasarDirObserver.observe(host, {
+    attributes: true,
+    attributeFilter: ['dir'],
+    childList: true,
+    subtree: true,
+  });
+}
+
+onBeforeUnmount(() => {
+  stopPinningMoyasarDir();
+});
+
 onMounted(async () => {
   if (authStore.userAddresses.length === 0) {
     await authStore.fetchAddresses();
@@ -349,5 +388,17 @@ onMounted(async () => {
 /* Custom Moyasar Overrides if needed */
 .mysr-form {
   max-width: 100%;
+}
+
+/* iPhone mirrors any element that carries an explicit dir="rtl". Moyasar
+   sets that on its wrapper when language is Arabic; JS pins the attribute
+   to ltr. CSS direction restores RTL layout without triggering the mirror.
+   Card number / expiry / CVC keep dir="ltr" so digits type left-to-right. */
+html[dir="rtl"] .mysr-form #mysr > div {
+  direction: rtl;
+}
+
+html[dir="rtl"] .mysr-form [dir="ltr"] {
+  direction: ltr;
 }
 </style>
