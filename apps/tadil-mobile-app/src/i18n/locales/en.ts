@@ -155,7 +155,6 @@ export const en = {
     preferences: {
       title: "Preferences",
       language: "Language",
-      darkTheme: "Dark Theme",
     },
     identity: {
       title: "Identity",

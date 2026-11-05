@@ -155,7 +155,6 @@ export const ar = {
     preferences: {
       title: "التفضيلات",
       language: "اللغة",
-      darkTheme: "الوضع الداكن",
     },
     identity: {
       title: "الهوية",

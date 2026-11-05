@@ -155,7 +155,6 @@ export const hi = {
     preferences: {
       title: "पसंद",
       language: "भाषा",
-      darkTheme: "डार्क थीम",
     },
     identity: {
       title: "पहचान",
