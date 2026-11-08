@@ -132,6 +132,27 @@
           </div>
         </div>
 
+        <button
+          v-if="applePayAvailable"
+          type="button"
+          class="apple-pay-button"
+          dir="ltr"
+          :disabled="applePayBusy"
+          :aria-label="$t('checkout.payment.applePay')"
+          @click="payWithApplePay"
+        >
+          {{ $t('checkout.payment.applePay') }}
+        </button>
+
+        <div
+          v-if="applePayAvailable"
+          class="flex items-center gap-3 text-sm text-muted-foreground"
+        >
+          <div class="flex-1 h-px bg-gray-200" />
+          <span>{{ $t('checkout.payment.orCard') }}</span>
+          <div class="flex-1 h-px bg-gray-200" />
+        </div>
+
         <div class="mysr-form"></div>
 
         <div
@@ -166,6 +187,14 @@ import { isAppleReviewPhone } from '@/utils/appleReviewPhones';
 import { DisplayOrderDTO } from '@/integration/dtos';
 import { useI18n } from 'vue-i18n';
 import { Preferences } from '@capacitor/preferences';
+import {
+  ApplePay,
+  APPLE_PAY_MERCHANT_ID,
+  formatApplePayAmount,
+  isApplePayCanceled,
+  isNativeIos,
+  nativeApplePayAvailable,
+} from '@/plugins/applePay';
 
 const { t } = useI18n();
 const authStore = useAuthStore();
@@ -181,6 +210,8 @@ const selectedAddressId = ref<string>('');
 const isProcessing = ref(false);
 const createdOrder = ref<DisplayOrderDTO | null>(null);
 const paymentError = ref('');
+const applePayAvailable = ref(false);
+const applePayBusy = ref(false);
 
 onBeforeRouteLeave(async (to) => {
   // The payment callback lands on the verify page; it owns the order then.
@@ -205,6 +236,8 @@ function resetCheckout() {
   step.value = 'address';
   createdOrder.value = null;
   paymentError.value = '';
+  applePayAvailable.value = false;
+  applePayBusy.value = false;
 }
 
 const paysCashOnDelivery = computed(() =>
@@ -253,6 +286,7 @@ async function proceedToPayment() {
 
     await Preferences.set({ key: 'pendingOrderId', value: order.id });
     await Preferences.set({ key: 'pendingOrderReference', value: order.reference });
+    applePayAvailable.value = await nativeApplePayAvailable();
     step.value = 'payment';
     await nextTick();
     initMoyasar();
@@ -321,7 +355,26 @@ function initMoyasar() {
       // Lets the server find this order's payment without the callback.
       metadata: { order_id: orderId },
       supported_networks: ['visa', 'mastercard', 'mada'],
-      methods: ['creditcard']
+      // Native iOS uses PassKit (WKWebView cannot start an Apple Pay JS session).
+      methods: isNativeIos() ? ['creditcard'] : ['creditcard', 'applepay'],
+      apple_pay: {
+        country: 'SA',
+        label: 'Tadil',
+        validate_merchant_url: 'https://api.moyasar.com/v1/applepay/initiate',
+      },
+      // Cards with 3DS still return via callback_url. Apple Pay is paid in
+      // place, so send those to verify immediately. Confirm is idempotent.
+      on_completed: async (payment: { id?: string; status?: string; message?: string }) => {
+        if (payment?.status !== 'paid' || !payment.id) return;
+        await router.replace({
+          name: 'customer-checkout-verify',
+          query: {
+            id: payment.id,
+            status: payment.status,
+            message: payment.message || 'Succeeded',
+          },
+        });
+      },
     });
     pinMoyasarFormDirection();
   };
@@ -342,6 +395,57 @@ function initMoyasar() {
   script.async = true;
   script.onload = renderForm;
   document.body.appendChild(script);
+}
+
+async function payWithApplePay() {
+  const publishableKey = import.meta.env.VITE_MOYASAR_PUBLISHABLE_KEY as
+    | string
+    | undefined;
+  if (!publishableKey || !/^pk_(test|live)_/.test(publishableKey)) {
+    paymentError.value = t('checkout.payment.unavailable');
+    return;
+  }
+
+  const amountHalalas = Math.round(Number(createdOrder.value?.totalPrice || 0) * 100);
+  const orderId = createdOrder.value?.id;
+  if (!orderId || amountHalalas < 100) {
+    paymentError.value = t('checkout.payment.unavailable');
+    return;
+  }
+
+  applePayBusy.value = true;
+  paymentError.value = '';
+  try {
+    const payment = await ApplePay.pay({
+      merchantId: APPLE_PAY_MERCHANT_ID,
+      countryCode: 'SA',
+      currencyCode: 'SAR',
+      label: 'Tadil',
+      amount: formatApplePayAmount(Number(createdOrder.value?.totalPrice || 0)),
+      amountHalalas,
+      description: `Order #${createdOrder.value?.reference} for Tadil`,
+      publishableApiKey: publishableKey,
+      orderId,
+    });
+    if (payment.status !== 'paid' || !payment.id) {
+      paymentError.value = payment.message || t('checkout.payment.applePayFailed');
+      return;
+    }
+    await router.replace({
+      name: 'customer-checkout-verify',
+      query: {
+        id: payment.id,
+        status: payment.status,
+        message: payment.message || 'Succeeded',
+      },
+    });
+  } catch (error) {
+    if (isApplePayCanceled(error)) return;
+    console.error('Apple Pay failed', error);
+    paymentError.value = t('checkout.payment.applePayFailed');
+  } finally {
+    applePayBusy.value = false;
+  }
 }
 
 let moyasarDirObserver: MutationObserver | null = null;
@@ -400,5 +504,26 @@ html[dir="rtl"] .mysr-form #mysr > div {
 
 html[dir="rtl"] .mysr-form [dir="ltr"] {
   direction: ltr;
+}
+
+.apple-pay-button {
+  display: block;
+  width: 100%;
+  height: 48px;
+  border: 0;
+  border-radius: 8px;
+  background: #000;
+  color: #fff;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  -webkit-appearance: -apple-pay-button;
+  -apple-pay-button-type: check-out;
+  -apple-pay-button-style: black;
+}
+
+.apple-pay-button:disabled {
+  opacity: 0.6;
+  pointer-events: none;
 }
 </style>
