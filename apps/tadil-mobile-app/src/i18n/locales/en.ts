@@ -303,7 +303,7 @@ export const en = {
       unavailable: "Card payment is temporarily unavailable. Please try again later.",
       applePay: "Apple Pay",
       googlePay: "Google Pay",
-      orCard: "Or pay by card",
+      orCard: "Or pay by card or STC Pay",
       applePayFailed: "Apple Pay could not complete this payment. Please try a card or try again.",
       googlePayFailed: "Google Pay could not complete this payment. Please try a card or try again.",
     },

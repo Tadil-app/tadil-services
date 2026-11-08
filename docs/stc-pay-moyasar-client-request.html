@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+  <head>
+    <meta charset="utf-8" />
+    <title>طلب تفعيل STC Pay عبر Moyasar</title>
+    <style>
+      @font-face {
+        font-family: "IBM Plex Sans Arabic";
+        src: url("file:///home/asaaid/.local/share/fonts/noto-arabic/IBMPlexSansArabic-Regular.ttf");
+        font-weight: 400;
+      }
+      @font-face {
+        font-family: "IBM Plex Sans Arabic";
+        src: url("file:///home/asaaid/.local/share/fonts/noto-arabic/IBMPlexSansArabic-Bold.ttf");
+        font-weight: 700;
+      }
+      @font-face {
+        font-family: "Noto Kufi Arabic";
+        src: url("file:///home/asaaid/.local/share/fonts/noto-arabic/NotoKufiArabic.ttf");
+      }
+
+      @page {
+        size: A4;
+        margin: 12mm 14mm 16mm 14mm;
+        @bottom-center {
+          content: "تعديل  ·  طلب تفعيل STC Pay عبر Moyasar  ·  " counter(page);
+          font-family: "IBM Plex Sans Arabic", sans-serif;
+          font-size: 8.5pt;
+          color: #8a6a72;
+        }
+      }
+
+      * { box-sizing: border-box; }
+
+      body {
+        margin: 0;
+        direction: rtl;
+        text-align: right;
+        font-family: "IBM Plex Sans Arabic", sans-serif;
+        font-size: 10.5pt;
+        line-height: 1.6;
+        color: #4a1723;
+      }
+
+      .letterhead {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        border-bottom: 3px solid #501a2e;
+        padding-bottom: 8px;
+        margin-bottom: 10px;
+      }
+
+      .brand {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .brand img { height: 42px; }
+
+      .brand-name {
+        font-family: "Noto Kufi Arabic", sans-serif;
+        font-size: 17pt;
+        color: #501a2e;
+      }
+
+      .meta {
+        font-size: 9.5pt;
+        color: #8a6a72;
+        line-height: 1.45;
+      }
+
+      h1 {
+        font-family: "Noto Kufi Arabic", sans-serif;
+        font-size: 14pt;
+        font-weight: 400;
+        color: #501a2e;
+        margin: 0 0 4px;
+      }
+
+      .subtitle {
+        color: #8a6a72;
+        margin: 0 0 10px;
+        font-size: 10pt;
+      }
+
+      p { margin: 0 0 7px; }
+
+      .intro {
+        background: #fffaf6;
+        border: 1px solid #ead3d6;
+        border-right: 5px solid #501a2e;
+        padding: 9px 12px;
+        margin-bottom: 12px;
+        border-radius: 4px;
+      }
+
+      .part {
+        font-family: "Noto Kufi Arabic", sans-serif;
+        font-size: 11.5pt;
+        color: #fff;
+        background: #501a2e;
+        display: inline-block;
+        padding: 3px 12px;
+        border-radius: 4px;
+        margin: 4px 0 8px;
+      }
+
+      .step {
+        margin: 0 0 8px;
+        page-break-inside: avoid;
+      }
+
+      .step-title {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin-bottom: 3px;
+      }
+
+      .num {
+        flex: 0 0 22px;
+        height: 22px;
+        width: 22px;
+        border-radius: 50%;
+        background: #501a2e;
+        color: #fff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 700;
+        font-size: 10pt;
+      }
+
+      .step h2 {
+        font-size: 11.5pt;
+        margin: 0;
+        color: #501a2e;
+      }
+
+      ul {
+        margin: 0;
+        padding: 0 20px 0 0;
+      }
+
+      li { margin: 0 0 2px; }
+
+      .value {
+        display: inline-block;
+        direction: ltr;
+        background: #fff5f7;
+        border: 1px solid #ead3d6;
+        color: #501a2e;
+        padding: 0 7px;
+        border-radius: 4px;
+        font-size: 9.5pt;
+        font-weight: 700;
+      }
+
+      .warn {
+        background: #fff6ee;
+        border: 1px solid #e8c9b0;
+        color: #7a3e1d;
+        padding: 6px 10px;
+        border-radius: 4px;
+        margin-top: 5px;
+        font-size: 10pt;
+      }
+
+      .footer-note {
+        margin-top: 10px;
+        padding-top: 8px;
+        border-top: 1px solid #ead3d6;
+        font-size: 10pt;
+        color: #6b3a46;
+      }
+
+      .checklist {
+        background: #fffaf6;
+        border: 1px solid #ead3d6;
+        border-radius: 4px;
+        padding: 10px 14px;
+        margin-top: 12px;
+        page-break-inside: avoid;
+      }
+
+      .checklist h2 {
+        font-family: "Noto Kufi Arabic", sans-serif;
+        font-size: 12pt;
+        color: #501a2e;
+        margin: 0 0 6px;
+        font-weight: 400;
+      }
+
+      .checklist li { margin: 0 0 4px; }
+    </style>
+  </head>
+  <body>
+    <header class="letterhead">
+      <div class="brand">
+        <img src="file:///home/asaaid/other/tadil-services/apps/tadil-mobile-app/public/logo.png" alt="تعديل" />
+        <div class="brand-name">تعديل</div>
+      </div>
+      <div class="meta">
+        ٨ نوفمبر ٢٠٢٦<br />
+        حساب <bdi dir="ltr">Moyasar Live</bdi>
+      </div>
+    </header>
+
+    <h1>طلب تفعيل <bdi dir="ltr">STC Pay</bdi> عبر <bdi dir="ltr">Moyasar</bdi></h1>
+    <p class="subtitle">إجراءات مطلوبة من صاحب الحساب — الجانب التقني في التطبيق والموقع جاهز بعد تفعيل الوسيلة</p>
+
+    <div class="intro">
+      السلام عليكم ورحمة الله وبركاته،<br />
+      لتفعيل <bdi dir="ltr">STC Pay</bdi> في منصة تعديل عبر <bdi dir="ltr">Moyasar</bdi>
+      (الموقع وتطبيق الجوال)، نرجو تنفيذ البنود أدناه على الحساب الحي
+      (<bdi dir="ltr">Live</bdi>) وليس حساب التجربة (<bdi dir="ltr">Sandbox</bdi>).
+      الربط التقني لا يحتاج شهادة أو معرّف تاجر إضافي: العميل يدفع برقم الجوال ثم رمز التحقق.
+    </div>
+
+    <div class="part">القسم الأول — لوحة Moyasar</div>
+
+    <section class="step">
+      <div class="step-title">
+        <span class="num">١</span>
+        <h2>طلب تفعيل الوسيلة</h2>
+      </div>
+      <ul>
+        <li>التواصل مع مدير الحساب أو الدعم: <span class="value">8001111848</span> أو <span class="value">care@moyasar.com</span></li>
+        <li>طلب تفعيل <bdi dir="ltr">STC Pay</bdi> على حساب <bdi dir="ltr">Moyasar</bdi> الحي لمنصة <strong>تعديل</strong>.</li>
+        <li>بدون هذا التفعيل يظهر للمستخدم خيار الدفع ثم ترفض العملية برسالة أن الحساب لا يدعم <bdi dir="ltr">STC Pay</bdi>.</li>
+      </ul>
+    </section>
+
+    <section class="step">
+      <div class="step-title">
+        <span class="num">٢</span>
+        <h2>تأكيد بيئة التجربة</h2>
+      </div>
+      <ul>
+        <li>إن أمكن، تفعيل <bdi dir="ltr">STC Pay</bdi> أيضاً على حساب التجربة (<bdi dir="ltr">Sandbox</bdi>) لاختبار الرقم والرمز قبل الإطلاق.</li>
+        <li>أرقام التجربة لدى Moyasar تبدأ بـ <span class="value">0515555555</span> وما يليها، ورمز النجاح <span class="value">123456</span> أو <span class="value">000000</span>.</li>
+      </ul>
+    </section>
+
+    <div class="part">القسم الثاني — الاختبار بعد التفعيل</div>
+
+    <section class="step">
+      <div class="step-title">
+        <span class="num">٣</span>
+        <h2>التحقق من الظهور في الدفع</h2>
+      </div>
+      <ul>
+        <li>الموقع والتطبيق يعرضان <bdi dir="ltr">STC Pay</bdi> داخل نموذج Moyasar بجانب البطاقة.</li>
+        <li>الاسم الظاهر للتاجر: <strong>تعديل (<bdi dir="ltr">Tadil</bdi>)</strong>.</li>
+        <li>عملية دفع حي بمبلغ بسيط من محفظة <bdi dir="ltr">STC Pay</bdi> حقيقية بعد التفعيل على الحساب الحي.</li>
+      </ul>
+      <div class="warn">
+        لا حاجة لتسجيل نطاق لدى آبل أو معرّف تاجر لدى جوجل. يكفي تفعيل الوسيلة على حساب Moyasar.
+      </div>
+    </section>
+
+    <div class="checklist">
+      <h2>المطلوب إرساله إلينا</h2>
+      <ul>
+        <li>تأكيد أن <bdi dir="ltr">STC Pay</bdi> مفعّل على حساب <bdi dir="ltr">Moyasar</bdi> الحي</li>
+        <li>تأكيد التفعيل على حساب التجربة إن وُجد، حتى نختبر قبل الإطلاق</li>
+      </ul>
+    </div>
+
+    <p class="footer-note">شاكرين تعاونكم، ويسعدنا تواصلكم عند جاهزية أي بند أو عند وجود استفسار.</p>
+  </body>
+</html>
