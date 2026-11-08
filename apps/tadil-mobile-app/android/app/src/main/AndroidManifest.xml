@@ -33,6 +33,15 @@
             </intent-filter>
         </activity>
 
+        <activity
+            android:name=".GooglePayActivity"
+            android:exported="false"
+            android:theme="@style/AppTheme.GooglePayTransparent" />
+
+        <meta-data
+            android:name="com.google.android.gms.wallet.api.enabled"
+            android:value="true" />
+
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="${applicationId}.fileprovider"

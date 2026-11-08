@@ -302,8 +302,10 @@ export const en = {
     payment: {
       unavailable: "Card payment is temporarily unavailable. Please try again later.",
       applePay: "Apple Pay",
+      googlePay: "Google Pay",
       orCard: "Or pay by card",
       applePayFailed: "Apple Pay could not complete this payment. Please try a card or try again.",
+      googlePayFailed: "Google Pay could not complete this payment. Please try a card or try again.",
     },
   },
   chat: {
