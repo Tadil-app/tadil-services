@@ -303,8 +303,10 @@ export const hi = {
     payment: {
       unavailable: "कार्ड भुगतान अस्थायी रूप से उपलब्ध नहीं है। कृपया बाद में पुनः प्रयास करें।",
       applePay: "Apple Pay",
+      googlePay: "Google Pay",
       orCard: "या कार्ड से भुगतान करें",
       applePayFailed: "Apple Pay से यह भुगतान पूरा नहीं हो सका। कृपया कार्ड आज़माएँ या फिर कोशिश करें।",
+      googlePayFailed: "Google Pay से यह भुगतान पूरा नहीं हो सका। कृपया कार्ड आज़माएँ या फिर कोशिश करें।",
     },
   },
   chat: {

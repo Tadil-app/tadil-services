@@ -36,6 +36,7 @@ jobs:
         env:
           VITE_TADIL_MOBILE_API_URL: ${{ secrets.VITE_TADIL_MOBILE_API_URL }}
           VITE_MOYASAR_PUBLISHABLE_KEY: ${{ secrets.VITE_MOYASAR_PUBLISHABLE_KEY }}
+          VITE_GOOGLE_PAY_MERCHANT_ID: ${{ secrets.VITE_GOOGLE_PAY_MERCHANT_ID }}
 
       - name: Grant execute permission for gradlew
         run: chmod +x android/gradlew

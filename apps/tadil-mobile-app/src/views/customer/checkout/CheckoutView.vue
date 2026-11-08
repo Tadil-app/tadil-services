@@ -137,15 +137,27 @@
           type="button"
           class="apple-pay-button"
           dir="ltr"
-          :disabled="applePayBusy"
+          :disabled="applePayBusy || googlePayBusy"
           :aria-label="$t('checkout.payment.applePay')"
           @click="payWithApplePay"
         >
           {{ $t('checkout.payment.applePay') }}
         </button>
 
+        <button
+          v-if="googlePayAvailable"
+          type="button"
+          class="google-pay-button"
+          dir="ltr"
+          :disabled="googlePayBusy || applePayBusy"
+          :aria-label="$t('checkout.payment.googlePay')"
+          @click="payWithGooglePay"
+        >
+          {{ $t('checkout.payment.googlePay') }}
+        </button>
+
         <div
-          v-if="applePayAvailable"
+          v-if="applePayAvailable || googlePayAvailable"
           class="flex items-center gap-3 text-sm text-muted-foreground"
         >
           <div class="flex-1 h-px bg-gray-200" />
@@ -195,6 +207,16 @@ import {
   isNativeIos,
   nativeApplePayAvailable,
 } from '@/plugins/applePay';
+import {
+  GooglePay,
+  GOOGLE_PAY_MERCHANT_ID,
+  formatGooglePayAmount,
+  googlePayEnabled,
+  googlePayEnvironment,
+  isGooglePayCanceled,
+  isNativeAndroid,
+  nativeGooglePayAvailable,
+} from '@/plugins/googlePay';
 
 const { t } = useI18n();
 const authStore = useAuthStore();
@@ -212,6 +234,8 @@ const createdOrder = ref<DisplayOrderDTO | null>(null);
 const paymentError = ref('');
 const applePayAvailable = ref(false);
 const applePayBusy = ref(false);
+const googlePayAvailable = ref(false);
+const googlePayBusy = ref(false);
 
 onBeforeRouteLeave(async (to) => {
   // The payment callback lands on the verify page; it owns the order then.
@@ -238,6 +262,8 @@ function resetCheckout() {
   paymentError.value = '';
   applePayAvailable.value = false;
   applePayBusy.value = false;
+  googlePayAvailable.value = false;
+  googlePayBusy.value = false;
 }
 
 const paysCashOnDelivery = computed(() =>
@@ -287,6 +313,12 @@ async function proceedToPayment() {
     await Preferences.set({ key: 'pendingOrderId', value: order.id });
     await Preferences.set({ key: 'pendingOrderReference', value: order.reference });
     applePayAvailable.value = await nativeApplePayAvailable();
+    const publishableKey = import.meta.env.VITE_MOYASAR_PUBLISHABLE_KEY as
+      | string
+      | undefined;
+    googlePayAvailable.value =
+      googlePayEnabled() &&
+      (await nativeGooglePayAvailable(googlePayEnvironment(publishableKey)));
     step.value = 'payment';
     await nextTick();
     initMoyasar();
@@ -355,14 +387,27 @@ function initMoyasar() {
       // Lets the server find this order's payment without the callback.
       metadata: { order_id: orderId },
       supported_networks: ['visa', 'mastercard', 'mada'],
-      // Native iOS uses PassKit (WKWebView cannot start an Apple Pay JS session).
-      methods: isNativeIos() ? ['creditcard'] : ['creditcard', 'applepay'],
+      // Native wallets cannot start from the WebView. iOS uses PassKit; Android
+      // uses the Google Pay API. The Moyasar form still offers Apple Pay / Google
+      // Pay on the hosted website.
+      methods: moyasarFormMethods(),
       apple_pay: {
         country: 'SA',
         label: 'Tadil',
         validate_merchant_url: 'https://api.moyasar.com/v1/applepay/initiate',
       },
-      // Cards with 3DS still return via callback_url. Apple Pay is paid in
+      ...(googlePayEnabled() && !isNativeIos() && !isNativeAndroid()
+        ? {
+            google_pay: {
+              merchant_id: GOOGLE_PAY_MERCHANT_ID,
+              country: 'SA',
+              label: 'Tadil',
+              environment: googlePayEnvironment(publishableKey),
+              auth_methods: ['CRYPTOGRAM_3DS'],
+            },
+          }
+        : {}),
+      // Cards with 3DS still return via callback_url. Wallets are paid in
       // place, so send those to verify immediately. Confirm is idempotent.
       on_completed: async (payment: { id?: string; status?: string; message?: string }) => {
         if (payment?.status !== 'paid' || !payment.id) return;
@@ -448,6 +493,70 @@ async function payWithApplePay() {
   }
 }
 
+function moyasarFormMethods(): string[] {
+  if (isNativeIos() || isNativeAndroid()) return ['creditcard'];
+  const methods = ['creditcard', 'applepay'];
+  if (googlePayEnabled()) methods.push('googlepay');
+  return methods;
+}
+
+async function payWithGooglePay() {
+  const publishableKey = import.meta.env.VITE_MOYASAR_PUBLISHABLE_KEY as
+    | string
+    | undefined;
+  if (!publishableKey || !/^pk_(test|live)_/.test(publishableKey)) {
+    paymentError.value = t('checkout.payment.unavailable');
+    return;
+  }
+  if (!googlePayEnabled()) {
+    paymentError.value = t('checkout.payment.unavailable');
+    return;
+  }
+
+  const amountHalalas = Math.round(Number(createdOrder.value?.totalPrice || 0) * 100);
+  const orderId = createdOrder.value?.id;
+  if (!orderId || amountHalalas < 100) {
+    paymentError.value = t('checkout.payment.unavailable');
+    return;
+  }
+
+  googlePayBusy.value = true;
+  paymentError.value = '';
+  try {
+    const payment = await GooglePay.pay({
+      merchantId: GOOGLE_PAY_MERCHANT_ID,
+      gatewayMerchantId: GOOGLE_PAY_MERCHANT_ID,
+      countryCode: 'SA',
+      currencyCode: 'SAR',
+      label: 'Tadil',
+      amount: formatGooglePayAmount(Number(createdOrder.value?.totalPrice || 0)),
+      amountHalalas,
+      description: `Order #${createdOrder.value?.reference} for Tadil`,
+      publishableApiKey: publishableKey,
+      orderId,
+      environment: googlePayEnvironment(publishableKey),
+    });
+    if (payment.status !== 'paid' || !payment.id) {
+      paymentError.value = payment.message || t('checkout.payment.googlePayFailed');
+      return;
+    }
+    await router.replace({
+      name: 'customer-checkout-verify',
+      query: {
+        id: payment.id,
+        status: payment.status,
+        message: payment.message || 'Succeeded',
+      },
+    });
+  } catch (error) {
+    if (isGooglePayCanceled(error)) return;
+    console.error('Google Pay failed', error);
+    paymentError.value = t('checkout.payment.googlePayFailed');
+  } finally {
+    googlePayBusy.value = false;
+  }
+}
+
 let moyasarDirObserver: MutationObserver | null = null;
 
 function stopPinningMoyasarDir() {
@@ -523,6 +632,24 @@ html[dir="rtl"] .mysr-form [dir="ltr"] {
 }
 
 .apple-pay-button:disabled {
+  opacity: 0.6;
+  pointer-events: none;
+}
+
+.google-pay-button {
+  display: block;
+  width: 100%;
+  height: 48px;
+  border: 0;
+  border-radius: 8px;
+  background: #000;
+  color: #fff;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.google-pay-button:disabled {
   opacity: 0.6;
   pointer-events: none;
 }
