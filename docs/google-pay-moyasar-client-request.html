@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+  <head>
+    <meta charset="utf-8" />
+    <title>طلب تفعيل Google Pay عبر Moyasar</title>
+    <style>
+      @font-face {
+        font-family: "IBM Plex Sans Arabic";
+        src: url("file:///home/asaaid/.local/share/fonts/noto-arabic/IBMPlexSansArabic-Regular.ttf");
+        font-weight: 400;
+      }
+      @font-face {
+        font-family: "IBM Plex Sans Arabic";
+        src: url("file:///home/asaaid/.local/share/fonts/noto-arabic/IBMPlexSansArabic-Bold.ttf");
+        font-weight: 700;
+      }
+      @font-face {
+        font-family: "Noto Kufi Arabic";
+        src: url("file:///home/asaaid/.local/share/fonts/noto-arabic/NotoKufiArabic.ttf");
+      }
+
+      @page {
+        size: A4;
+        margin: 12mm 14mm 16mm 14mm;
+        @bottom-center {
+          content: "تعديل  ·  طلب تفعيل Google Pay عبر Moyasar  ·  " counter(page);
+          font-family: "IBM Plex Sans Arabic", sans-serif;
+          font-size: 8.5pt;
+          color: #8a6a72;
+        }
+      }
+
+      * { box-sizing: border-box; }
+
+      body {
+        margin: 0;
+        direction: rtl;
+        text-align: right;
+        font-family: "IBM Plex Sans Arabic", sans-serif;
+        font-size: 10.5pt;
+        line-height: 1.6;
+        color: #4a1723;
+      }
+
+      .letterhead {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        border-bottom: 3px solid #501a2e;
+        padding-bottom: 8px;
+        margin-bottom: 10px;
+      }
+
+      .brand {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .brand img { height: 42px; }
+
+      .brand-name {
+        font-family: "Noto Kufi Arabic", sans-serif;
+        font-size: 17pt;
+        color: #501a2e;
+      }
+
+      .meta {
+        font-size: 9.5pt;
+        color: #8a6a72;
+        line-height: 1.45;
+      }
+
+      h1 {
+        font-family: "Noto Kufi Arabic", sans-serif;
+        font-size: 14pt;
+        font-weight: 400;
+        color: #501a2e;
+        margin: 0 0 4px;
+      }
+
+      .subtitle {
+        color: #8a6a72;
+        margin: 0 0 10px;
+        font-size: 10pt;
+      }
+
+      p { margin: 0 0 7px; }
+
+      .intro {
+        background: #fffaf6;
+        border: 1px solid #ead3d6;
+        border-right: 5px solid #501a2e;
+        padding: 9px 12px;
+        margin-bottom: 12px;
+        border-radius: 4px;
+      }
+
+      .part {
+        font-family: "Noto Kufi Arabic", sans-serif;
+        font-size: 11.5pt;
+        color: #fff;
+        background: #501a2e;
+        display: inline-block;
+        padding: 3px 12px;
+        border-radius: 4px;
+        margin: 4px 0 8px;
+      }
+
+      .step {
+        margin: 0 0 8px;
+        page-break-inside: avoid;
+      }
+
+      .step-title {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin-bottom: 3px;
+      }
+
+      .num {
+        flex: 0 0 22px;
+        height: 22px;
+        width: 22px;
+        border-radius: 50%;
+        background: #501a2e;
+        color: #fff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 700;
+        font-size: 10pt;
+      }
+
+      .step h2 {
+        font-size: 11.5pt;
+        margin: 0;
+        color: #501a2e;
+      }
+
+      ul {
+        margin: 0;
+        padding: 0 20px 0 0;
+      }
+
+      li { margin: 0 0 2px; }
+
+      .value {
+        display: inline-block;
+        direction: ltr;
+        background: #fff5f7;
+        border: 1px solid #ead3d6;
+        color: #501a2e;
+        padding: 0 7px;
+        border-radius: 4px;
+        font-size: 9.5pt;
+        font-weight: 700;
+      }
+
+      .warn {
+        background: #fff6ee;
+        border: 1px solid #e8c9b0;
+        color: #7a3e1d;
+        padding: 6px 10px;
+        border-radius: 4px;
+        margin-top: 5px;
+        font-size: 10pt;
+      }
+
+      .footer-note {
+        margin-top: 10px;
+        padding-top: 8px;
+        border-top: 1px solid #ead3d6;
+        font-size: 10pt;
+        color: #6b3a46;
+      }
+
+      .checklist {
+        background: #fffaf6;
+        border: 1px solid #ead3d6;
+        border-radius: 4px;
+        padding: 10px 14px;
+        margin-top: 12px;
+        page-break-inside: avoid;
+      }
+
+      .checklist h2 {
+        font-family: "Noto Kufi Arabic", sans-serif;
+        font-size: 12pt;
+        color: #501a2e;
+        margin: 0 0 6px;
+        font-weight: 400;
+      }
+
+      .checklist li { margin: 0 0 4px; }
+    </style>
+  </head>
+  <body>
+    <header class="letterhead">
+      <div class="brand">
+        <img src="file:///home/asaaid/other/tadil-services/apps/tadil-mobile-app/public/logo.png" alt="تعديل" />
+        <div class="brand-name">تعديل</div>
+      </div>
+      <div class="meta">
+        ٨ نوفمبر ٢٠٢٦<br />
+        حساب <bdi dir="ltr">Moyasar Live</bdi>
+      </div>
+    </header>
+
+    <h1>طلب تفعيل <bdi dir="ltr">Google Pay</bdi> عبر <bdi dir="ltr">Moyasar</bdi></h1>
+    <p class="subtitle">إجراءات مطلوبة من صاحب الحساب — الجانب التقني في التطبيق جاهز بعد استلام معرّف التاجر</p>
+
+    <div class="intro">
+      السلام عليكم ورحمة الله وبركاته،<br />
+      لتفعيل <bdi dir="ltr">Google Pay</bdi> في منصة تعديل عبر <bdi dir="ltr">Moyasar</bdi>
+      (الموقع وتطبيق الأندرويد)، نرجو تنفيذ الأقسام أدناه على الحساب الحي
+      (<bdi dir="ltr">Live</bdi>) وليس حساب التجربة (<bdi dir="ltr">Sandbox</bdi>).
+    </div>
+
+    <div class="part">القسم الأول — لوحة Moyasar</div>
+
+    <section class="step">
+      <div class="step-title">
+        <span class="num">١</span>
+        <h2>تفعيل الوسيلة على الحساب الحي</h2>
+      </div>
+      <ul>
+        <li>التأكد من تفعيل <bdi dir="ltr">Google Pay</bdi> على حساب <bdi dir="ltr">Moyasar</bdi> الحي. الدعم: <span class="value">8001111848</span></li>
+        <li>نوع الربط لدى جوجل: <bdi dir="ltr">Gateway</bdi> باسم <span class="value">moyasar</span></li>
+      </ul>
+    </section>
+
+    <div class="part">القسم الثاني — Google Pay &amp; Wallet Console (الموقع)</div>
+
+    <section class="step">
+      <div class="step-title">
+        <span class="num">٢</span>
+        <h2>إنشاء ملف التاجر وإرسال المعرّف</h2>
+      </div>
+      <ul>
+        <li>الدخول إلى <bdi dir="ltr">pay.google.com/business/console</bdi> وإنشاء ملف تاجر.</li>
+        <li>إرسال معرّف التاجر <bdi dir="ltr">Google Pay Merchant ID</bdi> إلينا لنضعه في الإعداد <span class="value">VITE_GOOGLE_PAY_MERCHANT_ID</span>.</li>
+      </ul>
+    </section>
+
+    <section class="step">
+      <div class="step-title">
+        <span class="num">٣</span>
+        <h2>تسجيل الموقع</h2>
+      </div>
+      <ul>
+        <li>من وحدة جوجل: إضافة الموقع ثم اختيار نوع الربط <bdi dir="ltr">Gateway</bdi>.</li>
+        <li>النطاق:</li>
+      </ul>
+      <p><span class="value">tadil-mobile-app-production-1db5.up.railway.app</span></p>
+      <ul>
+        <li>الاسم الظاهر في نافذة <bdi dir="ltr">Google Pay</bdi>: <strong>تعديل (<bdi dir="ltr">Tadil</bdi>)</strong>.</li>
+      </ul>
+    </section>
+
+    <div class="part">القسم الثالث — تطبيق الأندرويد</div>
+
+    <section class="step">
+      <div class="step-title">
+        <span class="num">٤</span>
+        <h2>تسجيل حزمة التطبيق</h2>
+      </div>
+      <ul>
+        <li>من وحدة جوجل: إضافة تطبيق أندرويد.</li>
+        <li>معرّف الحزمة:</li>
+      </ul>
+      <p><span class="value">com.tadil.app</span></p>
+      <ul>
+        <li>إرفاق بصمة <bdi dir="ltr">SHA-256</bdi> لمفتاح توقيع التحميل على <bdi dir="ltr">Play Console</bdi> (App signing key certificate).</li>
+      </ul>
+    </section>
+
+    <section class="step">
+      <div class="step-title">
+        <span class="num">٥</span>
+        <h2>طلب الوصول للإنتاج</h2>
+      </div>
+      <ul>
+        <li>إكمال قائمة التحقق ثم طلب <bdi dir="ltr">Production access</bdi> من وحدة جوجل.</li>
+        <li>بدون هذا الاعتماد يعمل الزر في بيئة الاختبار فقط (<bdi dir="ltr">TEST</bdi>).</li>
+      </ul>
+      <div class="warn">
+        <bdi dir="ltr">Moyasar</bdi> يقبل فقط البطاقات المرمّزة داخل المحفظة (<bdi dir="ltr">CRYPTOGRAM_3DS</bdi>) وليس إدخال رقم البطاقة مباشرة عبر جوجل.
+      </div>
+    </section>
+
+    <section class="step">
+      <div class="step-title">
+        <span class="num">٦</span>
+        <h2>الاختبار</h2>
+      </div>
+      <ul>
+        <li>جهاز أندرويد حقيقي، وبطاقة مضافة في <bdi dir="ltr">Google Wallet</bdi>.</li>
+        <li>الموقع: متصفح كروم على <bdi dir="ltr">HTTPS</bdi>. التطبيق: جهاز أندرويد بعد تسجيل الحزمة.</li>
+        <li>عملية دفع حي بمبلغ بسيط للتحقق من نجاح الربط.</li>
+      </ul>
+    </section>
+
+    <div class="checklist">
+      <h2>المطلوب إرساله إلينا</h2>
+      <ul>
+        <li>معرّف التاجر <bdi dir="ltr">Google Pay Merchant ID</bdi></li>
+        <li>تأكيد تسجيل النطاق <span class="value">tadil-mobile-app-production-1db5.up.railway.app</span></li>
+        <li>تأكيد تسجيل الحزمة <span class="value">com.tadil.app</span></li>
+        <li>تأكيد أن <bdi dir="ltr">Google Pay</bdi> مفعّل على حساب <bdi dir="ltr">Moyasar</bdi> الحي</li>
+      </ul>
+    </div>
+
+    <p class="footer-note">شاكرين تعاونكم، ويسعدنا تواصلكم عند جاهزية أي بند أو عند وجود استفسار.</p>
+  </body>
+</html>
