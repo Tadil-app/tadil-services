@@ -191,6 +191,19 @@ export const useCartStore = defineStore("cart", () => {
 
     const { data } = await apiClient.customerControllerCreateOrder(payload);
 
+    // Keep remote URLs in the cart so a later retry (back from payment, then
+    // proceed again) does not try to re-read files we are about to delete.
+    items.value = items.value.map((item, index) => {
+      const processed = processedItems[index];
+      if (!processed) return item;
+      return {
+        ...item,
+        model: processed.model,
+        configuration: processed.configuration,
+      };
+    });
+    await saveCart();
+
     // 3. Cleanup local files after successful order creation
     for (const path of localFilePathsToDelete) {
       try {

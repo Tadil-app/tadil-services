@@ -163,7 +163,8 @@ import { useLocalizedAddress } from '@/composables';
 import { onBeforeRouteLeave, useRouter } from 'vue-router';
 import { Check, MapPin, ShoppingBag } from 'lucide-vue-next';
 import { isAppleReviewPhone } from '@/utils/appleReviewPhones';
-import { DisplayOrderDTO } from '@/integration/dtos';
+import { DisplayOrderDTO, ORDER_STATUS } from '@/integration/dtos';
+import { apiClient } from '@/integration/api';
 import { useI18n } from 'vue-i18n';
 import { Preferences } from '@capacitor/preferences';
 
@@ -226,6 +227,24 @@ function goToOrders() {
   router.push('/customer/orders');
 }
 
+async function findPendingOrder(
+  orderId: string
+): Promise<DisplayOrderDTO | undefined> {
+  const { data } = await apiClient.customerControllerGetOrders();
+  return data.find(
+    (order) => order.id === orderId && order.status === ORDER_STATUS.PENDING
+  );
+}
+
+async function openPaymentStep(order: DisplayOrderDTO) {
+  createdOrder.value = order;
+  await Preferences.set({ key: 'pendingOrderId', value: order.id });
+  await Preferences.set({ key: 'pendingOrderReference', value: order.reference });
+  step.value = 'payment';
+  await nextTick();
+  initMoyasar();
+}
+
 async function proceedToPayment() {
   if (!selectedAddressId.value) return;
 
@@ -233,29 +252,40 @@ async function proceedToPayment() {
   try {
     // Settle any earlier checkout first so it is not left orphaned. If it
     // turns out to have been paid, the cart is already cleared: show it.
+    const { value: pendingOrderId } = await Preferences.get({
+      key: 'pendingOrderId',
+    });
     const previous = await cartStore.reconcilePendingOrder();
     if (previous === 'confirmed') {
       router.replace('/customer/orders');
       return;
     }
-    if (previous === 'error') {
-      throw new Error('Could not settle the previous checkout');
+    // Back-from-payment / Moyasar outage: reuse the unpaid order instead of
+    // blocking the user behind "Failed to create order".
+    if (
+      pendingOrderId &&
+      (previous === 'pending' || previous === 'error')
+    ) {
+      const existing = await findPendingOrder(pendingOrderId);
+      if (existing) {
+        await openPaymentStep(existing);
+        return;
+      }
+      if (previous === 'error') {
+        throw new Error('Could not settle the previous checkout');
+      }
     }
 
     const order = await cartStore.createOrder(selectedAddressId.value);
-    createdOrder.value = order;
 
     if (order.cashOnDelivery) {
+      createdOrder.value = order;
       await cartStore.clearCart();
       step.value = 'success';
       return;
     }
 
-    await Preferences.set({ key: 'pendingOrderId', value: order.id });
-    await Preferences.set({ key: 'pendingOrderReference', value: order.reference });
-    step.value = 'payment';
-    await nextTick();
-    initMoyasar();
+    await openPaymentStep(order);
   } catch (error) {
     console.error('Failed to create order', error);
     const toast = await toastController.create({
