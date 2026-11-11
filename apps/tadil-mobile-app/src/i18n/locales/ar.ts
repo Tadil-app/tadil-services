@@ -302,6 +302,9 @@ export const ar = {
     },
     payment: {
       unavailable: "الدفع بالبطاقة غير متاح مؤقتاً. يرجى المحاولة لاحقاً.",
+      applePay: "Apple Pay",
+      orCard: "أو ادفع بالبطاقة",
+      applePayFailed: "تعذر إتمام الدفع عبر Apple Pay. يرجى استخدام البطاقة أو المحاولة مرة أخرى.",
     },
   },
   chat: {
