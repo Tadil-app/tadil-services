@@ -304,7 +304,7 @@ export const ar = {
       unavailable: "الدفع بالبطاقة غير متاح مؤقتاً. يرجى المحاولة لاحقاً.",
       applePay: "Apple Pay",
       googlePay: "Google Pay",
-      orCard: "أو ادفع بالبطاقة",
+      orCard: "أو ادفع بالبطاقة أو STC Pay",
       applePayFailed: "تعذر إتمام الدفع عبر Apple Pay. يرجى استخدام البطاقة أو المحاولة مرة أخرى.",
       googlePayFailed: "تعذر إتمام الدفع عبر Google Pay. يرجى استخدام البطاقة أو المحاولة مرة أخرى.",
     },
