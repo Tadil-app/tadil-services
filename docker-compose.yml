@@ -45,7 +45,7 @@ services:
       - 8080:8080
     volumes:
       # Custom "tadil" login theme (select it in Realm settings > Themes > Login theme).
-      - ./keycloak-themes/tadil:/opt/keycloak/themes/tadil
+      - ./keycloak-config/themes/tadil:/opt/keycloak/themes/tadil
     depends_on:
       - keycloak-db
 
