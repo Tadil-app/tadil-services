@@ -1,7 +1,7 @@
 import { Controller, Get, Param, Post, Query, NotFoundException } from '@nestjs/common';
 import { ApiOkResponse, ApiTags, ApiOperation } from '@nestjs/swagger';
 import { DataReader } from '@tadil-database';
-import { DisplayOrderDTO } from '../tailor/dtos/order';
+import { CourierOrderDTO } from './dtos/courierOrder.dto';
 import { InformationType } from '../customer/dtos';
 import { ShippingLabelDTO } from './dtos/shippingLabel.dto';
 import {
@@ -24,8 +24,8 @@ export class CourierController {
 
   @Get('/orders')
   @ApiOperation({ summary: 'Get available assignments and my active orders' })
-  @ApiOkResponse({ type: DisplayOrderDTO, isArray: true })
-  async getOrders(@Param('id') courierId: string): Promise<DisplayOrderDTO[]> {
+  @ApiOkResponse({ type: CourierOrderDTO, isArray: true })
+  async getOrders(@Param('id') courierId: string): Promise<CourierOrderDTO[]> {
     // 1. Fetch courier's city and district
     const courierAddress = await this._dataReader.queries.address.findFirst({
       where: { userId: courierId },
@@ -97,6 +97,16 @@ export class CourierController {
       include: {
         address: true,
         customer: { select: { firstName: true, lastName: true } },
+        // The tailor is one end of every trip: the drop-off on the way in and
+        // the pickup on the way back. Their first address is the workshop,
+        // the same one the shipping label prints.
+        assignedTailor: {
+          select: {
+            firstName: true,
+            lastName: true,
+            addresses: { take: 1 },
+          },
+        },
         items: { include: { sections: { include: { alterations: { include: { informations: true } } } } } },
         customItems: { include: { alterations: { include: { informations: true } } } },
         history: { orderBy: { timestamp: 'desc' } },
@@ -239,10 +249,15 @@ export class CourierController {
     await this._deliverUseCase.execute({ orderId });
   }
 
-  private _mapOrder(order: any): DisplayOrderDTO {
+  private _mapOrder(order: any): CourierOrderDTO {
+    const { assignedTailor, ...rest } = order;
     return {
-      ...order,
+      ...rest,
       customerName: `${order.customer.firstName} ${order.customer.lastName}`,
+      tailorName: assignedTailor
+        ? `${assignedTailor.firstName} ${assignedTailor.lastName}`
+        : null,
+      tailorAddress: assignedTailor?.addresses?.[0] ?? null,
       items: order.items.map((item: any) => ({
         ...item,
         imageFileUrl: `${process.env.TADIL_MOBILE_API}/api/files/${item.imageFileId}`,

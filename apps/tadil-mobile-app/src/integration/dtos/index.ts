@@ -172,6 +172,9 @@ export interface DisplayOrderDTO {
   items: DisplayOrderItemDTO[];
   customItems: DisplayCustomOrderItemDTO[];
   address?: DisplayAddressDto;
+  /** Courier orders only: the assigned tailor, the other end of the trip. */
+  tailorName?: string | null;
+  tailorAddress?: DisplayAddressDto | null;
   history: OrderStatusHistoryDTO[];
   /** Présent seulement pour les numéros de revue App Store. */
   cashOnDelivery?: boolean;

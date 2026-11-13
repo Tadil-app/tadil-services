@@ -30,20 +30,10 @@
           </div>
         </IonCard>
 
-        <OrderTimeline v-if="order.history && order.history.length > 0" :history="order.history" />
+        <!-- Trip: direction, pickup and delivery points, navigation -->
+        <TripRouteCard v-if="trip" :trip="trip" />
 
-        <!-- Address Info -->
-        <IonCard class="ion-padding space-y-2">
-          <h3 class="font-bold flex items-center gap-2">
-            <MapPin class="w-4 h-4 text-primary" />
-            {{ $t("courier.orderDetails.deliveryAddress") }}
-          </h3>
-          <div v-if="order.address" class="text-sm">
-            <p class="font-medium">{{ cityName(order.address) }}</p>
-            <p class="text-muted-foreground">{{ districtName(order.address) }} {{ streetName(order.address) }}</p>
-          </div>
-          <p v-else class="text-sm text-muted-foreground italic">{{ $t("common.noAddress") }}</p>
-        </IonCard>
+        <OrderTimeline v-if="order.history && order.history.length > 0" :history="order.history" />
 
         <!-- Order Items -->
         <IonCard color="transparent" class="ion-padding">
@@ -145,17 +135,18 @@
 <script setup lang="ts">
 import { onMounted, ref, computed } from "vue";
 import { useRoute, useRouter } from "vue-router";
-import { MapPin, Printer } from "lucide-vue-next";
+import { Printer } from "lucide-vue-next";
 import { DisplayOrderDTO, ORDER_STATUS, ShippingLabelDTO } from "@/integration/dtos";
-import { createTailorOrderDeepLink, formatDate } from "@/utils";
+import { createTailorOrderDeepLink, formatDate, getCourierTrip } from "@/utils";
 import QRCode from "qrcode";
-import { useToast, useLocalizedAddress } from "@/composables";
+import { useToast } from "@/composables";
 import { apiClient } from "@/integration/api";
 import { useAuthStore } from "@/stores";
 import { ModelSegmenter, TranslatedName, StatusPill, SecondaryHeader, OrderTimeline, Chat } from "@/components";
 import { useI18n } from "vue-i18n";
 import { IonButton, IonCard, IonContent, IonPage, IonSpinner } from "@ionic/vue";
 import { getOrderLableHtml } from "./orderPritnable";
+import TripRouteCard from "./components/TripRouteCard.vue";
 
 const { t } = useI18n();
 const route = useRoute();
@@ -163,14 +154,13 @@ const router = useRouter();
 const authStore = useAuthStore();
 const { showToast } = useToast();
 
-// Show the stored city/district in the viewer's current language.
-const { cityName, districtName, streetName } = useLocalizedAddress();
-
 const order = ref<DisplayOrderDTO>();
 const isLoading = ref(true);
 const isActionLoading = ref(false);
 
 const orderId = computed(() => route.params.id as string);
+
+const trip = computed(() => (order.value ? getCourierTrip(order.value, authStore.userId) : null));
 
 const isPendingAssignment = computed(() => 
   order.value?.status === ORDER_STATUS.WAITING_FOR_COURIER_ASSIGNMENT || 

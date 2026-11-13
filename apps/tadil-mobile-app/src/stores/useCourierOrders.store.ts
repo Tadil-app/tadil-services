@@ -21,16 +21,18 @@ export const useCourierOrdersStore = defineStore("courierOrders", () => {
     ),
   );
 
-  const activeOrdersCount = computed(
-    () =>
-      orders.value.filter(
-        (o) =>
-          o.status === ORDER_STATUS.WAITING_FOR_PICKUP_FROM_CUSTOMER ||
-          o.status === ORDER_STATUS.WAITING_FOR_DROPOFF_TO_TAILOR ||
-          o.status === ORDER_STATUS.WAITING_FOR_PICKUP_FROM_TAILOR ||
-          o.status === ORDER_STATUS.WAITING_FOR_DROPOFF_TO_CUSTOMER,
-      ).length,
+  // Trips this courier accepted and has not delivered yet.
+  const activeTrips = computed(() =>
+    orders.value.filter(
+      (o) =>
+        o.status === ORDER_STATUS.WAITING_FOR_PICKUP_FROM_CUSTOMER ||
+        o.status === ORDER_STATUS.WAITING_FOR_DROPOFF_TO_TAILOR ||
+        o.status === ORDER_STATUS.WAITING_FOR_PICKUP_FROM_TAILOR ||
+        o.status === ORDER_STATUS.WAITING_FOR_DROPOFF_TO_CUSTOMER,
+    ),
   );
+
+  const activeOrdersCount = computed(() => activeTrips.value.length);
 
   async function fetchOrders(refresher?: RefresherCustomEvent) {
     const authStore = useAuthStore();
@@ -55,6 +57,7 @@ export const useCourierOrdersStore = defineStore("courierOrders", () => {
     orders,
     isLoading,
     pendingPickups,
+    activeTrips,
     activeOrdersCount,
     fetchOrders,
   };

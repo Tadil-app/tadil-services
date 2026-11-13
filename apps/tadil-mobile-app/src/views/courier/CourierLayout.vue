@@ -5,17 +5,17 @@
       <IonTabBar slot="bottom" class="flex">
         <IonTabButton tab="dashboard" href="/courier/dashboard">
           <House />
-          <IonLabel>{{ $t("tailor.navBar.dashboard") }}</IonLabel>
+          <IonLabel>{{ $t("courier.navBar.dashboard") }}</IonLabel>
         </IonTabButton>
 
         <IonTabButton tab="orders" href="/courier/orders">
-          <PackageSearch />
-          <IonLabel>{{ $t("tailor.navBar.orders") }}</IonLabel>
+          <Route />
+          <IonLabel>{{ $t("courier.navBar.orders") }}</IonLabel>
         </IonTabButton>
 
         <IonTabButton tab="wallet" href="/courier/wallet">
           <Wallet />
-          <IonLabel>{{ $t("tailor.navBar.wallet") }}</IonLabel>
+          <IonLabel>{{ $t("courier.navBar.wallet") }}</IonLabel>
         </IonTabButton>
       </IonTabBar>
     </IonTabs>
@@ -31,5 +31,5 @@ import {
   IonTabButton,
   IonTabs,
 } from "@ionic/vue";
-import { PackageSearch, House, Wallet } from "lucide-vue-next";
+import { Route, House, Wallet } from "lucide-vue-next";
 </script>
