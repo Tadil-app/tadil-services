@@ -165,6 +165,10 @@ export interface DisplayOrderDTO {
   reference: string;
   date: string;
   totalPrice: number;
+  /** Tailor/driver orders only: the logged-in user's share of this order, in SAR. */
+  myEarning?: number;
+  /** True once that share has been added to their wallet. */
+  myEarningPaid?: boolean;
   status: OrderStatusType;
   assignedTailorId?: string;
   assignedCourierId?: string;

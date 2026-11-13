@@ -122,6 +122,10 @@ export class DisplayOrderDTO {
   date!: Date;
   @ApiProperty()
   totalPrice!: number;
+  @ApiProperty({ description: "The logged-in tailor/driver's share of this order, in SAR" })
+  myEarning!: number;
+  @ApiProperty({ description: 'True once that share has been added to their wallet' })
+  myEarningPaid!: boolean;
   @ApiProperty()
   status!: OrderStatusType;
   @ApiProperty({ type: DisplayOrderItemDTO, isArray: true })

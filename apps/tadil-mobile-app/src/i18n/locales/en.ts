@@ -8,6 +8,11 @@ export const en = {
       cm: "cm",
       inch: "inch",
     },
+    earning: {
+      label: "Your earning",
+      paid: "Added to your wallet",
+      pending: "Added to your wallet when the client confirms receipt",
+    },
     currencies: {
       sar: "SAR",
       usd: "$",

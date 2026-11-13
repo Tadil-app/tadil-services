@@ -25,6 +25,7 @@ import {
 import { AuthGuard } from '../auth/auth.guard';
 import { createWaybillLink, publicBaseUrl, WaybillLinkDTO } from '../common/waybill/waybill.link';
 import { buildWaybill } from '../common/waybill/waybill.builder';
+import { getOrderEarnings } from '../common/earnings';
 
 @Controller('tailor/:id')
 @ApiTags('Tailor')
@@ -38,8 +39,17 @@ export class TailorController {
   ) {}
 
   @Get('/orders')
+  @UseGuards(AuthGuard)
+  @ApiBearerAuth()
   @ApiOkResponse({ type: DisplayOrderDTO, isArray: true })
-  async getOrders(@Param('id') tailorId: string): Promise<DisplayOrderDTO[]> {
+  async getOrders(
+    @Req() req: any,
+    @Param('id') tailorId: string
+  ): Promise<DisplayOrderDTO[]> {
+    // The list carries this tailor's earnings, so only they may read it.
+    if (req.user?.sub !== tailorId) {
+      throw new ForbiddenException();
+    }
     // 1. Fetch tailor's city and district
     const tailorAddress = await this._dataReader.queries.address.findFirst({
       where: { userId: tailorId },
@@ -105,7 +115,11 @@ export class TailorController {
       },
     });
 
-    return orders.map((order) => this._mapOrder(order));
+    const earnings = await getOrderEarnings(this._dataReader, tailorId, orders);
+    return orders.map((order) => ({
+      ...this._mapOrder(order),
+      ...earnings.get(order.id)!,
+    }));
   }
 
   @Post('/orders/:orderId/accept')

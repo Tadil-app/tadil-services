@@ -8,6 +8,11 @@ export const ar = {
       cm: "سم",
       inch: "بوصة",
     },
+    earning: {
+      label: "أرباحك",
+      paid: "أُضيفت إلى محفظتك",
+      pending: "تُضاف إلى محفظتك عند تأكيد العميل للاستلام",
+    },
     currencies: {
       sar: "ر.س",
       usd: "$",

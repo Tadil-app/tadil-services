@@ -452,6 +452,7 @@ export class Api<
       this.request<DisplayOrderDTO[], any>({
         path: `/api/tailor/${id}/orders`,
         method: "GET",
+        secure: true,
         format: "json",
         ...params,
       }),
@@ -588,6 +589,7 @@ export class Api<
       this.request<DisplayOrderDTO[], any>({
         path: `/api/courier/${id}/orders`,
         method: "GET",
+        secure: true,
         format: "json",
         ...params,
       }),

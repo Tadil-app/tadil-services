@@ -14,8 +14,12 @@
               <p class="mt-4 font-light">{{ $t("tailor.orderDetails.customerName") }}</p>
               <p class="font-semibold">{{ order.customerName }}</p>
               <p class="mt-4 font-light">{{ formatDate(order.date) }}</p>
+              <p class="mt-4 font-light">{{ $t("common.earning.label") }}</p>
               <p class="text-lg text-secondary font-semibold">
-                {{ $t("common.currencies.sar") }} {{ order.totalPrice }}
+                {{ $t("common.currencies.sar") }} {{ order.myEarning ?? 0 }}
+              </p>
+              <p class="text-xs text-medium">
+                {{ order.myEarningPaid ? $t("common.earning.paid") : $t("common.earning.pending") }}
               </p>
             </div>
             <div class="flex flex-col justify-between items-end">

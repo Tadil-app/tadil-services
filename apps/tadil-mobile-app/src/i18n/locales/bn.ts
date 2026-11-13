@@ -8,6 +8,11 @@ export const bn = {
       cm: "সেমি",
       inch: "ইঞ্চি",
     },
+    earning: {
+      label: "আপনার আয়",
+      paid: "আপনার ওয়ালেটে যোগ হয়েছে",
+      pending: "গ্রাহক প্রাপ্তি নিশ্চিত করলে আপনার ওয়ালেটে যোগ হবে",
+    },
     currencies: {
       sar: "SAR",
       usd: "$",

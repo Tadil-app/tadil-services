@@ -3,6 +3,7 @@ import { ApiOkResponse, ApiTags, ApiOperation, ApiBearerAuth } from '@nestjs/swa
 import { AuthGuard } from '../auth/auth.guard';
 import { createWaybillLink, publicBaseUrl, WaybillLinkDTO } from '../common/waybill/waybill.link';
 import { buildWaybill } from '../common/waybill/waybill.builder';
+import { getOrderEarnings } from '../common/earnings';
 import { DataReader } from '@tadil-database';
 import { CourierOrderDTO } from './dtos/courierOrder.dto';
 import { InformationType } from '../customer/dtos';
@@ -26,9 +27,18 @@ export class CourierController {
   ) {}
 
   @Get('/orders')
+  @UseGuards(AuthGuard)
+  @ApiBearerAuth()
   @ApiOperation({ summary: 'Get available assignments and my active orders' })
   @ApiOkResponse({ type: CourierOrderDTO, isArray: true })
-  async getOrders(@Param('id') courierId: string): Promise<CourierOrderDTO[]> {
+  async getOrders(
+    @Req() req: any,
+    @Param('id') courierId: string
+  ): Promise<CourierOrderDTO[]> {
+    // The list carries this driver's earnings, so only they may read it.
+    if (req.user?.sub !== courierId) {
+      throw new ForbiddenException();
+    }
     // 1. Fetch courier's city and district
     const courierAddress = await this._dataReader.queries.address.findFirst({
       where: { userId: courierId },
@@ -116,7 +126,22 @@ export class CourierController {
       },
     });
 
-    return orders.map((order) => this._mapOrder(order));
+    // A driver is paid per leg: doing both the pickup and the return on the
+    // same order earns their share twice, as the crediting does.
+    const earnings = await getOrderEarnings(
+      this._dataReader,
+      courierId,
+      orders,
+      (order) =>
+        order.assignedCourierId === courierId &&
+        order.assignedReturnCourierId === courierId
+          ? 2
+          : 1,
+    );
+    return orders.map((order) => ({
+      ...this._mapOrder(order),
+      ...earnings.get(order.id)!,
+    }));
     }
 
     @Get('/orders/:orderId/waybill')
