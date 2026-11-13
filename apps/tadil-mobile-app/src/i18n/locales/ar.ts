@@ -323,7 +323,7 @@ export const ar = {
     editMessage: "تعديل الرسالة",
     sendFailed: "لم يتم إرسال الرسالة. تحقق من الاتصال وحاول مرة أخرى.",
     channels: {
-      customer: "محادثة العميل",
+      customer: "الدردشة مع العميل",
       tailor: "الدردشة مع الخياط",
       courier: "الدردشة مع المندوب",
     },
