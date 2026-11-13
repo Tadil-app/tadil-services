@@ -400,6 +400,7 @@ export const en = {
       tailor: "Tailor",
       navigate: "Navigate",
       nextStop: "Next stop",
+      openFailed: "Couldn't open the maps app.",
       noLocation: "Location not available",
       openWith: "Open directions with",
       googleMaps: "Google Maps",
@@ -454,6 +455,7 @@ export const en = {
     close: "Close",
     printHint: "Opens in your browser, where you can print it or save it as a PDF.",
     loadFailed: "Couldn't load the waybill.",
+    printFailed: "Couldn't open the browser to print. Please try again.",
     retry: "Try again",
   },
   wallet: {

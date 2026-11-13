@@ -23,7 +23,7 @@ import {
   MarkOrderReadyUseCase 
 } from '@tadil-tailor';
 import { AuthGuard } from '../auth/auth.guard';
-import { createWaybillLink, WaybillLinkDTO } from '../common/waybill/waybill.link';
+import { createWaybillLink, publicBaseUrl, WaybillLinkDTO } from '../common/waybill/waybill.link';
 import { buildWaybill } from '../common/waybill/waybill.builder';
 
 @Controller('tailor/:id')
@@ -147,7 +147,7 @@ export class TailorController {
     }
     // Fails with 403/404 unless this tailor is on the order.
       await buildWaybill(this._dataReader, orderId, 'tailor', req.user.sub);
-      return createWaybillLink(orderId, 'tailor', req.user.sub);
+      return createWaybillLink(orderId, 'tailor', req.user.sub, publicBaseUrl(req));
   }
 
   @Post('/orders/:orderId/confirm-receipt')

@@ -1,7 +1,7 @@
 import { Controller, Get, Param, Post, Query, NotFoundException, Req, UseGuards, ForbiddenException } from '@nestjs/common';
 import { ApiOkResponse, ApiTags, ApiOperation, ApiBearerAuth } from '@nestjs/swagger';
 import { AuthGuard } from '../auth/auth.guard';
-import { createWaybillLink, WaybillLinkDTO } from '../common/waybill/waybill.link';
+import { createWaybillLink, publicBaseUrl, WaybillLinkDTO } from '../common/waybill/waybill.link';
 import { buildWaybill } from '../common/waybill/waybill.builder';
 import { DataReader } from '@tadil-database';
 import { CourierOrderDTO } from './dtos/courierOrder.dto';
@@ -134,7 +134,7 @@ export class CourierController {
       }
       // Fails with 403/404 unless this courier is on the order.
       await buildWaybill(this._dataReader, orderId, 'courier', req.user.sub);
-      return createWaybillLink(orderId, 'courier', req.user.sub);
+      return createWaybillLink(orderId, 'courier', req.user.sub, publicBaseUrl(req));
     }
 
     @Get('/orders/:orderId/shipping-label')

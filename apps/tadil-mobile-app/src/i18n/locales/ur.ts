@@ -400,6 +400,7 @@ export const ur = {
       tailor: "درزی",
       navigate: "نیویگیشن شروع کریں",
       nextStop: "اگلا اسٹاپ",
+      openFailed: "نقشہ ایپ نہیں کھل سکی۔",
       noLocation: "مقام دستیاب نہیں",
       openWith: "راستہ کھولیں بذریعہ",
       googleMaps: "Google Maps",
@@ -454,6 +455,7 @@ export const ur = {
     close: "بند کریں",
     printHint: "یہ براؤزر میں کھلے گا، جہاں سے آپ اسے پرنٹ یا PDF میں محفوظ کر سکتے ہیں۔",
     loadFailed: "وے بل لوڈ نہیں ہو سکا۔",
+    printFailed: "پرنٹ کے لیے براؤزر نہیں کھل سکا۔ دوبارہ کوشش کریں۔",
     retry: "دوبارہ کوشش کریں",
   },
   wallet: {

@@ -401,6 +401,7 @@ export const hi = {
       tailor: "दर्ज़ी",
       navigate: "नेविगेशन शुरू करें",
       nextStop: "अगला स्टॉप",
+      openFailed: "मैप ऐप नहीं खुल सका।",
       noLocation: "स्थान उपलब्ध नहीं",
       openWith: "दिशा-निर्देश खोलें",
       googleMaps: "Google Maps",
@@ -455,6 +456,7 @@ export const hi = {
     close: "बंद करें",
     printHint: "यह ब्राउज़र में खुलेगा, जहाँ से आप इसे प्रिंट या PDF के रूप में सेव कर सकते हैं।",
     loadFailed: "वेबिल लोड नहीं हो सका।",
+    printFailed: "प्रिंट के लिए ब्राउज़र नहीं खुल सका। फिर कोशिश करें।",
     retry: "फिर कोशिश करें",
   },
   wallet: {

@@ -401,6 +401,7 @@ export const ar = {
       tailor: "الخياط",
       navigate: "ابدأ الملاحة",
       nextStop: "المحطة التالية",
+      openFailed: "تعذّر فتح تطبيق الخرائط.",
       noLocation: "الموقع غير متوفر",
       openWith: "افتح الاتجاهات باستخدام",
       googleMaps: "Google Maps",
@@ -455,6 +456,7 @@ export const ar = {
     close: "إغلاق",
     printHint: "تُفتح في المتصفح، ومنه يمكنك طباعتها أو حفظها PDF.",
     loadFailed: "تعذّر تحميل البوليصة.",
+    printFailed: "تعذّر فتح المتصفح للطباعة. حاول مرة أخرى.",
     retry: "إعادة المحاولة",
   },
   wallet: {

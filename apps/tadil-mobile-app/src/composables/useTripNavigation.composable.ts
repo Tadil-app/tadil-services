@@ -2,7 +2,7 @@ import { actionSheetController } from "@ionic/vue";
 import { Capacitor } from "@capacitor/core";
 import { useI18n } from "vue-i18n";
 import { DisplayAddressDto } from "@/integration/dtos";
-import { buildNavigationUrl, canNavigateTo, MapsApp, NavigationTarget } from "@/utils";
+import { buildNavigationUrl, canNavigateTo, MapsApp, NavigationTarget, openExternalUrl } from "@/utils";
 import { useLocalizedAddress } from "./useLocalizedAddress.composable";
 import { useToast } from "./useToast.composable";
 
@@ -35,12 +35,11 @@ export function useTripNavigation() {
     return !!address && canNavigateTo(toTarget(address));
   }
 
-  function openUrl(url: string) {
-    // In the native app, Capacitor hands links outside the app to the phone,
-    // which opens the maps app (or its website when it is not installed).
-    const opened = window.open(url, "_blank");
-    if (!opened && !Capacitor.isNativePlatform()) {
-      window.location.href = url;
+  async function openUrl(url: string) {
+    // The phone opens the maps app, or its website when it is not installed.
+    const opened = await openExternalUrl(url);
+    if (!opened) {
+      showToast({ message: t("courier.trip.openFailed"), color: "danger" });
     }
   }
 

@@ -20,8 +20,8 @@
             <IonButton fill="outline" class="mt-4" @click="load">{{ $t("waybill.retry") }}</IonButton>
           </div>
           <iframe
-            v-else-if="link"
-            :src="link.viewUrl"
+            v-else-if="previewHtml"
+            :srcdoc="previewHtml"
             :title="$t('waybill.title')"
             class="w-full h-full border-0"
             data-testid="waybill-frame"
@@ -53,9 +53,12 @@ import {
   IonToolbar,
 } from "@ionic/vue";
 import { Printer } from "lucide-vue-next";
-import { apiClient } from "@/integration/api";
+import { apiClient, apiInstance } from "@/integration/api";
 import { WaybillLinkDTO } from "@/integration/dtos";
 import { useAuthStore } from "@/stores";
+import { openExternalUrl } from "@/utils";
+import { useToast } from "@/composables";
+import { useI18n } from "vue-i18n";
 
 /**
  * Shows the order waybill (the label for the garment bag) and prints it.
@@ -70,7 +73,10 @@ const props = defineProps<{
 const isOpen = defineModel<boolean>("isOpen", { default: false });
 
 const authStore = useAuthStore();
+const { t } = useI18n();
+const { showToast } = useToast();
 const link = ref<WaybillLinkDTO | null>(null);
+const previewHtml = ref("");
 const isLoading = ref(false);
 const hasError = ref(false);
 let fetchedAt = 0;
@@ -86,9 +92,17 @@ async function load() {
         : await apiClient.courierControllerGetWaybill(authStore.userId, props.orderId);
     link.value = data;
     fetchedAt = Date.now();
+    // Load the page over the app's own API connection and show it inline,
+    // rather than pointing a frame at the URL, which phones may block.
+    const { data: html } = await apiInstance.instance.get<string>(data.viewUrl, {
+      responseType: "text",
+      transformResponse: (body) => body,
+    });
+    previewHtml.value = html;
   } catch (error) {
     console.error("Failed to load waybill", error);
     link.value = null;
+    previewHtml.value = "";
     hasError.value = true;
   } finally {
     isLoading.value = false;
@@ -103,7 +117,10 @@ async function print() {
     await load();
     if (!link.value) return;
   }
-  window.open(link.value.printUrl, "_blank");
+  const opened = await openExternalUrl(link.value.printUrl);
+  if (!opened) {
+    showToast({ message: t("waybill.printFailed"), color: "danger" });
+  }
 }
 
 function close() {

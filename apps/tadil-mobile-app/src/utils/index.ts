@@ -6,3 +6,4 @@ export * from "./orderDeepLink.util";
 export * from "./unlockIonicTabBar.util";
 export * from "./courierTrip.util";
 export * from "./mapNavigation.util";
+export * from "./openExternal.util";

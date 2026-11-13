@@ -402,6 +402,7 @@ export const bn = {
       tailor: "দর্জি",
       navigate: "নেভিগেশন শুরু করুন",
       nextStop: "পরবর্তী স্টপ",
+      openFailed: "ম্যাপ অ্যাপ খোলা যায়নি।",
       noLocation: "অবস্থান পাওয়া যায়নি",
       openWith: "দিকনির্দেশনা খুলুন",
       googleMaps: "Google Maps",
@@ -456,6 +457,7 @@ export const bn = {
     close: "বন্ধ করুন",
     printHint: "এটি ব্রাউজারে খুলবে, সেখান থেকে প্রিন্ট বা PDF হিসেবে সেভ করতে পারবেন।",
     loadFailed: "ওয়েবিল লোড করা যায়নি।",
+    printFailed: "প্রিন্টের জন্য ব্রাউজার খোলা যায়নি। আবার চেষ্টা করুন।",
     retry: "আবার চেষ্টা করুন",
   },
   wallet: {
