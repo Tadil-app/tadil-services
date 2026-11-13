@@ -49,6 +49,13 @@ test-output
 # environment
 .env
 
+# Firebase / push secrets (never commit service account keys)
+secrets/
+**/firebase-adminsdk*.json
+
+# Optional: keep client Firebase configs out of git if preferred locally
+# (Android/iOS client configs are usually committed for CI builds.)
+
 # Android upload keystores (Play App Signing)
 *.jks
 *.keystore
