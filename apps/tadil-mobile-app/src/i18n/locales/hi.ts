@@ -321,7 +321,9 @@ export const hi = {
     edited: "संपादित",
     messageOptions: "संदेश विकल्प",
     editMessage: "संदेश संपादित करें",
+    sendFailed: "संदेश नहीं भेजा गया। अपना कनेक्शन जाँचें और फिर कोशिश करें।",
     channels: {
+      customer: "ग्राहक से चैट",
       tailor: "दर्जी के साथ चैट",
       courier: "कूरियर के साथ चैट",
     },

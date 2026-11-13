@@ -320,7 +320,9 @@ export const ur = {
     edited: "ترمیم شدہ",
     messageOptions: "پیغام کے اختیارات",
     editMessage: "پیغام میں ترمیم کریں",
+    sendFailed: "پیغام نہیں بھیجا گیا۔ اپنا کنکشن چیک کریں اور دوبارہ کوشش کریں۔",
     channels: {
+      customer: "گاہک سے چیٹ",
       tailor: "درزی کے ساتھ چیٹ",
       courier: "کوریئر کے ساتھ چیٹ",
     },

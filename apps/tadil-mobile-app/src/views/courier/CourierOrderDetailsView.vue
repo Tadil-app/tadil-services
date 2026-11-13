@@ -82,13 +82,8 @@
           </IonCard>
         </IonCard>
 
-        <!-- Chat Section -->
-        <div v-if="order" class="px-4 pb-10">
-          <h3 class="text-lg font-bold mb-3 px-2 text-main">{{ $t('chat.title') }}</h3>
-          <div class="h-125 border border-main/5 rounded-3xl overflow-hidden shadow-sm bg-item">
-            <Chat :key="order.id" :order-id="order.id" channel="COURIER" />
-          </div>
-        </div>
+        <!-- Chats open once this driver takes the trip -->
+        <OrderChats v-if="order && isMyTrip" :order-id="order.id" :channels="chatChannels" />
 
         <!-- Action Buttons -->
         <div class="space-y-3 pb-10">
@@ -139,10 +134,10 @@ import { Printer } from "lucide-vue-next";
 import { DisplayOrderDTO, ORDER_STATUS, ShippingLabelDTO } from "@/integration/dtos";
 import { createTailorOrderDeepLink, formatDate, getCourierTrip } from "@/utils";
 import QRCode from "qrcode";
-import { useToast } from "@/composables";
+import { useToast, ChatChannel } from "@/composables";
 import { apiClient } from "@/integration/api";
 import { useAuthStore } from "@/stores";
-import { ModelSegmenter, TranslatedName, StatusPill, SecondaryHeader, OrderTimeline, Chat } from "@/components";
+import { ModelSegmenter, TranslatedName, StatusPill, SecondaryHeader, OrderTimeline, OrderChats } from "@/components";
 import { useI18n } from "vue-i18n";
 import { IonButton, IonCard, IonContent, IonPage, IonSpinner } from "@ionic/vue";
 import { getOrderLableHtml } from "./orderPritnable";
@@ -159,6 +154,23 @@ const isLoading = ref(true);
 const isActionLoading = ref(false);
 
 const orderId = computed(() => route.params.id as string);
+
+const isMyTrip = computed(
+  () =>
+    !!authStore.userId &&
+    (order.value?.assignedCourierId === authStore.userId ||
+      order.value?.assignedReturnCourierId === authStore.userId),
+);
+
+const chatChannels = computed(() => {
+  const channels: { channel: ChatChannel; label: string }[] = [
+    { channel: "COURIER", label: t("chat.channels.customer") },
+  ];
+  if (order.value?.assignedTailorId) {
+    channels.push({ channel: "TAILOR_COURIER", label: t("chat.channels.tailor") });
+  }
+  return channels;
+});
 
 const trip = computed(() => (order.value ? getCourierTrip(order.value, authStore.userId) : null));
 

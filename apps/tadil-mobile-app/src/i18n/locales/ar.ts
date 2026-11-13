@@ -321,7 +321,9 @@ export const ar = {
     edited: "معدلة",
     messageOptions: "خيارات الرسالة",
     editMessage: "تعديل الرسالة",
+    sendFailed: "لم يتم إرسال الرسالة. تحقق من الاتصال وحاول مرة أخرى.",
     channels: {
+      customer: "محادثة العميل",
       tailor: "الدردشة مع الخياط",
       courier: "الدردشة مع المندوب",
     },

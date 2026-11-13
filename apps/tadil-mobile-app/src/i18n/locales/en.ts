@@ -320,7 +320,9 @@ export const en = {
     edited: "edited",
     messageOptions: "Message Options",
     editMessage: "Edit Message",
+    sendFailed: "Message not sent. Check your connection and try again.",
     channels: {
+      customer: "Chat with Client",
       tailor: "Chat with Tailor",
       courier: "Chat with Courier",
     },

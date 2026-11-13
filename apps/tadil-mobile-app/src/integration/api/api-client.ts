@@ -408,7 +408,7 @@ export class Api<
      */
     chatControllerGetMessages: (
       orderId: string,
-      channel: "TAILOR" | "COURIER",
+      channel: "TAILOR" | "COURIER" | "TAILOR_COURIER",
       params: RequestParams = {},
     ) =>
       this.request<any[], any>({

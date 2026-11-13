@@ -85,13 +85,8 @@
           </IonCard>
         </IonCard>
 
-        <!-- Chat Section -->
-        <div v-if="order" class="px-4 pb-10">
-          <h3 class="text-lg font-bold mb-3 px-2 text-main">{{ $t('chat.title') }}</h3>
-          <div class="h-125 border border-main/5 rounded-3xl overflow-hidden shadow-sm bg-item">
-            <Chat :key="order.id" :order-id="order.id" channel="TAILOR" />
-          </div>
-        </div>
+        <!-- Chats: with the client, and with the driver once one is assigned -->
+        <OrderChats v-if="order" :order-id="order.id" :channels="chatChannels" />
 
         <!-- Action Buttons based on New Flow -->
         <div class="space-y-3">
@@ -124,16 +119,16 @@
 </template>
 
 <script setup lang="ts">
-import { onBeforeUnmount, ref } from "vue";
+import { computed, onBeforeUnmount, ref } from "vue";
 import { useRouter } from "vue-router";
 import { DisplayOrderDTO, ORDER_STATUS } from "@/integration/dtos";
 import { useTailorOrdersStore } from "@/stores";
 import { createTailorOrderDeepLink, formatDate } from "@/utils";
-import { useToast } from "@/composables";
+import { useToast, ChatChannel } from "@/composables";
 import { useI18n } from "vue-i18n";
 import { apiClient } from "@/integration/api";
 import { useAuthStore } from "@/stores";
-import { ModelSegmenter, TranslatedName, StatusPill, SecondaryHeader, OrderTimeline, Chat } from "@/components";
+import { ModelSegmenter, TranslatedName, StatusPill, SecondaryHeader, OrderTimeline, OrderChats } from "@/components";
 import { IonButton, IonCard, IonContent, IonPage, onIonViewWillEnter } from "@ionic/vue";
 import { QrcodeSvg } from "qrcode.vue";
 import { storeToRefs } from "pinia";
@@ -148,6 +143,16 @@ const authStore = useAuthStore();
 const router = useRouter();
 
 const order = ref<DisplayOrderDTO>();
+
+const chatChannels = computed(() => {
+  const channels: { channel: ChatChannel; label: string }[] = [
+    { channel: "TAILOR", label: t("chat.channels.customer") },
+  ];
+  if (order.value?.assignedCourierId || order.value?.assignedReturnCourierId) {
+    channels.push({ channel: "TAILOR_COURIER", label: t("chat.channels.courier") });
+  }
+  return channels;
+});
 const ordersStore = useTailorOrdersStore();
 const { orders } = storeToRefs(ordersStore);
 const { fetchOrders } = ordersStore;

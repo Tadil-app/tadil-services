@@ -322,7 +322,9 @@ export const bn = {
     edited: "সম্পাদিত",
     messageOptions: "বার্তার বিকল্পসমূহ",
     editMessage: "বার্তা সম্পাদনা করুন",
+    sendFailed: "বার্তা পাঠানো যায়নি। সংযোগ দেখে আবার চেষ্টা করুন।",
     channels: {
+      customer: "গ্রাহকের সাথে চ্যাট",
       tailor: "দর্জির সাথে চ্যাট",
       courier: "কুরিয়ারের সাথে চ্যাট",
     },

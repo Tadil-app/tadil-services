@@ -8,7 +8,12 @@ import {
   UseGuards,
   UseInterceptors,
   Logger,
+  Req,
+  ForbiddenException,
+  BadRequestException,
 } from '@nestjs/common';
+import { DbClient } from '@tadil-database';
+import { canAccessChat, findOrderParticipants, isChatChannel } from './chat-access';
 import {
   ApiBearerAuth,
   ApiConsumes,
@@ -36,15 +41,25 @@ export class ChatController {
     @Inject('ChatRepository')
     private readonly _chatRepository: ChatRepository,
     @Inject('FileStorageService')
-    private readonly _fileStorageService: FileStorageService
+    private readonly _fileStorageService: FileStorageService,
+    private readonly _db: DbClient
   ) {}
 
   @Get('/:orderId/:channel')
   @ApiOperation({ summary: 'Get chat history' })
   async getMessages(
     @Param('orderId') orderId: string,
-    @Param('channel') channel: MessageChannel
+    @Param('channel') channel: MessageChannel,
+    @Req() request: { user?: { sub?: string } }
   ) {
+    if (!isChatChannel(channel)) {
+      throw new BadRequestException('Unknown chat channel');
+    }
+    const order = await findOrderParticipants(this._db, orderId);
+    if (!order || !canAccessChat(order, channel, request.user?.sub ?? '')) {
+      throw new ForbiddenException();
+    }
+
     this.logger.log(`Fetching chat history for order ${orderId} and channel ${channel}`);
     const chat = await this._chatRepository.getChat(orderId, channel);
 

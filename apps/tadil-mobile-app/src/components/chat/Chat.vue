@@ -109,7 +109,7 @@
 <script setup lang="ts">
 import { ref, onMounted, watch, nextTick } from "vue";
 import { IonSpinner, IonButton, alertController } from "@ionic/vue";
-import { useChat, ChatMessage } from "@/composables";
+import { useChat, ChatMessage, ChatChannel } from "@/composables";
 import { useAuthStore } from "@/stores";
 import { ChevronDown, Trash2 } from "lucide-vue-next";
 import ChatVoicePlayer from "./ChatVoicePlayer.vue";
@@ -118,7 +118,7 @@ import { useI18n } from "vue-i18n";
 
 const props = defineProps<{
   orderId: string;
-  channel: 'TAILOR' | 'COURIER';
+  channel: ChatChannel;
 }>();
 
 const { t } = useI18n();
