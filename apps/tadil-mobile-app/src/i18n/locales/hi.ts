@@ -1,5 +1,9 @@
 export const hi = {
   common: {
+    accountType: {
+      tailor: "दर्ज़ी खाता",
+      courier: "ड्राइवर खाता",
+    },
     units: {
       cm: "सेमी",
       inch: "इंच",

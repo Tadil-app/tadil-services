@@ -1,5 +1,9 @@
 export const ar = {
   common: {
+    accountType: {
+      tailor: "حساب خياط",
+      courier: "حساب سائق",
+    },
     units: {
       cm: "سم",
       inch: "بوصة",

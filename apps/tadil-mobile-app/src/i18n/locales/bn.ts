@@ -1,5 +1,9 @@
 export const bn = {
   common: {
+    accountType: {
+      tailor: "দর্জি অ্যাকাউন্ট",
+      courier: "ড্রাইভার অ্যাকাউন্ট",
+    },
     units: {
       cm: "সেমি",
       inch: "ইঞ্চি",

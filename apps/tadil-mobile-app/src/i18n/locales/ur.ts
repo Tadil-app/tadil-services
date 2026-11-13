@@ -1,5 +1,9 @@
 export const ur = {
   common: {
+    accountType: {
+      tailor: "درزی اکاؤنٹ",
+      courier: "ڈرائیور اکاؤنٹ",
+    },
     units: {
       cm: "سینٹی میٹر",
       inch: "انچ",

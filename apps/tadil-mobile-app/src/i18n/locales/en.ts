@@ -1,5 +1,9 @@
 export const en = {
   common: {
+    accountType: {
+      tailor: "Tailor Account",
+      courier: "Driver Account",
+    },
     units: {
       cm: "cm",
       inch: "inch",
