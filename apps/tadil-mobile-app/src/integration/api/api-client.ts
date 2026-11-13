@@ -31,6 +31,7 @@ import {
   DisplayBoundaryDTO,
   User,
   ShippingLabelDTO,
+  WaybillLinkDTO,
 } from "../dtos";
 export interface UploadFileDto {
   file: File;
@@ -526,6 +527,38 @@ export class Api<
       this.request<void, any>({
         path: `/api/tailor/${id}/orders/${orderId}/mark-ready`,
         method: "POST",
+        ...params,
+      }),
+
+    /**
+     * Short-lived link to view and print the order waybill.
+     *
+     * @tags Tailor
+     * @name TailorControllerGetWaybill
+     * @request GET:/api/tailor/{id}/orders/{orderId}/waybill
+     */
+    tailorControllerGetWaybill: (id: string, orderId: string, params: RequestParams = {}) =>
+      this.request<WaybillLinkDTO, any>({
+        path: `/api/tailor/${id}/orders/${orderId}/waybill`,
+        method: "GET",
+        secure: true,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * Short-lived link to view and print the order waybill.
+     *
+     * @tags Courier
+     * @name CourierControllerGetWaybill
+     * @request GET:/api/courier/{id}/orders/{orderId}/waybill
+     */
+    courierControllerGetWaybill: (id: string, orderId: string, params: RequestParams = {}) =>
+      this.request<WaybillLinkDTO, any>({
+        path: `/api/courier/${id}/orders/${orderId}/waybill`,
+        method: "GET",
+        secure: true,
+        format: "json",
         ...params,
       }),
 

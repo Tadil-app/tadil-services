@@ -24,7 +24,8 @@ const startScan = async () => {
 
   try {
     const result = await BarcodeScanner.scan({
-      formats: [BarcodeFormat.QrCode],
+      // QR codes on older labels, Code 128 barcodes on the waybill.
+      formats: [BarcodeFormat.QrCode, BarcodeFormat.Code128],
     });
 
     if (result.barcodes.length > 0) {

@@ -7,6 +7,7 @@ import OrderListItem from "./OrderListItem.vue";
 import OrderTimeline from "./OrderTimeline.vue";
 import SecondaryHeader from "./SecondaryHeader.vue";
 import EmptyState from "./EmptyState.vue";
+import WaybillModal from "./WaybillModal.vue";
 
 export {
   ImageInput,
@@ -18,4 +19,5 @@ export {
   OrderTimeline,
   SecondaryHeader,
   EmptyState,
+  WaybillModal,
 };

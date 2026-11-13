@@ -447,6 +447,15 @@ export const ur = {
       grandTotal: "مجموعی کل:"
     }
     },
+  waybill: {
+    title: "آرڈر وے بل",
+    open: "وے بل دیکھیں / پرنٹ کریں",
+    print: "وے بل پرنٹ کریں",
+    close: "بند کریں",
+    printHint: "یہ براؤزر میں کھلے گا، جہاں سے آپ اسے پرنٹ یا PDF میں محفوظ کر سکتے ہیں۔",
+    loadFailed: "وے بل لوڈ نہیں ہو سکا۔",
+    retry: "دوبارہ کوشش کریں",
+  },
   wallet: {
     noTransactions: "کوئی لین دین نہیں ملا",
     payoutRequest: {

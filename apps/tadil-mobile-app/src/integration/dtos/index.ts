@@ -343,6 +343,13 @@ export interface ShippingLabelItemDTO {
   price: number;
 }
 
+/** Links to the printable order waybill; valid for a short time. */
+export interface WaybillLinkDTO {
+  viewUrl: string;
+  printUrl: string;
+  expiresInMinutes: number;
+}
+
 export interface ShippingLabelDTO {
   orderId: string;
   orderReference: string;

@@ -22,13 +22,24 @@
               </p>
             </div>
             <div class="flex flex-col justify-between items-end">
-              <IonButton fill="clear" @click="printLabel" class="ion-hide-print text-primary m-0 p-0 h-10">
-                <Printer class="w-8 h-8" />
-              </IonButton>
               <StatusPill :status="order.status" />
             </div>
           </div>
         </IonCard>
+
+        <!-- Waybill: printed and attached to the garment bag -->
+        <IonButton
+          v-if="isMyTrip"
+          expand="block"
+          fill="outline"
+          class="mx-4"
+          data-testid="open-waybill"
+          @click="isWaybillOpen = true"
+        >
+          <ScrollText class="w-5 h-5 me-2" />
+          {{ $t("waybill.open") }}
+        </IonButton>
+        <WaybillModal v-model:is-open="isWaybillOpen" :order-id="order.id" role="courier" />
 
         <!-- Trip: direction, pickup and delivery points, navigation -->
         <TripRouteCard v-if="trip" :trip="trip" />
@@ -130,17 +141,15 @@
 <script setup lang="ts">
 import { onMounted, ref, computed } from "vue";
 import { useRoute, useRouter } from "vue-router";
-import { Printer } from "lucide-vue-next";
-import { DisplayOrderDTO, ORDER_STATUS, ShippingLabelDTO } from "@/integration/dtos";
-import { createTailorOrderDeepLink, formatDate, getCourierTrip } from "@/utils";
-import QRCode from "qrcode";
+import { ScrollText } from "lucide-vue-next";
+import { DisplayOrderDTO, ORDER_STATUS } from "@/integration/dtos";
+import { formatDate, getCourierTrip } from "@/utils";
 import { useToast, ChatChannel } from "@/composables";
 import { apiClient } from "@/integration/api";
 import { useAuthStore } from "@/stores";
-import { ModelSegmenter, TranslatedName, StatusPill, SecondaryHeader, OrderTimeline, OrderChats } from "@/components";
+import { ModelSegmenter, TranslatedName, StatusPill, SecondaryHeader, OrderTimeline, OrderChats, WaybillModal } from "@/components";
 import { useI18n } from "vue-i18n";
 import { IonButton, IonCard, IonContent, IonPage, IonSpinner } from "@ionic/vue";
-import { getOrderLableHtml } from "./orderPritnable";
 import TripRouteCard from "./components/TripRouteCard.vue";
 
 const { t } = useI18n();
@@ -154,6 +163,8 @@ const isLoading = ref(true);
 const isActionLoading = ref(false);
 
 const orderId = computed(() => route.params.id as string);
+
+const isWaybillOpen = ref(false);
 
 const isMyTrip = computed(
   () =>
@@ -248,34 +259,6 @@ async function performAction(action: () => Promise<any>) {
     showToast({ message: t("common.messages.actionError"), color: "danger" });
   } finally {
     isActionLoading.value = false;
-  }
-}
-
-async function printLabel() {
-  if (!order.value) return;
-  try {
-    const { data: label } = await apiClient.courierControllerGetShippingLabel(
-      authStore.userId,
-      order.value.id
-    );
-
-    const printWindow = window.open("", "_blank");
-    if (!printWindow) {
-      showToast({ message: "Please allow popups to print the label.", color: "danger" });
-      return;
-    }
-
-    const qrCodeDataUrl = await QRCode.toDataURL(
-      createTailorOrderDeepLink(label.orderReference),
-      { errorCorrectionLevel: "H", margin: 1, width: 240 }
-    );
-    const html = getOrderLableHtml(label, t, qrCodeDataUrl);
-
-    printWindow.document.write(html);
-    printWindow.document.close();
-  } catch (error) {
-    console.error("Failed to generate shipping label", error);
-    showToast({ message: "Failed to load printable shipping label.", color: "danger" });
   }
 }
 

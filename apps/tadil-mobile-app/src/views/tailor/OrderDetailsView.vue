@@ -30,6 +30,20 @@
           </div>
         </IonCard>
 
+        <!-- Waybill: printed and attached to the garment bag -->
+        <IonButton
+          v-if="isAssignedToMe"
+          expand="block"
+          fill="outline"
+          class="mx-4"
+          data-testid="open-waybill"
+          @click="isWaybillOpen = true"
+        >
+          <ScrollText class="w-5 h-5 me-2" />
+          {{ $t("waybill.open") }}
+        </IonButton>
+        <WaybillModal v-model:is-open="isWaybillOpen" :order-id="order.id" role="tailor" />
+
         <OrderTimeline v-if="order.history && order.history.length > 0" :history="order.history" />
 
         <!-- Alterations omitted for brevity in this replace call, but they should remain -->
@@ -128,7 +142,8 @@ import { useToast, ChatChannel } from "@/composables";
 import { useI18n } from "vue-i18n";
 import { apiClient } from "@/integration/api";
 import { useAuthStore } from "@/stores";
-import { ModelSegmenter, TranslatedName, StatusPill, SecondaryHeader, OrderTimeline, OrderChats } from "@/components";
+import { ModelSegmenter, TranslatedName, StatusPill, SecondaryHeader, OrderTimeline, OrderChats, WaybillModal } from "@/components";
+import { ScrollText } from "lucide-vue-next";
 import { IonButton, IonCard, IonContent, IonPage, onIonViewWillEnter } from "@ionic/vue";
 import { QrcodeSvg } from "qrcode.vue";
 import { storeToRefs } from "pinia";
@@ -143,6 +158,11 @@ const authStore = useAuthStore();
 const router = useRouter();
 
 const order = ref<DisplayOrderDTO>();
+
+const isWaybillOpen = ref(false);
+const isAssignedToMe = computed(
+  () => !!authStore.userId && order.value?.assignedTailorId === authStore.userId,
+);
 
 const chatChannels = computed(() => {
   const channels: { channel: ChatChannel; label: string }[] = [

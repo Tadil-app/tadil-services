@@ -447,6 +447,15 @@ export const en = {
       grandTotal: "Grand Total:"
     }
   },
+  waybill: {
+    title: "Order waybill",
+    open: "View / print waybill",
+    print: "Print waybill",
+    close: "Close",
+    printHint: "Opens in your browser, where you can print it or save it as a PDF.",
+    loadFailed: "Couldn't load the waybill.",
+    retry: "Try again",
+  },
   wallet: {
     noTransactions: "No transactions found",
     payoutRequest: {

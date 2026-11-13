@@ -448,6 +448,15 @@ export const ar = {
       grandTotal: "المجموع الكلي:"
     }
     },
+  waybill: {
+    title: "بوليصة الطلب",
+    open: "عرض / طباعة البوليصة",
+    print: "طباعة البوليصة",
+    close: "إغلاق",
+    printHint: "تُفتح في المتصفح، ومنه يمكنك طباعتها أو حفظها PDF.",
+    loadFailed: "تعذّر تحميل البوليصة.",
+    retry: "إعادة المحاولة",
+  },
   wallet: {
     noTransactions: "لم يتم العثور على معاملات",
     payoutRequest: {

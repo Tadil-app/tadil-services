@@ -84,9 +84,14 @@ const ordersSearchFilter = ref("");
 
 function handleScan(value: string | undefined) {
   if (!value) return;
+  // QR code on older labels: a tadil:// link to the order.
   const path = getTailorOrderPath(value);
-  if (path) router.push(path);
-  else ordersSearchFilter.value = value;
+  if (path) return router.push(path);
+  // Barcode on the waybill: the plain order number.
+  const reference = value.trim();
+  const match = orders.value.find((o) => o.reference.toLowerCase() === reference.toLowerCase());
+  if (match) return router.push(`/tailor/orders/${encodeURIComponent(match.reference)}`);
+  ordersSearchFilter.value = reference;
 }
 
 const orderStatus = [

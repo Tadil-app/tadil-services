@@ -448,6 +448,15 @@ export const hi = {
       grandTotal: "कुल योग:"
     }
     },
+  waybill: {
+    title: "ऑर्डर वेबिल",
+    open: "वेबिल देखें / प्रिंट करें",
+    print: "वेबिल प्रिंट करें",
+    close: "बंद करें",
+    printHint: "यह ब्राउज़र में खुलेगा, जहाँ से आप इसे प्रिंट या PDF के रूप में सेव कर सकते हैं।",
+    loadFailed: "वेबिल लोड नहीं हो सका।",
+    retry: "फिर कोशिश करें",
+  },
   wallet: {
     noTransactions: "कोई लेनदेन नहीं मिला",
     payoutRequest: {

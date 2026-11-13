@@ -23,6 +23,8 @@ import {
   MarkOrderReadyUseCase 
 } from '@tadil-tailor';
 import { AuthGuard } from '../auth/auth.guard';
+import { createWaybillLink, WaybillLinkDTO } from '../common/waybill/waybill.link';
+import { buildWaybill } from '../common/waybill/waybill.builder';
 
 @Controller('tailor/:id')
 @ApiTags('Tailor')
@@ -128,6 +130,24 @@ export class TailorController {
       tailorId,
       orderId,
     });
+  }
+
+  @Get('/orders/:orderId/waybill')
+  @UseGuards(AuthGuard)
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Get a short-lived link to view and print the order waybill' })
+  @ApiOkResponse({ type: WaybillLinkDTO })
+  async getWaybill(
+    @Req() req: any,
+    @Param('id') tailorId: string,
+    @Param('orderId') orderId: string
+  ): Promise<WaybillLinkDTO> {
+    if (req.user?.sub !== tailorId) {
+      throw new ForbiddenException();
+    }
+    // Fails with 403/404 unless this tailor is on the order.
+      await buildWaybill(this._dataReader, orderId, 'tailor', req.user.sub);
+      return createWaybillLink(orderId, 'tailor', req.user.sub);
   }
 
   @Post('/orders/:orderId/confirm-receipt')
