@@ -3,7 +3,6 @@ import { AuthResponseDto, User, UpdateProfileDto, DisplayAddressDto, CreateAddre
 import { Preferences } from "@capacitor/preferences";
 import { defineStore } from "pinia";
 import { ref } from "vue";
-import { useRouter } from "vue-router";
 
 export const useAuthStore = defineStore("auth", () => {
   const userId = ref("");
@@ -12,7 +11,7 @@ export const useAuthStore = defineStore("auth", () => {
   const userInfo = ref<User | null>(null);
   const userAddresses = ref<DisplayAddressDto[]>([]);
   const walletDetails = ref<any>(null);
-  const router = useRouter();
+  let isLoggingOut = false;
 
   async function initAuth() {
     const { value: storedToken } = await Preferences.get({ key: "token" });
@@ -139,6 +138,9 @@ export const useAuthStore = defineStore("auth", () => {
   }
 
   async function logout() {
+    // Several requests can fail with 401 at once; sign out only once.
+    if (isLoggingOut) return;
+    isLoggingOut = true;
     token.value = "";
     userId.value = "";
     userRole.value = "";
@@ -149,7 +151,14 @@ export const useAuthStore = defineStore("auth", () => {
     await Preferences.remove({ key: "token" });
     await Preferences.remove({ key: "userId" });
     await Preferences.remove({ key: "userRole" });
-    router.push({ name: "login" });
+    // Imported here, not via useRouter(): this store is first created in
+    // main.ts, outside any component, where useRouter() returns nothing.
+    const { default: router } = await import("@/router");
+    try {
+      await router.push({ name: "login" });
+    } finally {
+      isLoggingOut = false;
+    }
   }
 
   return { 

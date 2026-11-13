@@ -2,6 +2,7 @@ import { createApp } from "vue";
 import { App as CapacitorApp } from "@capacitor/app";
 import App from "./App.vue";
 import router from "./router";
+import { apiInstance } from "./integration/api";
 import { getPaymentReturnPath, getTailorOrderPath } from "./utils";
 
 import { IonicVue, iosTransitionAnimation } from "@ionic/vue";
@@ -58,6 +59,18 @@ app.use(router);
 app.use(pinia);
 
 const authStore = useAuthStore();
+
+// A signed-in request rejected with 401 means the saved session is no longer
+// valid (expired, or the server's signing key changed): sign out and go to
+// login, instead of leaving every screen failing on its own.
+apiInstance.instance.interceptors.response.use(undefined, async (error) => {
+  const sentToken = !!error?.config?.headers?.Authorization;
+  if (error?.response?.status === 401 && sentToken && authStore.token) {
+    await authStore.logout();
+  }
+  return Promise.reject(error);
+});
+
 const authReady = authStore.initAuth();
 
 const languageStore = useLanguageStore();
