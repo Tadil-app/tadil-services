@@ -75,9 +75,6 @@
                   </div>
                 </div>
               </div>
-              <div class="font-semibold text-secondary text-lg p-2">
-                {{ $t("common.price") }}: {{ item.price }} {{ $t("common.currencies.sar") }}
-              </div>
             </div>
           </IonCard>
           <IonCard v-for="item in order.customItems" :key="item.id" class="space-y-2">
@@ -96,9 +93,6 @@
                   <p class="truncate">{{ information.value }} {{ information.unit ? $t("common.units." + information.unit) : "" }}</p>
                 </div>
               </div>
-            </div>
-            <div class="border-t border-border font-semibold text-secondary text-lg p-2">
-              {{ $t("common.price") }}: {{ item.price }} {{ $t("common.currencies.sar") }}
             </div>
           </IonCard>
         </IonCard>
