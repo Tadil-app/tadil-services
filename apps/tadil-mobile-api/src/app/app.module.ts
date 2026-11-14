@@ -9,9 +9,10 @@ import { WalletModule } from './wallet/wallet.module';
 import { ChatModule } from './chat/chat.module';
 import { LocationsModule } from './locations/locations.module';
 import { WaybillModule } from './common/waybill/waybill.module';
+import { NotificationsModule } from './notifications/notifications.module';
 
 @Module({
-  imports: [CommonModule, CustomerModule, TailorModule, CourierModule, AuthModule, WalletModule, ChatModule, LocationsModule, WaybillModule],
+  imports: [CommonModule, CustomerModule, TailorModule, CourierModule, AuthModule, WalletModule, ChatModule, LocationsModule, WaybillModule, NotificationsModule],
   controllers: [AppController],
   providers: [],
 })

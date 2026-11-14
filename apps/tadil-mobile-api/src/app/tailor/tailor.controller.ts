@@ -26,6 +26,7 @@ import { AuthGuard } from '../auth/auth.guard';
 import { createWaybillLink, publicBaseUrl, WaybillLinkDTO } from '../common/waybill/waybill.link';
 import { buildWaybill } from '../common/waybill/waybill.builder';
 import { getOrderEarnings } from '../common/earnings';
+import { OrderNotifier } from '@tadil-notifications';
 
 @Controller('tailor/:id')
 @ApiTags('Tailor')
@@ -35,7 +36,8 @@ export class TailorController {
     private readonly _acceptOrderUseCase: AcceptOrderUseCase,
     private readonly _declineOrderUseCase: DeclineOrderUseCase,
     private readonly _confirmReceiptUseCase: ConfirmReceiptUseCase,
-    private readonly _markReadyUseCase: MarkOrderReadyUseCase
+    private readonly _markReadyUseCase: MarkOrderReadyUseCase,
+    private readonly _orderNotifier: OrderNotifier
   ) {}
 
   @Get('/orders')
@@ -132,6 +134,8 @@ export class TailorController {
       tailorId,
       orderId,
     });
+    // Drivers of the area can now pick it up from the customer.
+    this._orderNotifier.orderStatusChanged(orderId, tailorId);
   }
 
   @Post('/orders/:orderId/decline')
@@ -192,6 +196,8 @@ export class TailorController {
   @ApiOperation({ summary: 'Mark work as ready for return courier' })
   async markReady(@Param('orderId') orderId: string) {
     await this._markReadyUseCase.execute({ orderId });
+    // Drivers of the area can now bring it back to the customer.
+    this._orderNotifier.orderStatusChanged(orderId);
   }
 
   private _mapOrder(order: any): DisplayOrderDTO {

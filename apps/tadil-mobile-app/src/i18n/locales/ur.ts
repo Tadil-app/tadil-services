@@ -1,5 +1,9 @@
 export const ur = {
   common: {
+    push: {
+      open: "کھولیں",
+      channelName: "نئے آرڈرز",
+    },
     accountType: {
       tailor: "درزی اکاؤنٹ",
       courier: "ڈرائیور اکاؤنٹ",

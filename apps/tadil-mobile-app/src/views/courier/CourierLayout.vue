@@ -32,4 +32,13 @@ import {
   IonTabs,
 } from "@ionic/vue";
 import { Route, House, Wallet } from "lucide-vue-next";
+import { onUnmounted } from "vue";
+import { useCourierOrdersStore } from "@/stores";
+import { onOrderPush } from "@/push/pushNotifications";
+
+const ordersStore = useCourierOrdersStore();
+
+// An order alert arrived while the app is open: show the order right away.
+const stopOrderPush = onOrderPush(() => ordersStore.fetchOrders());
+onUnmounted(stopOrderPush);
 </script>

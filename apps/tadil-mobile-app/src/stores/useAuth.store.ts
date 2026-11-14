@@ -1,6 +1,7 @@
 import { apiClient, apiInstance } from "@/integration/api";
 import { AuthResponseDto, User, UpdateProfileDto, DisplayAddressDto, CreateAddressDto, UpdateAddressDto } from "@/integration/dtos";
 import { Preferences } from "@capacitor/preferences";
+import { disablePushForSession, enablePushForSession } from "@/push/pushNotifications";
 import { defineStore } from "pinia";
 import { ref } from "vue";
 
@@ -28,6 +29,8 @@ export const useAuthStore = defineStore("auth", () => {
       if (userRole.value === 'tailor' || userRole.value === 'courier') {
         await fetchWallet();
       }
+      // fetchProfile signs out on a rejected session; only a live one gets pushes.
+      if (token.value) void enablePushForSession(userRole.value);
     }
   }
 
@@ -130,6 +133,7 @@ export const useAuthStore = defineStore("auth", () => {
     if (user.role === 'tailor' || user.role === 'courier') {
       await fetchWallet();
     }
+    void enablePushForSession(user.role);
   }
 
   async function deleteAccount() {
@@ -141,6 +145,8 @@ export const useAuthStore = defineStore("auth", () => {
     // Several requests can fail with 401 at once; sign out only once.
     if (isLoggingOut) return;
     isLoggingOut = true;
+    // While the session token still authenticates the unregister call.
+    await disablePushForSession();
     token.value = "";
     userId.value = "";
     userRole.value = "";

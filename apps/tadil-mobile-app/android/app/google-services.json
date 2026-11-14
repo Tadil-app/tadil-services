@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "763978028025",
+    "project_id": "tadil-c4556",
+    "storage_bucket": "tadil-c4556.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:763978028025:android:4e2c355e7fec7cda676328",
+        "android_client_info": {
+          "package_name": "com.tadil.app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAc7a4Eldr9hGBbT2TdwLgp_MWrUK7bP7Q"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

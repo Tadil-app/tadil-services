@@ -34,7 +34,8 @@
       "@tadil-orders": ["libs/core/tadil-orders/src/index.ts"],
       "@tadil-wallet": ["libs/core/tadil-wallet/src/index.ts"],
       "@tadil-chat": ["libs/core/tadil-chat/src/index.ts"],
-      "@tadil-payment": ["libs/infra/tadil-payment/src/index.ts"]
+      "@tadil-payment": ["libs/infra/tadil-payment/src/index.ts"],
+      "@tadil-notifications": ["libs/infra/tadil-notifications/src/index.ts"]
     }
   }
 }

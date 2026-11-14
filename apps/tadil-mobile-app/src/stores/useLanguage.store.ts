@@ -1,5 +1,6 @@
 import i18n from "@/i18n/i18n";
 import { Preferences } from "@capacitor/preferences";
+import { refreshPushLocale } from "@/push/pushNotifications";
 import { defineStore } from "pinia";
 import { ref } from "vue";
 
@@ -46,6 +47,7 @@ export const useLanguageStore = defineStore("language", () => {
 
     applyDomAttributes(newLocale);
     await Preferences.set({ key: "locale", value: newLocale.key });
+    void refreshPushLocale();
   }
   function applyDomAttributes(locale: Locale) {
     // Set the property, not only the attribute: iOS WebKit ignores a late

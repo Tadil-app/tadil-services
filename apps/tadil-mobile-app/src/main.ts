@@ -4,6 +4,7 @@ import App from "./App.vue";
 import router from "./router";
 import { apiInstance } from "./integration/api";
 import { getPaymentReturnPath, getTailorOrderPath } from "./utils";
+import { initPushNotifications } from "./push/pushNotifications";
 
 import { IonicVue, iosTransitionAnimation } from "@ionic/vue";
 
@@ -72,6 +73,12 @@ apiInstance.instance.interceptors.response.use(undefined, async (error) => {
 });
 
 const authReady = authStore.initAuth();
+
+// Before mount, so the alert tap that launched the app is not missed.
+void initPushNotifications(router, async () => {
+  await authReady;
+  return { role: authStore.userRole };
+});
 
 const languageStore = useLanguageStore();
 languageStore.initLanguage();

@@ -16,6 +16,7 @@ import {
   DisplayOrderDTO,
   CreateOrderDto,
   ConfirmPaymentDto,
+  RegisterDeviceDto,
   ConfirmPaymentResultDto,
   ReconcilePendingOrderResultDto,
   RequestPayoutDto,
@@ -961,6 +962,45 @@ export class Api<
       this.request<void, any>({
         path: `/api/files/${id}`,
         method: "GET",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Devices
+     * @name DevicesControllerRegister
+     * @summary Register this phone for push notifications
+     * @request POST:/api/devices
+     * @secure
+     */
+    devicesControllerRegister: (
+      data: RegisterDeviceDto,
+      params: RequestParams = {},
+    ) =>
+      this.request<void, any>({
+        path: `/api/devices`,
+        method: "POST",
+        body: data,
+        secure: true,
+        type: ContentType.Json,
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Devices
+     * @name DevicesControllerUnregister
+     * @summary Stop push notifications to this phone (sign-out)
+     * @request DELETE:/api/devices/{token}
+     * @secure
+     */
+    devicesControllerUnregister: (token: string, params: RequestParams = {}) =>
+      this.request<void, any>({
+        path: `/api/devices/${encodeURIComponent(token)}`,
+        method: "DELETE",
+        secure: true,
         ...params,
       }),
   };

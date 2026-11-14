@@ -45,6 +45,7 @@ import { ConfirmReceiptUseCase } from '@tadil-customer';
 import { CreateOrderUseCase, ConfirmPaymentUseCase, ReconcilePendingOrderUseCase, OrdersRepository } from '@tadil-orders';
 import { AuthGuard } from '../auth/auth.guard';
 import { isAppleReviewPhone } from './apple-review-phones';
+import { OrderNotifier } from '@tadil-notifications';
 
 @Controller('customer')
 @ApiTags('Customer')
@@ -58,7 +59,8 @@ export class CustomerController {
     private readonly _confirmPaymentUseCase: ConfirmPaymentUseCase,
     private readonly _reconcilePendingOrderUseCase: ReconcilePendingOrderUseCase,
     @Inject('OrdersRepository')
-    private readonly _ordersRepository: OrdersRepository
+    private readonly _ordersRepository: OrdersRepository,
+    private readonly _orderNotifier: OrderNotifier
   ) {}
 
   @Get('orders')
@@ -129,6 +131,10 @@ export class CustomerController {
       orderId,
       customerId: req.user.sub,
     });
+    if (status === 'confirmed') {
+      // The order is now open to tailors. Repeats are dropped by the notifier.
+      this._orderNotifier.orderStatusChanged(orderId);
+    }
     return { status };
   }
 
@@ -142,11 +148,14 @@ export class CustomerController {
     @Req() req: any,
     @Body() dto: ConfirmPaymentDto
   ): Promise<ConfirmPaymentResultDto> {
-    return this._confirmPaymentUseCase.execute({
+    const result = await this._confirmPaymentUseCase.execute({
       paymentId: dto.paymentId,
       orderId: dto.orderId,
       customerId: req.user.sub,
     });
+    // The order is now open to tailors. Repeats are dropped by the notifier.
+    this._orderNotifier.orderStatusChanged(result.orderId);
+    return result;
   }
 
   @Post('orders/:orderId/confirm-receipt')

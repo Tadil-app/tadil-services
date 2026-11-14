@@ -1,5 +1,9 @@
 export const ar = {
   common: {
+    push: {
+      open: "فتح",
+      channelName: "الطلبات الجديدة",
+    },
     accountType: {
       tailor: "حساب خياط",
       courier: "حساب سائق",

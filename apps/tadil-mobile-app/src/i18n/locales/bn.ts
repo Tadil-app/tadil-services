@@ -1,5 +1,9 @@
 export const bn = {
   common: {
+    push: {
+      open: "খুলুন",
+      channelName: "নতুন অর্ডার",
+    },
     accountType: {
       tailor: "দর্জি অ্যাকাউন্ট",
       courier: "ড্রাইভার অ্যাকাউন্ট",

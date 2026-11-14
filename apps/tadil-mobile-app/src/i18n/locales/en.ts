@@ -1,5 +1,9 @@
 export const en = {
   common: {
+    push: {
+      open: "Open",
+      channelName: "New orders",
+    },
     accountType: {
       tailor: "Tailor Account",
       courier: "Driver Account",

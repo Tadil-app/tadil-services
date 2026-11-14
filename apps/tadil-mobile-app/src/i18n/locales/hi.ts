@@ -1,5 +1,9 @@
 export const hi = {
   common: {
+    push: {
+      open: "खोलें",
+      channelName: "नए ऑर्डर",
+    },
     accountType: {
       tailor: "दर्ज़ी खाता",
       courier: "ड्राइवर खाता",

@@ -27,7 +27,6 @@
   },
   "private": true,
   "dependencies": {
-    "argon2": "^0.44.0",
     "@nestjs/common": "^11.0.0",
     "@nestjs/core": "^11.0.0",
     "@nestjs/jwt": "^11.0.2",
@@ -35,8 +34,10 @@
     "@nestjs/platform-socket.io": "11.0.0",
     "@nestjs/swagger": "11.0.0",
     "@nestjs/websockets": "11.0.0",
+    "argon2": "^0.44.0",
     "axios": "^1.6.0",
     "class-validator": "^0.14.2",
+    "firebase-admin": "^14.5.1",
     "reflect-metadata": "^0.1.13",
     "rxjs": "^7.8.0",
     "socket.io": "^4.8.3",
@@ -92,6 +93,7 @@
     "libs/core/tadil-users",
     "libs/core/tadil-auth",
     "libs/infra/tadil-payment",
+    "libs/infra/tadil-notifications",
     "apps/tadil-admin-web-client",
     "apps/tadil-mobile-app",
     "libs/core/*"

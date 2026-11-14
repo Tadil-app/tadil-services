@@ -190,6 +190,13 @@ export interface CreateOrderDto {
   customItems: any[];
 }
 
+export interface RegisterDeviceDto {
+  /** Firebase Cloud Messaging registration token */
+  token: string;
+  platform: "ios" | "android";
+  locale?: "ar" | "en" | "ur" | "hi" | "bn";
+}
+
 export interface ConfirmPaymentDto {
   paymentId: string;
   /** Optional: the payment metadata carries the order id. */

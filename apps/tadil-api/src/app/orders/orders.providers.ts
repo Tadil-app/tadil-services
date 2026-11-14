@@ -1,5 +1,6 @@
 import { Provider, Scope } from '@nestjs/common';
 import { DbClient, PrismaOrdersRepository } from '@tadil-database';
+import { createPushSender, OrderNotifier } from '@tadil-notifications';
 import {
   OrdersRepository,
   AssignTailorManuallyUseCase,
@@ -23,7 +24,15 @@ const AssignTailorManuallyUseCaseProvider: Provider<AssignTailorManuallyUseCase>
   inject: ['OrdersRepository'],
 };
 
+// One sender per process: Firebase is initialised once.
+const OrderNotifierProvider: Provider<OrderNotifier> = {
+  provide: OrderNotifier,
+  useFactory: (dbClient: DbClient) => new OrderNotifier(dbClient, createPushSender()),
+  inject: [DbClient],
+};
+
 export {
+  OrderNotifierProvider,
   OrdersRepositoryProvider,
   AssignTailorManuallyUseCaseProvider,
 };
