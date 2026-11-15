@@ -9,7 +9,8 @@ export class AcceptOrderUseCase {
     this._tailorRepository = tailorRepository;
   }
 
-  async execute(command: AcceptOrderCommand) {
+  /** False when the order is no longer open to this tailor. */
+  async execute(command: AcceptOrderCommand): Promise<boolean> {
     if (!command.tailorId) {
       throw new InvalidCommandException('Tailor Id should be provided');
     }
@@ -18,7 +19,7 @@ export class AcceptOrderUseCase {
     }
 
     try {
-      await this._tailorRepository.acceptOrder(
+      return await this._tailorRepository.acceptOrder(
         command.tailorId,
         command.orderId
       );

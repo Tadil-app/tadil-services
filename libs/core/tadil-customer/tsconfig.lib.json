@@ -9,8 +9,17 @@
     "module": "nodenext",
     "moduleResolution": "nodenext",
     "forceConsistentCasingInFileNames": true,
-    "types": ["node"]
+    "types": [
+      "node"
+    ]
   },
-  "include": ["src/**/*.ts"],
-  "references": []
+  "include": [
+    "src/**/*.ts"
+  ],
+  "references": [],
+  "exclude": [
+    "jest.config.ts",
+    "src/**/*.spec.ts",
+    "src/**/*.test.ts"
+  ]
 }

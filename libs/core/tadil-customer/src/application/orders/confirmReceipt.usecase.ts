@@ -15,18 +15,27 @@ export class ConfirmReceiptUseCase {
     private readonly _creditOrderEarningUseCase: CreditOrderEarningUseCase
   ) {}
 
-  async execute(command: { orderId: string }) {
-    if (!command.orderId) {
-      throw new InvalidCommandException('Order ID is required');
+  /**
+   * False when the order isn't this customer's or isn't out for delivery to
+   * them. Earnings are credited only by the call that closed the order, so a
+   * repeated request pays nothing.
+   */
+  async execute(command: { customerId: string; orderId: string }): Promise<boolean> {
+    if (!command.customerId || !command.orderId) {
+      throw new InvalidCommandException('Customer ID and Order ID are required');
     }
 
     try {
       // 1. Confirm receipt and transition status to DONE
-      await this._customerRepository.confirmReceipt(command.orderId);
+      const closed = await this._customerRepository.confirmReceipt(
+        command.customerId,
+        command.orderId
+      );
+      if (!closed) return false;
 
       // 2. Fetch order details to credit earnings
       const order = await this._ordersRepository.getById(command.orderId);
-      if (!order) return;
+      if (!order) return true;
 
       // 3. Credit Tailor
       if (order.assignedTailorId) {
@@ -70,6 +79,7 @@ export class ConfirmReceiptUseCase {
         }
       }
 
+      return true;
     } catch (error) {
       if (error instanceof Error)
         throw new InfrastructureException(error.message);

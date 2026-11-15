@@ -7,13 +7,14 @@ import { CourierRepository } from '../courier.repository';
 export class AcceptCourierAssignmentUseCase {
   constructor(private readonly _courierRepository: CourierRepository) {}
 
-  async execute(command: { courierId: string; orderId: string; isReturn: boolean }) {
+  /** False when the trip is no longer open to this driver. */
+  async execute(command: { courierId: string; orderId: string; isReturn: boolean }): Promise<boolean> {
     if (!command.courierId || !command.orderId) {
       throw new InvalidCommandException('Courier ID and Order ID are required');
     }
 
     try {
-      await this._courierRepository.acceptAssignment(
+      return await this._courierRepository.acceptAssignment(
         command.courierId,
         command.orderId,
         command.isReturn

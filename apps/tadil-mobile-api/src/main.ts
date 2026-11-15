@@ -10,8 +10,10 @@ import { environment } from './environments/environment';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import * as fs from 'fs';
 import * as path from 'path';
+import { assertJwtSecretConfigured } from './app/auth/jwt-secret';
 
 async function bootstrap() {
+  assertJwtSecretConfigured();
   const app = await NestFactory.create(AppModule);
   app.enableCors({
     origin: '*', // or your frontend domain

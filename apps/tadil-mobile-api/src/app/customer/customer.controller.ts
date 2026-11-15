@@ -12,6 +12,7 @@ import {
   UseInterceptors,
   Req,
   UseGuards,
+  ForbiddenException,
 } from '@nestjs/common';
 import {
   ApiConsumes,
@@ -46,6 +47,7 @@ import { CreateOrderUseCase, ConfirmPaymentUseCase, ReconcilePendingOrderUseCase
 import { AuthGuard } from '../auth/auth.guard';
 import { isAppleReviewPhone } from './apple-review-phones';
 import { OrderNotifier } from '@tadil-notifications';
+import { fileIdFromLink, signedFileUrl } from '../common/files/file.link';
 
 @Controller('customer')
 @ApiTags('Customer')
@@ -95,8 +97,7 @@ export class CustomerController {
     const order = await this._createOrderUseCase.execute({
       customerId: req.user.sub,
       addressId: dto.addressId,
-      items: dto.items,
-      customItems: dto.customItems,
+      ...withPlainFileIds(dto),
     });
 
     if (!isAppleReviewPhone(req.user?.phone)) {
@@ -159,9 +160,19 @@ export class CustomerController {
   }
 
   @Post('orders/:orderId/confirm-receipt')
+  @UseGuards(AuthGuard)
+  @ApiBearerAuth()
   @ApiOperation({ summary: 'Confirm receipt of items from return courier' })
-  async confirmReceipt(@Param('orderId') orderId: string) {
-    await this._confirmReceiptUseCase.execute({ orderId });
+  async confirmReceipt(@Req() req: any, @Param('orderId') orderId: string) {
+    const confirmed = await this._confirmReceiptUseCase.execute({
+      customerId: req.user.sub,
+      orderId,
+    });
+    if (!confirmed) {
+      throw new ForbiddenException(
+        'Order is not yours or is not out for delivery to you'
+      );
+    }
   }
 
   @Get('models')
@@ -287,6 +298,8 @@ export class CustomerController {
   }
 
   @Post('files/upload')
+  @UseGuards(AuthGuard)
+  @ApiBearerAuth()
   @ApiConsumes('multipart/form-data')
   @UseInterceptors(FileInterceptor('file', fileUploadLocalPath))
   async uploadFile(
@@ -305,7 +318,9 @@ export class CustomerController {
 
     await this._fileStorageService.uploadFile(imageFileId, imageFile);
 
-    return `${process.env.TADIL_MOBILE_API}/api/files/${imageFileId}`;
+    // Signed, so the uploader can show the photo. The app sends it back as
+    // the item's image; createOrder keeps only the file id.
+    return signedFileUrl(imageFileId);
   }
 
   private _mapOrder(order: any): DisplayOrderDTO {
@@ -314,7 +329,7 @@ export class CustomerController {
       customerName: `${order.customer.firstName} ${order.customer.lastName}`,
       items: order.items.map((item: any) => ({
         ...item,
-        imageFileUrl: `${process.env.TADIL_MOBILE_API}/api/files/${item.imageFileId}`,
+        imageFileUrl: signedFileUrl(item.imageFileId),
         sections: item.sections.map((section: any) => ({
           ...section,
           alterations: section.alterations.map((alt: any) => ({
@@ -330,7 +345,7 @@ export class CustomerController {
       })),
       customItems: order.customItems.map((item: any) => ({
         ...item,
-        imageFileUrl: `${process.env.TADIL_MOBILE_API}/api/files/${item.imageFileId}`,
+        imageFileUrl: signedFileUrl(item.imageFileId),
         alterations: item.alterations.map((alt: any) => ({
           ...alt,
           informations: alt.informations.map((info: any) => ({
@@ -344,4 +359,24 @@ export class CustomerController {
       history: order.history || [],
     };
   }
+}
+
+/** The order's items with their image links reduced to stored file ids. */
+function withPlainFileIds(dto: CreateOrderDto): Pick<CreateOrderDto, 'items' | 'customItems'> {
+  return {
+    items: dto.items?.map((item) => ({
+      ...item,
+      imageFileId: fileIdFromLink(item?.imageFileId),
+      sections: Array.isArray(item?.sections)
+        ? item.sections.map((section: any) => ({
+            ...section,
+            imageFileId: fileIdFromLink(section?.imageFileId),
+          }))
+        : item?.sections,
+    })),
+    customItems: dto.customItems?.map((item) => ({
+      ...item,
+      imageFileId: fileIdFromLink(item?.imageFileId),
+    })),
+  };
 }

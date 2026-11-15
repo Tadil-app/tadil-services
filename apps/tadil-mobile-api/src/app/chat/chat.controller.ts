@@ -28,7 +28,7 @@ import { ReadableFile, type FileStorageService } from '@tadil-common';
 import { type ChatRepository } from '@tadil-chat';
 import { v4 as uuidv4 } from 'uuid';
 import { extname } from 'path';
-import { environment } from '../../environments/environment';
+import { signedFileUrl } from '../common/files/file.link';
 
 @Controller('chat')
 @ApiTags('Chat')
@@ -70,12 +70,10 @@ export class ChatController {
 
     this.logger.log(`Found ${chat.messages.length} messages for order ${orderId}`);
 
-    const baseUrl = process.env.TADIL_MOBILE_API || `http://localhost:${environment.apiPort}`;
-
     return chat.messages.map((msg) => ({
       ...msg,
       content: msg.type !== 'TEXT' 
-        ? `${baseUrl}/api/files/${msg.content}` 
+        ? signedFileUrl(msg.content)
         : msg.content,
     }));
   }

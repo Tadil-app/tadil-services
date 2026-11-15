@@ -18,7 +18,7 @@ import {
   GetMyAddressesUseCase,
   DeleteMyAccountUseCase,
 } from '@tadil-users';
-import { environment } from '../../environments/environment';
+import { jwtSecret } from './jwt-secret';
 
 const UsersRepositoryProvider: Provider<UsersRepository> = {
   provide: 'UsersRepository',
@@ -31,7 +31,7 @@ const UsersRepositoryProvider: Provider<UsersRepository> = {
 const LoginUseCaseProvider: Provider<LoginUseCase> = {
   provide: LoginUseCase,
   useFactory: (usersRepository: UsersRepository) => {
-    const secret = environment.jwtSecret || 'super-secret';
+    const secret = jwtSecret();
     return new LoginUseCase(usersRepository, secret);
   },
   scope: Scope.REQUEST,
@@ -41,7 +41,7 @@ const LoginUseCaseProvider: Provider<LoginUseCase> = {
 const CompleteProfileUseCaseProvider: Provider<CompleteProfileUseCase> = {
   provide: CompleteProfileUseCase,
   useFactory: (usersRepository: UsersRepository) => {
-    const secret = environment.jwtSecret || 'super-secret';
+    const secret = jwtSecret();
     return new CompleteProfileUseCase(usersRepository, secret);
   },
   scope: Scope.REQUEST,
@@ -51,7 +51,7 @@ const CompleteProfileUseCaseProvider: Provider<CompleteProfileUseCase> = {
 const ApproveLoginRequestUseCaseProvider: Provider<ApproveLoginRequestUseCase> = {
   provide: ApproveLoginRequestUseCase,
   useFactory: (usersRepository: UsersRepository) => {
-    const secret = environment.jwtSecret || 'super-secret';
+    const secret = jwtSecret();
     return new ApproveLoginRequestUseCase(usersRepository, secret);
   },
   scope: Scope.REQUEST,

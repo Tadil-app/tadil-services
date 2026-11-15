@@ -4,7 +4,7 @@ import {
   Injectable,
 } from '@nestjs/common';
 import * as jwt from 'jsonwebtoken';
-import { environment } from '../../environments/environment';
+import { jwtSecret } from './jwt-secret';
 import { WsException } from '@nestjs/websockets';
 import { Socket } from 'socket.io';
 import { DbClient } from '@tadil-database';
@@ -23,7 +23,7 @@ export class WsAuthGuard implements CanActivate {
     }
 
     try {
-      const secret = environment.jwtSecret || 'super-secret';
+      const secret = jwtSecret();
       const payload = jwt.verify(token, secret);
       const sub = typeof payload === 'string' ? undefined : payload.sub;
       await assertSocketAccountActive(this._db, sub);

@@ -1,6 +1,6 @@
 import { Capacitor } from "@capacitor/core";
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import { resolveMediaSrc } from "./media.util";
+import { fileIdFromUrl, resolveMediaSrc } from "./media.util";
 
 describe("resolveMediaSrc", () => {
   beforeEach(() => {
@@ -22,4 +22,15 @@ describe("resolveMediaSrc", () => {
       expect(Capacitor.convertFileSrc).toHaveBeenCalledWith(url);
     },
   );
+});
+
+describe("fileIdFromUrl", () => {
+  it.each([
+    ["https://api.example.com/api/files/abc.jpg", "abc.jpg"],
+    ["https://api.example.com/api/files/abc.jpg?token=x.y.z", "abc.jpg"],
+    ["abc.jpg", "abc.jpg"],
+    [undefined, ""],
+  ])("reads %s as %s", (url, id) => {
+    expect(fileIdFromUrl(url)).toBe(id);
+  });
 });

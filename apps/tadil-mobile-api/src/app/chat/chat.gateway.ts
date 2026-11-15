@@ -15,7 +15,7 @@ import { WsAuthGuard } from '../auth/ws-auth.guard';
 import { SendMessageDto } from './dtos/sendMessage.dto';
 import { DeleteMessageDto } from './dtos/deleteMessage.dto';
 import { EditMessageDto } from './dtos/editMessage.dto';
-import { environment } from '../../environments/environment';
+import { signedFileUrl } from '../common/files/file.link';
 
 @WebSocketGateway({
   cors: {
@@ -73,11 +73,10 @@ export class ChatGateway {
     const roomId = `order_${dto.orderId}_${dto.channel}`;
     
     // Map the message for the recipient (prepend URL if needed)
-    const baseUrl = process.env.TADIL_MOBILE_API || `http://localhost:${environment.apiPort}`;
     const mappedMessage = {
       ...message,
       content: message.type !== 'TEXT' 
-        ? `${baseUrl}/api/files/${message.content}` 
+        ? signedFileUrl(message.content)
         : message.content,
     };
 

@@ -1,6 +1,7 @@
 import * as jwt from 'jsonwebtoken';
 import { ApiProperty } from '@nestjs/swagger';
 import { environment } from '../../../environments/environment';
+import { jwtSecret } from '../../auth/jwt-secret';
 import { WaybillViewer } from './waybill.builder';
 
 const PURPOSE = 'waybill';
@@ -21,7 +22,7 @@ export class WaybillLinkDTO {
   @ApiProperty() expiresInMinutes!: number;
 }
 
-const secret = () => environment.jwtSecret || 'super-secret';
+const secret = jwtSecret;
 
 interface RequestLike {
   protocol?: string;

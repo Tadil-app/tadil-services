@@ -5,7 +5,10 @@ const config: CapacitorConfig = {
   appName: "Tadil-تعديل",
   webDir: "dist",
   server: {
-    allowNavigation: ["*"]
+    allowNavigation: ["*"],
+    // LAN dev API is plain http://<pc-ip>:4445; https://localhost would block
+    // those calls as mixed content. Production builds use an https API anyway.
+    androidScheme: "http",
   },
   plugins: {
     StatusBar: {
