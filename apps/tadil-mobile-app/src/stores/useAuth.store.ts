@@ -1,9 +1,9 @@
 import { apiClient, apiInstance } from "@/integration/api";
 import { AuthResponseDto, User, UpdateProfileDto, DisplayAddressDto, CreateAddressDto, UpdateAddressDto } from "@/integration/dtos";
 import { Preferences } from "@capacitor/preferences";
+import { disablePushForSession, enablePushForSession } from "@/push/pushNotifications";
 import { defineStore } from "pinia";
 import { ref } from "vue";
-import { useRouter } from "vue-router";
 
 export const useAuthStore = defineStore("auth", () => {
   const userId = ref("");
@@ -12,7 +12,7 @@ export const useAuthStore = defineStore("auth", () => {
   const userInfo = ref<User | null>(null);
   const userAddresses = ref<DisplayAddressDto[]>([]);
   const walletDetails = ref<any>(null);
-  const router = useRouter();
+  let isLoggingOut = false;
 
   async function initAuth() {
     const { value: storedToken } = await Preferences.get({ key: "token" });
@@ -29,6 +29,8 @@ export const useAuthStore = defineStore("auth", () => {
       if (userRole.value === 'tailor' || userRole.value === 'courier') {
         await fetchWallet();
       }
+      // fetchProfile signs out on a rejected session; only a live one gets pushes.
+      if (token.value) void enablePushForSession(userRole.value);
     }
   }
 
@@ -131,6 +133,7 @@ export const useAuthStore = defineStore("auth", () => {
     if (user.role === 'tailor' || user.role === 'courier') {
       await fetchWallet();
     }
+    void enablePushForSession(user.role);
   }
 
   async function deleteAccount() {
@@ -139,6 +142,11 @@ export const useAuthStore = defineStore("auth", () => {
   }
 
   async function logout() {
+    // Several requests can fail with 401 at once; sign out only once.
+    if (isLoggingOut) return;
+    isLoggingOut = true;
+    // While the session token still authenticates the unregister call.
+    await disablePushForSession();
     token.value = "";
     userId.value = "";
     userRole.value = "";
@@ -149,7 +157,14 @@ export const useAuthStore = defineStore("auth", () => {
     await Preferences.remove({ key: "token" });
     await Preferences.remove({ key: "userId" });
     await Preferences.remove({ key: "userRole" });
-    router.push({ name: "login" });
+    // Imported here, not via useRouter(): this store is first created in
+    // main.ts, outside any component, where useRouter() returns nothing.
+    const { default: router } = await import("@/router");
+    try {
+      await router.push({ name: "login" });
+    } finally {
+      isLoggingOut = false;
+    }
   }
 
   return { 

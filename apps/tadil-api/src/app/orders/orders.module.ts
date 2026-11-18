@@ -4,6 +4,7 @@ import { OrdersController } from './orders.controller';
 import {
   OrdersRepositoryProvider,
   AssignTailorManuallyUseCaseProvider,
+  OrderNotifierProvider,
 } from './orders.providers';
 
 @Module({
@@ -12,6 +13,7 @@ import {
   providers: [
     OrdersRepositoryProvider,
     AssignTailorManuallyUseCaseProvider,
+    OrderNotifierProvider,
   ],
 })
 export class OrdersModule {}

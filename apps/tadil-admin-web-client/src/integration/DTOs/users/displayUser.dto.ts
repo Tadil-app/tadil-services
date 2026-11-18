@@ -7,7 +7,7 @@ export interface DisplayUserDTO {
   phone: string;
   role: RoleType;
   email?: string;
-  commissionRate?: number;
+  commissionRate?: number | null;
   sorting: number;
   cityNameAr?: string;
   cityNameEn?: string;

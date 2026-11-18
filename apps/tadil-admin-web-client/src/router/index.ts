@@ -60,6 +60,11 @@ const pages: Array<
     () => import('@/views/orders/OrdersManagementView.vue'),
   ],
   [
+    'settings',
+    'settings.read',
+    () => import('@/views/settings/SettingsView.vue'),
+  ],
+  [
     'staff',
     'staff.read',
     () => import('@/views/staff/StaffManagementView.vue'),

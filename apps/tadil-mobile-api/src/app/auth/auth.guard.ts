@@ -5,7 +5,7 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import * as jwt from 'jsonwebtoken';
-import { environment } from '../../environments/environment';
+import { jwtSecret } from './jwt-secret';
 import { Request } from 'express';
 import { DbClient } from '@tadil-database';
 import { assertAccountActive } from './account-status';
@@ -27,7 +27,7 @@ export class AuthGuard implements CanActivate {
     }
 
     try {
-      const secret = environment.jwtSecret || 'super-secret';
+      const secret = jwtSecret();
       const payload = jwt.verify(token, secret);
       const sub = typeof payload === 'string' ? undefined : payload.sub;
       await assertAccountActive(this._db, sub);

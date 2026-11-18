@@ -3,6 +3,14 @@
     <IonContent class="ion-padding">
       <div class="login-page">
         <IonCard color="light" class="login-card">
+          <IonButton
+            fill="clear"
+            class="back-to-app"
+            :aria-label="$t('login.form.buttons.backToApp')"
+            @click="returnToApp"
+          >
+            <IonIcon slot="icon-only" :icon="arrowBackOutline" :flip-rtl="true" />
+          </IonButton>
           <div class="login-logo">
             <img src="/Tadil_logo.svg" alt="Tadil-تعديل" />
           </div>
@@ -26,9 +34,6 @@
               <IonSpinner v-if="isLoading" name="crescent" />
               <span v-else>{{ $t("login.form.buttons.login") }}</span>
             </IonButton>
-            <IonButton expand="block" fill="clear" class="back-to-app" @click="returnToApp">
-              {{ $t("login.form.buttons.backToApp") }}
-            </IonButton>
             <p class="login-agreement">{{ $t("login.form.agreement") }}</p>
           </div>
 
@@ -48,9 +53,6 @@
               <IonButton expand="block" fill="clear" class="w-full" @click="loginStep = 'phone'">
                 {{ $t("login.form.buttons.back") }}
               </IonButton>
-              <IonButton expand="block" fill="clear" class="back-to-app w-full" @click="returnToApp">
-                {{ $t("login.form.buttons.backToApp") }}
-              </IonButton>
             </div>
           </div>
 
@@ -61,9 +63,6 @@
             <IonButton expand="block" fill="clear" @click="loginStep = 'phone'">
               {{ $t("login.form.buttons.back") }}
             </IonButton>
-            <IonButton expand="block" fill="clear" class="back-to-app" @click="returnToApp">
-              {{ $t("login.form.buttons.backToApp") }}
-            </IonButton>
           </div>
 
           <div v-if="loginStep === 'rejected'" class="px-10 text-center space-y-5">
@@ -71,9 +70,6 @@
             <p>{{ statusMessage || $t("login.form.status.rejected") }}</p>
             <IonButton expand="block" fill="clear" @click="loginStep = 'phone'">
               {{ $t("login.form.buttons.back") }}
-            </IonButton>
-            <IonButton expand="block" fill="clear" class="back-to-app" @click="returnToApp">
-              {{ $t("login.form.buttons.backToApp") }}
             </IonButton>
           </div>
         </IonCard>
@@ -85,7 +81,7 @@
 <script setup lang="ts">
 import { useAuthStore } from "@/stores";
 import { IonButton, IonCard, IonContent, IonInput, IonPage, IonSpinner, IonIcon, onIonViewWillEnter, useIonRouter } from "@ionic/vue";
-import { callOutline, timeOutline, closeCircleOutline } from "ionicons/icons";
+import { arrowBackOutline, callOutline, timeOutline, closeCircleOutline } from "ionicons/icons";
 import { ref } from "vue";
 import { useI18n } from "vue-i18n";
 import { useRoute, useRouter } from "vue-router";
@@ -224,6 +220,7 @@ ion-content {
 }
 
 .login-card {
+  position: relative;
   width: min(100%, 430px);
   margin: 0;
   padding: 24px 24px 32px;
@@ -305,12 +302,14 @@ ion-content {
 }
 
 .back-to-app {
+  /* Physical top-right in every language, as the design asks. */
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  z-index: 1;
   --color: var(--ion-color-secondary);
   margin: 0;
-  min-height: 44px;
-  font-size: 16px;
-  font-weight: 600;
-  text-transform: none;
+  font-size: 18px;
 }
 
 .login-agreement {

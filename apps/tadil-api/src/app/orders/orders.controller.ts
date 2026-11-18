@@ -7,13 +7,15 @@ import { DisplayOrderDetailsDto, DisplayExtraSnapshotDTO } from './dtos/displayO
 import { environment } from '../../environments/environment';
 import { ChatMessage } from '@tadil-chat';
 import { RequirePermissions } from '../auth/decorators/permissions.decorator';
+import { OrderNotifier } from '@tadil-notifications';
 
 @Controller('orders')
 @ApiTags('Orders')
 export class OrdersController {
   constructor(
     private readonly _dataReader: DataReader,
-    private readonly _assignTailorUseCase: AssignTailorManuallyUseCase
+    private readonly _assignTailorUseCase: AssignTailorManuallyUseCase,
+    private readonly _orderNotifier: OrderNotifier
   ) {}
 
   @Get('/')
@@ -283,5 +285,7 @@ export class OrdersController {
       orderId: id,
       tailorId,
     });
+    // Tells the tailor, and calls the area's drivers for the pickup.
+    this._orderNotifier.orderStatusChanged(id);
   }
 }

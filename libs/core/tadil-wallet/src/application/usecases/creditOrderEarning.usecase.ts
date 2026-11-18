@@ -12,14 +12,14 @@ export class CreditOrderEarningUseCase {
   async execute(command: {
     userId: string;
     orderId: string;
-    orderTotal: number;
-    commissionRate: number; // Percentage, e.g., 10 for 10%
+    amount: number; // SAR to add to the wallet
   }): Promise<void> {
-    if (!command.userId || !command.orderId || command.orderTotal <= 0) {
-      throw new InvalidCommandException('Valid User ID, Order ID and positive total are required');
+    if (!command.userId || !command.orderId || !(command.amount >= 0)) {
+      throw new InvalidCommandException('Valid User ID, Order ID and amount are required');
     }
+    if (command.amount === 0) return;
 
-    const earningAmount = (command.orderTotal * command.commissionRate) / 100;
+    const earningAmount = command.amount;
 
     try {
       const wallet = await this._walletRepository.getWalletDetails(command.userId);

@@ -164,7 +164,14 @@ export interface DisplayOrderDTO {
   customerName: string;
   reference: string;
   date: string;
+  /** What the customer pays: the items plus deliveryFee. */
   totalPrice: number;
+  /** Transportation fee, in SAR (0 when delivery is free). */
+  deliveryFee?: number;
+  /** Tailor/driver orders only: the logged-in user's share of this order, in SAR. */
+  myEarning?: number;
+  /** True once that share has been added to their wallet. */
+  myEarningPaid?: boolean;
   status: OrderStatusType;
   assignedTailorId?: string;
   assignedCourierId?: string;
@@ -172,6 +179,9 @@ export interface DisplayOrderDTO {
   items: DisplayOrderItemDTO[];
   customItems: DisplayCustomOrderItemDTO[];
   address?: DisplayAddressDto;
+  /** Courier orders only: the assigned tailor, the other end of the trip. */
+  tailorName?: string | null;
+  tailorAddress?: DisplayAddressDto | null;
   history: OrderStatusHistoryDTO[];
   /** Présent seulement pour les numéros de revue App Store. */
   cashOnDelivery?: boolean;
@@ -181,6 +191,13 @@ export interface CreateOrderDto {
   addressId: string;
   items: any[];
   customItems: any[];
+}
+
+export interface RegisterDeviceDto {
+  /** Firebase Cloud Messaging registration token */
+  token: string;
+  platform: "ios" | "android";
+  locale?: "ar" | "en" | "ur" | "hi" | "bn";
 }
 
 export interface ConfirmPaymentDto {
@@ -338,6 +355,13 @@ export interface ShippingLabelItemDTO {
   name: string;
   details: string;
   price: number;
+}
+
+/** Links to the printable order waybill; valid for a short time. */
+export interface WaybillLinkDTO {
+  viewUrl: string;
+  printUrl: string;
+  expiresInMinutes: number;
 }
 
 export interface ShippingLabelDTO {

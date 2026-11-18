@@ -3,7 +3,7 @@ export interface CreateUserDTO {
   lastName: string;
   phone: string;
   email?: string;
-  commissionRate?: number;
+  commissionRate?: number | null;
   /** Legacy free-text city. Prefer the structured address fields below. */
   city?: string;
   cityId?: number;

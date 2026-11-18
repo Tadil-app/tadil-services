@@ -7,6 +7,7 @@ import { calculateConfigurationPrice } from "@/utils";
 import type { CartItem, CartItemConfiguration } from "@/types/cart.types";
 import { apiClient } from "@/integration/api";
 import { Filesystem, Directory } from "@capacitor/filesystem";
+import { fileIdFromUrl } from "@/utils/media.util";
 
 export const useCartStore = defineStore("cart", () => {
   const items = ref<CartItem[]>([]);
@@ -120,7 +121,7 @@ export const useCartStore = defineStore("cart", () => {
         urduName: model.urduName,
         hindiName: model.hindiName,
         bengaliName: model.bengaliName,
-        imageFileId: model.thumbnailImageUrl?.split("/").pop() || "",
+        imageFileId: fileIdFromUrl(model.thumbnailImageUrl),
         sections: configuration.modelImages.flatMap((img) =>
           img.sections.map((sec) => ({
             id: uuidv4(),
@@ -129,7 +130,7 @@ export const useCartStore = defineStore("cart", () => {
             urduName: sec.urduName,
             hindiName: sec.hindiName,
             bengaliName: sec.bengaliName,
-            imageFileId: img.imageUrl.split("/").pop() || "",
+            imageFileId: fileIdFromUrl(img.imageUrl),
             coordinates: sec.coordinates,
             alterations: sec.alterations.map((alt) => ({
               id: uuidv4(),
@@ -159,7 +160,7 @@ export const useCartStore = defineStore("cart", () => {
       customItems: customItems.map(({ model, configuration }) => ({
         id: uuidv4(),
         price: calculateConfigurationPrice(configuration),
-        imageFileId: model.thumbnailImageUrl?.split("/").pop() || "",
+        imageFileId: fileIdFromUrl(model.thumbnailImageUrl),
         alterations: configuration.modelImages.flatMap((img) =>
           img.sections.flatMap((sec) =>
             sec.alterations.map((alt) => ({

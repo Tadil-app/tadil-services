@@ -8,11 +8,14 @@ import {
 import { Server, Socket } from 'socket.io';
 import { SendMessageUseCase, DeleteMessageUseCase, EditMessageUseCase } from '@tadil-chat';
 import { Inject, UseGuards, Logger } from '@nestjs/common';
+import { WsException } from '@nestjs/websockets';
+import { DbClient } from '@tadil-database';
+import { canAccessChat, findOrderParticipants, isChatChannel } from './chat-access';
 import { WsAuthGuard } from '../auth/ws-auth.guard';
 import { SendMessageDto } from './dtos/sendMessage.dto';
 import { DeleteMessageDto } from './dtos/deleteMessage.dto';
 import { EditMessageDto } from './dtos/editMessage.dto';
-import { environment } from '../../environments/environment';
+import { signedFileUrl } from '../common/files/file.link';
 
 @WebSocketGateway({
   cors: {
@@ -31,21 +34,24 @@ export class ChatGateway {
     @Inject('DeleteMessageUseCase')
     private readonly _deleteMessageUseCase: DeleteMessageUseCase,
     @Inject('EditMessageUseCase')
-    private readonly _editMessageUseCase: EditMessageUseCase
+    private readonly _editMessageUseCase: EditMessageUseCase,
+    private readonly _db: DbClient
   ) {
     this.logger.log('ChatGateway initialized');
   }
 
   @UseGuards(WsAuthGuard)
   @SubscribeMessage('joinOrderChat')
-  handleJoinRoom(
+  async handleJoinRoom(
     @ConnectedSocket() client: Socket,
     @MessageBody() data: { orderId: string; channel: string }
   ) {
+    await this._assertAccess(client, data?.orderId, data?.channel);
     const roomId = `order_${data.orderId}_${data.channel}`;
-    client.join(roomId);
+    await client.join(roomId);
     this.logger.log(`Client ${client.id} joined room ${roomId}`);
-    return { event: 'joined', data: roomId };
+    // Plain object so the client receives it as the acknowledgement.
+    return { joined: roomId };
   }
 
   @UseGuards(WsAuthGuard)
@@ -54,8 +60,10 @@ export class ChatGateway {
     @ConnectedSocket() client: Socket,
     @MessageBody() dto: SendMessageDto
   ) {
-    // @ts-expect-error - sub is added by WsAuthGuard
-    const senderId = client.user.sub;
+    const senderId = await this._assertAccess(client, dto?.orderId, dto?.channel);
+    if (!['TEXT', 'IMAGE', 'AUDIO'].includes(dto.type) || typeof dto.content !== 'string' || !dto.content.trim()) {
+      throw new WsException('Invalid message');
+    }
 
     const message = await this._sendMessageUseCase.execute({
       ...dto,
@@ -65,11 +73,10 @@ export class ChatGateway {
     const roomId = `order_${dto.orderId}_${dto.channel}`;
     
     // Map the message for the recipient (prepend URL if needed)
-    const baseUrl = process.env.TADIL_MOBILE_API || `http://localhost:${environment.apiPort}`;
     const mappedMessage = {
       ...message,
       content: message.type !== 'TEXT' 
-        ? `${baseUrl}/api/files/${message.content}` 
+        ? signedFileUrl(message.content)
         : message.content,
     };
 
@@ -85,8 +92,7 @@ export class ChatGateway {
     @ConnectedSocket() client: Socket,
     @MessageBody() dto: DeleteMessageDto
   ) {
-    // @ts-expect-error - sub is added by WsAuthGuard
-    const senderId = client.user.sub;
+    const senderId = await this._assertAccess(client, dto?.orderId, dto?.channel);
 
     await this._deleteMessageUseCase.execute({
       ...dto,
@@ -106,8 +112,7 @@ export class ChatGateway {
     @ConnectedSocket() client: Socket,
     @MessageBody() dto: EditMessageDto
   ) {
-    // @ts-expect-error - sub is added by WsAuthGuard
-    const senderId = client.user.sub;
+    const senderId = await this._assertAccess(client, dto?.orderId, dto?.channel);
 
     await this._editMessageUseCase.execute({
       ...dto,
@@ -122,5 +127,23 @@ export class ChatGateway {
     });
     
     return { status: 'edited' };
+  }
+
+  /**
+   * Only the people on an order's chat may join, read or write it.
+   * Returns the caller's user id.
+   */
+  private async _assertAccess(client: Socket, orderId: string, channel: string): Promise<string> {
+    // @ts-expect-error - user is added by WsAuthGuard
+    const userId: string = client.user?.sub;
+    if (!isChatChannel(channel)) {
+      throw new WsException('Unknown chat channel');
+    }
+    const order = await findOrderParticipants(this._db, orderId);
+    if (!order || !canAccessChat(order, channel, userId)) {
+      this.logger.warn(`User ${userId} denied access to chat ${orderId}/${channel}`);
+      throw new WsException('Forbidden');
+    }
+    return userId;
   }
 }

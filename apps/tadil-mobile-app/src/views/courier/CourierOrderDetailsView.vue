@@ -17,33 +17,38 @@
               <p class="mt-4 font-light">{{ $t("tailor.orderDetails.customerName") }}</p>
               <p class="font-semibold">{{ order.customerName }}</p>
               <p class="mt-4 font-light">{{ formatDate(order.date) }}</p>
+              <p class="mt-4 font-light">{{ $t("common.earning.label") }}</p>
               <p class="text-lg text-secondary font-semibold">
-                {{ $t("common.currencies.sar") }} {{ order.totalPrice }}
+                {{ $t("common.currencies.sar") }} {{ order.myEarning ?? 0 }}
+              </p>
+              <p class="text-xs text-medium">
+                {{ order.myEarningPaid ? $t("common.earning.paid") : $t("common.earning.pending") }}
               </p>
             </div>
             <div class="flex flex-col justify-between items-end">
-              <IonButton fill="clear" @click="printLabel" class="ion-hide-print text-primary m-0 p-0 h-10">
-                <Printer class="w-8 h-8" />
-              </IonButton>
               <StatusPill :status="order.status" />
             </div>
           </div>
         </IonCard>
 
-        <OrderTimeline v-if="order.history && order.history.length > 0" :history="order.history" />
+        <!-- Waybill: printed and attached to the garment bag -->
+        <IonButton
+          v-if="isMyTrip"
+          expand="block"
+          fill="outline"
+          class="mx-4"
+          data-testid="open-waybill"
+          @click="isWaybillOpen = true"
+        >
+          <ScrollText class="w-5 h-5 me-2" />
+          {{ $t("waybill.open") }}
+        </IonButton>
+        <WaybillModal v-model:is-open="isWaybillOpen" :order-id="order.id" role="courier" />
 
-        <!-- Address Info -->
-        <IonCard class="ion-padding space-y-2">
-          <h3 class="font-bold flex items-center gap-2">
-            <MapPin class="w-4 h-4 text-primary" />
-            {{ $t("courier.orderDetails.deliveryAddress") }}
-          </h3>
-          <div v-if="order.address" class="text-sm">
-            <p class="font-medium">{{ cityName(order.address) }}</p>
-            <p class="text-muted-foreground">{{ districtName(order.address) }} {{ streetName(order.address) }}</p>
-          </div>
-          <p v-else class="text-sm text-muted-foreground italic">{{ $t("common.noAddress") }}</p>
-        </IonCard>
+        <!-- Trip: direction, pickup and delivery points, navigation -->
+        <TripRouteCard v-if="trip" :trip="trip" />
+
+        <OrderTimeline v-if="order.history && order.history.length > 0" :history="order.history" />
 
         <!-- Order Items -->
         <IonCard color="transparent" class="ion-padding">
@@ -92,13 +97,8 @@
           </IonCard>
         </IonCard>
 
-        <!-- Chat Section -->
-        <div v-if="order" class="px-4 pb-10">
-          <h3 class="text-lg font-bold mb-3 px-2 text-main">{{ $t('chat.title') }}</h3>
-          <div class="h-125 border border-main/5 rounded-3xl overflow-hidden shadow-sm bg-item">
-            <Chat :key="order.id" :order-id="order.id" channel="COURIER" />
-          </div>
-        </div>
+        <!-- Chats open once this driver takes the trip -->
+        <OrderChats v-if="order && isMyTrip" :order-id="order.id" :channels="chatChannels" />
 
         <!-- Action Buttons -->
         <div class="space-y-3 pb-10">
@@ -145,17 +145,16 @@
 <script setup lang="ts">
 import { onMounted, ref, computed } from "vue";
 import { useRoute, useRouter } from "vue-router";
-import { MapPin, Printer } from "lucide-vue-next";
-import { DisplayOrderDTO, ORDER_STATUS, ShippingLabelDTO } from "@/integration/dtos";
-import { createTailorOrderDeepLink, formatDate } from "@/utils";
-import QRCode from "qrcode";
-import { useToast, useLocalizedAddress } from "@/composables";
+import { ScrollText } from "lucide-vue-next";
+import { DisplayOrderDTO, ORDER_STATUS } from "@/integration/dtos";
+import { formatDate, getCourierTrip } from "@/utils";
+import { useToast, ChatChannel } from "@/composables";
 import { apiClient } from "@/integration/api";
 import { useAuthStore } from "@/stores";
-import { ModelSegmenter, TranslatedName, StatusPill, SecondaryHeader, OrderTimeline, Chat } from "@/components";
+import { ModelSegmenter, TranslatedName, StatusPill, SecondaryHeader, OrderTimeline, OrderChats, WaybillModal } from "@/components";
 import { useI18n } from "vue-i18n";
 import { IonButton, IonCard, IonContent, IonPage, IonSpinner } from "@ionic/vue";
-import { getOrderLableHtml } from "./orderPritnable";
+import TripRouteCard from "./components/TripRouteCard.vue";
 
 const { t } = useI18n();
 const route = useRoute();
@@ -163,14 +162,32 @@ const router = useRouter();
 const authStore = useAuthStore();
 const { showToast } = useToast();
 
-// Show the stored city/district in the viewer's current language.
-const { cityName, districtName, streetName } = useLocalizedAddress();
-
 const order = ref<DisplayOrderDTO>();
 const isLoading = ref(true);
 const isActionLoading = ref(false);
 
 const orderId = computed(() => route.params.id as string);
+
+const isWaybillOpen = ref(false);
+
+const isMyTrip = computed(
+  () =>
+    !!authStore.userId &&
+    (order.value?.assignedCourierId === authStore.userId ||
+      order.value?.assignedReturnCourierId === authStore.userId),
+);
+
+const chatChannels = computed(() => {
+  const channels: { channel: ChatChannel; label: string }[] = [
+    { channel: "COURIER", label: t("chat.channels.customer") },
+  ];
+  if (order.value?.assignedTailorId) {
+    channels.push({ channel: "TAILOR_COURIER", label: t("chat.channels.tailor") });
+  }
+  return channels;
+});
+
+const trip = computed(() => (order.value ? getCourierTrip(order.value, authStore.userId) : null));
 
 const isPendingAssignment = computed(() => 
   order.value?.status === ORDER_STATUS.WAITING_FOR_COURIER_ASSIGNMENT || 
@@ -246,34 +263,6 @@ async function performAction(action: () => Promise<any>) {
     showToast({ message: t("common.messages.actionError"), color: "danger" });
   } finally {
     isActionLoading.value = false;
-  }
-}
-
-async function printLabel() {
-  if (!order.value) return;
-  try {
-    const { data: label } = await apiClient.courierControllerGetShippingLabel(
-      authStore.userId,
-      order.value.id
-    );
-
-    const printWindow = window.open("", "_blank");
-    if (!printWindow) {
-      showToast({ message: "Please allow popups to print the label.", color: "danger" });
-      return;
-    }
-
-    const qrCodeDataUrl = await QRCode.toDataURL(
-      createTailorOrderDeepLink(label.orderReference),
-      { errorCorrectionLevel: "H", margin: 1, width: 240 }
-    );
-    const html = getOrderLableHtml(label, t, qrCodeDataUrl);
-
-    printWindow.document.write(html);
-    printWindow.document.close();
-  } catch (error) {
-    console.error("Failed to generate shipping label", error);
-    showToast({ message: "Failed to load printable shipping label.", color: "danger" });
   }
 }
 

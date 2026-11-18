@@ -14,8 +14,12 @@
               <p class="mt-4 font-light">{{ $t("tailor.orderDetails.customerName") }}</p>
               <p class="font-semibold">{{ order.customerName }}</p>
               <p class="mt-4 font-light">{{ formatDate(order.date) }}</p>
+              <p class="mt-4 font-light">{{ $t("common.earning.label") }}</p>
               <p class="text-lg text-secondary font-semibold">
-                {{ $t("common.currencies.sar") }} {{ order.totalPrice }}
+                {{ $t("common.currencies.sar") }} {{ order.myEarning ?? 0 }}
+              </p>
+              <p class="text-xs text-medium">
+                {{ order.myEarningPaid ? $t("common.earning.paid") : $t("common.earning.pending") }}
               </p>
             </div>
             <div class="flex flex-col justify-between items-end">
@@ -29,6 +33,20 @@
             </div>
           </div>
         </IonCard>
+
+        <!-- Waybill: printed and attached to the garment bag -->
+        <IonButton
+          v-if="isAssignedToMe"
+          expand="block"
+          fill="outline"
+          class="mx-4"
+          data-testid="open-waybill"
+          @click="isWaybillOpen = true"
+        >
+          <ScrollText class="w-5 h-5 me-2" />
+          {{ $t("waybill.open") }}
+        </IonButton>
+        <WaybillModal v-model:is-open="isWaybillOpen" :order-id="order.id" role="tailor" />
 
         <OrderTimeline v-if="order.history && order.history.length > 0" :history="order.history" />
 
@@ -57,9 +75,6 @@
                   </div>
                 </div>
               </div>
-              <div class="font-semibold text-secondary text-lg p-2">
-                {{ $t("common.price") }}: {{ item.price }} {{ $t("common.currencies.sar") }}
-              </div>
             </div>
           </IonCard>
           <IonCard v-for="item in order.customItems" :key="item.id" class="space-y-2">
@@ -79,19 +94,11 @@
                 </div>
               </div>
             </div>
-            <div class="border-t border-border font-semibold text-secondary text-lg p-2">
-              {{ $t("common.price") }}: {{ item.price }} {{ $t("common.currencies.sar") }}
-            </div>
           </IonCard>
         </IonCard>
 
-        <!-- Chat Section -->
-        <div v-if="order" class="px-4 pb-10">
-          <h3 class="text-lg font-bold mb-3 px-2 text-main">{{ $t('chat.title') }}</h3>
-          <div class="h-125 border border-main/5 rounded-3xl overflow-hidden shadow-sm bg-item">
-            <Chat :key="order.id" :order-id="order.id" channel="TAILOR" />
-          </div>
-        </div>
+        <!-- Chats: with the client, and with the driver once one is assigned -->
+        <OrderChats v-if="order" :order-id="order.id" :channels="chatChannels" />
 
         <!-- Action Buttons based on New Flow -->
         <div class="space-y-3">
@@ -124,16 +131,17 @@
 </template>
 
 <script setup lang="ts">
-import { onBeforeUnmount, ref } from "vue";
+import { computed, onBeforeUnmount, ref } from "vue";
 import { useRouter } from "vue-router";
 import { DisplayOrderDTO, ORDER_STATUS } from "@/integration/dtos";
 import { useTailorOrdersStore } from "@/stores";
 import { createTailorOrderDeepLink, formatDate } from "@/utils";
-import { useToast } from "@/composables";
+import { useToast, ChatChannel } from "@/composables";
 import { useI18n } from "vue-i18n";
 import { apiClient } from "@/integration/api";
 import { useAuthStore } from "@/stores";
-import { ModelSegmenter, TranslatedName, StatusPill, SecondaryHeader, OrderTimeline, Chat } from "@/components";
+import { ModelSegmenter, TranslatedName, StatusPill, SecondaryHeader, OrderTimeline, OrderChats, WaybillModal } from "@/components";
+import { ScrollText } from "lucide-vue-next";
 import { IonButton, IonCard, IonContent, IonPage, onIonViewWillEnter } from "@ionic/vue";
 import { QrcodeSvg } from "qrcode.vue";
 import { storeToRefs } from "pinia";
@@ -148,6 +156,21 @@ const authStore = useAuthStore();
 const router = useRouter();
 
 const order = ref<DisplayOrderDTO>();
+
+const isWaybillOpen = ref(false);
+const isAssignedToMe = computed(
+  () => !!authStore.userId && order.value?.assignedTailorId === authStore.userId,
+);
+
+const chatChannels = computed(() => {
+  const channels: { channel: ChatChannel; label: string }[] = [
+    { channel: "TAILOR", label: t("chat.channels.customer") },
+  ];
+  if (order.value?.assignedCourierId || order.value?.assignedReturnCourierId) {
+    channels.push({ channel: "TAILOR_COURIER", label: t("chat.channels.courier") });
+  }
+  return channels;
+});
 const ordersStore = useTailorOrdersStore();
 const { orders } = storeToRefs(ordersStore);
 const { fetchOrders } = ordersStore;

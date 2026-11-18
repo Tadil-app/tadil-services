@@ -36,7 +36,7 @@
             :key="order.reference"
             :reference="order.reference"
             :date="order.date"
-            :total-price="order.totalPrice"
+            :total-price="order.myEarning ?? 0"
             :status="order.status"
             @click="router.push({
               name: 'tailor-orders-details',

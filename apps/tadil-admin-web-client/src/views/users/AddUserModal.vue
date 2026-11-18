@@ -81,7 +81,7 @@
           :show-validation="showAddressValidation"
           @valid-change="(v) => (addressValid = v)"
         />
-        <div class="space-y-1.5" v-if="selectedUserType !== ROLE.CUSTOMER">
+        <div class="space-y-1.5" v-if="selectedUserType === ROLE.TAILOR">
           <InputLabel for="commissionRate">
             {{ $t("common.inputs.commissionRate.label") }}
           </InputLabel>
@@ -89,7 +89,7 @@
             id="commissionRate"
             type="number"
             v-model="newUser.commissionRate"
-            :placeholder="$t('common.inputs.commissionRate.placeholder')"
+            :placeholder="$t('common.inputs.commissionRate.globalHint')"
           />
         </div>
       </div>
@@ -125,6 +125,7 @@ import { Scissors, Truck, UserPlus } from "lucide-vue-next";
 import AddressFields from "./components/AddressFields.vue";
 import type { AddressFormValue } from "./components/address.types";
 import { can } from "@/auth";
+import { rateOrNull } from "@/utils/rateOrNull";
 
 const { t } = useI18n();
 const { openToast } = useToast();
@@ -154,7 +155,7 @@ const newUser = ref<CreateUserDTO>({
   firstName: "",
   lastName: "",
   email: undefined,
-  commissionRate: 10,
+  commissionRate: undefined as number | undefined,
 });
 const address = ref<AddressFormValue>({});
 const addressValid = ref(false);
@@ -227,7 +228,15 @@ async function createUser() {
         showAddressValidation.value = true;
         return;
       }
-      const payload: CreateUserDTO = { ...newUser.value, ...address.value };
+      const payload: CreateUserDTO = {
+        ...newUser.value,
+        ...address.value,
+        // Drivers are paid per trip; an empty rate means the tailor uses the global one.
+        commissionRate:
+          props.selectedUserType !== ROLE.TAILOR
+            ? undefined
+            : rateOrNull(newUser.value.commissionRate),
+      };
       switch (props.selectedUserType) {
         case ROLE.TAILOR: {
           await apiClient.tailorsControllerCreateTailor(payload);
@@ -259,7 +268,7 @@ function closeModal() {
     firstName: "",
     lastName: "",
     email: undefined,
-    commissionRate: 10,
+    commissionRate: undefined as number | undefined,
   };
   address.value = {};
   addressValid.value = false;

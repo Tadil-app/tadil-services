@@ -8,9 +8,11 @@ import { AuthModule } from './auth/auth.module';
 import { WalletModule } from './wallet/wallet.module';
 import { ChatModule } from './chat/chat.module';
 import { LocationsModule } from './locations/locations.module';
+import { WaybillModule } from './common/waybill/waybill.module';
+import { NotificationsModule } from './notifications/notifications.module';
 
 @Module({
-  imports: [CommonModule, CustomerModule, TailorModule, CourierModule, AuthModule, WalletModule, ChatModule, LocationsModule],
+  imports: [CommonModule, CustomerModule, TailorModule, CourierModule, AuthModule, WalletModule, ChatModule, LocationsModule, WaybillModule, NotificationsModule],
   controllers: [AppController],
   providers: [],
 })

@@ -21,6 +21,8 @@ export const PERMISSIONS = [
   'payouts.fulfill',
   'payouts.reject',
   'locations.read',
+  'settings.read',
+  'settings.update',
   'staff.read',
   'staff.create',
   'staff.update',

@@ -1,8 +1,21 @@
 export const en = {
   common: {
+    push: {
+      open: "Open",
+      channelName: "New orders",
+    },
+    accountType: {
+      tailor: "Tailor Account",
+      courier: "Driver Account",
+    },
     units: {
       cm: "cm",
       inch: "inch",
+    },
+    earning: {
+      label: "Your earning",
+      paid: "Added to your wallet",
+      pending: "Added to your wallet when the client confirms receipt",
     },
     currencies: {
       sar: "SAR",
@@ -283,6 +296,8 @@ export const en = {
       addInProfile: "Add Address in Profile",
     },
     orderInfo: {
+      itemsTotal: "Items total:",
+      transportationFee: "Transportation fee:",
       reference: "Order Reference:",
       totalAmount: "Total Amount:",
     },
@@ -316,7 +331,9 @@ export const en = {
     edited: "edited",
     messageOptions: "Message Options",
     editMessage: "Edit Message",
+    sendFailed: "Message not sent. Check your connection and try again.",
     channels: {
+      customer: "Chat with Client",
       tailor: "Chat with Tailor",
       courier: "Chat with Courier",
     },
@@ -380,10 +397,37 @@ export const en = {
     },
   },
   courier: {
+    navBar: {
+      dashboard: "Home",
+      orders: "Trips",
+      wallet: "Wallet",
+    },
+    trip: {
+      toTailor: "From client to tailor",
+      toCustomer: "From tailor to client",
+      pickupPoint: "Pickup point",
+      dropoffPoint: "Delivery point",
+      customer: "Client",
+      tailor: "Tailor",
+      navigate: "Navigate",
+      nextStop: "Next stop",
+      openFailed: "Couldn't open the maps app.",
+      noLocation: "Location not available",
+      openWith: "Open directions with",
+      googleMaps: "Google Maps",
+      waze: "Waze",
+      appleMaps: "Apple Maps",
+    },
     dashboard: {
+      title: "My trips",
+      activeTrips: "Active trips",
+      newRequests: "New trip requests",
       noPendingPickups: "No pending pickups available",
     },
     orders: {
+      title: "Trips",
+      subtitle: "Your pickups and deliveries",
+      search: "Search by order number...",
       noOrders: "No orders found",
       newAssignment: "New Assignment",
       returnTrip: "Return Trip",
@@ -414,6 +458,16 @@ export const en = {
       total: "Total",
       grandTotal: "Grand Total:"
     }
+  },
+  waybill: {
+    title: "Order waybill",
+    open: "View / print waybill",
+    print: "Print waybill",
+    close: "Close",
+    printHint: "Opens in your browser, where you can print it or save it as a PDF.",
+    loadFailed: "Couldn't load the waybill.",
+    printFailed: "Couldn't open the browser to print. Please try again.",
+    retry: "Try again",
   },
   wallet: {
     noTransactions: "No transactions found",

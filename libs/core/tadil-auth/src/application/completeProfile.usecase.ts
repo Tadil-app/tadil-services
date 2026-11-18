@@ -1,5 +1,5 @@
 import { InvalidCommandException } from '@tadil-common';
-import { UsersRepository, User, isDeletedAccountPhone } from '@tadil-users';
+import { UsersRepository, User, ROLE, isDeletedAccountPhone } from '@tadil-users';
 import * as jwt from 'jsonwebtoken';
 
 export class CompleteProfileUseCase {
@@ -20,6 +20,13 @@ export class CompleteProfileUseCase {
 
     if (!user) {
       throw new InvalidCommandException('User not found');
+    }
+
+    // This only finishes a new customer's signup, the `signup_required` state
+    // of /login. Tailors and drivers need the admin's approval, and an account
+    // that already has a name is not a signup to finish.
+    if (user.role !== ROLE.CUSTOMER || (user.firstName && user.lastName)) {
+      throw new InvalidCommandException('This account cannot complete a signup');
     }
 
     const updatedUser = {

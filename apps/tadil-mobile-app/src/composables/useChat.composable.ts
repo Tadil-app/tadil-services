@@ -2,6 +2,18 @@ import { ref, onUnmounted } from 'vue';
 import { io, Socket } from 'socket.io-client';
 import { useAuthStore } from '@/stores';
 import { apiClient } from '@/integration/api';
+import { useI18n } from 'vue-i18n';
+import { useToast } from './useToast.composable';
+
+/**
+ * Each order has up to three chats:
+ * - TAILOR: client and tailor
+ * - COURIER: client and driver
+ * - TAILOR_COURIER: tailor and driver
+ */
+export type ChatChannel = 'TAILOR' | 'COURIER' | 'TAILOR_COURIER';
+
+const SEND_TIMEOUT_MS = 10_000;
 
 export interface ChatMessage {
   id: string;
@@ -14,8 +26,10 @@ export interface ChatMessage {
   isEdited?: boolean;
 }
 
-export function useChat(orderId: string, channel: 'TAILOR' | 'COURIER') {
+export function useChat(orderId: string, channel: ChatChannel) {
   const authStore = useAuthStore();
+  const { t } = useI18n();
+  const { showToast } = useToast();
   const socket = ref<Socket | null>(null);
   const messages = ref<ChatMessage[]>([]);
   const isConnected = ref(false);
@@ -43,15 +57,29 @@ export function useChat(orderId: string, channel: 'TAILOR' | 'COURIER') {
       },
     });
 
-    socket.value.on('connect', () => {
-      console.log('Chat connected to socket', socket.value?.id);
+    let hasConnectedBefore = false;
+    socket.value.on('connect', async () => {
       isConnected.value = true;
-      socket.value?.emit('joinOrderChat', { orderId, channel });
+      try {
+        await socket.value?.timeout(SEND_TIMEOUT_MS).emitWithAck('joinOrderChat', { orderId, channel });
+      } catch (error) {
+        console.error('Failed to join chat', error);
+      }
+      // After a reconnect (app back from background, network change), pull
+      // the messages sent while this phone was offline.
+      if (hasConnectedBefore) {
+        await fetchHistory();
+      }
+      hasConnectedBefore = true;
     });
 
     socket.value.on('newMessage', (message: ChatMessage) => {
-      console.log('New message received via socket:', message);
+      if (messages.value.some((m) => m.id === message.id)) return;
       messages.value.push(message);
+    });
+
+    socket.value.on('exception', (error: unknown) => {
+      console.error('Chat server error', error);
     });
 
     socket.value.on('messageDeleted', ({ messageId }: { messageId: string }) => {
@@ -84,15 +112,32 @@ export function useChat(orderId: string, channel: 'TAILOR' | 'COURIER') {
     });
   }
 
-  function sendMessage(text: string) {
-    if (!socket.value || !text.trim()) return;
+  /**
+   * Sends through the socket and waits for the server to store it, so a
+   * message that never reached the server is reported instead of vanishing.
+   */
+  async function emitMessage(payload: { type: ChatMessage['type']; content: string; metadata?: any }) {
+    if (!socket.value) initSocket();
+    try {
+      const saved: ChatMessage = await socket.value!
+        .timeout(SEND_TIMEOUT_MS)
+        .emitWithAck('sendMessage', { orderId, channel, ...payload });
+      // The room broadcast normally delivers our own message too; add it
+      // here in case this socket was between reconnects.
+      if (saved?.id && !messages.value.some((m) => m.id === saved.id)) {
+        messages.value.push(saved);
+      }
+      return true;
+    } catch (error) {
+      console.error('Failed to send message', error);
+      showToast({ message: t('chat.sendFailed'), color: 'danger' });
+      return false;
+    }
+  }
 
-    socket.value.emit('sendMessage', {
-      orderId,
-      channel,
-      type: 'TEXT',
-      content: text,
-    });
+  async function sendMessage(text: string) {
+    if (!text.trim()) return false;
+    return emitMessage({ type: 'TEXT', content: text });
   }
 
   function deleteMessage(messageId: string) {
@@ -120,15 +165,10 @@ export function useChat(orderId: string, channel: 'TAILOR' | 'COURIER') {
       const fileId = response.data;
 
       // 2. Send the fileId via WebSocket
-      socket.value?.emit('sendMessage', {
-        orderId,
-        channel,
-        type,
-        content: fileId,
-        metadata,
-      });
+      await emitMessage({ type, content: fileId, metadata });
     } catch (error) {
       console.error('Media upload failed', error);
+      showToast({ message: t('chat.sendFailed'), color: 'danger' });
     } finally {
       uploadingMediaType.value = null;
     }

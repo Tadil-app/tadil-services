@@ -1,8 +1,21 @@
 export const ur = {
   common: {
+    push: {
+      open: "کھولیں",
+      channelName: "نئے آرڈرز",
+    },
+    accountType: {
+      tailor: "درزی اکاؤنٹ",
+      courier: "ڈرائیور اکاؤنٹ",
+    },
     units: {
       cm: "سینٹی میٹر",
       inch: "انچ",
+    },
+    earning: {
+      label: "آپ کی کمائی",
+      paid: "آپ کے والٹ میں شامل کر دی گئی",
+      pending: "کلائنٹ کی جانب سے وصولی کی تصدیق پر آپ کے والٹ میں شامل ہوگی",
     },
     currencies: {
       sar: "سعودی ریال",
@@ -283,6 +296,8 @@ export const ur = {
       addInProfile: "پروفائل میں پتہ شامل کریں",
     },
     orderInfo: {
+      itemsTotal: "اشیاء کا کل:",
+      transportationFee: "ٹرانسپورٹ فیس:",
       reference: "آرڈر کا حوالہ:",
       totalAmount: "کل رقم:",
     },
@@ -316,7 +331,9 @@ export const ur = {
     edited: "ترمیم شدہ",
     messageOptions: "پیغام کے اختیارات",
     editMessage: "پیغام میں ترمیم کریں",
+    sendFailed: "پیغام نہیں بھیجا گیا۔ اپنا کنکشن چیک کریں اور دوبارہ کوشش کریں۔",
     channels: {
+      customer: "گاہک سے چیٹ",
       tailor: "درزی کے ساتھ چیٹ",
       courier: "کوریئر کے ساتھ چیٹ",
     },
@@ -380,10 +397,37 @@ export const ur = {
     },
   },
   courier: {
+    navBar: {
+      dashboard: "ہوم",
+      orders: "سفر",
+      wallet: "والیٹ",
+    },
+    trip: {
+      toTailor: "گاہک سے درزی تک",
+      toCustomer: "درزی سے گاہک تک",
+      pickupPoint: "پک اپ پوائنٹ",
+      dropoffPoint: "ڈیلیوری پوائنٹ",
+      customer: "گاہک",
+      tailor: "درزی",
+      navigate: "نیویگیشن شروع کریں",
+      nextStop: "اگلا اسٹاپ",
+      openFailed: "نقشہ ایپ نہیں کھل سکی۔",
+      noLocation: "مقام دستیاب نہیں",
+      openWith: "راستہ کھولیں بذریعہ",
+      googleMaps: "Google Maps",
+      waze: "Waze",
+      appleMaps: "Apple Maps",
+    },
     dashboard: {
+      title: "میرے سفر",
+      activeTrips: "جاری سفر",
+      newRequests: "نئے سفر کی درخواستیں",
       noPendingPickups: "کوئی زیر التواء پک اپ دستیاب نہیں ہے",
     },
     orders: {
+      title: "سفر",
+      subtitle: "آپ کے پک اپ اور ڈیلیوریز",
+      search: "آرڈر نمبر سے تلاش کریں...",
       noOrders: "کوئی آرڈر نہیں ملا",
       newAssignment: "نئی تفویض",
       returnTrip: "واپسی کا سفر",
@@ -415,6 +459,16 @@ export const ur = {
       grandTotal: "مجموعی کل:"
     }
     },
+  waybill: {
+    title: "آرڈر وے بل",
+    open: "وے بل دیکھیں / پرنٹ کریں",
+    print: "وے بل پرنٹ کریں",
+    close: "بند کریں",
+    printHint: "یہ براؤزر میں کھلے گا، جہاں سے آپ اسے پرنٹ یا PDF میں محفوظ کر سکتے ہیں۔",
+    loadFailed: "وے بل لوڈ نہیں ہو سکا۔",
+    printFailed: "پرنٹ کے لیے براؤزر نہیں کھل سکا۔ دوبارہ کوشش کریں۔",
+    retry: "دوبارہ کوشش کریں",
+  },
   wallet: {
     noTransactions: "کوئی لین دین نہیں ملا",
     payoutRequest: {

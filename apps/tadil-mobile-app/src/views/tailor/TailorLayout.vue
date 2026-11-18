@@ -32,7 +32,8 @@ import {
   IonPage,
 } from '@ionic/vue';
 import { useTailorOrdersStore } from '@/stores';
-import { onBeforeMount } from 'vue';
+import { onBeforeMount, onUnmounted } from 'vue';
+import { onOrderPush } from '@/push/pushNotifications';
 import { House, PackageSearch, Wallet } from 'lucide-vue-next';
 
 const ordersStore = useTailorOrdersStore();
@@ -41,4 +42,8 @@ const { fetchOrders } = ordersStore;
 onBeforeMount(() => {
   fetchOrders();
 });
+
+// An order alert arrived while the app is open: show the order right away.
+const stopOrderPush = onOrderPush(() => fetchOrders());
+onUnmounted(stopOrderPush);
 </script>

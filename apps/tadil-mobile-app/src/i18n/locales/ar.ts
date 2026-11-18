@@ -1,8 +1,21 @@
 export const ar = {
   common: {
+    push: {
+      open: "فتح",
+      channelName: "الطلبات الجديدة",
+    },
+    accountType: {
+      tailor: "حساب خياط",
+      courier: "حساب سائق",
+    },
     units: {
       cm: "سم",
       inch: "بوصة",
+    },
+    earning: {
+      label: "أرباحك",
+      paid: "أُضيفت إلى محفظتك",
+      pending: "تُضاف إلى محفظتك عند تأكيد العميل للاستلام",
     },
     currencies: {
       sar: "ر.س",
@@ -284,6 +297,8 @@ export const ar = {
       addInProfile: "أضف عنواناً في الملف الشخصي",
     },
     orderInfo: {
+      itemsTotal: "إجمالي القطع:",
+      transportationFee: "رسوم النقل:",
       reference: "مرجع الطلب:",
       totalAmount: "المبلغ الإجمالي:",
     },
@@ -317,7 +332,9 @@ export const ar = {
     edited: "معدلة",
     messageOptions: "خيارات الرسالة",
     editMessage: "تعديل الرسالة",
+    sendFailed: "لم يتم إرسال الرسالة. تحقق من الاتصال وحاول مرة أخرى.",
     channels: {
+      customer: "الدردشة مع العميل",
       tailor: "الدردشة مع الخياط",
       courier: "الدردشة مع المندوب",
     },
@@ -381,10 +398,37 @@ export const ar = {
     },
   },
   courier: {
+    navBar: {
+      dashboard: "الرئيسية",
+      orders: "الرحلات",
+      wallet: "المحفظة",
+    },
+    trip: {
+      toTailor: "من العميل إلى الخياط",
+      toCustomer: "من الخياط إلى العميل",
+      pickupPoint: "نقطة الاستلام",
+      dropoffPoint: "نقطة التسليم",
+      customer: "العميل",
+      tailor: "الخياط",
+      navigate: "ابدأ الملاحة",
+      nextStop: "المحطة التالية",
+      openFailed: "تعذّر فتح تطبيق الخرائط.",
+      noLocation: "الموقع غير متوفر",
+      openWith: "افتح الاتجاهات باستخدام",
+      googleMaps: "Google Maps",
+      waze: "Waze",
+      appleMaps: "Apple Maps",
+    },
     dashboard: {
+      title: "رحلاتي",
+      activeTrips: "الرحلات الجارية",
+      newRequests: "طلبات رحلات جديدة",
       noPendingPickups: "لا توجد استلامات معلقة متاحة",
     },
     orders: {
+      title: "الرحلات",
+      subtitle: "عمليات الاستلام والتوصيل",
+      search: "ابحث برقم الطلب...",
       noOrders: "لم يتم العثور على طلبات",
       newAssignment: "مهمة جديدة",
       returnTrip: "رحلة عودة",
@@ -416,6 +460,16 @@ export const ar = {
       grandTotal: "المجموع الكلي:"
     }
     },
+  waybill: {
+    title: "بوليصة الطلب",
+    open: "عرض / طباعة البوليصة",
+    print: "طباعة البوليصة",
+    close: "إغلاق",
+    printHint: "تُفتح في المتصفح، ومنه يمكنك طباعتها أو حفظها PDF.",
+    loadFailed: "تعذّر تحميل البوليصة.",
+    printFailed: "تعذّر فتح المتصفح للطباعة. حاول مرة أخرى.",
+    retry: "إعادة المحاولة",
+  },
   wallet: {
     noTransactions: "لم يتم العثور على معاملات",
     payoutRequest: {

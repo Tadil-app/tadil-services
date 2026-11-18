@@ -74,7 +74,9 @@
               {{ $t("common.inputs.commissionRate.label") }}
             </dt>
             <dd class="mt-0.5 truncate font-medium">
-              {{ display(user.commissionRate) }}
+              {{
+                user.commissionRate ?? $t("common.inputs.commissionRate.globalHint")
+              }}
             </dd>
           </div>
         </dl>
@@ -169,9 +171,8 @@ const headerIcon = computed(() => {
   }
 });
 
-const showCommission = computed(
-  () => role.value === ROLE.TAILOR || role.value === ROLE.COURIER,
-);
+// Drivers are paid a fixed amount per trip (admin Settings), not a rate.
+const showCommission = computed(() => role.value === ROLE.TAILOR);
 
 const display = (value?: string | number | null) => {
   if (value === undefined || value === null || value === "") return "--";

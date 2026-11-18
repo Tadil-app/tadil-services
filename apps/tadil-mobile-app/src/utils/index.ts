@@ -4,3 +4,6 @@ export * from "./geofence.util";
 export * from "./media.util";
 export * from "./orderDeepLink.util";
 export * from "./unlockIonicTabBar.util";
+export * from "./courierTrip.util";
+export * from "./mapNavigation.util";
+export * from "./openExternal.util";

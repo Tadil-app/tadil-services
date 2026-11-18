@@ -1,8 +1,21 @@
 export const bn = {
   common: {
+    push: {
+      open: "খুলুন",
+      channelName: "নতুন অর্ডার",
+    },
+    accountType: {
+      tailor: "দর্জি অ্যাকাউন্ট",
+      courier: "ড্রাইভার অ্যাকাউন্ট",
+    },
     units: {
       cm: "সেমি",
       inch: "ইঞ্চি",
+    },
+    earning: {
+      label: "আপনার আয়",
+      paid: "আপনার ওয়ালেটে যোগ হয়েছে",
+      pending: "গ্রাহক প্রাপ্তি নিশ্চিত করলে আপনার ওয়ালেটে যোগ হবে",
     },
     currencies: {
       sar: "SAR",
@@ -285,6 +298,8 @@ export const bn = {
       addInProfile: "প্রোফাইলে ঠিকানা যোগ করুন",
     },
     orderInfo: {
+      itemsTotal: "আইটেমের মোট:",
+      transportationFee: "পরিবহন ফি:",
       reference: "অর্ডার রেফারেন্স:",
       totalAmount: "মোট পরিমাণ:",
     },
@@ -318,7 +333,9 @@ export const bn = {
     edited: "সম্পাদিত",
     messageOptions: "বার্তার বিকল্পসমূহ",
     editMessage: "বার্তা সম্পাদনা করুন",
+    sendFailed: "বার্তা পাঠানো যায়নি। সংযোগ দেখে আবার চেষ্টা করুন।",
     channels: {
+      customer: "গ্রাহকের সাথে চ্যাট",
       tailor: "দর্জির সাথে চ্যাট",
       courier: "কুরিয়ারের সাথে চ্যাট",
     },
@@ -382,10 +399,37 @@ export const bn = {
     },
   },
   courier: {
+    navBar: {
+      dashboard: "হোম",
+      orders: "ট্রিপ",
+      wallet: "ওয়ালেট",
+    },
+    trip: {
+      toTailor: "গ্রাহক থেকে দর্জির কাছে",
+      toCustomer: "দর্জি থেকে গ্রাহকের কাছে",
+      pickupPoint: "পিকআপ পয়েন্ট",
+      dropoffPoint: "ডেলিভারি পয়েন্ট",
+      customer: "গ্রাহক",
+      tailor: "দর্জি",
+      navigate: "নেভিগেশন শুরু করুন",
+      nextStop: "পরবর্তী স্টপ",
+      openFailed: "ম্যাপ অ্যাপ খোলা যায়নি।",
+      noLocation: "অবস্থান পাওয়া যায়নি",
+      openWith: "দিকনির্দেশনা খুলুন",
+      googleMaps: "Google Maps",
+      waze: "Waze",
+      appleMaps: "Apple Maps",
+    },
     dashboard: {
+      title: "আমার ট্রিপ",
+      activeTrips: "চলমান ট্রিপ",
+      newRequests: "নতুন ট্রিপের অনুরোধ",
       noPendingPickups: "কোন পেন্ডিং পিকআপ নেই",
     },
     orders: {
+      title: "ট্রিপ",
+      subtitle: "আপনার পিকআপ ও ডেলিভারি",
+      search: "অর্ডার নম্বর দিয়ে খুঁজুন...",
       noOrders: "কোন অর্ডার পাওয়া যায়নি",
       newAssignment: "নতুন অ্যাসাইনমেন্ট",
       returnTrip: "ফেরত ট্রিপ",
@@ -417,6 +461,16 @@ export const bn = {
       grandTotal: "সর্বমোট:"
     }
     },
+  waybill: {
+    title: "অর্ডার ওয়েবিল",
+    open: "ওয়েবিল দেখুন / প্রিন্ট করুন",
+    print: "ওয়েবিল প্রিন্ট করুন",
+    close: "বন্ধ করুন",
+    printHint: "এটি ব্রাউজারে খুলবে, সেখান থেকে প্রিন্ট বা PDF হিসেবে সেভ করতে পারবেন।",
+    loadFailed: "ওয়েবিল লোড করা যায়নি।",
+    printFailed: "প্রিন্টের জন্য ব্রাউজার খোলা যায়নি। আবার চেষ্টা করুন।",
+    retry: "আবার চেষ্টা করুন",
+  },
   wallet: {
     noTransactions: "কোন লেনদেন পাওয়া যায়নি",
     payoutRequest: {

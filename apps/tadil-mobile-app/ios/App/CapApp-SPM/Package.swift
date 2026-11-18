@@ -12,13 +12,14 @@ let package = Package(
     ],
     dependencies: [
         .package(url: "https://github.com/ionic-team/capacitor-swift-pm.git", exact: "8.0.0"),
+        .package(name: "CapacitorFirebaseMessaging", path: "symlinks/CapacitorFirebaseMessaging"),
         .package(name: "CapacitorApp", path: "../../../../../node_modules/@capacitor/app"),
+        .package(name: "CapacitorAppLauncher", path: "../../../../../node_modules/@capacitor/app-launcher"),
         .package(name: "CapacitorCamera", path: "../../../../../node_modules/@capacitor/camera"),
         .package(name: "CapacitorFilesystem", path: "../../../../../node_modules/@capacitor/filesystem"),
         .package(name: "CapacitorHaptics", path: "../../../../../node_modules/@capacitor/haptics"),
         .package(name: "CapacitorKeyboard", path: "../../../../../node_modules/@capacitor/keyboard"),
         .package(name: "CapacitorPreferences", path: "../../../../../node_modules/@capacitor/preferences"),
-        .package(name: "CapacitorPushNotifications", path: "../../../../../node_modules/@capacitor/push-notifications"),
         .package(name: "CapacitorStatusBar", path: "../../../../../node_modules/@capacitor/status-bar")
     ],
     targets: [
@@ -27,13 +28,14 @@ let package = Package(
             dependencies: [
                 .product(name: "Capacitor", package: "capacitor-swift-pm"),
                 .product(name: "Cordova", package: "capacitor-swift-pm"),
+                .product(name: "CapacitorFirebaseMessaging", package: "CapacitorFirebaseMessaging"),
                 .product(name: "CapacitorApp", package: "CapacitorApp"),
+                .product(name: "CapacitorAppLauncher", package: "CapacitorAppLauncher"),
                 .product(name: "CapacitorCamera", package: "CapacitorCamera"),
                 .product(name: "CapacitorFilesystem", package: "CapacitorFilesystem"),
                 .product(name: "CapacitorHaptics", package: "CapacitorHaptics"),
                 .product(name: "CapacitorKeyboard", package: "CapacitorKeyboard"),
                 .product(name: "CapacitorPreferences", package: "CapacitorPreferences"),
-                .product(name: "CapacitorPushNotifications", package: "CapacitorPushNotifications"),
                 .product(name: "CapacitorStatusBar", package: "CapacitorStatusBar")
             ]
         )

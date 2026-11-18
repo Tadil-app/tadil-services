@@ -59,7 +59,10 @@ export class LoginUseCase {
 
     // For Tailors and Couriers
     if (user.loginToken) {
-      const token = user.loginToken;
+      // The stored token only marks the admin's approval. Issue a fresh one:
+      // the stored token is never cleared, so returning it handed out the
+      // same token until it expired, 30 days after approval.
+      const token = this._generateToken(user);
       const updatedUser = { ...user, loginToken: undefined, loginRequestStatus: undefined };
       await this._usersRepository.updateUser(updatedUser);
       return { status: 'authenticated', token, user: updatedUser };

@@ -1,8 +1,21 @@
 export const hi = {
   common: {
+    push: {
+      open: "खोलें",
+      channelName: "नए ऑर्डर",
+    },
+    accountType: {
+      tailor: "दर्ज़ी खाता",
+      courier: "ड्राइवर खाता",
+    },
     units: {
       cm: "सेमी",
       inch: "इंच",
+    },
+    earning: {
+      label: "आपकी कमाई",
+      paid: "आपके वॉलेट में जोड़ दी गई",
+      pending: "ग्राहक द्वारा प्राप्ति की पुष्टि करने पर आपके वॉलेट में जोड़ी जाएगी",
     },
     currencies: {
       sar: "SAR",
@@ -284,6 +297,8 @@ export const hi = {
       addInProfile: "प्रोफ़ाइल में पता जोड़ें",
     },
     orderInfo: {
+      itemsTotal: "आइटम कुल:",
+      transportationFee: "परिवहन शुल्क:",
       reference: "ऑर्डर संदर्भ:",
       totalAmount: "कुल राशि:",
     },
@@ -317,7 +332,9 @@ export const hi = {
     edited: "संपादित",
     messageOptions: "संदेश विकल्प",
     editMessage: "संदेश संपादित करें",
+    sendFailed: "संदेश नहीं भेजा गया। अपना कनेक्शन जाँचें और फिर कोशिश करें।",
     channels: {
+      customer: "ग्राहक से चैट",
       tailor: "दर्जी के साथ चैट",
       courier: "कूरियर के साथ चैट",
     },
@@ -381,10 +398,37 @@ export const hi = {
     },
   },
   courier: {
+    navBar: {
+      dashboard: "होम",
+      orders: "यात्राएँ",
+      wallet: "वॉलेट",
+    },
+    trip: {
+      toTailor: "ग्राहक से दर्ज़ी तक",
+      toCustomer: "दर्ज़ी से ग्राहक तक",
+      pickupPoint: "पिकअप पॉइंट",
+      dropoffPoint: "डिलीवरी पॉइंट",
+      customer: "ग्राहक",
+      tailor: "दर्ज़ी",
+      navigate: "नेविगेशन शुरू करें",
+      nextStop: "अगला स्टॉप",
+      openFailed: "मैप ऐप नहीं खुल सका।",
+      noLocation: "स्थान उपलब्ध नहीं",
+      openWith: "दिशा-निर्देश खोलें",
+      googleMaps: "Google Maps",
+      waze: "Waze",
+      appleMaps: "Apple Maps",
+    },
     dashboard: {
+      title: "मेरी यात्राएँ",
+      activeTrips: "चालू यात्राएँ",
+      newRequests: "नई यात्रा अनुरोध",
       noPendingPickups: "कोई लंबित पिकअप उपलब्ध नहीं है",
     },
     orders: {
+      title: "यात्राएँ",
+      subtitle: "आपके पिकअप और डिलीवरी",
+      search: "ऑर्डर नंबर से खोजें...",
       noOrders: "कोई ऑर्डर नहीं मिला",
       newAssignment: "नया असाइनमेंट",
       returnTrip: "वापसी यात्रा",
@@ -416,6 +460,16 @@ export const hi = {
       grandTotal: "कुल योग:"
     }
     },
+  waybill: {
+    title: "ऑर्डर वेबिल",
+    open: "वेबिल देखें / प्रिंट करें",
+    print: "वेबिल प्रिंट करें",
+    close: "बंद करें",
+    printHint: "यह ब्राउज़र में खुलेगा, जहाँ से आप इसे प्रिंट या PDF के रूप में सेव कर सकते हैं।",
+    loadFailed: "वेबिल लोड नहीं हो सका।",
+    printFailed: "प्रिंट के लिए ब्राउज़र नहीं खुल सका। फिर कोशिश करें।",
+    retry: "फिर कोशिश करें",
+  },
   wallet: {
     noTransactions: "कोई लेनदेन नहीं मिला",
     payoutRequest: {

@@ -13,6 +13,7 @@ export class PrismaOrdersRepository implements OrdersRepository {
         reference: order.reference,
         date: order.date,
         totalPrice: order.totalPrice,
+        deliveryFee: order.deliveryFee ?? 0,
         status: order.status as OrderStatus,
         customerId: order.customerId,
         addressId: order.addressId,

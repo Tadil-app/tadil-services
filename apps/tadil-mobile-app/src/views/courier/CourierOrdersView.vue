@@ -2,14 +2,14 @@
   <IonPage>
     <IonHeader class="ion-no-border">
       <SecondaryHeader
-        :title="$t('tailor.orders.title')"
-        :subtitle="$t('tailor.orders.subtitle')"
+        :title="$t('courier.orders.title')"
+        :subtitle="$t('courier.orders.subtitle')"
         :show-back-button="false"
       />
       <div class="px-4 pb-2 bg-background">
         <IonSearchbar
           show-clear-button="always"
-          :placeholder="$t('tailor.orders.search')"
+          :placeholder="$t('courier.orders.search')"
           v-model="searchQuery"
           class="custom-searchbar"
         />
@@ -44,13 +44,10 @@
       </div>
 
       <div v-else class="px-2 space-y-2 mt-2">
-        <OrderListItem
+        <CourierTripListItem
           v-for="order in filteredOrders"
           :key="order.id"
-          :reference="order.reference"
-          :date="order.date"
-          :total-price="order.totalPrice"
-          :status="order.status"
+          :order="order"
           @click="goToOrder(order.id)"
         />
       </div>
@@ -59,7 +56,8 @@
 </template>
 
 <script setup lang="ts">
-import { SecondaryHeader, OrderListItem } from "@/components";
+import { SecondaryHeader } from "@/components";
+import CourierTripListItem from "./components/CourierTripListItem.vue";
 import {
   IonPage,
   IonContent,

@@ -16,6 +16,7 @@ import {
   DisplayOrderDTO,
   CreateOrderDto,
   ConfirmPaymentDto,
+  RegisterDeviceDto,
   ConfirmPaymentResultDto,
   ReconcilePendingOrderResultDto,
   RequestPayoutDto,
@@ -31,6 +32,7 @@ import {
   DisplayBoundaryDTO,
   User,
   ShippingLabelDTO,
+  WaybillLinkDTO,
 } from "../dtos";
 export interface UploadFileDto {
   file: File;
@@ -279,6 +281,27 @@ export class Api<
       }),
 
     /**
+     * Transportation fee for a cart whose items cost `itemsTotal` SAR
+     *
+     * @tags Customer
+     * @name CustomerControllerGetDeliveryFee
+     * @request GET:/api/customer/delivery-fee
+     * @secure
+     */
+    customerControllerGetDeliveryFee: (
+      query: { itemsTotal: number },
+      params: RequestParams = {},
+    ) =>
+      this.request<{ deliveryFee: number; freeDeliveryThreshold: number }, any>({
+        path: `/api/customer/delivery-fee`,
+        method: "GET",
+        query: query,
+        secure: true,
+        format: "json",
+        ...params,
+      }),
+
+    /**
      * Settle a pending order: confirm it if Moyasar holds a paid payment, otherwise drop it.
      *
      * @tags Customer
@@ -408,7 +431,7 @@ export class Api<
      */
     chatControllerGetMessages: (
       orderId: string,
-      channel: "TAILOR" | "COURIER",
+      channel: "TAILOR" | "COURIER" | "TAILOR_COURIER",
       params: RequestParams = {},
     ) =>
       this.request<any[], any>({
@@ -451,6 +474,7 @@ export class Api<
       this.request<DisplayOrderDTO[], any>({
         path: `/api/tailor/${id}/orders`,
         method: "GET",
+        secure: true,
         format: "json",
         ...params,
       }),
@@ -530,6 +554,38 @@ export class Api<
       }),
 
     /**
+     * Short-lived link to view and print the order waybill.
+     *
+     * @tags Tailor
+     * @name TailorControllerGetWaybill
+     * @request GET:/api/tailor/{id}/orders/{orderId}/waybill
+     */
+    tailorControllerGetWaybill: (id: string, orderId: string, params: RequestParams = {}) =>
+      this.request<WaybillLinkDTO, any>({
+        path: `/api/tailor/${id}/orders/${orderId}/waybill`,
+        method: "GET",
+        secure: true,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * Short-lived link to view and print the order waybill.
+     *
+     * @tags Courier
+     * @name CourierControllerGetWaybill
+     * @request GET:/api/courier/{id}/orders/{orderId}/waybill
+     */
+    courierControllerGetWaybill: (id: string, orderId: string, params: RequestParams = {}) =>
+      this.request<WaybillLinkDTO, any>({
+        path: `/api/courier/${id}/orders/${orderId}/waybill`,
+        method: "GET",
+        secure: true,
+        format: "json",
+        ...params,
+      }),
+
+    /**
      * No description
      *
      * @tags Courier
@@ -555,6 +611,7 @@ export class Api<
       this.request<DisplayOrderDTO[], any>({
         path: `/api/courier/${id}/orders`,
         method: "GET",
+        secure: true,
         format: "json",
         ...params,
       }),
@@ -926,6 +983,45 @@ export class Api<
       this.request<void, any>({
         path: `/api/files/${id}`,
         method: "GET",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Devices
+     * @name DevicesControllerRegister
+     * @summary Register this phone for push notifications
+     * @request POST:/api/devices
+     * @secure
+     */
+    devicesControllerRegister: (
+      data: RegisterDeviceDto,
+      params: RequestParams = {},
+    ) =>
+      this.request<void, any>({
+        path: `/api/devices`,
+        method: "POST",
+        body: data,
+        secure: true,
+        type: ContentType.Json,
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Devices
+     * @name DevicesControllerUnregister
+     * @summary Stop push notifications to this phone (sign-out)
+     * @request DELETE:/api/devices/{token}
+     * @secure
+     */
+    devicesControllerUnregister: (token: string, params: RequestParams = {}) =>
+      this.request<void, any>({
+        path: `/api/devices/${encodeURIComponent(token)}`,
+        method: "DELETE",
+        secure: true,
         ...params,
       }),
   };

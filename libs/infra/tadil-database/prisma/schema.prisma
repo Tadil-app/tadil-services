@@ -243,8 +243,10 @@ model Order {
     id         String      @id @default(uuid())
     reference  String      @unique()
     date       DateTime    @default(now())
-    totalPrice Float       @default(0)
-    status     OrderStatus
+    /// What the customer pays: the items plus deliveryFee.
+    totalPrice  Float       @default(0)
+    deliveryFee Float       @default(0)
+    status      OrderStatus
 
     items       OrderItem[]
     customItems CustomOrderItem[]
@@ -289,6 +291,7 @@ model Chat {
 enum MessageChannel {
     TAILOR
     COURIER
+    TAILOR_COURIER
 }
 
 model OrderStatusHistory {
@@ -386,7 +389,8 @@ model User {
     loginToken         String?
 
     walletBalance  Float @default(0)
-    commissionRate Float @default(10)
+    /// Tailor's own share in %. Null uses the global PlatformSettings rate.
+    commissionRate Float?
     sorting        Int   @default(1)
 
     addresses Address[]
@@ -405,7 +409,35 @@ model User {
     transactions   Transaction[]
     payoutRequests PayoutRequest[]
 
+    deviceTokens DeviceToken[]
+
     @@map("users")
+}
+
+/// A phone that can receive push notifications for a signed-in user. The FCM
+/// token is the key: when someone else signs in on the same phone, the row
+/// moves to them.
+model DeviceToken {
+    token     String   @id
+    userId    String
+    user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+    platform  String
+    /// App language at registration, so the alert reads in the user's language.
+    locale    String   @default("ar")
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    @@index([userId])
+    @@map("device-tokens")
+}
+
+/// One row per order event already announced by push, so a retried request
+/// (or a second API instance) never sends the same alert twice.
+model PushDispatch {
+    key       String   @id
+    createdAt DateTime @default(now())
+
+    @@map("push-dispatches")
 }
 
 model Transaction {
@@ -421,6 +453,21 @@ model Transaction {
     orderId String?
 
     @@map("transactions")
+}
+
+/// Admin-set money rules. A single row, id 1.
+model PlatformSettings {
+    id                    Int   @id @default(1)
+    /// Orders whose items reach this total ship free. 0 = not set.
+    freeDeliveryThreshold Float @default(0)
+    /// Paid to the driver for each trip (pickup or return).
+    courierBasePayout     Float @default(7.5)
+    /// Tailor's share of the items total, in %.
+    tailorCommissionRate  Float @default(10)
+    /// Delivery subsidy: share of the items total, in % per trip, that offsets the fee.
+    courierCommissionRate Float @default(6.5)
+
+    @@map("platform-settings")
 }
 
 model PayoutRequest {

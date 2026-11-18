@@ -1,6 +1,8 @@
 export interface TailorRepository {
-  acceptOrder(tailorId: string, orderId: string): Promise<void>;
+  /** False when the order is no longer open to tailors or this tailor declined it. */
+  acceptOrder(tailorId: string, orderId: string): Promise<boolean>;
   declineOrder(tailorId: string, orderId: string): Promise<void>;
   confirmReceipt(tailorId: string, orderId: string): Promise<boolean>;
-  markReady(orderId: string): Promise<void>;
+  /** False unless the order is in progress with this tailor. */
+  markReady(tailorId: string, orderId: string): Promise<boolean>;
 }

@@ -125,7 +125,7 @@ export class PrismaUsersRepository implements UsersRepository {
         loginRequestStatus: user.loginRequestStatus,
         loginToken: user.loginToken,
         walletBalance: user.walletBalance ?? 0,
-        commissionRate: user.commissionRate ?? 10,
+        commissionRate: user.commissionRate ?? null,
         sorting: user.sorting ?? (max._max.sorting ?? 0) + 1,
       },
     });

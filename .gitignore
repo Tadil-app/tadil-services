@@ -65,3 +65,11 @@ mobile-api.log
 .hoplite/bin/
 CLAUDE.md
 .claude/
+
+# Firebase Admin SDK key and the raw notification handoff folder (never commit)
+secrets/
+tadil notif files/
+service-account*.json
+
+# Recreated by `npx cap sync ios` (SPM symlinks to node_modules)
+apps/tadil-mobile-app/ios/App/CapApp-SPM/symlinks/

@@ -73,7 +73,9 @@ export interface Order {
   addressId: string;
   reference: string;
   date: string;
+  /** What the customer pays: the items plus deliveryFee. */
   totalPrice: number;
+  deliveryFee?: number;
   status: OrderStatusType;
   items: OrderItem[];
   customItems: CustomOrderItem[];

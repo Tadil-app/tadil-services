@@ -13,6 +13,7 @@ import { AuthModule } from './auth/auth.module';
 import { SessionGuard } from './auth/guards/session.guard';
 import { PermissionsGuard } from './auth/guards/permissions.guard';
 import { CatalogSortingController } from './catalog-sorting.controller';
+import { SettingsController } from './settings.controller';
 
 @Module({
   imports: [
@@ -26,7 +27,7 @@ import { CatalogSortingController } from './catalog-sorting.controller';
     OrdersModule,
     LocationsModule,
   ],
-  controllers: [AppController, CatalogSortingController],
+  controllers: [AppController, CatalogSortingController, SettingsController],
   providers: [
     { provide: APP_GUARD, useClass: SessionGuard },
     { provide: APP_GUARD, useClass: PermissionsGuard },

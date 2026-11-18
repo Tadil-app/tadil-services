@@ -3,6 +3,8 @@ import {
   InvalidCommandException,
   Order,
   ORDER_STATUS,
+  PlatformSettings,
+  transportationFee,
 } from '@tadil-common';
 import { OrdersRepository } from '../orders.repository';
 import { v4 as uuid } from 'uuid';
@@ -15,6 +17,7 @@ export class CreateOrderUseCase {
     addressId: string;
     items: any[]; // Simplified for now, should match ModelItems
     customItems: any[];
+    settings: PlatformSettings;
   }): Promise<Order> {
     if (!command.customerId || !command.addressId) {
       throw new InvalidCommandException('Customer ID and Address ID are required');
@@ -29,13 +32,16 @@ export class CreateOrderUseCase {
       totalPrice += item.price;
     });
 
+    const deliveryFee = transportationFee(totalPrice, command.settings);
+
     const order: Order = {
       id: uuid(),
       customerId: command.customerId,
       addressId: command.addressId,
       reference: `TAD-${Math.floor(100000 + Math.random() * 900000)}`,
       date: new Date().toISOString(),
-      totalPrice,
+      totalPrice: totalPrice + deliveryFee,
+      deliveryFee,
       status: ORDER_STATUS.PENDING,
       items: command.items,
       customItems: command.customItems,

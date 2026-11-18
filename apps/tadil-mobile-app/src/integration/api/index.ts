@@ -17,6 +17,9 @@ if (!apiBaseUrl) {
 const apiInstance = new Api({
   baseURL: apiBaseUrl,
   timeout: API_TIMEOUT_MS,
+  // Send the login token on every call, not only on routes the generated
+  // client marks as secure. Order actions now require it.
+  secure: true,
   securityWorker: (token) => {
     if (token) {
       return {

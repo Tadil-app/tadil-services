@@ -12,6 +12,8 @@ import {
   UseInterceptors,
   Req,
   UseGuards,
+  ForbiddenException,
+  BadRequestException,
 } from '@nestjs/common';
 import {
   ApiConsumes,
@@ -22,8 +24,8 @@ import {
   ApiOperation,
   ApiBearerAuth,
 } from '@nestjs/swagger';
-import { ORDER_STATUS, ReadableFile, type FileStorageService } from '@tadil-common';
-import { DataReader } from '@tadil-database';
+import { ORDER_STATUS, ReadableFile, transportationFee, type FileStorageService } from '@tadil-common';
+import { DataReader, getPlatformSettings } from '@tadil-database';
 import {
   DisplayAlterationDTO,
   DisplayModelDTO,
@@ -45,6 +47,8 @@ import { ConfirmReceiptUseCase } from '@tadil-customer';
 import { CreateOrderUseCase, ConfirmPaymentUseCase, ReconcilePendingOrderUseCase, OrdersRepository } from '@tadil-orders';
 import { AuthGuard } from '../auth/auth.guard';
 import { isAppleReviewPhone } from './apple-review-phones';
+import { OrderNotifier } from '@tadil-notifications';
+import { fileIdFromLink, signedFileUrl } from '../common/files/file.link';
 
 @Controller('customer')
 @ApiTags('Customer')
@@ -58,7 +62,8 @@ export class CustomerController {
     private readonly _confirmPaymentUseCase: ConfirmPaymentUseCase,
     private readonly _reconcilePendingOrderUseCase: ReconcilePendingOrderUseCase,
     @Inject('OrdersRepository')
-    private readonly _ordersRepository: OrdersRepository
+    private readonly _ordersRepository: OrdersRepository,
+    private readonly _orderNotifier: OrderNotifier
   ) {}
 
   @Get('orders')
@@ -93,8 +98,8 @@ export class CustomerController {
     const order = await this._createOrderUseCase.execute({
       customerId: req.user.sub,
       addressId: dto.addressId,
-      items: dto.items,
-      customItems: dto.customItems,
+      ...withPlainFileIds(dto),
+      settings: await getPlatformSettings(this._dataReader.queries),
     });
 
     if (!isAppleReviewPhone(req.user?.phone)) {
@@ -110,6 +115,23 @@ export class CustomerController {
       ...order,
       status: ORDER_STATUS.WAITING_FOR_TAILOR_ASSIGNMENT,
       cashOnDelivery: true,
+    };
+  }
+
+  @Get('delivery-fee')
+  @UseGuards(AuthGuard)
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Transportation fee for a cart whose items cost `itemsTotal` SAR' })
+  @ApiQuery({ name: 'itemsTotal', type: Number })
+  async getDeliveryFee(@Query('itemsTotal') itemsTotal: string) {
+    const total = Number(itemsTotal);
+    if (!Number.isFinite(total) || total < 0) {
+      throw new BadRequestException('itemsTotal must be a non-negative number');
+    }
+    const settings = await getPlatformSettings(this._dataReader.queries);
+    return {
+      deliveryFee: transportationFee(total, settings),
+      freeDeliveryThreshold: settings.freeDeliveryThreshold,
     };
   }
 
@@ -129,6 +151,10 @@ export class CustomerController {
       orderId,
       customerId: req.user.sub,
     });
+    if (status === 'confirmed') {
+      // The order is now open to tailors. Repeats are dropped by the notifier.
+      this._orderNotifier.orderStatusChanged(orderId);
+    }
     return { status };
   }
 
@@ -142,17 +168,31 @@ export class CustomerController {
     @Req() req: any,
     @Body() dto: ConfirmPaymentDto
   ): Promise<ConfirmPaymentResultDto> {
-    return this._confirmPaymentUseCase.execute({
+    const result = await this._confirmPaymentUseCase.execute({
       paymentId: dto.paymentId,
       orderId: dto.orderId,
       customerId: req.user.sub,
     });
+    // The order is now open to tailors. Repeats are dropped by the notifier.
+    this._orderNotifier.orderStatusChanged(result.orderId);
+    return result;
   }
 
   @Post('orders/:orderId/confirm-receipt')
+  @UseGuards(AuthGuard)
+  @ApiBearerAuth()
   @ApiOperation({ summary: 'Confirm receipt of items from return courier' })
-  async confirmReceipt(@Param('orderId') orderId: string) {
-    await this._confirmReceiptUseCase.execute({ orderId });
+  async confirmReceipt(@Req() req: any, @Param('orderId') orderId: string) {
+    const confirmed = await this._confirmReceiptUseCase.execute({
+      customerId: req.user.sub,
+      orderId,
+      settings: await getPlatformSettings(this._dataReader.queries),
+    });
+    if (!confirmed) {
+      throw new ForbiddenException(
+        'Order is not yours or is not out for delivery to you'
+      );
+    }
   }
 
   @Get('models')
@@ -278,6 +318,8 @@ export class CustomerController {
   }
 
   @Post('files/upload')
+  @UseGuards(AuthGuard)
+  @ApiBearerAuth()
   @ApiConsumes('multipart/form-data')
   @UseInterceptors(FileInterceptor('file', fileUploadLocalPath))
   async uploadFile(
@@ -296,7 +338,9 @@ export class CustomerController {
 
     await this._fileStorageService.uploadFile(imageFileId, imageFile);
 
-    return `${process.env.TADIL_MOBILE_API}/api/files/${imageFileId}`;
+    // Signed, so the uploader can show the photo. The app sends it back as
+    // the item's image; createOrder keeps only the file id.
+    return signedFileUrl(imageFileId);
   }
 
   private _mapOrder(order: any): DisplayOrderDTO {
@@ -305,7 +349,7 @@ export class CustomerController {
       customerName: `${order.customer.firstName} ${order.customer.lastName}`,
       items: order.items.map((item: any) => ({
         ...item,
-        imageFileUrl: `${process.env.TADIL_MOBILE_API}/api/files/${item.imageFileId}`,
+        imageFileUrl: signedFileUrl(item.imageFileId),
         sections: item.sections.map((section: any) => ({
           ...section,
           alterations: section.alterations.map((alt: any) => ({
@@ -321,7 +365,7 @@ export class CustomerController {
       })),
       customItems: order.customItems.map((item: any) => ({
         ...item,
-        imageFileUrl: `${process.env.TADIL_MOBILE_API}/api/files/${item.imageFileId}`,
+        imageFileUrl: signedFileUrl(item.imageFileId),
         alterations: item.alterations.map((alt: any) => ({
           ...alt,
           informations: alt.informations.map((info: any) => ({
@@ -335,4 +379,24 @@ export class CustomerController {
       history: order.history || [],
     };
   }
+}
+
+/** The order's items with their image links reduced to stored file ids. */
+function withPlainFileIds(dto: CreateOrderDto): Pick<CreateOrderDto, 'items' | 'customItems'> {
+  return {
+    items: dto.items?.map((item) => ({
+      ...item,
+      imageFileId: fileIdFromLink(item?.imageFileId),
+      sections: Array.isArray(item?.sections)
+        ? item.sections.map((section: any) => ({
+            ...section,
+            imageFileId: fileIdFromLink(section?.imageFileId),
+          }))
+        : item?.sections,
+    })),
+    customItems: dto.customItems?.map((item) => ({
+      ...item,
+      imageFileId: fileIdFromLink(item?.imageFileId),
+    })),
+  };
 }
