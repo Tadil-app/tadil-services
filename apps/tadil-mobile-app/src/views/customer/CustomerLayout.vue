@@ -47,8 +47,8 @@ const authStore = useAuthStore();
 const route = useRoute();
 const isTabsVisible = computed(() => !HIDDEN_TAB_ROUTES.has(String(route.name)));
 
-let revealTimer: ReturnType<typeof window.setTimeout> | undefined;
-let visibilityTimer: ReturnType<typeof window.setTimeout> | undefined;
+let revealTimer: number | undefined;
+let visibilityTimer: number | undefined;
 
 function scheduleUnlock() {
   window.clearTimeout(revealTimer);
