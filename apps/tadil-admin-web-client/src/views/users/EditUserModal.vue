@@ -81,7 +81,7 @@
           :show-validation="showAddressValidation"
           @valid-change="(v) => (addressValid = v)"
         />
-        <div class="space-y-1.5" v-if="selectedUserType !== ROLE.CUSTOMER">
+        <div class="space-y-1.5" v-if="selectedUserType === ROLE.TAILOR">
           <InputLabel for="commissionRate">
             {{ $t("common.inputs.commissionRate.label") }}
           </InputLabel>
@@ -89,7 +89,7 @@
             id="commissionRate"
             type="number"
             v-model="newUser.commissionRate"
-            :placeholder="$t('common.inputs.commissionRate.placeholder')"
+            :placeholder="$t('common.inputs.commissionRate.globalHint')"
           />
         </div>
       </div>
@@ -126,6 +126,7 @@ import { useI18n } from "vue-i18n";
 import AddressFields from "./components/AddressFields.vue";
 import type { AddressFormValue } from "./components/address.types";
 import { can } from "@/auth";
+import { rateOrNull } from "@/utils/rateOrNull";
 
 function addressFromUser(user: DisplayUserDTO): AddressFormValue {
   return {
@@ -181,7 +182,7 @@ const newUser = ref<UpdateUserDTO>({
   firstName: props.user.firstName,
   lastName: props.user.lastName,
   email: props.user.email,
-  commissionRate: props.user.commissionRate ?? 10,
+  commissionRate: props.user.commissionRate ?? undefined,
 });
 const address = ref<AddressFormValue>(addressFromUser(props.user));
 const addressValid = ref(false);
@@ -254,7 +255,15 @@ async function updateUser() {
         showAddressValidation.value = true;
         return;
       }
-      const payload: UpdateUserDTO = { ...newUser.value, ...address.value };
+      const payload: UpdateUserDTO = {
+        ...newUser.value,
+        ...address.value,
+        // Drivers are paid per trip; an empty rate means the tailor uses the global one.
+        commissionRate:
+          props.selectedUserType !== ROLE.TAILOR
+            ? undefined
+            : rateOrNull(newUser.value.commissionRate),
+      };
       switch (props.selectedUserType) {
         case ROLE.TAILOR: {
           await apiClient.tailorsControllerUpdateTailor(
@@ -292,7 +301,7 @@ function closeModal() {
     firstName: props.user.firstName,
     lastName: props.user.lastName,
     email: props.user.email,
-    commissionRate: props.user.commissionRate ?? 10,
+    commissionRate: props.user.commissionRate ?? undefined,
   };
   address.value = addressFromUser(props.user);
   addressValid.value = false;

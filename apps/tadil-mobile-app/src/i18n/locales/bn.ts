@@ -298,6 +298,8 @@ export const bn = {
       addInProfile: "প্রোফাইলে ঠিকানা যোগ করুন",
     },
     orderInfo: {
+      itemsTotal: "আইটেমের মোট:",
+      transportationFee: "পরিবহন ফি:",
       reference: "অর্ডার রেফারেন্স:",
       totalAmount: "মোট পরিমাণ:",
     },

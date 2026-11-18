@@ -164,7 +164,10 @@ export interface DisplayOrderDTO {
   customerName: string;
   reference: string;
   date: string;
+  /** What the customer pays: the items plus deliveryFee. */
   totalPrice: number;
+  /** Transportation fee, in SAR (0 when delivery is free). */
+  deliveryFee?: number;
   /** Tailor/driver orders only: the logged-in user's share of this order, in SAR. */
   myEarning?: number;
   /** True once that share has been added to their wallet. */

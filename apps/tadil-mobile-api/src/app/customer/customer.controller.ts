@@ -13,6 +13,7 @@ import {
   Req,
   UseGuards,
   ForbiddenException,
+  BadRequestException,
 } from '@nestjs/common';
 import {
   ApiConsumes,
@@ -23,8 +24,8 @@ import {
   ApiOperation,
   ApiBearerAuth,
 } from '@nestjs/swagger';
-import { ORDER_STATUS, ReadableFile, type FileStorageService } from '@tadil-common';
-import { DataReader } from '@tadil-database';
+import { ORDER_STATUS, ReadableFile, transportationFee, type FileStorageService } from '@tadil-common';
+import { DataReader, getPlatformSettings } from '@tadil-database';
 import {
   DisplayAlterationDTO,
   DisplayModelDTO,
@@ -98,6 +99,7 @@ export class CustomerController {
       customerId: req.user.sub,
       addressId: dto.addressId,
       ...withPlainFileIds(dto),
+      settings: await getPlatformSettings(this._dataReader.queries),
     });
 
     if (!isAppleReviewPhone(req.user?.phone)) {
@@ -113,6 +115,23 @@ export class CustomerController {
       ...order,
       status: ORDER_STATUS.WAITING_FOR_TAILOR_ASSIGNMENT,
       cashOnDelivery: true,
+    };
+  }
+
+  @Get('delivery-fee')
+  @UseGuards(AuthGuard)
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Transportation fee for a cart whose items cost `itemsTotal` SAR' })
+  @ApiQuery({ name: 'itemsTotal', type: Number })
+  async getDeliveryFee(@Query('itemsTotal') itemsTotal: string) {
+    const total = Number(itemsTotal);
+    if (!Number.isFinite(total) || total < 0) {
+      throw new BadRequestException('itemsTotal must be a non-negative number');
+    }
+    const settings = await getPlatformSettings(this._dataReader.queries);
+    return {
+      deliveryFee: transportationFee(total, settings),
+      freeDeliveryThreshold: settings.freeDeliveryThreshold,
     };
   }
 
@@ -167,6 +186,7 @@ export class CustomerController {
     const confirmed = await this._confirmReceiptUseCase.execute({
       customerId: req.user.sub,
       orderId,
+      settings: await getPlatformSettings(this._dataReader.queries),
     });
     if (!confirmed) {
       throw new ForbiddenException(

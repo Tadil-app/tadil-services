@@ -61,6 +61,7 @@ export interface User {
   addresses?: Address[];
 
   walletBalance?: number;
-  commissionRate?: number;
+  /** Tailor's own rate in %; null uses the global rate. */
+  commissionRate?: number | null;
   sorting?: number;
 }

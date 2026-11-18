@@ -281,6 +281,27 @@ export class Api<
       }),
 
     /**
+     * Transportation fee for a cart whose items cost `itemsTotal` SAR
+     *
+     * @tags Customer
+     * @name CustomerControllerGetDeliveryFee
+     * @request GET:/api/customer/delivery-fee
+     * @secure
+     */
+    customerControllerGetDeliveryFee: (
+      query: { itemsTotal: number },
+      params: RequestParams = {},
+    ) =>
+      this.request<{ deliveryFee: number; freeDeliveryThreshold: number }, any>({
+        path: `/api/customer/delivery-fee`,
+        method: "GET",
+        query: query,
+        secure: true,
+        format: "json",
+        ...params,
+      }),
+
+    /**
      * Settle a pending order: confirm it if Moyasar holds a paid payment, otherwise drop it.
      *
      * @tags Customer

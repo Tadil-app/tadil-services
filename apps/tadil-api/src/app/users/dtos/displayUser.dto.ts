@@ -14,8 +14,8 @@ export class DisplayUserDTO {
   role!: RoleType;
   @ApiProperty({ required: false })
   email?: string;
-  @ApiProperty({ required: false })
-  commissionRate?: number;
+  @ApiProperty({ required: false, type: Number, nullable: true, description: 'Tailor own rate in %; null uses the global rate' })
+  commissionRate?: number | null;
   @ApiProperty()
   sorting!: number;
   @ApiProperty({ required: false })

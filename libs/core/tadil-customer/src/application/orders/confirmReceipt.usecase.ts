@@ -1,6 +1,8 @@
 import {
   InfrastructureException,
   InvalidCommandException,
+  PlatformSettings,
+  tailorPayout,
 } from '@tadil-common';
 import { CustomerRepository } from '../customer.repository';
 import { CreditOrderEarningUseCase } from '@tadil-wallet';
@@ -20,7 +22,11 @@ export class ConfirmReceiptUseCase {
    * them. Earnings are credited only by the call that closed the order, so a
    * repeated request pays nothing.
    */
-  async execute(command: { customerId: string; orderId: string }): Promise<boolean> {
+  async execute(command: {
+    customerId: string;
+    orderId: string;
+    settings: PlatformSettings;
+  }): Promise<boolean> {
     if (!command.customerId || !command.orderId) {
       throw new InvalidCommandException('Customer ID and Order ID are required');
     }
@@ -37,46 +43,27 @@ export class ConfirmReceiptUseCase {
       const order = await this._ordersRepository.getById(command.orderId);
       if (!order) return true;
 
-      // 3. Credit Tailor
+      // 3. Credit the tailor their share of the items, and each driver a
+      // fixed payout per trip (the same driver can do both trips).
+      const itemsTotal = order.totalPrice - (order.deliveryFee ?? 0);
       if (order.assignedTailorId) {
         const tailor = await this._usersRepository.getUserById(order.assignedTailorId);
         if (tailor) {
           await this._creditOrderEarningUseCase.execute({
             userId: tailor.id,
             orderId: order.id,
-            orderTotal: order.totalPrice,
-            commissionRate: tailor.commissionRate || 10,
+            amount: tailorPayout(itemsTotal, tailor.commissionRate, command.settings),
           });
         }
       }
 
-      // 4. Credit Return Courier
-      if (order.assignedReturnCourierId) {
-        const courier = await this._usersRepository.getUserById(order.assignedReturnCourierId);
-        if (courier) {
-          await this._creditOrderEarningUseCase.execute({
-            userId: courier.id,
-            orderId: order.id,
-            orderTotal: order.totalPrice,
-            commissionRate: courier.commissionRate || 10,
-          });
-        }
-      }
-
-      // NOTE: The initial courier (assignedCourierId) should probably be credited when they deliver to the tailor.
-      // But the prompt said "percentage of the total price ... fulfill the payment".
-      // I'll stick to crediting when the whole order is "Done" for both for now, OR I can add it to Tailor's confirmReceipt too.
-      // Let's also credit the INITIAL courier if they were involved.
-      if (order.assignedCourierId) {
-        const firstCourier = await this._usersRepository.getUserById(order.assignedCourierId);
-        if (firstCourier) {
-          await this._creditOrderEarningUseCase.execute({
-            userId: firstCourier.id,
-            orderId: order.id,
-            orderTotal: order.totalPrice,
-            commissionRate: firstCourier.commissionRate || 10,
-          });
-        }
+      for (const courierId of [order.assignedCourierId, order.assignedReturnCourierId]) {
+        if (!courierId) continue;
+        await this._creditOrderEarningUseCase.execute({
+          userId: courierId,
+          orderId: order.id,
+          amount: command.settings.courierBasePayout,
+        });
       }
 
       return true;

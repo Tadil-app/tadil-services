@@ -1,4 +1,5 @@
-import { DataReader } from '@tadil-database';
+import { tailorPayout } from '@tadil-common';
+import { DataReader, getPlatformSettings } from '@tadil-database';
 
 /** What a tailor or driver earns on one order, as shown on their order screens. */
 export interface OrderEarning {
@@ -8,27 +9,26 @@ export interface OrderEarning {
   myEarningPaid: boolean;
 }
 
-// Same fallback the crediting uses (confirmReceipt.usecase.ts).
-const DEFAULT_RATE = 10;
-
 const round2 = (n: number) => Math.round(n * 100) / 100;
 
 /**
  * Works out each order's earning for one user. Orders already credited show
- * the amount actually added to the wallet; the rest show order total x the
- * user's admin rate x the number of legs they do on it (a driver doing both
- * the pickup and the return is paid for each).
+ * the amount actually added to the wallet; the rest show what the crediting
+ * (confirmReceipt.usecase.ts) will pay: a tailor's rate of the items total,
+ * or a driver's base payout per trip (doing both trips is paid twice).
+ * Pass `tripsFor` for drivers; without it the user is paid as the tailor.
  */
 export async function getOrderEarnings(
   dataReader: DataReader,
   userId: string,
-  orders: { id: string; totalPrice: number }[],
-  legsFor: (order: any) => number = () => 1,
+  orders: { id: string; totalPrice: number; deliveryFee: number }[],
+  tripsFor?: (order: any) => number,
 ): Promise<Map<string, OrderEarning>> {
   const result = new Map<string, OrderEarning>();
   if (orders.length === 0) return result;
 
-  const [user, credited] = await Promise.all([
+  const [settings, user, credited] = await Promise.all([
+    getPlatformSettings(dataReader.queries),
     dataReader.queries.user.findUnique({
       where: { id: userId },
       select: { commissionRate: true },
@@ -44,7 +44,10 @@ export async function getOrderEarnings(
     }),
   ]);
 
-  const rate = user?.commissionRate || DEFAULT_RATE;
+  const expected = (order: { totalPrice: number; deliveryFee: number }) =>
+    tripsFor
+      ? settings.courierBasePayout * tripsFor(order)
+      : tailorPayout(order.totalPrice - order.deliveryFee, user?.commissionRate, settings);
   const paidByOrder = new Map<string, number>(
     credited.map((c: { orderId: string | null; _sum: { amount: number | null } }) => [
       c.orderId as string,
@@ -58,12 +61,7 @@ export async function getOrderEarnings(
       order.id,
       paid != null
         ? { myEarning: round2(paid), myEarningPaid: true }
-        : {
-            myEarning: round2(
-              ((order.totalPrice * rate) / 100) * Math.max(1, legsFor(order)),
-            ),
-            myEarningPaid: false,
-          },
+        : { myEarning: round2(expected(order)), myEarningPaid: false },
     );
   }
   return result;

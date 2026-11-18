@@ -64,6 +64,7 @@ import {
   Users,
   ShieldCheck,
   LogOut,
+  Settings,
 } from 'lucide-vue-next';
 import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
@@ -131,6 +132,12 @@ const navItems = computed(() =>
       label: t('nav.orders'),
       icon: ClipboardList,
       permission: 'orders.read',
+    },
+    {
+      path: '/settings',
+      label: t('nav.settings'),
+      icon: Settings,
+      permission: 'settings.read',
     },
     {
       path: '/staff',

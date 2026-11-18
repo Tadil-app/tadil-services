@@ -92,7 +92,9 @@ export class UpdateUserUseCase {
         phone: command.phone,
         role: user.role,
         email: command.email,
-        commissionRate: command.commissionRate ?? user.commissionRate,
+        // null clears the tailor's own rate, so the global one applies.
+        commissionRate:
+          command.commissionRate !== undefined ? command.commissionRate : user.commissionRate,
       });
 
       if (cityNameAr) {
@@ -124,7 +126,7 @@ export class UpdateUserCommand {
   readonly lastName: string;
   readonly phone: string;
   readonly email?: string;
-  readonly commissionRate?: number;
+  readonly commissionRate?: number | null;
   readonly city?: string;
   readonly cityId?: number;
   readonly cityNameAr?: string;
@@ -153,7 +155,7 @@ export class UpdateUserCommand {
     lastName: string,
     phone: string,
     email?: string,
-    commissionRate?: number,
+    commissionRate?: number | null,
     city?: string,
     address?: {
       cityId?: number;

@@ -297,6 +297,8 @@ export const ar = {
       addInProfile: "أضف عنواناً في الملف الشخصي",
     },
     orderInfo: {
+      itemsTotal: "إجمالي القطع:",
+      transportationFee: "رسوم النقل:",
       reference: "مرجع الطلب:",
       totalAmount: "المبلغ الإجمالي:",
     },

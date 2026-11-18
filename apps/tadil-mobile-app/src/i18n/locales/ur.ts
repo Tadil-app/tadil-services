@@ -296,6 +296,8 @@ export const ur = {
       addInProfile: "پروفائل میں پتہ شامل کریں",
     },
     orderInfo: {
+      itemsTotal: "اشیاء کا کل:",
+      transportationFee: "ٹرانسپورٹ فیس:",
       reference: "آرڈر کا حوالہ:",
       totalAmount: "کل رقم:",
     },

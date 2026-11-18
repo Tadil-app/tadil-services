@@ -243,8 +243,10 @@ model Order {
     id         String      @id @default(uuid())
     reference  String      @unique()
     date       DateTime    @default(now())
-    totalPrice Float       @default(0)
-    status     OrderStatus
+    /// What the customer pays: the items plus deliveryFee.
+    totalPrice  Float       @default(0)
+    deliveryFee Float       @default(0)
+    status      OrderStatus
 
     items       OrderItem[]
     customItems CustomOrderItem[]
@@ -387,7 +389,8 @@ model User {
     loginToken         String?
 
     walletBalance  Float @default(0)
-    commissionRate Float @default(10)
+    /// Tailor's own share in %. Null uses the global PlatformSettings rate.
+    commissionRate Float?
     sorting        Int   @default(1)
 
     addresses Address[]
@@ -450,6 +453,21 @@ model Transaction {
     orderId String?
 
     @@map("transactions")
+}
+
+/// Admin-set money rules. A single row, id 1.
+model PlatformSettings {
+    id                    Int   @id @default(1)
+    /// Orders whose items reach this total ship free. 0 = not set.
+    freeDeliveryThreshold Float @default(0)
+    /// Paid to the driver for each trip (pickup or return).
+    courierBasePayout     Float @default(7.5)
+    /// Tailor's share of the items total, in %.
+    tailorCommissionRate  Float @default(10)
+    /// Delivery subsidy: share of the items total, in % per trip, that offsets the fee.
+    courierCommissionRate Float @default(6.5)
+
+    @@map("platform-settings")
 }
 
 model PayoutRequest {

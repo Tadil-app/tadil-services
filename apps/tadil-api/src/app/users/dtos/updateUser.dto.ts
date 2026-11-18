@@ -14,10 +14,10 @@ export class UpdateUserDTO {
   @ApiProperty()
   @IsOptional()
   email?: string;
-  @ApiProperty({ required: false })
+  @ApiProperty({ required: false, type: Number, nullable: true, description: 'Tailor own rate in %; null uses the global rate' })
   @IsOptional()
   @IsNumber()
-  commissionRate?: number;
+  commissionRate?: number | null;
   // Legacy free-text city, kept for backward compatibility. Prefer the
   // structured address fields below.
   @ApiProperty({ required: false })

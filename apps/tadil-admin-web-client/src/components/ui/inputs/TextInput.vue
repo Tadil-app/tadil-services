@@ -17,7 +17,7 @@
 </template>
 
 <script setup lang="ts">
-const text = defineModel<string | number | Date>({ required: false });
+const text = defineModel<string | number | Date | null>({ required: false });
 const emit = defineEmits<{
   (e: "blur"): void;
 }>();

@@ -78,8 +78,8 @@ export class CourierController {
       },
     });
 
-    // A driver is paid per leg: doing both the pickup and the return on the
-    // same order earns their share twice, as the crediting does.
+    // A driver is paid per trip: doing both the pickup and the return on the
+    // same order earns the payout twice, as the crediting does.
     const earnings = await getOrderEarnings(
       this._dataReader,
       courierId,

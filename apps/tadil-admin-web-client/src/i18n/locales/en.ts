@@ -1,4 +1,19 @@
 export const en = {
+  platformSettings: {
+    title: "Settings",
+    subtitle: "Delivery fees and how each order's money is split.",
+    freeDeliveryThreshold: { label: "Free delivery threshold (SAR)", hint: "Orders whose items reach this amount pay no transportation fee. 0 means not set." },
+    courierBasePayout: { label: "Courier base payout per trip (SAR)", hint: "Paid to the driver for each trip: pickup and return are two trips." },
+    tailorCommissionRate: { label: "Tailor commission (%)", hint: "Tailor's share of the items total. A tailor's own rate, if set, wins." },
+    courierCommissionRate: { label: "Delivery subsidy per trip (%)", hint: "Share of the items total the platform puts toward the driver's pay, counted for both trips. It lowers the customer's fee; the driver is always paid the base payout." },
+    example: "Example: items of {total} SAR pay {fee} SAR transportation.",
+    save: "Save settings",
+    saving: "Saving…",
+    saved: "Settings saved.",
+    loadFailed: "Could not load the settings.",
+    saveFailed: "Could not save the settings.",
+    invalid: "Amounts must be 0 or more, and percentages between 0 and 100.",
+  },
   nav: {
     menu: "Menu",
     informations: "Required informations",
@@ -10,6 +25,7 @@ export const en = {
     customers: "Customers",
     loginRequests: "Login Requests",
     payoutRequests: "Payout Requests",
+    settings: "Settings",
     orders: "Orders",
     logout: "Logout",
   },
@@ -315,6 +331,7 @@ export const en = {
         errorMessage: "City is required",
       },
       commissionRate: {
+        globalHint: "Leave empty to use the global tailor rate from Settings.",
         label: "Commission Rate (%)",
         placeholder: "Enter Commission Rate (e.g. 10)",
         errorMessage: "Commission Rate is required",

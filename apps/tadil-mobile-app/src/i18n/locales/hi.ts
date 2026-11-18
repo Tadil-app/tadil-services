@@ -297,6 +297,8 @@ export const hi = {
       addInProfile: "प्रोफ़ाइल में पता जोड़ें",
     },
     orderInfo: {
+      itemsTotal: "आइटम कुल:",
+      transportationFee: "परिवहन शुल्क:",
       reference: "ऑर्डर संदर्भ:",
       totalAmount: "कुल राशि:",
     },

@@ -85,7 +85,10 @@ export class CreateUserUseCase {
           lastName: command.lastName,
           role: command.role,
           email: command.email ?? userByPhone.email,
-          commissionRate: command.commissionRate ?? userByPhone.commissionRate,
+          commissionRate:
+            command.commissionRate !== undefined
+              ? command.commissionRate
+              : userByPhone.commissionRate,
         };
         await this._usersRepository.updateUser(updatedUser);
 
@@ -115,7 +118,7 @@ export class CreateUserUseCase {
         phone: command.phone,
         role: command.role,
         email: command.email,
-        commissionRate: command.commissionRate ?? 10,
+        commissionRate: command.commissionRate ?? null,
       });
 
       if (cityNameAr) {
@@ -139,7 +142,7 @@ export class CreateUserCommand {
   readonly phone: string;
   readonly role: RoleType;
   readonly email?: string;
-  readonly commissionRate?: number;
+  readonly commissionRate?: number | null;
   readonly city?: string;
   readonly cityId?: number;
   readonly cityNameAr?: string;
@@ -168,7 +171,7 @@ export class CreateUserCommand {
     phone: string,
     role: RoleType,
     email?: string,
-    commissionRate?: number,
+    commissionRate?: number | null,
     city?: string,
     address?: {
       cityId?: number;

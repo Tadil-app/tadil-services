@@ -296,6 +296,8 @@ export const en = {
       addInProfile: "Add Address in Profile",
     },
     orderInfo: {
+      itemsTotal: "Items total:",
+      transportationFee: "Transportation fee:",
       reference: "Order Reference:",
       totalAmount: "Total Amount:",
     },
