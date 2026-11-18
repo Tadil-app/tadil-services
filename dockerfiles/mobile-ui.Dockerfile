@@ -4,7 +4,7 @@ FROM node:22-alpine AS build
 # Set working directory to the app folder inside the container
 WORKDIR /app
 
-# Copy the specific app's package file
+# Copy the specific app's package file (overrides pin Rollup for Alpine)
 COPY apps/tadil-mobile-app/package.json ./
 
 # Install dependencies
@@ -20,7 +20,9 @@ ENV VITE_TADIL_MOBILE_API_URL=${VITE_TADIL_MOBILE_API_URL}
 ARG VITE_MOYASAR_PUBLISHABLE_KEY
 ENV VITE_MOYASAR_PUBLISHABLE_KEY=${VITE_MOYASAR_PUBLISHABLE_KEY}
 
-# Run the local build script
+# Run the local build script. Rollup is pinned via package.json overrides
+# (4.52.5): newer Rollup AST walkers hit Alpine's 8MB stack and fail with
+# "Code is nested too deeply" (seen on @ionic/pwa-elements).
 RUN npm run build
 
 # Production stage
