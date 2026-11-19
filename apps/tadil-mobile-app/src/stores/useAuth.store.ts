@@ -147,6 +147,9 @@ export const useAuthStore = defineStore("auth", () => {
     isLoggingOut = true;
     // While the session token still authenticates the unregister call.
     await disablePushForSession();
+    // Revoke on the server so a copied token stops working. Sign out locally
+    // even if this fails (offline, or the token was already refused).
+    if (token.value) await apiClient.authControllerLogout().catch(() => undefined);
     token.value = "";
     userId.value = "";
     userRole.value = "";

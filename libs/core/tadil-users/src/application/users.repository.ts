@@ -14,6 +14,8 @@ export interface UsersRepository {
    * Order rows stay so tailor/courier assignments and accounting records survive.
    */
   anonymizeAccount(id: string): Promise<void>;
+  /** Refuses the user's tokens issued before `before` (logout). */
+  revokeSessions(id: string, before: Date): Promise<void>;
 
   // Address management
   getAddressesByUserId(userId: string): Promise<Address[]>;

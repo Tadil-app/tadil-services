@@ -56,8 +56,9 @@ export interface User {
   phone: string;
   role: RoleType;
   email?: string;
-  loginRequestStatus?: LoginRequestStatusType;
-  loginToken?: string;
+  // null clears the column; undefined leaves it unchanged in updateUser.
+  loginRequestStatus?: LoginRequestStatusType | null;
+  loginToken?: string | null;
   addresses?: Address[];
 
   walletBalance?: number;

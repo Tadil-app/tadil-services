@@ -25,6 +25,7 @@ import {
   DisplayAddressDto,
 } from './dtos';
 import { AuthGuard } from './auth.guard';
+import { sessionCutoff } from './account-status';
 import {
   AddAddressUseCase,
   UpdateAddressUseCase,
@@ -78,6 +79,15 @@ export class AuthController {
   })
   async deleteAccount(@Req() req: any): Promise<void> {
     await this._deleteMyAccountUseCase.execute(req.user.sub);
+  }
+
+  @Post('/logout')
+  @UseGuards(AuthGuard)
+  @ApiBearerAuth()
+  @HttpCode(HttpStatus.NO_CONTENT)
+  @ApiOperation({ summary: 'Revoke every session of the current user' })
+  async logout(@Req() req: any): Promise<void> {
+    await this._usersRepository.revokeSessions(req.user.sub, sessionCutoff());
   }
 
   @Put('/me')
