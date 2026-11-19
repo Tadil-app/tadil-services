@@ -32,9 +32,20 @@
             <p>{{ $t("cart.itemsCount") }}</p>
             <strong>{{ cartStore.itemsCount }}</strong>
           </div>
+          <div class="cart-summary__row">
+            <p>{{ $t("checkout.orderInfo.itemsTotal") }}</p>
+            <strong>{{ cartStore.totalPrice }} {{ $t("common.currencies.sar") }}</strong>
+          </div>
+          <div class="cart-summary__row">
+            <p>{{ $t("checkout.orderInfo.transportationFee") }}</p>
+            <strong>{{ deliveryFee ?? "…" }} {{ $t("common.currencies.sar") }}</strong>
+          </div>
           <div class="cart-summary__row cart-summary__total">
             <p>{{ $t("cart.totalPrice") }}</p>
-            <strong> {{ cartStore.totalPrice }} {{ $t("common.currencies.sar") }} </strong>
+            <strong>
+              {{ deliveryFee == null ? "…" : Math.round((cartStore.totalPrice + deliveryFee) * 100) / 100 }}
+              {{ $t("common.currencies.sar") }}
+            </strong>
           </div>
         </div>
 
@@ -52,17 +63,39 @@
 </template>
 
 <script setup lang="ts">
-import { IonButton, IonContent, IonFooter, IonPage, alertController } from "@ionic/vue";
+import { IonButton, IonContent, IonFooter, IonPage, alertController, onIonViewWillEnter } from "@ionic/vue";
 import { ShoppingBag } from "lucide-vue-next";
 import { useCartStore } from "@/stores";
 import CartItem from "./components/CartItem.vue";
 import { useRouter } from "vue-router";
 import { SecondaryHeader, EmptyState } from "@/components";
 import { useI18n } from "vue-i18n";
+import { ref, watch } from "vue";
+import { apiClient } from "@/integration/api";
 
 const cartStore = useCartStore();
 const router = useRouter();
 const { t } = useI18n();
+
+// Null while loading. The server recomputes it when the order is created.
+const deliveryFee = ref<number | null>(null);
+
+async function loadDeliveryFee() {
+  const itemsTotal = cartStore.totalPrice;
+  deliveryFee.value = null;
+  if (cartStore.itemsCount === 0) return;
+  try {
+    const { data } = await apiClient.customerControllerGetDeliveryFee({ itemsTotal });
+    // A newer total may have started its own request meanwhile.
+    if (itemsTotal === cartStore.totalPrice) deliveryFee.value = data.deliveryFee;
+  } catch (error) {
+    console.error("Failed to load the transportation fee", error);
+  }
+}
+
+watch(() => cartStore.totalPrice, loadDeliveryFee);
+// Ionic caches this page; re-read on every visit to pick up fee setting changes.
+onIonViewWillEnter(loadDeliveryFee);
 
 async function confirmClearCart() {
   const alert = await alertController.create({

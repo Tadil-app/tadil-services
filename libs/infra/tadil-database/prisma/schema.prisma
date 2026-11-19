@@ -387,6 +387,8 @@ model User {
 
     loginRequestStatus LoginRequestStatus?
     loginToken         String?
+    /// Tokens issued before this time are refused (set on logout).
+    sessionsValidAfter DateTime?
 
     walletBalance  Float @default(0)
     /// Tailor's own share in %. Null uses the global PlatformSettings rate.

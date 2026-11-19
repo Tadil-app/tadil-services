@@ -25,8 +25,7 @@ export class WsAuthGuard implements CanActivate {
     try {
       const secret = jwtSecret();
       const payload = jwt.verify(token, secret);
-      const sub = typeof payload === 'string' ? undefined : payload.sub;
-      await assertSocketAccountActive(this._db, sub);
+      await assertSocketAccountActive(this._db, payload);
       // @ts-expect-error - we are adding user to the client object
       client.user = payload;
     } catch {

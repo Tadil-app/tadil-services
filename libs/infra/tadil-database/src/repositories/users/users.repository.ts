@@ -155,6 +155,10 @@ export class PrismaUsersRepository implements UsersRepository {
     });
   }
 
+  async revokeSessions(id: string, before: Date): Promise<void> {
+    await this._db.user.update({ where: { id }, data: { sessionsValidAfter: before } });
+  }
+
   async anonymizeAccount(id: string): Promise<void> {
     await this._db.$transaction(async (tx) => {
       await tx.address.updateMany({

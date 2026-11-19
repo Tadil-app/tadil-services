@@ -826,6 +826,23 @@ export class Api<
     /**
      * No description
      *
+     * @tags Auth
+     * @name AuthControllerLogout
+     * @summary Revoke every session of the current user
+     * @request POST:/api/auth/logout
+     * @secure
+     */
+    authControllerLogout: (params: RequestParams = {}) =>
+      this.request<void, any>({
+        path: `/api/auth/logout`,
+        method: "POST",
+        secure: true,
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
      * @tags Wallet
      * @name WalletControllerGetDetails
      * @request GET:/api/wallet/{userId}

@@ -118,9 +118,8 @@ export class CustomerController {
     };
   }
 
+  // Public: guests see the fee in the cart, and it only reads platform settings.
   @Get('delivery-fee')
-  @UseGuards(AuthGuard)
-  @ApiBearerAuth()
   @ApiOperation({ summary: 'Transportation fee for a cart whose items cost `itemsTotal` SAR' })
   @ApiQuery({ name: 'itemsTotal', type: Number })
   async getDeliveryFee(@Query('itemsTotal') itemsTotal: string) {

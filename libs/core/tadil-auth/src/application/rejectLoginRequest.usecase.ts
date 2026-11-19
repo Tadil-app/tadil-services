@@ -14,7 +14,7 @@ export class RejectLoginRequestUseCase {
     await this._usersRepository.updateUser({
       ...user,
       loginRequestStatus: LOGIN_REQUEST_STATUS.REJECTED,
-      loginToken: undefined,
+      loginToken: null,
     });
   }
 }
