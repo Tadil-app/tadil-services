@@ -157,6 +157,39 @@
           </div>
         </div>
 
+        <button
+          v-if="applePayAvailable"
+          type="button"
+          class="apple-pay-button"
+          dir="ltr"
+          :disabled="applePayBusy || googlePayBusy"
+          :aria-label="$t('checkout.payment.applePay')"
+          @click="payWithApplePay"
+        >
+          {{ $t('checkout.payment.applePay') }}
+        </button>
+
+        <button
+          v-if="googlePayAvailable"
+          type="button"
+          class="google-pay-button"
+          dir="ltr"
+          :disabled="googlePayBusy || applePayBusy"
+          :aria-label="$t('checkout.payment.googlePay')"
+          @click="payWithGooglePay"
+        >
+          {{ $t('checkout.payment.googlePay') }}
+        </button>
+
+        <div
+          v-if="applePayAvailable || googlePayAvailable"
+          class="flex items-center gap-3 text-sm text-muted-foreground"
+        >
+          <div class="flex-1 h-px bg-gray-200" />
+          <span>{{ $t('checkout.payment.orCard') }}</span>
+          <div class="flex-1 h-px bg-gray-200" />
+        </div>
+
         <div class="mysr-form"></div>
 
         <div
@@ -192,6 +225,25 @@ import { DisplayOrderDTO } from '@/integration/dtos';
 import { useI18n } from 'vue-i18n';
 import { Preferences } from '@capacitor/preferences';
 import { apiClient } from '@/integration/api';
+import {
+  ApplePay,
+  APPLE_PAY_MERCHANT_ID,
+  formatApplePayAmount,
+  isApplePayCanceled,
+  isNativeIos,
+  nativeApplePayAvailable,
+} from '@/plugins/applePay';
+import {
+  GooglePay,
+  GOOGLE_PAY_MERCHANT_ID,
+  formatGooglePayAmount,
+  googlePayEnabled,
+  googlePayEnvironment,
+  isGooglePayCanceled,
+  isNativeAndroid,
+  nativeGooglePayAvailable,
+} from '@/plugins/googlePay';
+import { moyasarFormMethods } from '@/plugins/moyasarForm.util';
 
 const { t } = useI18n();
 const authStore = useAuthStore();
@@ -209,6 +261,10 @@ const createdOrder = ref<DisplayOrderDTO | null>(null);
 const paymentError = ref('');
 // Null while loading. The server recomputes it when the order is created.
 const deliveryFee = ref<number | null>(null);
+const applePayAvailable = ref(false);
+const applePayBusy = ref(false);
+const googlePayAvailable = ref(false);
+const googlePayBusy = ref(false);
 
 async function loadDeliveryFee() {
   deliveryFee.value = null;
@@ -246,6 +302,10 @@ function resetCheckout() {
   step.value = 'address';
   createdOrder.value = null;
   paymentError.value = '';
+  applePayAvailable.value = false;
+  applePayBusy.value = false;
+  googlePayAvailable.value = false;
+  googlePayBusy.value = false;
 }
 
 const paysCashOnDelivery = computed(() =>
@@ -294,6 +354,13 @@ async function proceedToPayment() {
 
     await Preferences.set({ key: 'pendingOrderId', value: order.id });
     await Preferences.set({ key: 'pendingOrderReference', value: order.reference });
+    applePayAvailable.value = await nativeApplePayAvailable();
+    const publishableKey = import.meta.env.VITE_MOYASAR_PUBLISHABLE_KEY as
+      | string
+      | undefined;
+    googlePayAvailable.value =
+      googlePayEnabled() &&
+      (await nativeGooglePayAvailable(googlePayEnvironment(publishableKey)));
     step.value = 'payment';
     await nextTick();
     initMoyasar();
@@ -362,7 +429,44 @@ function initMoyasar() {
       // Lets the server find this order's payment without the callback.
       metadata: { order_id: orderId },
       supported_networks: ['visa', 'mastercard', 'mada'],
-      methods: ['creditcard']
+      // Native wallets cannot start from the WebView. iOS uses PassKit; Android
+      // uses the Google Pay API. STC Pay is phone + OTP inside this form, so it
+      // stays on every platform. The form still offers Apple Pay / Google Pay on
+      // the hosted website.
+      methods: moyasarFormMethods({
+        nativeApp: isNativeIos() || isNativeAndroid(),
+        googlePay: googlePayEnabled(),
+      }),
+      apple_pay: {
+        country: 'SA',
+        label: 'Tadil',
+        validate_merchant_url: 'https://api.moyasar.com/v1/applepay/initiate',
+      },
+      ...(googlePayEnabled() && !isNativeIos() && !isNativeAndroid()
+        ? {
+            google_pay: {
+              merchant_id: GOOGLE_PAY_MERCHANT_ID,
+              country: 'SA',
+              label: 'Tadil',
+              environment: googlePayEnvironment(publishableKey),
+              auth_methods: ['CRYPTOGRAM_3DS'],
+            },
+          }
+        : {}),
+      // Cards with 3DS and STC Pay after OTP still return via callback_url.
+      // Native wallets are paid in place, so send those to verify immediately.
+      // Confirm is idempotent.
+      on_completed: async (payment: { id?: string; status?: string; message?: string }) => {
+        if (payment?.status !== 'paid' || !payment.id) return;
+        await router.replace({
+          name: 'customer-checkout-verify',
+          query: {
+            id: payment.id,
+            status: payment.status,
+            message: payment.message || 'Succeeded',
+          },
+        });
+      },
     });
     pinMoyasarFormDirection();
   };
@@ -383,6 +487,114 @@ function initMoyasar() {
   script.async = true;
   script.onload = renderForm;
   document.body.appendChild(script);
+}
+
+async function payWithApplePay() {
+  const publishableKey = import.meta.env.VITE_MOYASAR_PUBLISHABLE_KEY as
+    | string
+    | undefined;
+  if (!publishableKey || !/^pk_(test|live)_/.test(publishableKey)) {
+    paymentError.value = t('checkout.payment.unavailable');
+    return;
+  }
+
+  const amountHalalas = Math.round(Number(createdOrder.value?.totalPrice || 0) * 100);
+  const orderId = createdOrder.value?.id;
+  if (!orderId || amountHalalas < 100) {
+    paymentError.value = t('checkout.payment.unavailable');
+    return;
+  }
+
+  applePayBusy.value = true;
+  paymentError.value = '';
+  try {
+    const payment = await ApplePay.pay({
+      merchantId: APPLE_PAY_MERCHANT_ID,
+      countryCode: 'SA',
+      currencyCode: 'SAR',
+      label: 'Tadil',
+      amount: formatApplePayAmount(Number(createdOrder.value?.totalPrice || 0)),
+      amountHalalas,
+      description: `Order #${createdOrder.value?.reference} for Tadil`,
+      publishableApiKey: publishableKey,
+      orderId,
+    });
+    if (payment.status !== 'paid' || !payment.id) {
+      paymentError.value = payment.message || t('checkout.payment.applePayFailed');
+      return;
+    }
+    await router.replace({
+      name: 'customer-checkout-verify',
+      query: {
+        id: payment.id,
+        status: payment.status,
+        message: payment.message || 'Succeeded',
+      },
+    });
+  } catch (error) {
+    if (isApplePayCanceled(error)) return;
+    console.error('Apple Pay failed', error);
+    paymentError.value = t('checkout.payment.applePayFailed');
+  } finally {
+    applePayBusy.value = false;
+  }
+}
+
+async function payWithGooglePay() {
+  const publishableKey = import.meta.env.VITE_MOYASAR_PUBLISHABLE_KEY as
+    | string
+    | undefined;
+  if (!publishableKey || !/^pk_(test|live)_/.test(publishableKey)) {
+    paymentError.value = t('checkout.payment.unavailable');
+    return;
+  }
+  if (!googlePayEnabled()) {
+    paymentError.value = t('checkout.payment.unavailable');
+    return;
+  }
+
+  const amountHalalas = Math.round(Number(createdOrder.value?.totalPrice || 0) * 100);
+  const orderId = createdOrder.value?.id;
+  if (!orderId || amountHalalas < 100) {
+    paymentError.value = t('checkout.payment.unavailable');
+    return;
+  }
+
+  googlePayBusy.value = true;
+  paymentError.value = '';
+  try {
+    const payment = await GooglePay.pay({
+      merchantId: GOOGLE_PAY_MERCHANT_ID,
+      gatewayMerchantId: GOOGLE_PAY_MERCHANT_ID,
+      countryCode: 'SA',
+      currencyCode: 'SAR',
+      label: 'Tadil',
+      amount: formatGooglePayAmount(Number(createdOrder.value?.totalPrice || 0)),
+      amountHalalas,
+      description: `Order #${createdOrder.value?.reference} for Tadil`,
+      publishableApiKey: publishableKey,
+      orderId,
+      environment: googlePayEnvironment(publishableKey),
+    });
+    if (payment.status !== 'paid' || !payment.id) {
+      paymentError.value = payment.message || t('checkout.payment.googlePayFailed');
+      return;
+    }
+    await router.replace({
+      name: 'customer-checkout-verify',
+      query: {
+        id: payment.id,
+        status: payment.status,
+        message: payment.message || 'Succeeded',
+      },
+    });
+  } catch (error) {
+    if (isGooglePayCanceled(error)) return;
+    console.error('Google Pay failed', error);
+    paymentError.value = t('checkout.payment.googlePayFailed');
+  } finally {
+    googlePayBusy.value = false;
+  }
 }
 
 let moyasarDirObserver: MutationObserver | null = null;
@@ -441,5 +653,44 @@ html[dir="rtl"] .mysr-form #mysr > div {
 
 html[dir="rtl"] .mysr-form [dir="ltr"] {
   direction: ltr;
+}
+
+.apple-pay-button {
+  display: block;
+  width: 100%;
+  height: 48px;
+  border: 0;
+  border-radius: 8px;
+  background: #000;
+  color: #fff;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  -webkit-appearance: -apple-pay-button;
+  -apple-pay-button-type: check-out;
+  -apple-pay-button-style: black;
+}
+
+.apple-pay-button:disabled {
+  opacity: 0.6;
+  pointer-events: none;
+}
+
+.google-pay-button {
+  display: block;
+  width: 100%;
+  height: 48px;
+  border: 0;
+  border-radius: 8px;
+  background: #000;
+  color: #fff;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.google-pay-button:disabled {
+  opacity: 0.6;
+  pointer-events: none;
 }
 </style>

@@ -318,6 +318,11 @@ export const bn = {
     },
     payment: {
       unavailable: "কার্ড পেমেন্ট সাময়িকভাবে বন্ধ। পরে আবার চেষ্টা করুন।",
+      applePay: "Apple Pay",
+      googlePay: "Google Pay",
+      orCard: "অথবা কার্ড বা STC Pay দিয়ে পরিশোধ করুন",
+      applePayFailed: "Apple Pay দিয়ে এই পেমেন্ট সম্পন্ন করা যায়নি। কার্ড ব্যবহার করুন অথবা আবার চেষ্টা করুন।",
+      googlePayFailed: "Google Pay দিয়ে এই পেমেন্ট সম্পন্ন করা যায়নি। কার্ড ব্যবহার করুন অথবা আবার চেষ্টা করুন।",
     },
   },
   chat: {
