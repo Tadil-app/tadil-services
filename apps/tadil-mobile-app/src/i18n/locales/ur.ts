@@ -303,7 +303,7 @@ export const ur = {
       unavailable: "کارڈ سے ادائیگی عارضی طور پر دستیاب نہیں۔ براہ کرم بعد میں کوشش کریں۔",
       applePay: "Apple Pay",
       googlePay: "Google Pay",
-      orCard: "یا کارڈ سے ادائیگی کریں",
+      orCard: "یا کارڈ یا STC Pay سے ادائیگی کریں",
       applePayFailed: "Apple Pay سے یہ ادائیگی مکمل نہیں ہو سکی۔ براہ کرم کارڈ استعمال کریں یا دوبارہ کوشش کریں۔",
       googlePayFailed: "Google Pay سے یہ ادائیگی مکمل نہیں ہو سکی۔ براہ کرم کارڈ استعمال کریں یا دوبارہ کوشش کریں۔",
     },

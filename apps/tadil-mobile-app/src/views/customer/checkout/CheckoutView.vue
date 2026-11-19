@@ -217,6 +217,7 @@ import {
   isNativeAndroid,
   nativeGooglePayAvailable,
 } from '@/plugins/googlePay';
+import { moyasarFormMethods } from '@/plugins/moyasarForm.util';
 
 const { t } = useI18n();
 const authStore = useAuthStore();
@@ -388,9 +389,13 @@ function initMoyasar() {
       metadata: { order_id: orderId },
       supported_networks: ['visa', 'mastercard', 'mada'],
       // Native wallets cannot start from the WebView. iOS uses PassKit; Android
-      // uses the Google Pay API. The Moyasar form still offers Apple Pay / Google
-      // Pay on the hosted website.
-      methods: moyasarFormMethods(),
+      // uses the Google Pay API. STC Pay is phone + OTP inside this form, so it
+      // stays on every platform. The form still offers Apple Pay / Google Pay on
+      // the hosted website.
+      methods: moyasarFormMethods({
+        nativeApp: isNativeIos() || isNativeAndroid(),
+        googlePay: googlePayEnabled(),
+      }),
       apple_pay: {
         country: 'SA',
         label: 'Tadil',
@@ -407,8 +412,9 @@ function initMoyasar() {
             },
           }
         : {}),
-      // Cards with 3DS still return via callback_url. Wallets are paid in
-      // place, so send those to verify immediately. Confirm is idempotent.
+      // Cards with 3DS and STC Pay after OTP still return via callback_url.
+      // Native wallets are paid in place, so send those to verify immediately.
+      // Confirm is idempotent.
       on_completed: async (payment: { id?: string; status?: string; message?: string }) => {
         if (payment?.status !== 'paid' || !payment.id) return;
         await router.replace({
@@ -491,13 +497,6 @@ async function payWithApplePay() {
   } finally {
     applePayBusy.value = false;
   }
-}
-
-function moyasarFormMethods(): string[] {
-  if (isNativeIos() || isNativeAndroid()) return ['creditcard'];
-  const methods = ['creditcard', 'applepay'];
-  if (googlePayEnabled()) methods.push('googlepay');
-  return methods;
 }
 
 async function payWithGooglePay() {
