@@ -40,12 +40,34 @@ const setUser = (user: User) => {
   authState.csrfToken = user.csrfToken;
 };
 
-export async function login(email: string, password: string) {
-  const { data } = await authHttp.post<User>('/api/auth/login', {
+export type MfaChallenge = { mfaRequired: true; mfaToken: string };
+
+export async function login(
+  email: string,
+  password: string
+): Promise<User | MfaChallenge> {
+  const { data } = await authHttp.post<User | MfaChallenge>('/api/auth/login', {
     email,
     password,
   });
+  if ('mfaRequired' in data && data.mfaRequired) return data;
+  setUser(data as User);
+  return data as User;
+}
+
+export async function verifyMfa(mfaToken: string, code: string) {
+  const { data } = await authHttp.post<User>('/api/auth/mfa/verify', {
+    mfaToken,
+    code,
+  });
   setUser(data);
+  return data;
+}
+
+export async function resendMfa(mfaToken: string) {
+  const { data } = await authHttp.post<MfaChallenge>('/api/auth/mfa/resend', {
+    mfaToken,
+  });
   return data;
 }
 
@@ -113,6 +135,8 @@ authHttp.interceptors.response.use(undefined, async (error) => {
   const authEntry = [
     '/api/auth/me',
     '/api/auth/login',
+    '/api/auth/mfa/verify',
+    '/api/auth/mfa/resend',
     '/api/auth/accept-invitation',
   ].includes(request?.url);
   if (error.response?.status === 401 && !authEntry) {

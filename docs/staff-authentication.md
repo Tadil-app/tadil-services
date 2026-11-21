@@ -8,13 +8,21 @@ and their existing mobile login flow are separate and unchanged.
 
 - Staff credentials use Argon2id. Passwords are 12–128 characters with upper/lower
   case, a number, and a symbol. There is no public staff registration.
-- Random eight-hour session credentials live in HttpOnly, SameSite=Lax cookies.
-  Only SHA-256 hashes are stored in the database. HTTPS cookies are mandatory
-  in production. Password changes/resets and disabling accounts revoke sessions.
+- Login is two-step MFA for every active staff account: email/password, then a
+  six-digit OTP emailed to the account address. OTP and MFA challenge secrets are
+  stored only as SHA-256 hashes, expire after five minutes, allow five attempts,
+  and are single-use. Issuing a new login or resend invalidates prior open
+  challenges for that account. Resend is rate-limited (60s cooldown; throttle
+  windows also apply). Password changes/resets and disabling accounts revoke
+  sessions, invitation/reset tokens, and open MFA challenges.
+- Random eight-hour session credentials live in HttpOnly, SameSite=Lax cookies
+  and are issued only after a successful MFA verification. Only SHA-256 hashes
+  are stored in the database. HTTPS cookies are mandatory in production.
 - Every mutation checks the exact Origin allowlist and an `X-CSRF-Token` header.
   `/api/auth/me` returns the current synchronizer token and effective permissions.
-  Login and invitation redemption require an allowed Origin but no existing session.
-- Login attempts have database-backed per-account and per-IP limits over a
+  Login, MFA verify/resend, and invitation redemption require an allowed Origin
+  but no existing session.
+- Login and MFA attempts have database-backed per-account and per-IP limits over a
   15-minute window. Configure any external ingress rate limiter too. The API
   does not trust arbitrary forwarded client-IP headers.
 - Effective permissions are role grants plus direct grants, minus direct denials.
@@ -67,7 +75,14 @@ Prefer **same-origin `/api` proxying** so session cookies remain first-party:
 3. Set `STAFF_ALLOWED_ORIGINS` on the API to the exact public dashboard origin,
    e.g. `https://admin.example.com`. Multiple origins are comma-separated;
    wildcards are not supported. Keep `NODE_ENV=production` behind HTTPS.
-4. Keep `TADIL_DB` and existing MinIO settings. Remove `KEYCLOAK_*` and
+4. Configure Gmail SMTP for MFA OTP delivery from `tadil.refit@gmail.com`:
+   `STAFF_SMTP_HOST=smtp.gmail.com`, `STAFF_SMTP_PORT=587`,
+   `STAFF_SMTP_USER=tadil.refit@gmail.com`, `STAFF_SMTP_PASS` (Google App
+   Password; the Gmail account must have 2-Step Verification), and
+   `STAFF_MAIL_FROM=Tadil Admin <tadil.refit@gmail.com>`. Production refuses
+   login if SMTP is missing. Local/dev without SMTP logs the OTP to the API
+   console instead of sending mail.
+5. Keep `TADIL_DB` and existing MinIO settings. Remove `KEYCLOAK_*` and
    `VITE_KEYCLOAK_*`. Do not reuse the mobile JWT secret for staff sessions.
 
 For local development use `http://localhost:4000` in `STAFF_ALLOWED_ORIGINS`,
@@ -115,9 +130,10 @@ or production services are modified by applying this source branch alone.
 
 ### Invitations and password recovery
 
-There is no configured email delivery provider in this repository. The UI creates
-one-time links for **manual secure delivery**, not automatic email. Staff who
-forget a password contact an authorized staff manager, who issues a reset link.
+MFA login OTPs are emailed through Gmail SMTP. Invitation and password-reset
+links are still created for **manual secure delivery**, not automatic email.
+Staff who forget a password contact an authorized staff manager, who issues a
+reset link.
 Links keep the secret in the URL fragment, remove it after opening, and redeem it
 only once. Disabling an account invalidates outstanding links. A manager must
 deliberately enable/reinvite a disabled account; stale tokens cannot reactivate it.
@@ -158,9 +174,10 @@ expects Ubuntu PostgreSQL 16 tooling and Docker image-download support, avoiding
 sandbox volume mounts. It never seeds or resets a configured production database.
 
 Schedule retention maintenance appropriate to deployment volume: delete expired or
-revoked `StaffSession` records, used/expired `StaffToken` records, and old
-`StaffLoginThrottle` rows after their window expires. Retain `StaffAudit` according
-to the security policy. No new always-on worker service is required.
+revoked `StaffSession` records, used/expired `StaffToken` and `StaffMfaChallenge`
+records, and old `StaffLoginThrottle` rows after their window expires. Retain
+`StaffAudit` according to the security policy. No new always-on worker service is
+required.
 
 ## Explicit compatibility boundaries
 
@@ -169,5 +186,6 @@ to the security policy. No new always-on worker service is required.
   require a separate coordinated mobile change. Do not put staff secrets there.
 - Mobile authentication and mobile endpoint policies are not replaced by staff
   roles. Mobile bearer credentials are rejected by the staff API.
-- Application-native MFA, SSO/federation, email automation, and production identity
-  import are not implemented. Verify that none is required for your cutover.
+- Application-native email MFA OTP is implemented for staff login. SSO/federation
+  and production identity import are not. Verify whether any remaining Keycloak
+  MFA/SSO behavior still blocks cutover acceptance.
