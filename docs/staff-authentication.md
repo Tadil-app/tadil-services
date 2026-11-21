@@ -9,9 +9,10 @@ and their existing mobile login flow are separate and unchanged.
 - Staff credentials use Argon2id. Passwords are 12–128 characters with upper/lower
   case, a number, and a symbol. There is no public staff registration.
 - Login is two-step MFA for every active staff account: email/password, then a
-  six-digit OTP emailed to the account address. OTP and MFA challenge secrets are
-  stored only as SHA-256 hashes, expire after five minutes, allow five attempts,
-  and are single-use. Issuing a new login or resend invalidates prior open
+  six-digit OTP emailed to the account address. Challenge tokens are stored as
+  SHA-256 hashes; OTPs are stored as HMAC-SHA256 with `STAFF_MFA_PEPPER`. Codes
+  expire after five minutes, allow five lifetime attempts (resend does not reset
+  the counter), and are single-use. Issuing a new login invalidates prior open
   challenges for that account. Resend is rate-limited (60s cooldown; throttle
   windows also apply). Password changes/resets and disabling accounts revoke
   sessions, invitation/reset tokens, and open MFA challenges.
@@ -78,10 +79,12 @@ Prefer **same-origin `/api` proxying** so session cookies remain first-party:
 4. Configure Gmail SMTP for MFA OTP delivery from `tadil.refit@gmail.com`:
    `STAFF_SMTP_HOST=smtp.gmail.com`, `STAFF_SMTP_PORT=587`,
    `STAFF_SMTP_USER=tadil.refit@gmail.com`, `STAFF_SMTP_PASS` (Google App
-   Password; the Gmail account must have 2-Step Verification), and
-   `STAFF_MAIL_FROM=Tadil Admin <tadil.refit@gmail.com>`. Production refuses
-   login if SMTP is missing. Local/dev without SMTP logs the OTP to the API
-   console instead of sending mail.
+   Password; the Gmail account must have 2-Step Verification),
+   `STAFF_MAIL_FROM=Tadil Admin <tadil.refit@gmail.com>`, and a random
+   `STAFF_MFA_PEPPER` (do not reuse `JWT_SECRET`). Production refuses login if
+   SMTP is missing. Local/dev without SMTP issues the OTP without emailing; set
+   `STAFF_MAIL_DEV_LOG_OTP=true` only on a private workstation if you need the
+   code printed in API logs.
 5. Keep `TADIL_DB` and existing MinIO settings. Remove `KEYCLOAK_*` and
    `VITE_KEYCLOAK_*`. Do not reuse the mobile JWT secret for staff sessions.
 

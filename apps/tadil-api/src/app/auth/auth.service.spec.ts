@@ -4,7 +4,7 @@ import {
   ForbiddenException,
   UnauthorizedException,
 } from '@nestjs/common';
-import { createHash } from 'crypto';
+import { createHmac } from 'crypto';
 import { AuthService } from './auth.service';
 
 jest.mock('argon2', () => ({
@@ -13,8 +13,8 @@ jest.mock('argon2', () => ({
   argon2id: 2,
 }));
 
-const digest = (value: string) =>
-  createHash('sha256').update(value).digest('hex');
+const otpDigest = (value: string) =>
+  createHmac('sha256', 'dev-only-staff-mfa-pepper').update(value).digest('hex');
 
 const transaction = () => ({
   $executeRaw: jest.fn(),
@@ -228,7 +228,7 @@ describe('AuthService', () => {
     db.tx.staffMfaChallenge.findUnique.mockResolvedValue({
       id: 'challenge',
       accountId: account.id,
-      otpHash: digest(code),
+      otpHash: otpDigest(code),
       attempts: 0,
       usedAt: null,
       expiresAt: new Date(Date.now() + 60_000),
@@ -258,7 +258,7 @@ describe('AuthService', () => {
     db.tx.staffMfaChallenge.findUnique.mockResolvedValue({
       id: 'challenge',
       accountId: account.id,
-      otpHash: digest('999999'),
+      otpHash: otpDigest('999999'),
       attempts: 0,
       usedAt: null,
       expiresAt: new Date(Date.now() - 1),
@@ -272,7 +272,7 @@ describe('AuthService', () => {
     db.tx.staffMfaChallenge.findUnique.mockResolvedValue({
       id: 'challenge',
       accountId: account.id,
-      otpHash: digest('999999'),
+      otpHash: otpDigest('999999'),
       attempts: 4,
       usedAt: null,
       expiresAt: new Date(Date.now() + 60_000),
@@ -304,7 +304,7 @@ describe('AuthService', () => {
     });
     const service = new AuthService(db as any, mail() as any);
     await expect(service.resendMfa(token)).rejects.toBeInstanceOf(
-      BadRequestException
+      UnauthorizedException
     );
   });
 });

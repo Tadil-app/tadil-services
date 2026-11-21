@@ -6,7 +6,13 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
-import { createHash, randomBytes, randomInt, timingSafeEqual } from 'crypto';
+import {
+  createHash,
+  createHmac,
+  randomBytes,
+  randomInt,
+  timingSafeEqual,
+} from 'crypto';
 import * as argon2 from 'argon2';
 import { DbClient } from '@tadil-database';
 import { PERMISSION_SET, validatePermissions } from './permissions';
@@ -22,6 +28,13 @@ const csrfFor = (token: string) => digest(`staff-csrf:${token}`);
 const MFA_TTL_MS = 5 * 60_000;
 const MFA_RESEND_COOLDOWN_MS = 60_000;
 const MFA_MAX_ATTEMPTS = 5;
+const otpDigest = (code: string) =>
+  createHmac(
+    'sha256',
+    process.env.STAFF_MFA_PEPPER || 'dev-only-staff-mfa-pepper'
+  )
+    .update(code)
+    .digest('hex');
 const passwordOptions = {
   type: argon2.argon2id,
   memoryCost: 19456,
@@ -184,7 +197,7 @@ export class AuthService {
         });
         throw new UnauthorizedException('Invalid verification code');
       }
-      if (!safeEqualHex(challenge.otpHash, digest(otp))) {
+      if (!safeEqualHex(challenge.otpHash, otpDigest(otp))) {
         const attempts = challenge.attempts + 1;
         await tx.staffMfaChallenge.update({
           where: { id: challenge.id },
@@ -244,11 +257,10 @@ export class AuthService {
     await this.throttle(`mfa-resend:${digest(existing.accountId)}`, 5);
     if (
       Date.now() - existing.lastSentAt.getTime() <
-      MFA_RESEND_COOLDOWN_MS
+        MFA_RESEND_COOLDOWN_MS ||
+      existing.attempts >= MFA_MAX_ATTEMPTS
     )
-      throw new BadRequestException(
-        'Please wait before requesting another code'
-      );
+      throw new UnauthorizedException('Invalid verification challenge');
     const code = otpCode();
     const updated = await this.db.$transaction(async (tx) => {
       await this.lock(tx);
@@ -267,15 +279,14 @@ export class AuthService {
         Date.now() - current.lastSentAt.getTime() <
         MFA_RESEND_COOLDOWN_MS
       )
-        throw new BadRequestException(
-          'Please wait before requesting another code'
-        );
+        throw new UnauthorizedException('Invalid verification challenge');
+      if (current.attempts >= MFA_MAX_ATTEMPTS)
+        throw new UnauthorizedException('Invalid verification challenge');
       const now = new Date();
       await tx.staffMfaChallenge.update({
         where: { id: current.id },
         data: {
-          otpHash: digest(code),
-          attempts: 0,
+          otpHash: otpDigest(code),
           expiresAt: new Date(now.getTime() + MFA_TTL_MS),
           lastSentAt: now,
         },
@@ -313,7 +324,7 @@ export class AuthService {
       data: {
         accountId: account.id,
         challengeTokenHash: digest(mfaToken),
-        otpHash: digest(code),
+        otpHash: otpDigest(code),
         expiresAt: new Date(now.getTime() + MFA_TTL_MS),
         lastSentAt: now,
       },

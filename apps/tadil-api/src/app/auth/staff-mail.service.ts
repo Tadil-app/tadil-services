@@ -56,7 +56,14 @@ export class StaffMailService {
         throw new ServiceUnavailableException(
           'Email delivery is not configured'
         );
-      this.logger.warn(`[dev-mail] OTP for ${to}: ${code}`);
+      // Never log the OTP itself; set STAFF_MAIL_DEV_LOG_OTP=true only on a
+      // private workstation when SMTP is unavailable and you need the code.
+      if (process.env.STAFF_MAIL_DEV_LOG_OTP === 'true')
+        this.logger.warn(`[dev-mail] OTP for ${to}: ${code}`);
+      else
+        this.logger.warn(
+          `[dev-mail] OTP issued for ${to} (code not logged; set STAFF_MAIL_DEV_LOG_OTP=true to print it)`
+        );
       return;
     }
 

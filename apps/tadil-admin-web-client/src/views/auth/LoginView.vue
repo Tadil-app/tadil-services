@@ -110,7 +110,6 @@
 import { computed, onBeforeUnmount, ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { Eye, EyeOff } from 'lucide-vue-next';
-import axios from 'axios';
 import { login, resendMfa, verifyMfa } from '@/auth';
 import AuthShell from './AuthShell.vue';
 const email = ref('');
@@ -191,11 +190,8 @@ const resend = async () => {
     const result = await resendMfa(mfaToken.value);
     mfaToken.value = result.mfaToken;
     startCooldown();
-  } catch (err: unknown) {
-    error.value =
-      axios.isAxiosError(err) && err.response?.status === 400
-        ? 'auth.mfaResendCooldown'
-        : 'auth.mfaResendFailed';
+  } catch {
+    error.value = 'auth.mfaResendFailed';
   } finally {
     loading.value = false;
   }

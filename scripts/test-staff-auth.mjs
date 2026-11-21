@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import { createHash, randomBytes } from 'node:crypto';
+import { createHmac, randomBytes } from 'node:crypto';
 import { PrismaClient } from '@prisma/client';
 
 const base = process.env.STAFF_TEST_URL || 'http://localhost:4444';
@@ -60,10 +60,12 @@ async function resolveOtp(accountId) {
     orderBy: { createdAt: 'desc' },
   });
   assert(challenge, 'MFA challenge missing');
+  const pepper = process.env.STAFF_MFA_PEPPER || 'dev-only-staff-mfa-pepper';
   for (let i = 0; i < 1_000_000; i++) {
     const code = String(i).padStart(6, '0');
     if (
-      createHash('sha256').update(code).digest('hex') === challenge.otpHash
+      createHmac('sha256', pepper).update(code).digest('hex') ===
+      challenge.otpHash
     )
       return code;
   }
