@@ -7,3 +7,4 @@ export * from "./unlockIonicTabBar.util";
 export * from "./courierTrip.util";
 export * from "./mapNavigation.util";
 export * from "./openExternal.util";
+export * from "./googleMaps.util";

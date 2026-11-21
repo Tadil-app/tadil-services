@@ -6,7 +6,9 @@
       </IonButtons>
       <IonTitle>{{ $t("profileSettings.profile.pickOnMap") }}</IonTitle>
       <IonButtons slot="end">
-        <IonButton :strong="true" @click="confirm">{{ $t("common.buttons.save") }}</IonButton>
+        <IonButton :strong="true" :disabled="!ready" @click="confirm">
+          {{ $t("common.buttons.save") }}
+        </IonButton>
       </IonButtons>
     </IonToolbar>
   </IonHeader>
@@ -15,8 +17,22 @@
       <div ref="mapEl" class="map-container"></div>
       <!-- Fixed crosshair pin: the chosen point is whatever sits under it. -->
       <div class="center-pin">📍</div>
-      <div class="map-hint">{{ $t("profileSettings.profile.mapHint") }}</div>
-      <div class="coord-readout">{{ picked.lat.toFixed(5) }}, {{ picked.lng.toFixed(5) }}</div>
+      <button
+        type="button"
+        class="locate-btn"
+        :disabled="!ready || locating"
+        :aria-label="$t('profileSettings.profile.locateMe')"
+        @click="locateMe"
+      >
+        <IonSpinner v-if="locating" name="crescent" />
+        <IonIcon v-else :icon="locateOutline" />
+      </button>
+      <div class="map-hint">
+        {{ loadError ? $t("profileSettings.profile.mapLoadError") : $t("profileSettings.profile.mapHint") }}
+      </div>
+      <div v-if="ready" class="place-label">
+        {{ labelLoading ? $t("profileSettings.profile.locating") : label || `${picked.lat.toFixed(5)}, ${picked.lng.toFixed(5)}` }}
+      </div>
     </div>
   </IonContent>
 </template>
@@ -29,12 +45,18 @@ import {
   IonContent,
   IonButtons,
   IonButton,
+  IonIcon,
+  IonSpinner,
 } from "@ionic/vue";
-import L from "leaflet";
-import "leaflet/dist/leaflet.css";
+import { Geolocation } from "@capacitor/geolocation";
+import { locateOutline } from "ionicons/icons";
 import { onBeforeUnmount, onMounted, reactive, ref } from "vue";
+import { useI18n } from "vue-i18n";
+import { useToast } from "@/composables/useToast.composable";
+import { useLocationsStore } from "@/stores";
 import {
   isInsideBoundary,
+  loadGoogleMaps,
   snapInsideBoundary,
   type BoundaryGeometry,
 } from "@/utils";
@@ -51,14 +73,22 @@ const emit = defineEmits<{
   (e: "cancel"): void;
 }>();
 
-const TILE_URL =
-  (import.meta.env.VITE_MAP_TILE_URL as string | undefined) ||
-  "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png";
+const { t, locale } = useI18n();
+const { showToast } = useToast();
+const locationsStore = useLocationsStore();
 
 const mapEl = ref<HTMLDivElement | null>(null);
-let map: L.Map | null = null;
+const ready = ref(false);
+const loadError = ref(false);
+const locating = ref(false);
+const label = ref("");
+const labelLoading = ref(false);
+let map: google.maps.Map | null = null;
+let boundaryBounds: google.maps.LatLngBounds | null = null;
 let resizeObserver: ResizeObserver | null = null;
-let boundaryLayer: L.GeoJSON | null = null;
+let labelTimer: ReturnType<typeof setTimeout> | undefined;
+// Drops answers from older lookups that finish after a newer one started.
+let labelRequest = 0;
 // Guards against the programmatic snap pan re-triggering another snap.
 let snapping = false;
 const start = props.initial ?? props.center;
@@ -68,109 +98,159 @@ const picked = reactive({ lat: start.lat, lng: start.lng });
 function resetView() {
   if (!map) return;
   if (props.initial) {
-    map.setView([props.initial.lat, props.initial.lng], props.zoom ?? 13);
-  } else if (boundaryLayer) {
-    map.fitBounds(boundaryLayer.getBounds(), { padding: [24, 24] });
+    map.setCenter(props.initial);
+    map.setZoom(props.zoom ?? 13);
+  } else if (boundaryBounds) {
+    map.fitBounds(boundaryBounds, 24);
   } else {
-    map.setView([props.center.lat, props.center.lng], props.zoom ?? 13);
+    map.setCenter(props.center);
+    map.setZoom(props.zoom ?? 13);
   }
 }
 
-onMounted(() => {
+/** Shows the street and neighbourhood under the pin once the map settles. */
+function scheduleLabel() {
+  clearTimeout(labelTimer);
+  labelLoading.value = true;
+  // Debounced so a pan only costs one geocode request when it stops.
+  labelTimer = setTimeout(async () => {
+    const id = ++labelRequest;
+    let text = "";
+    try {
+      text = await locationsStore.reverseGeocodeOne(picked.lat, picked.lng, locale.value);
+    } catch {
+      // No label: the readout falls back to coordinates.
+    }
+    if (id !== labelRequest) return;
+    label.value = text;
+    labelLoading.value = false;
+  }, 600);
+}
+
+onMounted(async () => {
   if (!mapEl.value) return;
+  try {
+    await loadGoogleMaps(locale.value);
+  } catch (error) {
+    console.error(error);
+    loadError.value = true;
+    return;
+  }
+  // The modal may have closed while the script was loading.
+  if (!mapEl.value) return;
+  const { Map } = (await google.maps.importLibrary("maps")) as google.maps.MapsLibrary;
 
-  map = L.map(mapEl.value, { zoomControl: true });
-
-  L.tileLayer(TILE_URL, {
-    maxZoom: 19,
-    attribution: "&copy; OpenStreetMap contributors",
-  }).addTo(map);
+  map = new Map(mapEl.value, {
+    center: start,
+    zoom: props.zoom ?? 13,
+    // One-finger pan inside the modal instead of the "use two fingers" overlay.
+    gestureHandling: "greedy",
+    clickableIcons: false,
+    mapTypeControl: false,
+    streetViewControl: false,
+    fullscreenControl: false,
+  });
 
   // Draw the allowed area so the user can see where they may drop the pin.
   if (props.boundary) {
-    boundaryLayer = L.geoJSON(
-      { type: "Feature", geometry: props.boundary, properties: {} } as never,
-      {
-        style: {
-          color: "#3880ff",
-          weight: 2,
-          fillColor: "#3880ff",
-          fillOpacity: 0.08,
-        },
-        interactive: false,
-      }
-    ).addTo(map);
+    map.data.addGeoJson({ type: "Feature", geometry: props.boundary, properties: {} });
+    map.data.setStyle({
+      strokeColor: "#3880ff",
+      strokeWeight: 2,
+      fillColor: "#3880ff",
+      fillOpacity: 0.08,
+      clickable: false,
+    });
+    boundaryBounds = new google.maps.LatLngBounds();
+    map.data.forEach((f) =>
+      f.getGeometry()?.forEachLatLng((ll) => boundaryBounds?.extend(ll))
+    );
   }
 
   resetView();
 
   // The selected point is always the map center under the fixed pin.
-  const sync = () => {
-    if (!map) return;
-    const c = map.getCenter();
-    picked.lat = c.lat;
-    picked.lng = c.lng;
-  };
-  map.on("move", sync);
-
-  // When a gesture settles, snap the centre back inside the boundary if it
-  // drifted out. The `snapping` guard stops the snap pan from looping.
-  map.on("moveend", () => {
-    if (!map || !props.boundary) return;
-    if (snapping) {
-      snapping = false;
-      return;
-    }
-    const c = map.getCenter();
-    if (!isInsideBoundary({ lat: c.lat, lng: c.lng }, props.boundary)) {
-      const s = snapInsideBoundary({ lat: c.lat, lng: c.lng }, props.boundary);
-      snapping = true;
-      map.panTo([s.lat, s.lng]);
-    }
+  map.addListener("center_changed", () => {
+    const c = map?.getCenter();
+    if (!c) return;
+    picked.lat = c.lat();
+    picked.lng = c.lng();
   });
 
-  // Tap anywhere to drop the pin there: pan the tapped point to the center
-  // (under the fixed pin), which fires move/moveend and snaps if needed.
-  map.on("click", (e: L.LeafletMouseEvent) => {
-    map?.panTo(e.latlng);
+  // When a gesture settles, snap the centre back inside the boundary if it
+  // drifted out, then look up the street name. The `snapping` guard stops the
+  // snap pan from looping.
+  map.addListener("idle", () => {
+    if (!map) return;
+    if (props.boundary && !snapping) {
+      const c = { lat: picked.lat, lng: picked.lng };
+      if (!isInsideBoundary(c, props.boundary)) {
+        snapping = true;
+        map.panTo(snapInsideBoundary(c, props.boundary));
+        return;
+      }
+    }
+    snapping = false;
+    scheduleLabel();
+  });
+
+  // Tap anywhere to drop the pin there: pan the tapped point under the pin.
+  map.addListener("click", (e: google.maps.MapMouseEvent) => {
+    if (e.latLng) map?.panTo(e.latLng);
   });
 
   // Inside an Ionic modal the container is 0x0 while the present animation
-  // runs, so Leaflet measures the wrong size and renders gray tiles / maps
-  // taps to wrong coordinates. Recompute size whenever the container resizes,
-  // which reliably fires once the modal is laid out (more robust than a fixed
-  // timeout on real devices).
+  // runs, so the first fit uses the wrong size. Re-fit once it has a real size.
   resizeObserver = new ResizeObserver(() => {
-    if (!map) return;
-    map.invalidateSize();
+    if (!mapEl.value || mapEl.value.clientHeight === 0) return;
     resetView();
-    sync();
-    // Only the initial sizing needs the re-fit; stop after first real size.
-    if (mapEl.value && mapEl.value.clientHeight > 0) {
-      resizeObserver?.disconnect();
-      resizeObserver = null;
-    }
+    resizeObserver?.disconnect();
+    resizeObserver = null;
   });
   resizeObserver.observe(mapEl.value);
+  ready.value = true;
 });
 
 onBeforeUnmount(() => {
+  clearTimeout(labelTimer);
   resizeObserver?.disconnect();
   resizeObserver = null;
-  map?.remove();
+  if (map) google.maps.event.clearInstanceListeners(map);
   map = null;
 });
 
-function confirm() {
-  const c = map ? map.getCenter() : picked;
-  let lat = c.lat;
-  let lng = c.lng;
-  // Final guard: never emit a point outside the allowed area.
-  if (props.boundary) {
-    const s = snapInsideBoundary({ lat, lng }, props.boundary);
-    lat = s.lat;
-    lng = s.lng;
+/** Moves the pin to the device's position, if it is inside the allowed area. */
+async function locateMe() {
+  if (!map) return;
+  locating.value = true;
+  try {
+    const { coords } = await Geolocation.getCurrentPosition({
+      enableHighAccuracy: true,
+      timeout: 10000,
+    });
+    const here = { lat: coords.latitude, lng: coords.longitude };
+    if (props.boundary && !isInsideBoundary(here, props.boundary)) {
+      await showToast({ message: t("profileSettings.profile.outsideServiceArea"), color: "warning" });
+      return;
+    }
+    map.panTo(here);
+    map.setZoom(17);
+  } catch (error) {
+    // Capacitor reports a denied permission as a message, not a code.
+    const denied = /denied|permission/i.test(String((error as Error)?.message ?? error));
+    await showToast({
+      message: t(denied ? "profileSettings.profile.locateDenied" : "profileSettings.profile.locateFailed"),
+      color: "warning",
+    });
+  } finally {
+    locating.value = false;
   }
+}
+
+function confirm() {
+  let { lat, lng } = picked;
+  // Final guard: never emit a point outside the allowed area.
+  if (props.boundary) ({ lat, lng } = snapInsideBoundary({ lat, lng }, props.boundary));
   emit("confirm", {
     lat: Number(lat.toFixed(6)),
     lng: Number(lng.toFixed(6)),
@@ -199,9 +279,29 @@ function confirm() {
   z-index: 1000;
   pointer-events: none;
 }
+.locate-btn {
+  position: absolute;
+  top: 12px;
+  inset-inline-start: 12px;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.4rem;
+  background: var(--ion-color-light);
+  color: var(--ion-color-primary);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
+  z-index: 1000;
+}
+.locate-btn:disabled {
+  opacity: 0.6;
+}
 .map-hint {
   position: absolute;
-  bottom: 56px;
+  bottom: 84px;
   left: 50%;
   transform: translateX(-50%);
   background: var(--ion-color-light);
@@ -214,17 +314,21 @@ function confirm() {
   pointer-events: none;
   white-space: nowrap;
 }
-.coord-readout {
+/* Street and neighbourhood under the pin, large enough to read at a glance.
+   Kept above the bottom edge so Google's logo stays visible (required). */
+.place-label {
   position: absolute;
-  bottom: 20px;
+  bottom: 32px;
   left: 50%;
   transform: translateX(-50%);
+  max-width: calc(100% - 32px);
   background: var(--ion-color-primary);
   color: #fff;
-  padding: 4px 12px;
+  padding: 8px 16px;
   border-radius: 16px;
-  font-size: 0.75rem;
-  font-variant-numeric: tabular-nums;
+  font-size: 0.95rem;
+  font-weight: 600;
+  text-align: center;
   z-index: 1000;
   pointer-events: none;
 }

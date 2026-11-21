@@ -30,6 +30,7 @@ jobs:
           VITE_TADIL_MOBILE_API_URL: ${{ secrets.VITE_TADIL_MOBILE_API_URL }}
           VITE_MOYASAR_PUBLISHABLE_KEY: ${{ secrets.VITE_MOYASAR_PUBLISHABLE_KEY }}
           VITE_GOOGLE_PAY_MERCHANT_ID: ${{ secrets.VITE_GOOGLE_PAY_MERCHANT_ID }}
+          VITE_GOOGLE_MAPS_KEY: ${{ secrets.VITE_GOOGLE_MAPS_KEY }}
 
       - name: Build Xcode Project (Real Device Architecture)
         run: |

@@ -39,6 +39,8 @@
 	<string>We need write access to save clothes products photos.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>We need access to your photos to upload clothes products images and share photos in chat.</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>We use your location to pin your delivery address on the map.</string>
 	<key>NSMicrophoneUsageDescription</key>
 	<string>We need microphone access for voice messages in chat.</string>
 	<key>ITSAppUsesNonExemptEncryption</key>
