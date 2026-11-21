@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import { randomBytes } from 'node:crypto';
+import { createHmac, randomBytes } from 'node:crypto';
 import { PrismaClient } from '@prisma/client';
 
 const base = process.env.STAFF_TEST_URL || 'http://localhost:4444';
@@ -54,12 +54,49 @@ function status(result, expected, label) {
   assert.equal(result.status, expected, `${label}: unexpected HTTP status`);
   checks++;
 }
+async function resolveOtp(accountId) {
+  const challenge = await db.staffMfaChallenge.findFirst({
+    where: { accountId, usedAt: null },
+    orderBy: { createdAt: 'desc' },
+  });
+  assert(challenge, 'MFA challenge missing');
+  const pepper = process.env.STAFF_MFA_PEPPER || 'dev-only-staff-mfa-pepper';
+  for (let i = 0; i < 1_000_000; i++) {
+    const code = String(i).padStart(6, '0');
+    if (
+      createHmac('sha256', pepper).update(code).digest('hex') ===
+      challenge.otpHash
+    )
+      return code;
+  }
+  throw new Error('Unable to resolve MFA OTP from hash');
+}
+
 async function login(email, pass = password) {
-  const response = await request('/auth/login', {
+  const challenge = await request('/auth/login', {
     method: 'POST',
     body: { email, password: pass },
   });
-  status(response, 201, 'login');
+  status(challenge, 201, 'login challenge');
+  assert.equal(challenge.data.mfaRequired, true, 'MFA required after login');
+  assert(
+    typeof challenge.data.mfaToken === 'string' &&
+      challenge.data.mfaToken.length === 43,
+    'MFA token shape'
+  );
+  assert(
+    !challenge.headers
+      .getSetCookie()
+      .some((value) => value.startsWith('staff_session=')),
+    'No session cookie before MFA'
+  );
+  const account = await db.staffAccount.findUnique({ where: { email } });
+  const code = await resolveOtp(account.id);
+  const response = await request('/auth/mfa/verify', {
+    method: 'POST',
+    body: { mfaToken: challenge.data.mfaToken, code },
+  });
+  status(response, 201, 'mfa verify');
   const cookie = response.headers
     .getSetCookie()
     .find((value) => value.startsWith('staff_session='));

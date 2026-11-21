@@ -32,12 +32,28 @@ export class AuthController {
   constructor(private readonly auth: AuthService) {}
   @Public() @Post('login') async login(
     @Req() request: Request,
+    @Body() body: any
+  ) {
+    return this.auth.login(body.email, body.password, request.ip);
+  }
+  @Public() @Post('mfa/verify') async verifyMfa(
+    @Req() request: Request,
     @Body() body: any,
     @Res({ passthrough: true }) response: Response
   ) {
-    const result = await this.auth.login(body.email, body.password, request.ip);
+    const result = await this.auth.verifyMfa(
+      body.mfaToken,
+      body.code,
+      request.ip
+    );
     response.cookie('staff_session', result.token, cookieOptions());
     return result.user;
+  }
+  @Public() @Post('mfa/resend') async resendMfa(
+    @Req() request: Request,
+    @Body() body: any
+  ) {
+    return this.auth.resendMfa(body.mfaToken, request.ip);
   }
   @AuthenticatedRoute() @Get('me') me(@Authenticated() user: any) {
     return user;

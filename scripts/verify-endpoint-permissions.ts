@@ -17,6 +17,8 @@ const routeDecorators = new Set([
 const publicRoutes = new Set([
   'AppController.getFileStream',
   'AuthController.login',
+  'AuthController.verifyMfa',
+  'AuthController.resendMfa',
   'AuthController.accept',
 ]);
 const authenticatedRoutes = new Set([

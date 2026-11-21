@@ -6,6 +6,7 @@ import {
   StaffUsersController,
 } from './auth.controller';
 import { AuthService } from './auth.service';
+import { StaffMailService } from './staff-mail.service';
 import { SessionGuard } from './guards/session.guard';
 import { PermissionsGuard } from './guards/permissions.guard';
 import { CommonModule } from '../common/common.module';
@@ -18,7 +19,7 @@ import { CommonModule } from '../common/common.module';
     StaffRolesController,
     StaffPermissionsController,
   ],
-  providers: [AuthService, SessionGuard, PermissionsGuard],
+  providers: [AuthService, StaffMailService, SessionGuard, PermissionsGuard],
   exports: [AuthService, SessionGuard, PermissionsGuard],
 })
 export class AuthModule {}

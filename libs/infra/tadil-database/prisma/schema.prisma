@@ -498,7 +498,23 @@ model StaffAccount {
     denials      String[]           @default([])
     sessions     StaffSession[]
     tokens       StaffToken[]
+    mfaChallenges StaffMfaChallenge[]
     audits       StaffAudit[]       @relation("staff-audit-actor")
+}
+
+model StaffMfaChallenge {
+    id                 String       @id @default(uuid())
+    accountId          String
+    account            StaffAccount @relation(fields: [accountId], references: [id], onDelete: Cascade)
+    challengeTokenHash String       @unique
+    otpHash            String
+    expiresAt          DateTime
+    attempts           Int          @default(0)
+    usedAt             DateTime?
+    lastSentAt         DateTime
+    createdAt          DateTime     @default(now())
+
+    @@index([accountId])
 }
 
 model StaffRole {

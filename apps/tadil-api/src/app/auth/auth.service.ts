@@ -6,10 +6,17 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
-import { createHash, randomBytes, timingSafeEqual } from 'crypto';
+import {
+  createHash,
+  createHmac,
+  randomBytes,
+  randomInt,
+  timingSafeEqual,
+} from 'crypto';
 import * as argon2 from 'argon2';
 import { DbClient } from '@tadil-database';
 import { PERMISSION_SET, validatePermissions } from './permissions';
+import { StaffMailService } from './staff-mail.service';
 
 const includeRoles = { roles: { include: { role: true } } } as const;
 type Account = Prisma.StaffAccountGetPayload<{ include: typeof includeRoles }>;
@@ -18,6 +25,16 @@ type Transaction = Prisma.TransactionClient;
 const digest = (value: string) =>
   createHash('sha256').update(value).digest('hex');
 const csrfFor = (token: string) => digest(`staff-csrf:${token}`);
+const MFA_TTL_MS = 5 * 60_000;
+const MFA_RESEND_COOLDOWN_MS = 60_000;
+const MFA_MAX_ATTEMPTS = 5;
+const otpDigest = (code: string) =>
+  createHmac(
+    'sha256',
+    process.env.STAFF_MFA_PEPPER || 'dev-only-staff-mfa-pepper'
+  )
+    .update(code)
+    .digest('hex');
 const passwordOptions = {
   type: argon2.argon2id,
   memoryCost: 19456,
@@ -25,6 +42,28 @@ const passwordOptions = {
   parallelism: 1,
 };
 let dummyPassword: Promise<string> | undefined;
+
+function safeEqualHex(left: string, right: string) {
+  const a = Buffer.from(left);
+  const b = Buffer.from(right);
+  return a.length === b.length && timingSafeEqual(a, b);
+}
+
+function otpCode() {
+  return String(randomInt(0, 1_000_000)).padStart(6, '0');
+}
+
+function otpOf(value: unknown): string {
+  if (typeof value !== 'string' || !/^\d{6}$/.test(value))
+    throw new UnauthorizedException('Invalid verification code');
+  return value;
+}
+
+function mfaTokenOf(value: unknown): string {
+  if (typeof value !== 'string' || !/^[\w-]{43}$/.test(value))
+    throw new UnauthorizedException('Invalid verification challenge');
+  return value;
+}
 
 function text(value: unknown, label: string, max = 160): string {
   if (typeof value !== 'string' || !value.trim() || value.length > max)
@@ -80,7 +119,10 @@ function bodyOf(value: unknown, allowed: string[]): Record<string, unknown> {
 
 @Injectable()
 export class AuthService {
-  constructor(private readonly db: DbClient) {}
+  constructor(
+    private readonly db: DbClient,
+    private readonly mail: StaffMailService
+  ) {}
 
   async login(email: unknown, password: unknown, ip = 'unknown') {
     const emailKey = emailOf(email);
@@ -100,7 +142,7 @@ export class AuthService {
     if (!account || !account.active || !valid)
       throw new UnauthorizedException('Invalid credentials');
     // Recheck under the same lock as password resets and account disabling.
-    return this.db.$transaction(async (tx) => {
+    const challenge = await this.db.$transaction(async (tx) => {
       await this.lock(tx);
       const current = await tx.staffAccount.findUnique({
         where: { id: account.id },
@@ -108,16 +150,186 @@ export class AuthService {
       });
       if (!current?.active || current.passwordHash !== account.passwordHash)
         throw new UnauthorizedException('Invalid credentials');
-      const result = await this.createSession(current, tx);
+      const issued = await this.issueMfaChallenge(tx, current);
       await this.audit(
         tx,
         account.id,
-        'session.created',
+        'mfa.challenged',
         'StaffAccount',
         account.id
       );
+      return issued;
+    });
+    try {
+      await this.mail.sendLoginOtp(account.email, challenge.code);
+    } catch (error) {
+      await this.db.staffMfaChallenge.updateMany({
+        where: { id: challenge.id, usedAt: null },
+        data: { usedAt: new Date() },
+      });
+      throw error;
+    }
+    return { mfaRequired: true as const, mfaToken: challenge.mfaToken };
+  }
+
+  async verifyMfa(mfaToken: unknown, code: unknown, ip = 'unknown') {
+    const token = mfaTokenOf(mfaToken);
+    const otp = otpOf(code);
+    await this.throttle(`mfa-ip:${digest(ip)}`, 60);
+    await this.throttle(`mfa-token:${digest(token)}`, 20);
+    return this.db.$transaction(async (tx) => {
+      await this.lock(tx);
+      const challenge = await tx.staffMfaChallenge.findUnique({
+        where: { challengeTokenHash: digest(token) },
+        include: { account: { include: includeRoles } },
+      });
+      if (
+        !challenge ||
+        challenge.usedAt ||
+        challenge.expiresAt <= new Date() ||
+        !challenge.account.active
+      )
+        throw new UnauthorizedException('Invalid verification code');
+      if (challenge.attempts >= MFA_MAX_ATTEMPTS) {
+        await tx.staffMfaChallenge.update({
+          where: { id: challenge.id },
+          data: { usedAt: new Date() },
+        });
+        throw new UnauthorizedException('Invalid verification code');
+      }
+      if (!safeEqualHex(challenge.otpHash, otpDigest(otp))) {
+        const attempts = challenge.attempts + 1;
+        await tx.staffMfaChallenge.update({
+          where: { id: challenge.id },
+          data: {
+            attempts,
+            ...(attempts >= MFA_MAX_ATTEMPTS ? { usedAt: new Date() } : {}),
+          },
+        });
+        await this.audit(
+          tx,
+          challenge.accountId,
+          'mfa.failed',
+          'StaffAccount',
+          challenge.accountId
+        );
+        throw new UnauthorizedException('Invalid verification code');
+      }
+      const consumed = await tx.staffMfaChallenge.updateMany({
+        where: { id: challenge.id, usedAt: null },
+        data: { usedAt: new Date() },
+      });
+      if (!consumed.count)
+        throw new UnauthorizedException('Invalid verification code');
+      const result = await this.createSession(challenge.account, tx);
+      await this.audit(
+        tx,
+        challenge.accountId,
+        'mfa.verified',
+        'StaffAccount',
+        challenge.accountId
+      );
+      await this.audit(
+        tx,
+        challenge.accountId,
+        'session.created',
+        'StaffAccount',
+        challenge.accountId
+      );
       return result;
     });
+  }
+
+  async resendMfa(mfaToken: unknown, ip = 'unknown') {
+    const token = mfaTokenOf(mfaToken);
+    await this.throttle(`mfa-resend-ip:${digest(ip)}`, 30);
+    const existing = await this.db.staffMfaChallenge.findUnique({
+      where: { challengeTokenHash: digest(token) },
+      include: { account: true },
+    });
+    if (
+      !existing ||
+      existing.usedAt ||
+      existing.expiresAt <= new Date() ||
+      !existing.account.active
+    )
+      throw new UnauthorizedException('Invalid verification challenge');
+    await this.throttle(`mfa-resend:${digest(existing.accountId)}`, 5);
+    if (
+      Date.now() - existing.lastSentAt.getTime() <
+        MFA_RESEND_COOLDOWN_MS ||
+      existing.attempts >= MFA_MAX_ATTEMPTS
+    )
+      throw new UnauthorizedException('Invalid verification challenge');
+    const code = otpCode();
+    const updated = await this.db.$transaction(async (tx) => {
+      await this.lock(tx);
+      const current = await tx.staffMfaChallenge.findUnique({
+        where: { id: existing.id },
+        include: { account: true },
+      });
+      if (
+        !current ||
+        current.usedAt ||
+        current.expiresAt <= new Date() ||
+        !current.account.active
+      )
+        throw new UnauthorizedException('Invalid verification challenge');
+      if (
+        Date.now() - current.lastSentAt.getTime() <
+        MFA_RESEND_COOLDOWN_MS
+      )
+        throw new UnauthorizedException('Invalid verification challenge');
+      if (current.attempts >= MFA_MAX_ATTEMPTS)
+        throw new UnauthorizedException('Invalid verification challenge');
+      const now = new Date();
+      await tx.staffMfaChallenge.update({
+        where: { id: current.id },
+        data: {
+          otpHash: otpDigest(code),
+          expiresAt: new Date(now.getTime() + MFA_TTL_MS),
+          lastSentAt: now,
+        },
+      });
+      await this.audit(
+        tx,
+        current.accountId,
+        'mfa.resent',
+        'StaffAccount',
+        current.accountId
+      );
+      return current.account.email;
+    });
+    try {
+      await this.mail.sendLoginOtp(updated, code);
+    } catch (error) {
+      await this.db.staffMfaChallenge.updateMany({
+        where: { id: existing.id, usedAt: null },
+        data: { usedAt: new Date() },
+      });
+      throw error;
+    }
+    return { mfaRequired: true as const, mfaToken: token };
+  }
+
+  private async issueMfaChallenge(tx: Transaction, account: Account) {
+    await tx.staffMfaChallenge.updateMany({
+      where: { accountId: account.id, usedAt: null },
+      data: { usedAt: new Date() },
+    });
+    const mfaToken = randomBytes(32).toString('base64url');
+    const code = otpCode();
+    const now = new Date();
+    const row = await tx.staffMfaChallenge.create({
+      data: {
+        accountId: account.id,
+        challengeTokenHash: digest(mfaToken),
+        otpHash: otpDigest(code),
+        expiresAt: new Date(now.getTime() + MFA_TTL_MS),
+        lastSentAt: now,
+      },
+    });
+    return { id: row.id, mfaToken, code };
   }
 
   private async throttle(key: string, limit: number) {
@@ -610,6 +822,10 @@ export class AuthService {
       data: { revokedAt: new Date() },
     });
     await tx.staffToken.updateMany({
+      where: { accountId, usedAt: null },
+      data: { usedAt: new Date() },
+    });
+    await tx.staffMfaChallenge.updateMany({
       where: { accountId, usedAt: null },
       data: { usedAt: new Date() },
     });
