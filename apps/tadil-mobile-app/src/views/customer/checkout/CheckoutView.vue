@@ -126,14 +126,14 @@
           <div class="flex justify-between mb-2">
             <span>{{ $t('checkout.orderInfo.transportationFee') }}</span>
             <span>
-              {{ createdOrder?.deliveryFee ?? 0 }}
+              {{ formatAmount(createdOrder?.deliveryFee) }}
               {{ $t('common.currencies.sar') }}
             </span>
           </div>
           <div class="flex justify-between">
             <span>{{ $t('checkout.orderInfo.totalAmount') }}</span>
             <span class="font-bold text-primary">
-              {{ createdOrder?.totalPrice }}
+              {{ formatAmount(createdOrder?.totalPrice) }}
               {{ $t('common.currencies.sar') }}
             </span>
           </div>
@@ -277,6 +277,10 @@ function resetCheckout() {
 const paysCashOnDelivery = computed(() =>
   isAppleReviewPhone(authStore.userInfo?.phone)
 );
+
+function formatAmount(value: number | undefined | null): string {
+  return (Math.round(Number(value || 0) * 100) / 100).toFixed(2);
+}
 
 const stepTitle = computed(() => {
   if (step.value === 'address') return t('checkout.address.title');
