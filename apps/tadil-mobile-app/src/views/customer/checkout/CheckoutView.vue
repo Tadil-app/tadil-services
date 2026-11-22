@@ -73,24 +73,6 @@
           </IonCard>
         </div>
 
-        <div class="bg-gray-50 p-4 rounded-xl space-y-2" data-testid="checkout-summary">
-          <div class="flex justify-between">
-            <span>{{ $t('checkout.orderInfo.itemsTotal') }}</span>
-            <span>{{ cartStore.totalPrice }} {{ $t('common.currencies.sar') }}</span>
-          </div>
-          <div class="flex justify-between">
-            <span>{{ $t('checkout.orderInfo.transportationFee') }}</span>
-            <span>{{ deliveryFee ?? '…' }} {{ $t('common.currencies.sar') }}</span>
-          </div>
-          <div class="flex justify-between font-bold border-t pt-2">
-            <span>{{ $t('checkout.orderInfo.totalAmount') }}</span>
-            <span class="text-primary">
-              {{ deliveryFee == null ? '…' : Math.round((cartStore.totalPrice + deliveryFee) * 100) / 100 }}
-              {{ $t('common.currencies.sar') }}
-            </span>
-          </div>
-        </div>
-
         <div class="pt-10 space-y-3">
           <p
             v-if="paysCashOnDelivery"
@@ -224,7 +206,6 @@ import { isAppleReviewPhone } from '@/utils/appleReviewPhones';
 import { DisplayOrderDTO } from '@/integration/dtos';
 import { useI18n } from 'vue-i18n';
 import { Preferences } from '@capacitor/preferences';
-import { apiClient } from '@/integration/api';
 import {
   ApplePay,
   APPLE_PAY_MERCHANT_ID,
@@ -259,24 +240,10 @@ const selectedAddressId = ref<string>('');
 const isProcessing = ref(false);
 const createdOrder = ref<DisplayOrderDTO | null>(null);
 const paymentError = ref('');
-// Null while loading. The server recomputes it when the order is created.
-const deliveryFee = ref<number | null>(null);
 const applePayAvailable = ref(false);
 const applePayBusy = ref(false);
 const googlePayAvailable = ref(false);
 const googlePayBusy = ref(false);
-
-async function loadDeliveryFee() {
-  deliveryFee.value = null;
-  try {
-    const { data } = await apiClient.customerControllerGetDeliveryFee({
-      itemsTotal: cartStore.totalPrice,
-    });
-    deliveryFee.value = data.deliveryFee;
-  } catch (error) {
-    console.error('Failed to load the transportation fee', error);
-  }
-}
 
 onBeforeRouteLeave(async (to) => {
   // The payment callback lands on the verify page; it owns the order then.
@@ -288,7 +255,6 @@ onIonViewWillEnter(async () => {
   // Ionic caches this page. A return from a failed or abandoned payment must
   // start again from the address, not on a Moyasar form for a dropped order.
   resetCheckout();
-  loadDeliveryFee();
 
   const { value: shouldRedirect } = await Preferences.get({ key: 'redirectToOrders' });
   if (shouldRedirect === 'true') {
