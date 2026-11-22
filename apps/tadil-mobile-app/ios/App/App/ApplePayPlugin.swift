@@ -17,12 +17,16 @@ public class ApplePayPlugin: CAPPlugin, CAPBridgedPlugin {
     private var session: ApplePaySession?
 
     @objc func isAvailable(_ call: CAPPluginCall) {
-        let available = PKPaymentAuthorizationController.canMakePayments(usingNetworks: supportedNetworks)
+        // Device capability only — do not require a card already in Wallet.
+        // On iOS 15+, Apple Pay sheet lets the user add a card; hiding the
+        // button when Wallet is empty made TestFlight look like Apple Pay
+        // was missing. Networks are still enforced on the PKPaymentRequest.
+        let available = PKPaymentAuthorizationController.canMakePayments()
         call.resolve(["available": available])
     }
 
     @objc func pay(_ call: CAPPluginCall) {
-        guard PKPaymentAuthorizationController.canMakePayments(usingNetworks: supportedNetworks) else {
+        guard PKPaymentAuthorizationController.canMakePayments() else {
             call.reject("unavailable", "unavailable")
             return
         }
