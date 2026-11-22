@@ -6,9 +6,11 @@ const config: CapacitorConfig = {
   webDir: "dist",
   server: {
     allowNavigation: ["*"],
-    // LAN dev API is plain http://<pc-ip>:4445; https://localhost would block
-    // those calls as mixed content. Production builds use an https API anyway.
-    androidScheme: "http",
+    // Play Store builds use a live Moyasar key. The payment form refuses
+    // pk_live unless the WebView origin is https, so release stays on
+    // https://localhost. A LAN API on plain http is mixed content from that
+    // origin: set CAPACITOR_ANDROID_SCHEME=http before `cap sync` for that.
+    androidScheme: process.env.CAPACITOR_ANDROID_SCHEME === "http" ? "http" : "https",
   },
   plugins: {
     StatusBar: {
