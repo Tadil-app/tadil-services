@@ -261,6 +261,8 @@ export const ar = {
     alteration: "التعديل",
     price: "السعر",
     itemsCount: "إجمالي القطع",
+    alterationFeesTotal: "اجمالي رسوم التعديل",
+    pickupDeliveryFee: "رسوم الاستلام والتسليم",
     totalPrice: "السعر الإجمالي",
     clearAll: "مسح الكل",
     clearConfirmMessage: "هل أنت متأكد أنك تريد تفريغ عربة التسوق؟ لا يمكن التراجع عن هذا الإجراء.",
