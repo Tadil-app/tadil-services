@@ -633,12 +633,9 @@ html[dir="rtl"] .mysr-form [dir="ltr"] {
   border-radius: 8px;
   background: #000;
   color: #fff;
-  font-size: 16px;
+  font-size: 17px;
   font-weight: 600;
   cursor: pointer;
-  -webkit-appearance: -apple-pay-button;
-  -apple-pay-button-type: check-out;
-  -apple-pay-button-style: black;
 }
 
 .apple-pay-button:disabled {

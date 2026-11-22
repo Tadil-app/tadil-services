@@ -77,6 +77,9 @@ class TadilBridgeViewController: CAPBridgeViewController {
 
     override func capacitorDidLoad() {
         super.capacitorDidLoad()
+        // Local plugins are not in the SPM package list. Without this, ApplePay
+        // is "not implemented", isAvailable() fails, and the checkout hides the button.
+        bridge?.registerPluginInstance(ApplePayPlugin())
         pinWebViewToLeftToRight()
     }
 
