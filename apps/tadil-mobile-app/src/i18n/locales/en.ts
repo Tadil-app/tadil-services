@@ -260,6 +260,8 @@ export const en = {
     alteration: "Alteration",
     price: "Price",
     itemsCount: "Total Items",
+    alterationFeesTotal: "Total alteration fees",
+    pickupDeliveryFee: "Pickup and delivery fee",
     totalPrice: "Total Price",
     clearAll: "Clear All",
     clearConfirmMessage: "Are you sure you want to clear your cart? This action cannot be undone.",

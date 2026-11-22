@@ -33,11 +33,11 @@
             <strong>{{ cartStore.itemsCount }}</strong>
           </div>
           <div class="cart-summary__row">
-            <p>{{ $t("checkout.orderInfo.itemsTotal") }}</p>
+            <p>{{ $t("cart.alterationFeesTotal") }}</p>
             <strong>{{ cartStore.totalPrice }} {{ $t("common.currencies.sar") }}</strong>
           </div>
           <div class="cart-summary__row">
-            <p>{{ $t("checkout.orderInfo.transportationFee") }}</p>
+            <p>{{ $t("cart.pickupDeliveryFee") }}</p>
             <strong>{{ deliveryFee ?? "…" }} {{ $t("common.currencies.sar") }}</strong>
           </div>
           <div class="cart-summary__row cart-summary__total">
